@@ -442,12 +442,6 @@ void CMotion::SetMotion(const int motiontype,bool bBlend,const int nBlendFrame)
 	{
 		m_nKeyBlend = 0;
 
-		//// ブレンドが終わってたら
-		//if (m_bFinish == true)
-		//{
-		//	m_nKey = ;				 // キーをリセット
-		//}
-
 		if (m_bFirst == false)
 		{
 			m_nCounterBlend = 0;		 // ブレンドカウンターをリセット
