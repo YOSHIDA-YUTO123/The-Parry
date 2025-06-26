@@ -32,12 +32,12 @@ public:
 	void Draw(void);
 	void SetWave(const int nSegX, const float fRadius, const float fHeight); // 頂点の設定
 private:
-	D3DXCOLOR m_Incol, m_Outcol;	// 色
-	int m_nLife;					// 寿命
-	float m_fDecAlv;				// α値の減少スピード
-	float m_fSpeed;					// 速さ
-	float m_fInRadius;				// 内側の半径
-	float m_fOutRadius;				// 外側の半径
+	D3DXCOLOR m_col;	// 色
+	int m_nLife;		// 寿命
+	float m_fDecAlv;	// α値の減少スピード
+	float m_fSpeed;		// 速さ
+	float m_fHeight;	// 高さ
+	float m_fRadius;	// 半径
 };
 
 #endif

@@ -121,8 +121,8 @@ HRESULT CManager::Init(HINSTANCE hInstance,HWND hWnd, BOOL bWindow)
 	// フィールドの設定
 	m_pMeshField = CMeshField::Create(VEC3_NULL ,32,32, D3DXVECTOR2(7500.0f,7500.0f));
 
-	//// シリンダーの生成
-	//CMeshCylinder::Create(D3DXVECTOR3(500.0f,0.0f,0.0f), 10, 10,500.0f,500.0f);
+	// シリンダーの生成
+	//CMeshCylinder::Create(D3DXVECTOR3(500.0f,0.0f,0.0f), 32, 1,500.0f,500.0f);
 
 	// ドームの生成
 	CMeshDome::Create(VEC3_NULL,10,10,60000.0f,20000.0f);

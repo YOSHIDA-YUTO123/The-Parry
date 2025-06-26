@@ -147,7 +147,10 @@ void CMeshCylinder::SetCylinder(const int nSegX, const int nSegZ, const float fR
 			SetVtxBuffer(posWk, nCntVtx, D3DXVECTOR2((fTexPosX * nCntX), (fTexPosY * nCntZ)));
 
 			// ñ@ê¸ÇÃê≥ãKâª
-			NormalizeNormal(nCntVtx);
+			D3DXVECTOR3 nor = NormalizeNormal(nCntVtx);
+
+			// ñ@ê¸ÇÃê≥ãKâª
+			SetNormal(nor, nCntVtx);
 
 			nCntVtx++;
 		}

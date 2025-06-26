@@ -138,14 +138,20 @@ void CMotion::FinishFirstBlend(void)
 		// もとに戻す
 		m_bFirst = false;
 
-		m_nKeyBlend = 0;
 		m_nKey = 0;
 
 		// モーションをブレンドしたモーションにする
 		m_nType = m_nTypeBlend;
 
-		m_nCount = m_nCounterBlend;
-		m_nAllCounter = m_nCounterBlend;
+		//for (int nCnt = 0; nCnt < m_aInfo[m_nType].nNumkey; nCnt++)
+		//{
+		//	if (m_nFrameBlend >= m_aInfo[m_nType].aKeyInfo[nCnt].nFrame)
+		//	{
+		//		m_nFrameBlend -= m_aInfo[m_nType].aKeyInfo[nCnt].nFrame;
+		//	}
+		//}
+		m_nCount = m_nFrameBlend;
+		m_nAllCounter = m_nCount;
 
 		m_nCounterBlend = 0;
 	}
@@ -341,6 +347,8 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 	// モーションが終了したら
 	if (IsEndMotion())
 	{
+		m_nKeyBlend = 0;
+		m_nAllCounter = 0;
 		m_nCounterBlend = 0;
 		m_bFinish = true;
 		m_nFrameBlend = m_aInfo[m_nType].aKeyInfo[m_nNumKey - 1].nFrame;
@@ -353,7 +361,7 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 	// キーが最大かつブレンドのカウントが最大になった
 	if (IsFinishEndBlend() == true)
 	{
-		m_bFinish = false;			// もとに戻す
+		m_bFinish = false;				// もとに戻す
 		m_bBlend = false;				// もとに戻す
 		m_nCount = m_nFrameBlend;	    // フレームをブレンドした先のフレームに合わせる
 		m_nAllCounter = m_nFrameBlend;
@@ -361,12 +369,25 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 		m_nCounterBlend = 0;
 	}
 
+	// フレームが最大フレームを超えたら
 	if (m_nCount >= m_aInfo[m_nType].aKeyInfo[m_nKey].nFrame)
 	{
 		// キーを増やす
-		m_nKey = (m_nKey + 1) % m_aInfo[m_nType].nNumkey;
+		m_nKey++;
 
+		// 範囲内にラップする
+		m_nKey = Wrap(m_nKey, 0, m_aInfo[m_nType].nNumkey - 1);
+
+		// カウンターをリセット
 		m_nCount = 0;
+	}
+
+	if (m_nCounterBlend >= m_aInfo[m_nTypeBlend].aKeyInfo[m_nKeyBlend].nFrame && m_bFinish == true)
+	{
+		m_nKeyBlend++;
+
+		// 範囲内にラップする
+		m_nKeyBlend = Wrap(m_nKeyBlend, 0, m_aInfo[m_nTypeBlend].nNumkey - 1);
 	}
 
 	if (m_bFirst == false)
@@ -405,7 +426,7 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 //===================================================
 void CMotion::SetMotion(const int motiontype,bool bBlend,const int nBlendFrame)
 {
-	// 同じモーションだったらスキップ
+	// 同じ種類のモーションだったら
 	if (m_nTypeBlend == motiontype || m_nType == motiontype) return;
 
 	// モーションの総数を超えていたら
@@ -414,34 +435,34 @@ void CMotion::SetMotion(const int motiontype,bool bBlend,const int nBlendFrame)
 		return;
 	}
 
+	// ブレンドがあるなら
 	if (bBlend == true)
 	{
-		//if (m_aInfo[motiontype].bLoop == false || m_bFirst == false)
-		//{
-		//	m_nFrameBlend = nBlendFrame;
-		//	m_nCounterBlend = 0;
-		//}
+		m_nKeyBlend = 0;
 
-		m_nFrameBlend = nBlendFrame;
-
-		if (m_aInfo[motiontype].aKeyInfo[0].nFrame <= m_nCounterBlend)
+		// ブレンドが終わってたら
+		if (m_bFinish == true)
 		{
-			m_nCounterBlend = 0;
+			m_nKey = 0;				 // キーをリセット
 		}
 
-		m_nKeyBlend = 0;
-		m_bFirst = true;
-		m_bFinish = false;
-		m_bBlend = bBlend;
-		m_nTypeBlend = motiontype;
+		m_nCounterBlend = 0;		 // ブレンドカウンターをリセット
+		m_nFrameBlend = nBlendFrame; // ブレンドフレームを設定する
+
+		m_bFirst = true;			 // 最初のブレンド開始フラグをtrueにする
+		m_bFinish = false;			 // モーションが終わっていない
+		m_nTypeBlend = motiontype;   // ブレンド先の種類を設定
 	}
 	else
 	{
-		m_bBlend = bBlend;				// ブレンドがあるかどうか
 		m_nType = motiontype;			// ブレンドするモーションのタイプを代入
 		m_nTypeBlend = motiontype;		// ブレンドするモーションのタイプを代入
 		m_bFinish = false;
 	}
+
+	m_bBlend = bBlend; // ブレンドするかどうか判定
+
+	m_nAllCounter = 0; // 全体のフレームのカウンターをリセットする
 }
 
 //===================================================

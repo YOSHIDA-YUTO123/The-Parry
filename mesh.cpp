@@ -24,7 +24,7 @@ CMesh::CMesh()
 	D3DXMatrixIdentity(&m_mtxWorld);
 	m_nSegmentX = NULL;	
 	m_nSegmentZ = NULL;	
-	m_nIdexTexture = NULL;
+	m_nIdexTexture = -1;
 	m_nNumVtx = NULL;	
 	m_nNumPolygon = NULL;
 	m_nNumIndex = NULL;	

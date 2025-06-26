@@ -22,6 +22,8 @@
 #include "explosion.h"
 #include "dust.h"
 #include "LoadManager.h"
+#include "Wave.h"
+#include "cylinder.h"
 
 //***************************************************
 // マクロ定義
@@ -266,12 +268,8 @@ void CPlayer::Update(void)
 
 	if (pKeyboard->GetTrigger(DIK_RETURN))
 	{
-		// モーションの情報が読み込めていたら
-		if (m_pMotion != nullptr)
-		{
-			m_pMotion->SetMotion(MOTIONTYPE_ACTION, true, 5);
-		}
-
+		m_pMotion->SetMotion(MOTIONTYPE_ACTION, true, 5);
+	
 		SetState(STATE_ACTION, 15);
 	}
 

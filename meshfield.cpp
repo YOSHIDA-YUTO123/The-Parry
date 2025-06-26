@@ -616,8 +616,6 @@ void CMeshField::UpdateNor(void)
 				nIdx2 = nCnt + 1;
 				nIdx3 = nCnt + (nSegX + 1);
 
-				int nNumVertex = ((nSegX + 1) * (nSegZ + 1)) - 1;
-
 				vtx0 = GetVtxPos(nCnt);
 				vtx1 = GetVtxPos(nIdx0);
 				vtx2 = GetVtxPos(nIdx1);
