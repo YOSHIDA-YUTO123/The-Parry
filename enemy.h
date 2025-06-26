@@ -86,6 +86,7 @@ public:
 private:
 	void TransitionMotion(void);
 	void SetParent(const int nCnt);
+	void Load(void);
 
 	CCollisionSphere* m_pCollision;		// 当たり判定
 	CShadow* m_pShadow;					// 影のクラスへのポインタ

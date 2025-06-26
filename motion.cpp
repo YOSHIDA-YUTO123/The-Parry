@@ -138,19 +138,19 @@ void CMotion::FinishFirstBlend(void)
 		// もとに戻す
 		m_bFirst = false;
 
-		m_nKey = 0;
+		m_nKey = m_nKeyBlend;
 
 		// モーションをブレンドしたモーションにする
 		m_nType = m_nTypeBlend;
 
-		//for (int nCnt = 0; nCnt < m_aInfo[m_nType].nNumkey; nCnt++)
-		//{
-		//	if (m_nFrameBlend >= m_aInfo[m_nType].aKeyInfo[nCnt].nFrame)
-		//	{
-		//		m_nFrameBlend -= m_aInfo[m_nType].aKeyInfo[nCnt].nFrame;
-		//	}
-		//}
-		m_nCount = m_nFrameBlend;
+		for (int nCnt = 0; nCnt < m_aInfo[m_nType].nNumkey; nCnt++)
+		{
+			if (m_nFrameBlend >= m_aInfo[m_nType].aKeyInfo[nCnt].nFrame)
+			{
+				m_nFrameBlend -= m_aInfo[m_nType].aKeyInfo[nCnt].nFrame;
+			}
+		}
+		m_nCount += m_nFrameBlend;
 		m_nAllCounter = m_nCount;
 
 		m_nCounterBlend = 0;
@@ -382,8 +382,10 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 		m_nCount = 0;
 	}
 
-	if (m_nCounterBlend >= m_aInfo[m_nTypeBlend].aKeyInfo[m_nKeyBlend].nFrame && m_bFinish == true)
+	// ブレンドキーを進める
+	if (m_nCounterBlend >= m_aInfo[m_nTypeBlend].aKeyInfo[m_nKeyBlend].nFrame && (m_bFinish == true || m_bFirst == true))
 	{
+		// キーを増やす
 		m_nKeyBlend++;
 
 		// 範囲内にラップする
@@ -440,21 +442,26 @@ void CMotion::SetMotion(const int motiontype,bool bBlend,const int nBlendFrame)
 	{
 		m_nKeyBlend = 0;
 
-		// ブレンドが終わってたら
-		if (m_bFinish == true)
+		//// ブレンドが終わってたら
+		//if (m_bFinish == true)
+		//{
+		//	m_nKey = ;				 // キーをリセット
+		//}
+
+		if (m_bFirst == false)
 		{
-			m_nKey = 0;				 // キーをリセット
+			m_nCounterBlend = 0;		 // ブレンドカウンターをリセット
+			m_nFrameBlend = nBlendFrame; // ブレンドフレームを設定する
+			m_bFirst = true;			 // 最初のブレンド開始フラグをtrueにする
 		}
 
-		m_nCounterBlend = 0;		 // ブレンドカウンターをリセット
-		m_nFrameBlend = nBlendFrame; // ブレンドフレームを設定する
-
-		m_bFirst = true;			 // 最初のブレンド開始フラグをtrueにする
 		m_bFinish = false;			 // モーションが終わっていない
 		m_nTypeBlend = motiontype;   // ブレンド先の種類を設定
 	}
 	else
 	{
+		m_nKey = 0;						// 最初から始める
+		m_nCount = 0;					// 最初から始める
 		m_nType = motiontype;			// ブレンドするモーションのタイプを代入
 		m_nTypeBlend = motiontype;		// ブレンドするモーションのタイプを代入
 		m_bFinish = false;

@@ -14,6 +14,7 @@
 #include "debugproc.h"
 #include "explosion.h"
 #include "dust.h"
+#include "LoadManager.h"
 
 //************************************************
 // マクロ定義
@@ -28,8 +29,8 @@ CMeshField::CMeshField()
 {
 	m_fWidth = NULL;
 	m_fHeight = NULL;
-	memset(&m_Wave, NULL, sizeof(m_Wave));
 	m_Nor = VEC3_NULL;
+	//m_pWave = nullptr;
 }
 
 //================================================
@@ -104,8 +105,8 @@ HRESULT CMeshField::Init(void)
 		return E_FAIL;
 	}
 
-	// テクスチャのIDの設定
-	CMesh::SetTextureID("data/TEXTURE/field.png");
+	// メッシュフィールドのロード
+	Load();
 
 	return S_OK;
 }
@@ -115,6 +116,16 @@ HRESULT CMeshField::Init(void)
 //================================================
 void CMeshField::Uninit(void)
 {
+	for (int nCnt = 0; nCnt < (int)m_pWave.size(); nCnt++)
+	{
+		if (m_pWave[nCnt] != nullptr)
+		{
+			delete m_pWave[nCnt];
+			m_pWave[nCnt] = nullptr;
+		}
+	}
+	m_pWave.clear();
+
 	// 終了処理
 	CMesh::Uninit();
 }
@@ -134,9 +145,24 @@ void CMeshField::Update(void)
 	int nNumVtx = (nSegX + 1) * (nSegZ + 1);
 #if 1
 
-	// 波の更新処理
-	UpdateWave(nNumVtx);
+	// 要素分調べる
+	for (int nCnt = 0; nCnt < (int)m_pWave.size(); nCnt++)
+	{
+		// 波の更新処理
+		if (m_pWave[nCnt] != nullptr)
+		{
+			// 波の更新処理
+			bool bResult = m_pWave[nCnt]->Update(this, nNumVtx);
 
+			// ウェーブが消えたら
+			if (m_pWave[nCnt] != nullptr && bResult == false)
+			{
+				// ウェーブの破棄
+				delete m_pWave[nCnt];
+				m_pWave[nCnt] = nullptr;
+			}
+		}
+	}
 #endif // 0
 
 	
@@ -159,36 +185,6 @@ void CMeshField::Update(void)
 		SetVtxPos(pos, nCnt);
 	}
 #endif // 0
-
-	//for (int nCnt = 0; nCnt < nNumVtx; nCnt++)
-	//{
-	//	D3DXVECTOR3 pos = GetVtxPos(nCnt);
-
-	//	D3DXVECTOR3 diff = pPlayer->GetPosition() - pos;
-
-	//	float sqdiffX = diff.x * diff.x;
-	//	float sqdiffY = diff.y * diff.y;
-	//	float sqdiffZ = diff.z * diff.z;
-
-	//	float fDistance = (sqdiffX + sqdiffY + sqdiffZ);
-
-	//	float fRadius = 50.0f + 50.0f;
-
-	//	fRadius = fRadius * fRadius;
-
-	//	if (fDistance <= fRadius)
-	//	{
-	//		if (pKeyboard->GetPress(DIK_UP))
-	//		{
-	//			pos.y += 5.0f;
-	//		}
-	//		else if (pKeyboard->GetPress(DIK_DOWN))
-	//		{
-	//			pos.y -= 5.0f;
-	//		}
-	//	}
-	//	SetVtxPos(pos, nCnt);
-	//}
 
 	// 法線の再設定
 	UpdateNor();
@@ -391,28 +387,6 @@ bool CMeshField::Collision(const D3DXVECTOR3 pos,float *pOutHeight)
 	}
 
 	return bLanding;//判定を返す
-}
-
-//================================================
-// 波の設定処理
-//================================================
-void CMeshField::SetWave(const D3DXVECTOR3 epicenter, const int nTime,const float fSpeed,const float fInRadius,const float fOutRadius,const float fWaveHeight,const float fcoef)
-{
-	if (m_Wave.bUse == false)
-	{
-		m_Wave.epicenter = epicenter;
-		m_Wave.fSpeed = fSpeed;
-		m_Wave.nTime = nTime;
-		m_Wave.fInRadius = fInRadius;
-		m_Wave.fOutRadius = fOutRadius;
-		m_Wave.fHeight = fWaveHeight;
-		m_Wave.fStartHeight = fWaveHeight;
-		m_Wave.nCounter = NULL;
-		m_Wave.fTime = NULL;
-		m_Wave.fcoef = fcoef;
-
-		m_Wave.bUse = true;
-	}
 }
 
 //================================================
@@ -644,50 +618,192 @@ void CMeshField::UpdateNor(void)
 }
 
 //================================================
-// 波の更新処理
+// ウェーブの設定処理
 //================================================
-void CMeshField::UpdateWave(const int nNumVtx)
+void CMeshField::SetWave(const D3DXVECTOR3 epicenter, const float InR, const float OutR, const float fHeight, const float fSpeed, const float fcoef, const int nTime)
 {
+	// ウェーブの生成
+	CMeshFieldWave *pWave = CMeshFieldWave::Create(epicenter, InR, OutR, fHeight, fSpeed, fcoef, nTime);
+
+	// 要素の追加
+	m_pWave.push_back(pWave);
+}
+
+//================================================
+// メッシュフィールドのロード
+//================================================
+void CMeshField::Load(void)
+{
+	fstream file("data/system.ini"); // ファイルを開く
+	string line; // ファイルの文字列読み取り用
+	string input; // 値を代入する
+
+	// ファイルを開けたら
+	if (file.is_open())
+	{
+		// ロードのマネージャの生成
+		CLoadManager* pLoadManager = new CLoadManager;
+
+		// 最後じゃないなら
+		while (getline(file, line))
+		{
+			// プレイヤーのモーションファイルを読み取ったら
+			if (line.find("FIELD_TEXTURE") != string::npos)
+			{
+				size_t equal_pos = line.find("="); // =の位置
+
+				// [=] から先を求める
+				input = line.substr(equal_pos + 1);
+
+				// ファイルの名前を取得
+				string file_name = pLoadManager->GetString(input);
+
+				// ファイルの名前を代入
+				const char* FILE_NAME = file_name.c_str();
+
+				// テクスチャのIDの設定
+				CMesh::SetTextureID(FILE_NAME);
+			}
+		}
+
+		// ロードのマネージャーの破棄
+		if (pLoadManager != nullptr)
+		{
+			delete pLoadManager;
+			pLoadManager = nullptr;
+		}
+		// ファイルを閉じる
+		file.close();
+	}
+	else
+	{
+		MessageBox(NULL, "system.iniが開けません", "ファイルが存在しません。", MB_OK | MB_ICONWARNING);
+		return;
+	}
+}
+
+//================================================
+// コンストラクタ
+//================================================
+CMeshFieldWave::CMeshFieldWave()
+{
+	m_epicenter = VEC3_NULL;
+	m_fSpeed = NULL;
+	m_nTime = NULL;
+	m_fInRadius = NULL;
+	m_fOutRadius = NULL;
+	m_fHeight = NULL;
+	m_fStartHeight = NULL;
+	m_nCounter = NULL;
+	m_fTime = NULL;
+	m_fcoef = NULL;
+}
+
+//================================================
+// デストラクタ
+//================================================
+CMeshFieldWave::~CMeshFieldWave()
+{
+}
+
+//================================================
+// 生成処理
+//================================================
+CMeshFieldWave* CMeshFieldWave::Create(const D3DXVECTOR3 epicenter, const float InR, const float OutR, const float fHeight, const float fSpeed, const float fcoef, const int nTime)
+{
+	// 波の生成
+	CMeshFieldWave* pWave = new CMeshFieldWave;
+
+	// nullだったら
+	if (pWave == nullptr) return nullptr;
+
+	pWave->Init(); // 初期化処理
+
+	pWave->m_epicenter = epicenter;		// 発生地点
+	pWave->m_fInRadius = InR;			// 内側の半径
+	pWave->m_fOutRadius = OutR;			// 外側のお半径
+	pWave->m_fHeight = fHeight;			// 波の高さ
+	pWave->m_fStartHeight = fHeight;	// 最初の波の高さ
+	pWave->m_fSpeed = fSpeed;			// 広がる速さ
+	pWave->m_fcoef = fcoef;				// 係数
+	pWave->m_nTime = nTime;				// 波の発生時間
+
+	return pWave;
+}
+
+//================================================
+// 初期化処理
+//================================================
+void CMeshFieldWave::Init(void)
+{
+	m_nCounter = 0;
+}
+
+//================================================
+// 更新処理
+//================================================
+bool CMeshFieldWave::Update(CMeshField* pMeshField,const int nNumVtx)
+{
+	// 相対値を求める
+	float fRate = (float)m_nCounter / (float)m_nTime;
+
 	for (int nCnt = 0; nCnt < nNumVtx; nCnt++)
 	{
-		D3DXVECTOR3 pos = GetVtxPos(nCnt);
+		// 頂点座標の取得
+		D3DXVECTOR3 pos = pMeshField->GetVtxPos(nCnt);
 
-		D3DXVECTOR3 diff = m_Wave.epicenter - pos;
+		// 震源地から頂点までの差分
+		D3DXVECTOR3 diff = m_epicenter - pos;
 
+		// 距離をもとめる
 		float dis = sqrtf((diff.x * diff.x) + (diff.z * diff.z));
 
 		// 時間に応じた距離を設定
-		float fTimeInRadius = m_Wave.fInRadius + m_Wave.fTime;
-		float fTimeOutRadius = m_Wave.fOutRadius + m_Wave.fTime;
+		float fTimeInRadius = m_fInRadius + m_fTime;
+		float fTimeOutRadius = m_fOutRadius + m_fTime;
 
-		if (dis >= fTimeInRadius && dis <= fTimeOutRadius && m_Wave.bUse == true)
+		// 範囲内だったら
+		if (dis >= fTimeInRadius && dis <= fTimeOutRadius)
 		{
-			float dest = m_Wave.fHeight + sinf(dis * m_Wave.fcoef);
+			//// 色の変更
+			//pMeshField->SetColor(D3DXCOLOR(fRate, fRate, fRate, 1.0f), nCnt);
 
+			// 高さの設定
+			float dest = m_fHeight + sinf(dis * m_fcoef);
+
+			// 目的の高さに近づける
 			pos.y += (dest - pos.y) * 0.1f;
 		}
 		else
 		{
+			//// 色の変更
+			//pMeshField->SetColor(WHITE, nCnt);
+
+			// だんだん0に戻す
 			pos.y += (0.0f - pos.y) * 0.05f;
 		}
-		SetVtxPos(pos, nCnt);
+
+		// 頂点座標の設定
+		pMeshField->SetVtxPos(pos, nCnt);
 	}
 
-	float fRate = (float)m_Wave.nCounter / (float)m_Wave.nTime;
-
-	if (m_Wave.bUse == true)
+	// 最大値だったら
+	if (m_nCounter >= m_nTime)
 	{
-		if (m_Wave.nCounter >= m_Wave.nTime)
-		{
-			m_Wave.bUse = false;
-			m_Wave.nCounter = 0;
-		}
+		// カウンターをリセット
+		m_nCounter = 0;
 
-		m_Wave.nCounter++;
-
-		//m_fTime += 5.0f;
-		m_Wave.fTime += m_Wave.fSpeed;
-
-		m_Wave.fHeight = m_Wave.fStartHeight + (0.0f - m_Wave.fStartHeight) * fRate;
+		return false;
 	}
+
+	// 波のカウンターを進める
+	m_nCounter++;
+
+	// 速さに応じた波の幅を設定
+	m_fTime += m_fSpeed;
+
+	// 波の高さをだんだん0に近づける
+	m_fHeight = m_fStartHeight + (0.0f - m_fStartHeight) * fRate;
+
+	return true;
 }

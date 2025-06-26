@@ -17,6 +17,7 @@
 #include"main.h"
 #include"character3D.h"
 #include "Collision.h"
+#include<vector>
 
 //***************************************************
 // ƒ}ƒNƒ’è‹`

@@ -43,7 +43,7 @@ CPlayer::CPlayer(int nPriority) : CCharacter3D(nPriority)
 	m_fSpeed = NULL;
 	m_bJump = false;
 	m_pScore = nullptr;
-	memset(m_apModel, NULL, sizeof(m_apModel));
+	//memset(m_apModel, NULL, sizeof(m_apModel));
 	m_nNumModel = NULL;
 	m_pMotion = nullptr;
 	m_bDash = false;
@@ -167,21 +167,19 @@ void CPlayer::Update(void)
 		// パッドの移動処理
 		CPlayer::MoveJoypad(pJoypad);
 	}
-	else
+	// キーボードの移動処理
+	else if(CPlayer::MoveKeyboard(pKeyboard))
 	{
-		// キーボードの移動処理
-		if(CPlayer::MoveKeyboard(pKeyboard))
-		{
-			// ダッシュモーションか歩きモーションかを判定
-			int isDashMotion = (m_bDash ? MOTIONTYPE_DASH : MOTIONTYPE_MOVE);
+		// ダッシュモーションか歩きモーションかを判定
+		int isDashMotion = (m_bDash ? MOTIONTYPE_DASH : MOTIONTYPE_MOVE);
 
-			// ジャンプかjumpじゃないかを判定
-			int motiontype = m_bJump ? isDashMotion : MOTIONTYPE_JUMP;
+		// ジャンプかjumpじゃないかを判定
+		int motiontype = m_bJump ? isDashMotion : MOTIONTYPE_JUMP;
 
-			// モーションの設定
-			m_pMotion->SetMotion(motiontype, true, 5);
-		}
+		// モーションの設定
+		m_pMotion->SetMotion(motiontype, true, 5);
 	}
+	
 
 	// ダッシュボタンを押したら
 	if (pKeyboard->GetPress(DIK_LSHIFT) || pJoypad->GetPress(pJoypad->JOYKEY_RIGHT_SHOULDER))
@@ -218,7 +216,6 @@ void CPlayer::Update(void)
 		
 		if (m_pMotion->GetBlendMotionType() == MOTIONTYPE_JUMP)
 		{
-
 			m_pMotion->SetMotion(MOTIONTYPE_LANDING, true, 5);
 			CMeshCircle::Create(pos,10.0f,100.0f,10.0f,120);
 		}
@@ -263,7 +260,7 @@ void CPlayer::Update(void)
 		m_pScore->SetDestScore(100000,120);
 
 		// 瓦礫を生成
-		CDust::Create(pos, D3DXVECTOR3(15.0f, 15.0f, 15.0f), 120);
+		CRubble::Create(pos, D3DXVECTOR3(15.0f, 15.0f, 15.0f), 120);
 	}
 
 	if (pKeyboard->GetTrigger(DIK_RETURN))
@@ -275,7 +272,8 @@ void CPlayer::Update(void)
 
 	if (pKeyboard->GetTrigger(DIK_V))
 	{
-		pMesh->SetWave(pos, 120, 15.0f, 20.0f, 300.0f, 380.0f,0.01f);
+		// 地面に波を発生させる
+		pMesh->SetWave(pos, 20.0f, 300.0f, 380.0f, 15.0f, 0.01f, 120);
 	}
 
 	if (pKeyboard->GetTrigger(DIK_R) || pJoypad->GetTrigger(pJoypad->JOYKEY_RIGHT_THUMB))

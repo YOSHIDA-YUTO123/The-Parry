@@ -17,6 +17,7 @@
 #include "dust.h"
 #include"explosion.h"
 #include "impact.h"
+#include "LoadManager.h"
 
 //***************************************************
 // マクロ定義
@@ -95,7 +96,8 @@ CEnemy* CEnemy::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 //===================================================
 HRESULT CEnemy::Init(void)
 {
-	m_pMotion = CMotion::Load("data/MOTION/motionEnemy000.txt", &m_apModel[0], ENEMY_MAX_PARTS, &m_nNumModel, MOTIONTYPE_MAX,CMotion::LOAD_TEXT);
+	Load();
+	//m_pMotion = CMotion::Load("data/MOTION/motionEnemy000.txt", &m_apModel[0], ENEMY_MAX_PARTS, &m_nNumModel, MOTIONTYPE_MAX,CMotion::LOAD_TEXT);
 
 	// 敵のAIの生成
 	m_pAI = new CEnemyAI;
@@ -267,7 +269,10 @@ void CEnemy::Update(void)
 	if (m_pMotion->IsIventFrame(72,72,MOTIONTYPE_ACTION))
 	{
 		// 地面に波を発生させる
-		pMesh->SetWave(modelpos, 120, 15.0f, 20.0f, 300.0f, 380.0f, 0.01f);
+		pMesh->SetWave(modelpos,20.0f,300.0f,380.0f,25.0f,0.01f,120);
+
+		// メッシュサークルの生成
+		CMeshCircle::Create(modelpos, 0.0f, 50.0f, 35.0f, 60,32,D3DXCOLOR(1.0f,0.5f,0.5f,1.0f));
 
 		// 瓦礫の数分出す
 		for (int nCnt = 0; nCnt < NUM_DUST; nCnt++)
@@ -287,10 +292,11 @@ void CEnemy::Update(void)
 			int nLife = rand() % 120 + 60;
 
 			// 瓦礫を生成
-			CDust::Create(modelpos, D3DXVECTOR3(fMoveX, Jump, fMoveZ), nLife);
+			CRubble::Create(modelpos, D3DXVECTOR3(fMoveX, Jump, fMoveZ), nLife);
 		}
 	}
 
+	// イベントフレームの判定
 	if (m_pMotion->IsIventFrame(64, 78, MOTIONTYPE_ACTION))
 	{
 		// 当たり判定がnullじゃなかったら
@@ -445,6 +451,59 @@ void CEnemy::SetParent(const int nCnt)
 
 	// ワールドマトリックスの設定
 	pDevice->SetTransform(D3DTS_WORLD, &m_weponMatrix);
+}
+
+//===================================================
+// 敵のロード処理
+//===================================================
+void CEnemy::Load(void)
+{
+	fstream file("data/system.ini"); // ファイルを開く
+	string line; // ファイルの文字列読み取り用
+	string input; // 値を代入する
+
+	// ファイルを開けたら
+	if (file.is_open())
+	{
+		// ロードのマネージャの生成
+		CLoadManager* pLoadManager = new CLoadManager;
+
+		// 最後じゃないなら
+		while (getline(file, line))
+		{
+			// プレイヤーのモーションファイルを読み取ったら
+			if (line.find("ENEMY000_MOTION_FILE") != string::npos)
+			{
+				size_t equal_pos = line.find("="); // =の位置
+
+				// [=] から先を求める
+				input = line.substr(equal_pos + 1);
+
+				// ファイルの名前を取得
+				string file_name = pLoadManager->GetString(input);
+
+				// ファイルの名前を代入
+				const char* FILE_NAME = file_name.c_str();
+
+				// モーションのロード処理
+				m_pMotion = CMotion::Load(FILE_NAME, &m_apModel[0], ENEMY_MAX_PARTS, &m_nNumModel, MOTIONTYPE_MAX, CMotion::LOAD_TEXT);
+			}
+		}
+
+		// ロードのマネージャーの破棄
+		if (pLoadManager != nullptr)
+		{
+			delete pLoadManager;
+			pLoadManager = nullptr;
+		}
+		// ファイルを閉じる
+		file.close();
+	}
+	else
+	{
+		MessageBox(NULL, "system.iniが開けません", "ファイルが存在しません。", MB_OK | MB_ICONWARNING);
+		return;
+	}
 }
 
 //===================================================

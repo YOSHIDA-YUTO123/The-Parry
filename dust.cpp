@@ -13,10 +13,17 @@
 #include "manager.h"
 #include"math.h"
 
+//***************************************************
+// マクロ定義
+//***************************************************
+#define SHADOW_SIZE (50.0f)		// 影の大きさ
+#define SHADOW_MAX_HEIGHT (700.0f)  // 影が見える最大の高さ
+#define SHADOW_A_LEVEL (0.9f)       // 影のアルファ値のオフセット
+
 //===================================================
 // コンストラクタ
 //===================================================
-CDust::CDust(int nPriority) : CObject(nPriority)
+CRubble::CRubble(int nPriority) : CObject(nPriority)
 {
 	m_nLife = NULL;
 	m_pObjectX = nullptr;
@@ -25,24 +32,25 @@ CDust::CDust(int nPriority) : CObject(nPriority)
 	ZeroMemory(&m_move, sizeof(m_move));
 	m_nMaxLife = NULL;
 	m_fDecAlv = NULL;
+	m_pShadow = nullptr;
 }
 
 //===================================================
 // デストラクタ
 //===================================================
-CDust::~CDust()
+CRubble::~CRubble()
 {
 }
 
 //===================================================
 // 生成処理
 //===================================================
-CDust* CDust::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 dir, const int nLife)
+CRubble* CRubble::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 dir, const int nLife)
 {
-	CDust* pDust = nullptr;
+	CRubble* pDust = nullptr;
 
 	// 瓦礫の生成
-	pDust = new CDust;
+	pDust = new CRubble;
 
 	// 優先順位の取得
 	int nPriority = pDust->GetPriority();
@@ -98,7 +106,7 @@ CDust* CDust::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 dir, const int nLi
 //===================================================
 // 瓦礫の生成処理(円形)
 //===================================================
-void CDust::Creates(const int nNumDust,const D3DXVECTOR3 move, const D3DXVECTOR3 pos, const int nLife)
+void CRubble::Creates(const int nNumDust,const D3DXVECTOR3 move, const D3DXVECTOR3 pos, const int nLife)
 {
 	for (int nCnt = 0; nCnt < nNumDust; nCnt++)
 	{
@@ -107,22 +115,25 @@ void CDust::Creates(const int nNumDust,const D3DXVECTOR3 move, const D3DXVECTOR3
 		float dirX = sinf(fAngle) * move.x;
 		float dirZ = cosf(fAngle) * move.z;
 
-		CDust::Create(pos, D3DXVECTOR3(dirX, move.y, dirZ), nLife);
+		CRubble::Create(pos, D3DXVECTOR3(dirX, move.y, dirZ), nLife);
 	}
 }
 
 //===================================================
 // 初期化処理
 //===================================================
-HRESULT CDust::Init(void)
+HRESULT CRubble::Init(void)
 {
+	// 影の生成
+	m_pShadow = CShadow::Create(m_pos.Get(), SHADOW_SIZE, SHADOW_SIZE, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.9f));
+
 	return S_OK;
 }
 
 //===================================================
 // 終了処理
 //===================================================
-void CDust::Uninit(void)
+void CRubble::Uninit(void)
 {
 	// オブジェクトXの破棄
 	if (m_pObjectX != nullptr)
@@ -131,13 +142,21 @@ void CDust::Uninit(void)
 		m_pObjectX = nullptr;
 	}
 
+	// 影の破棄
+	if (m_pShadow != nullptr)
+	{
+		m_pShadow->Uninit();
+		m_pShadow = nullptr;
+	}
+
+	// 自分自身の破棄
 	Release();
 }
 
 //===================================================
 // 更新処理
 //===================================================
-void CDust::Update(void)
+void CRubble::Update(void)
 {
 	CMeshField* pMesh = CManager::GetMeshField();
 
@@ -190,6 +209,24 @@ void CDust::Update(void)
 	// 重力の設定
 	m_move.Gravity(-MAX_GRABITY);
 
+	// 影の更新処理
+	if (m_pShadow != nullptr)
+	{
+		pMesh = CManager::GetMeshField();
+
+		D3DXVECTOR3 FieldNor = pMesh->GetNor(); 				// 地面の法線ベクトルの取得
+		D3DXVECTOR3 PlayerRay = D3DXVECTOR3(0.0f, 1.0f, 0.0f);  // 上方向ベクトルの作成
+
+		// 地面の角度に合わせた角度を取得
+		D3DXVECTOR3 Shadowrot = m_pShadow->GetFieldAngle(FieldNor, PlayerRay);
+
+		// 影の設定処理
+		m_pShadow->Setting(D3DXVECTOR3(pos.x, pos.y - fHeight, pos.z), D3DXVECTOR3(pos.x, fHeight + 2.0f, pos.z), SHADOW_SIZE, SHADOW_SIZE, SHADOW_MAX_HEIGHT, SHADOW_A_LEVEL);
+
+		// 影の向きの設定
+		m_pShadow->GetRotaition()->Set(Shadowrot);
+	}
+
 	if (m_pObjectX != nullptr)
 	{
 		// 位置の設定処理
@@ -213,7 +250,7 @@ void CDust::Update(void)
 //===================================================
 // 描画処理
 //===================================================
-void CDust::Draw(void)
+void CRubble::Draw(void)
 {
 	if (m_pObjectX != nullptr)
 	{

@@ -18,6 +18,35 @@
 #include<vector>
 
 //************************************************
+// 前方宣言
+//************************************************
+class CMeshField;
+
+//************************************************
+// メッシュのフィールドのウェーブクラスの定義
+//************************************************
+class CMeshFieldWave
+{
+public:
+	CMeshFieldWave();
+	~CMeshFieldWave();
+
+	static CMeshFieldWave* Create(const D3DXVECTOR3 epicenter, const float InR, const float OutR, const float fHeight, const float fSpeed, const float fcoef, const int nTime);
+	void Init(void);
+	bool Update(CMeshField* pMeshField, const int nNumVtx);
+private:
+	D3DXVECTOR3 m_epicenter;			// 波の発生地点
+	float m_fInRadius, m_fOutRadius;	// 波の半径
+	float m_fHeight;					// 波の高さ
+	float m_fStartHeight;				// 最初の高さ
+	float m_fTime;						// 高さ
+	float m_fSpeed;						// 速さ
+	float m_fcoef;						// 係数
+	int m_nCounter;						// 波のカウンター
+	int m_nTime;						// 波の発生時間
+};
+
+//************************************************
 // メッシュフィールドクラスの定義
 //************************************************
 class CMeshField : public CMesh
@@ -33,29 +62,15 @@ public:
 	void Draw(void);
 	void SetMeshField(const int nSegX, const int nSegZ, const  D3DXVECTOR3 pos, const D3DXVECTOR2 Size);
 	bool Collision(const D3DXVECTOR3 pos, float* pOutHeight);
-	void SetWave(const D3DXVECTOR3 epicenter, const int nTime, const float fSpeed, const float fInRadius, const float fOutRadius, const float fWaveHeight, const float fcoef);
-	void UpdateNor(void);
+	void UpdateNor(void); // 法線の再設定
 	D3DXVECTOR3 GetNor(void) const { return m_Nor; }
+	void SetWave(const D3DXVECTOR3 epicenter, const float InR, const float OutR, const float fHeight, const float fSpeed, const float fcoef, const int nTime);
 private:
-	void UpdateWave(const int nNumVtx);
+	void Load(void);
 
-	// 波の情報
-	struct Wave
-	{
-		D3DXVECTOR3 epicenter;
-		float fInRadius, fOutRadius;	// 波の半径
-		float fHeight;					// 波の高さ
-		float fStartHeight;				// 最初の高さ
-		float fTime;					// 高さ
-		float fSpeed;					// 速さ
-		float fcoef;					// 係数
-		int nCounter;					// 波のカウンター
-		int nTime;						// 波の発生時間
-		bool bUse;						// 使用しているかどうか
-	};
-
+	std::vector<CMeshFieldWave*> m_pWave;	// フィールドの波クラスへのポインタ
 	D3DXVECTOR3 m_Nor;					// 法線
-	Wave m_Wave;						// ウェーブの情報
 	float m_fWidth, m_fHeight;			// 横幅,高さ
 };
+
 #endif
