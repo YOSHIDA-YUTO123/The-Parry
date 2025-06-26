@@ -1,0 +1,327 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="ソース ファイル\base">
+      <UniqueIdentifier>{f173b58c-795f-42ad-842b-124e02083d05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\base">
+      <UniqueIdentifier>{e69b9407-98f9-4e55-98e6-37d1063dbadb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\object2D">
+      <UniqueIdentifier>{6753876b-b0c9-4ef2-b2ce-ad2e8ea3bb32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\object2D">
+      <UniqueIdentifier>{98331734-6a9c-4aad-a717-41fb144cc8e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\object3D">
+      <UniqueIdentifier>{f0bcda6d-5732-4d1c-9241-5a4881c54806}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\objectX">
+      <UniqueIdentifier>{a95b7635-39f7-44ca-b8c8-98527c81730d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\objectBillboard">
+      <UniqueIdentifier>{9dee3842-422d-42c9-a5b0-f7d0d793c5d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\object3D">
+      <UniqueIdentifier>{107250bc-e5d1-4da9-9d39-762e81141501}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\objectX">
+      <UniqueIdentifier>{ef368957-ddb2-4271-ac73-45c84b57a049}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\objectBillboard">
+      <UniqueIdentifier>{7b0a197e-adba-4afc-9632-93437ed6f950}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\mesh">
+      <UniqueIdentifier>{6c722b08-8cc7-4bec-bb4e-489dde8e4202}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\mesh">
+      <UniqueIdentifier>{3a026f48-31aa-41b5-8fe8-03fc064f0056}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\system">
+      <UniqueIdentifier>{0d9e7af1-69a8-4ae7-b59f-3a1777b217c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\number">
+      <UniqueIdentifier>{8aa9ff3b-a5c2-4c98-9d58-5c81647c7da2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\number">
+      <UniqueIdentifier>{5fa0e8f2-a1f9-41e8-9116-725bc289373b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\system">
+      <UniqueIdentifier>{aed7b188-e939-474f-90ed-83797deab8f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\model">
+      <UniqueIdentifier>{39afd47f-fa16-4eb8-b813-3f565bf7654f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\model">
+      <UniqueIdentifier>{d10c1f19-2e2d-4f35-9ea1-2f585139fb6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\manager">
+      <UniqueIdentifier>{df678558-2bd6-4ba1-a4e7-daaa2db035ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\manager">
+      <UniqueIdentifier>{ffcaf2b6-0309-4679-9998-beefdfac05de}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="testword.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="word.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>ソース ファイル\base</Filter>
+    </ClCompile>
+    <ClCompile Include="object2D.cpp">
+      <Filter>ソース ファイル\object2D</Filter>
+    </ClCompile>
+    <ClCompile Include="object.cpp">
+      <Filter>ソース ファイル\base</Filter>
+    </ClCompile>
+    <ClCompile Include="billboard.cpp">
+      <Filter>ソース ファイル\objectBillboard</Filter>
+    </ClCompile>
+    <ClCompile Include="object3D.cpp">
+      <Filter>ソース ファイル\object3D</Filter>
+    </ClCompile>
+    <ClCompile Include="objectX.cpp">
+      <Filter>ソース ファイル\objectX</Filter>
+    </ClCompile>
+    <ClCompile Include="particle.cpp">
+      <Filter>ソース ファイル\objectBillboard</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh.cpp">
+      <Filter>ソース ファイル\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="meshfield.cpp">
+      <Filter>ソース ファイル\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="impact.cpp">
+      <Filter>ソース ファイル\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="cylinder.cpp">
+      <Filter>ソース ファイル\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="dome.cpp">
+      <Filter>ソース ファイル\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Wave.cpp">
+      <Filter>ソース ファイル\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="dust.cpp">
+      <Filter>ソース ファイル\objectX</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer.cpp">
+      <Filter>ソース ファイル\base</Filter>
+    </ClCompile>
+    <ClCompile Include="effect.cpp">
+      <Filter>ソース ファイル\objectBillboard</Filter>
+    </ClCompile>
+    <ClCompile Include="score.cpp">
+      <Filter>ソース ファイル\number</Filter>
+    </ClCompile>
+    <ClCompile Include="number.cpp">
+      <Filter>ソース ファイル\number</Filter>
+    </ClCompile>
+    <ClCompile Include="character2D.cpp">
+      <Filter>ソース ファイル\object2D</Filter>
+    </ClCompile>
+    <ClCompile Include="character3D.cpp">
+      <Filter>ソース ファイル\model</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy.cpp">
+      <Filter>ソース ファイル\model</Filter>
+    </ClCompile>
+    <ClCompile Include="explosion.cpp">
+      <Filter>ソース ファイル\objectBillboard</Filter>
+    </ClCompile>
+    <ClCompile Include="input.cpp">
+      <Filter>ソース ファイル\base</Filter>
+    </ClCompile>
+    <ClCompile Include="light.cpp">
+      <Filter>ソース ファイル\base</Filter>
+    </ClCompile>
+    <ClCompile Include="debugproc.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadManager.cpp">
+      <Filter>ソース ファイル\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="manager.cpp">
+      <Filter>ソース ファイル\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="math.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="model.cpp">
+      <Filter>ソース ファイル\model</Filter>
+    </ClCompile>
+    <ClCompile Include="modelManager.cpp">
+      <Filter>ソース ファイル\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="motion.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>ソース ファイル\model</Filter>
+    </ClCompile>
+    <ClCompile Include="shadow.cpp">
+      <Filter>ソース ファイル\object3D</Filter>
+    </ClCompile>
+    <ClCompile Include="sound.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="transform.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="textureManager.cpp">
+      <Filter>ソース ファイル\manager</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="testword.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="word.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>ヘッダー ファイル\base</Filter>
+    </ClInclude>
+    <ClInclude Include="character2D.h">
+      <Filter>ヘッダー ファイル\object2D</Filter>
+    </ClInclude>
+    <ClInclude Include="object.h">
+      <Filter>ヘッダー ファイル\base</Filter>
+    </ClInclude>
+    <ClInclude Include="billboard.h">
+      <Filter>ヘッダー ファイル\objectBillboard</Filter>
+    </ClInclude>
+    <ClInclude Include="object2D.h">
+      <Filter>ヘッダー ファイル\object2D</Filter>
+    </ClInclude>
+    <ClInclude Include="object3D.h">
+      <Filter>ヘッダー ファイル\object3D</Filter>
+    </ClInclude>
+    <ClInclude Include="objectX.h">
+      <Filter>ヘッダー ファイル\objectX</Filter>
+    </ClInclude>
+    <ClInclude Include="effect.h">
+      <Filter>ヘッダー ファイル\objectBillboard</Filter>
+    </ClInclude>
+    <ClInclude Include="dome.h">
+      <Filter>ヘッダー ファイル\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="impact.h">
+      <Filter>ヘッダー ファイル\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="cylinder.h">
+      <Filter>ヘッダー ファイル\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>ヘッダー ファイル\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="meshfield.h">
+      <Filter>ヘッダー ファイル\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Wave.h">
+      <Filter>ヘッダー ファイル\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer.h">
+      <Filter>ヘッダー ファイル\base</Filter>
+    </ClInclude>
+    <ClInclude Include="dust.h">
+      <Filter>ヘッダー ファイル\objectX</Filter>
+    </ClInclude>
+    <ClInclude Include="particle.h">
+      <Filter>ヘッダー ファイル\objectBillboard</Filter>
+    </ClInclude>
+    <ClInclude Include="shadow.h">
+      <Filter>ヘッダー ファイル\object3D</Filter>
+    </ClInclude>
+    <ClInclude Include="number.h">
+      <Filter>ヘッダー ファイル\number</Filter>
+    </ClInclude>
+    <ClInclude Include="score.h">
+      <Filter>ヘッダー ファイル\number</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="character3D.h">
+      <Filter>ヘッダー ファイル\model</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy.h">
+      <Filter>ヘッダー ファイル\model</Filter>
+    </ClInclude>
+    <ClInclude Include="model.h">
+      <Filter>ヘッダー ファイル\model</Filter>
+    </ClInclude>
+    <ClInclude Include="math.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="debugproc.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="sound.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>ヘッダー ファイル\model</Filter>
+    </ClInclude>
+    <ClInclude Include="explosion.h">
+      <Filter>ヘッダー ファイル\objectBillboard</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>ヘッダー ファイル\base</Filter>
+    </ClInclude>
+    <ClInclude Include="light.h">
+      <Filter>ヘッダー ファイル\base</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadManager.h">
+      <Filter>ヘッダー ファイル\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="manager.h">
+      <Filter>ヘッダー ファイル\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="modelManager.h">
+      <Filter>ヘッダー ファイル\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="textureManager.h">
+      <Filter>ヘッダー ファイル\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="motion.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="transform.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
