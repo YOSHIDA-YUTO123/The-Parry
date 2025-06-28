@@ -24,13 +24,15 @@
 #include "LoadManager.h"
 #include "Wave.h"
 #include "cylinder.h"
+#include"math.h"
+
+using namespace math; // 名前空間mathを使用
 
 //***************************************************
 // マクロ定義
 //***************************************************
 #define PLAYER_JUMP_HEIGHT (25.0f)  // ジャンプ量
-#define MOVE_SPEED (10.5f)			// 移動速度
-#define SHADOW_SIZE (100.0f)		// 影の大きさ
+#define SHADOW_SIZE (50.0f)			// 影の大きさ
 #define SHADOW_MAX_HEIGHT (500.0f)  // 影が見える最大の高さ
 #define SHADOW_A_LEVEL (0.9f)       // 影のアルファ値のオフセット
 
@@ -40,10 +42,8 @@
 CPlayer::CPlayer(int nPriority) : CCharacter3D(nPriority)
 {
 	m_pMove = nullptr;
-	m_fSpeed = NULL;
 	m_bJump = false;
 	m_pScore = nullptr;
-	//memset(m_apModel, NULL, sizeof(m_apModel));
 	m_nNumModel = NULL;
 	m_pMotion = nullptr;
 	m_bDash = false;
@@ -63,20 +63,17 @@ CPlayer::~CPlayer()
 //===================================================
 HRESULT CPlayer::Init(void)
 {
-	// プレイヤーのパラメーターのロード処理
-	LoadPlayerParam();
+	// プレイヤーのロード処理
+	Load();
+
+	// キャラクターの設定処理
+	SetCharacter(10, 6.0f);
 
 	// スコアの生成
 	m_pScore = (CScoreLerper*)CScore::Create(CScore::TYPE_LERPER,D3DXVECTOR3(1150.0f, 50.0f, 0.0f), 180.0f, 30.0f);
 
 	// 影の生成
 	m_pShadow = CShadow::Create(VEC3_NULL, 50.0f, 50.0f, WHITE);
-
-	// 当たり判定の生成
-	m_pCollision = new CCollisionSphere;
-
-	// 速さの設定
-	m_fSpeed = MOVE_SPEED;
 
 	// 移動クラスの生成
 	m_pMove = new CVelocity;
@@ -217,6 +214,7 @@ void CPlayer::Update(void)
 		if (m_pMotion->GetBlendMotionType() == MOTIONTYPE_JUMP)
 		{
 			m_pMotion->SetMotion(MOTIONTYPE_LANDING, true, 5);
+
 			CMeshCircle::Create(pos,10.0f,100.0f,10.0f,120);
 		}
 	}
@@ -224,6 +222,10 @@ void CPlayer::Update(void)
 	{
 		m_bJump = false;
 	}
+
+	CMeshCylinder* pCylinder = CManager::GetCylinder();
+
+	pCylinder->Collision(&pos);
 
 	// 重力を加算
 	m_pMove->Gravity(-MAX_GRABITY);
@@ -244,7 +246,6 @@ void CPlayer::Update(void)
 		m_pShadow->GetRotaition()->Set(rot);	
 	}
 
-
 	// ジャンプできるなら
 	if ((pKeyboard->GetPress(DIK_SPACE) == true || pJoypad->GetPress(pJoypad->JOYKEY_A) == true) && m_bJump == true)
 	{
@@ -261,11 +262,15 @@ void CPlayer::Update(void)
 
 		// 瓦礫を生成
 		CRubble::Create(pos, D3DXVECTOR3(15.0f, 15.0f, 15.0f), 120);
+
+		CSlow* pSlow = CManager::GetSlow();
+
+		pSlow->Start(120, 4);
 	}
 
 	if (pKeyboard->GetTrigger(DIK_RETURN))
 	{
-		m_pMotion->SetMotion(MOTIONTYPE_ACTION, true, 5);
+		m_pMotion->SetMotion(MOTIONTYPE_ACTION, true,3);
 	
 		SetState(STATE_ACTION, 15);
 	}
@@ -292,8 +297,8 @@ void CPlayer::Update(void)
 	// 当たり判定の設定処理
 	if (m_pCollision != nullptr)
 	{
-		m_pCollision->SetElement(pos);
-		m_pCollision->SetRadius(50.0f);
+		// 位置の設定処理
+		m_pCollision->SetPos(pos);
 	}
 
 	Parry();
@@ -319,9 +324,11 @@ void CPlayer::Update(void)
 
 	D3DXVECTOR3 rot = GetRotation()->Get();
 
-	posRDest.x = pos.x + sinf(rot.y) * 1.0f;
-	posRDest.y = (pos.y + 200.0f) + sinf(rot.y) * 1.0f;
-	posRDest.z = pos.z + cosf(rot.y) * 1.0f;
+	D3DXVECTOR3 modelpos = math::GetPositionFromMatrix(m_apModel[2]->GetMatrixWorld());
+
+	posRDest.x = modelpos.x + sinf(rot.y) * 1.0f;
+	posRDest.y = (modelpos.y + 0.0f) + sinf(rot.y) * 1.0f;
+	posRDest.z = modelpos.z + cosf(rot.y) * 1.0f;
 
 	// カメラの追従処理
 	pCamera->SetTracking(posRDest,1.0f,0.1f);
@@ -359,7 +366,7 @@ bool CPlayer::MoveKeyboard(CInputKeyboard* pKeyboard)
 	D3DXVECTOR3 cameraRot = pCamera->GetRotaition();
 
 	// 速さ
-	float fSpeed = m_bDash ? MOVE_SPEED : 2.0f;
+	float fSpeed = m_bDash ? GetSpeed() : 1.5f;
 
 	// 移動量
 	D3DXVECTOR3 move = m_pMove->Get();
@@ -489,7 +496,7 @@ void CPlayer::MoveJoypad(CInputJoypad* pJoypad)
 	D3DXVECTOR3 cameraRot = pCamera->GetRotaition();
 
 	// 速さ
-	float fSpeed = m_bDash ? MOVE_SPEED : 2.0f;
+	float fSpeed = m_bDash ? GetSpeed() : 2.0f;
 
 	// Lスティックの角度
 	float LStickAngleY = pStick->Gamepad.sThumbLY;
@@ -548,7 +555,7 @@ void CPlayer::MoveJoypad(CInputJoypad* pJoypad)
 	{
 		int motiontype = m_pMotion->GetBlendMotionType();
 
-		if (motiontype == MOTIONTYPE_MOVE || motiontype == MOTIONTYPE_DASH)
+		if ((motiontype == MOTIONTYPE_MOVE || motiontype == MOTIONTYPE_DASH) && m_pMotion->FinishLoopMotion())
 		{
 			m_pMotion->SetMotion(MOTIONTYPE_NEUTRAL, true, 15);
 		}
@@ -559,7 +566,7 @@ void CPlayer::MoveJoypad(CInputJoypad* pJoypad)
 //===================================================
 // プレイヤーのパラメーターのロード処理
 //===================================================
-void CPlayer::LoadPlayerParam(void)
+void CPlayer::Load(void)
 {
 	fstream file("data/system.ini"); // ファイルを開く
 	string line; // ファイルの文字列読み取り用
@@ -684,9 +691,14 @@ CPlayer* CPlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 
 	if (pPlayer == nullptr) return nullptr;
 
+	// 初期化処理
 	pPlayer->CCharacter3D::Init();
 	pPlayer->GetPosition()->Set(pos);
 	pPlayer->GetRotation()->Set(rot);
+
+	// 当たり判定の生成
+	pPlayer->m_pCollision = CCollisionSphere::CreateSphere(pos, 50.0f);
+
 	pPlayer->Init();
 
 	return pPlayer;

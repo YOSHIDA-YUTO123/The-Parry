@@ -70,6 +70,7 @@ public:
 		MOTIONTYPE_ACTION,
 		MOTIONTYPE_JUMP,
 		MOTIONTYPE_LANDING,
+		MOTIONTYPE_DAMAGE,
 		MOTIONTYPE_MAX
 	}MOTIONTYPE;
 
@@ -82,8 +83,9 @@ public:
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
-	void UpdateMoveMotion(void);
 private:
+	void UpdateMoveMotion(void);
+	void UpdateDamageMotion(void);
 	void TransitionMotion(void);
 	void SetParent(const int nCnt);
 	void Load(void);
@@ -95,7 +97,6 @@ private:
 	CModel* m_apModel[ENEMY_MAX_PARTS];	// モデルクラスへのポインタ
 	CVelocity* m_pMove;					// 移動量
 	D3DXMATRIX m_weponMatrix;			// 武器のワールドマトリックス
-	float m_fSpeed;						// 移動速度
 	int m_nNumModel;					// モデルの最大数
 };
 

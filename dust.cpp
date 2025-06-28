@@ -138,7 +138,6 @@ void CRubble::Uninit(void)
 	// オブジェクトXの破棄
 	if (m_pObjectX != nullptr)
 	{
-		m_pObjectX->Uninit();
 		m_pObjectX = nullptr;
 	}
 
@@ -243,6 +242,9 @@ void CRubble::Update(void)
 
 	if (m_nLife <= 0)
 	{
+		// オブジェクトの破棄
+		m_pObjectX->Uninit();
+
 		Uninit();
 	}
 }
@@ -252,9 +254,12 @@ void CRubble::Update(void)
 //===================================================
 void CRubble::Draw(void)
 {
+	// 割合を求める
+	float fRate = m_nLife / (float)m_nMaxLife;
+
 	if (m_pObjectX != nullptr)
 	{
-		// 描画処理
-		m_pObjectX->Draw();
+		// 描画処理(透明度設定)
+		m_pObjectX->Draw(fRate);
 	}
 }

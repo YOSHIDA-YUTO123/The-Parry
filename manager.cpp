@@ -10,17 +10,7 @@
 //***************************************************
 #include "manager.h"
 #include"renderer.h"
-#include "object2D.h"
-#include "sound.h"
-#include"debugproc.h"
-#include "object3D.h"
-#include "objectX.h"
-#include "billboard.h"
-#include "player.h"
-#include "score.h"
 #include "testword.h"
-#include "meshfield.h"
-#include "cylinder.h"
 #include "dome.h"
 #include "enemy.h"
 
@@ -40,7 +30,9 @@ CLight* CManager::m_pLight = nullptr;					// カメラへのポインタ
 CModelManager* CManager::m_pModel = nullptr;			// モデルのクラスへのポインタ
 CPlayer* CManager::m_pPlayer = nullptr;					// プレイヤークラスへのポインタ
 bool CManager::m_bPause = false;						// ポーズ
-CMeshField* CManager::m_pMeshField = nullptr;
+CMeshField* CManager::m_pMeshField = nullptr;			// メッシュフィールドのポインタ
+CSlow* CManager::m_pSlow = nullptr;						// スローモーションのポインタ
+CMeshCylinder* CManager::m_pCylinder = nullptr;			// シリンダーのクラスへのポインタ
 
 //===================================================
 // コンストラクタ
@@ -110,19 +102,14 @@ HRESULT CManager::Init(HINSTANCE hInstance,HWND hWnd, BOOL bWindow)
 	m_pLight->SetLight(D3DLIGHT_DIRECTIONAL, D3DXCOLOR(1.0f,1.0f, 1.0f,1.0f), D3DXVECTOR3(-0.3f, -0.56f, 0.74f), D3DXVECTOR3(3000.0f, 0.0f, 0.0f));
 	m_pLight->SetLight(D3DLIGHT_DIRECTIONAL, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(-0.18f, -0.29f, -0.74f), D3DXVECTOR3(3000.0f, 0.0f, 0.0f));
 
-	//m_pLight->SetLight(D3DLIGHT_DIRECTIONAL, WHITE, D3DXVECTOR3(-0.2f, -0.1f, 0.4f), D3DXVECTOR3(0.0f, 500.0f, 0.0f));
-
-	//m_pLight->SetLight(D3DLIGHT_DIRECTIONAL, WHITE, D3DXVECTOR3(-0.2f, -0.8f, -0.4f), D3DXVECTOR3(0.0f, 500.0f, 0.0f));
-
-	//m_pLight->SetLight(D3DLIGHT_DIRECTIONAL, WHITE, D3DXVECTOR3(-0.2f, -0.8f, 0.4f), D3DXVECTOR3(0.0f, 500.0f, 0.0f));
-
-	//m_pLight->SetLight(D3DLIGHT_DIRECTIONAL, WHITE, D3DXVECTOR3(0.2f, -0.8f, -0.4f), D3DXVECTOR3(0.0f, 500.0f, 0.0f));
+	// スローモーションの生成処理
+	m_pSlow = new CSlow;
 
 	// フィールドの設定
-	m_pMeshField = CMeshField::Create(VEC3_NULL ,32,32, D3DXVECTOR2(7500.0f,7500.0f));
+	m_pMeshField = CMeshField::Create(VEC3_NULL ,32,32, D3DXVECTOR2(5500.0f,5500.0f));
 
 	// シリンダーの生成
-	//CMeshCylinder::Create(D3DXVECTOR3(500.0f,0.0f,0.0f), 32, 1,500.0f,500.0f);
+	m_pCylinder = CMeshCylinder::Create(D3DXVECTOR3(0.0f,0.0f,0.0f), 32, 1,1900.0f,1900.0f);
 
 	// ドームの生成
 	CMeshDome::Create(VEC3_NULL,10,10,60000.0f,20000.0f);
@@ -134,7 +121,7 @@ HRESULT CManager::Init(HINSTANCE hInstance,HWND hWnd, BOOL bWindow)
 
 	CObjectX::Create(VEC3_NULL, "data/MODEL/field/arena.x");
 
-	CEnemy::Create(D3DXVECTOR3(0.0f,0.0f,3045.0f));
+	CEnemy::Create(D3DXVECTOR3(0.0f,0.0f,1500.0f));
 
 	// 結果を返す
 	return S_OK;
@@ -147,12 +134,28 @@ void CManager::Uninit(void)
 	// すべてのサウンドの停止
 	m_pSound->StopSound();
 
+	// スローの破棄
+	if (m_pSlow != nullptr)
+	{
+		delete m_pSlow;
+		m_pSlow = nullptr;
+	}
+
+	// メッシュシリンダーの破棄
+	if (m_pCylinder != nullptr)
+	{
+		m_pCylinder->Uninit();
+		m_pCylinder = nullptr;
+	}
+
+	// メッシュフィールドの破棄
 	if (m_pMeshField != nullptr)
 	{
 		m_pMeshField->Uninit();
 		m_pMeshField = nullptr;
 	}
 
+	// プレイヤーの破棄
 	if (m_pPlayer != nullptr)
 	{
 		m_pPlayer = nullptr;
@@ -292,6 +295,9 @@ void CManager::Update(void)
 
 	// ライトの更新処理
 	m_pLight->Update();
+
+	// スローモーションの更新処理
+	m_pSlow->Update();
 
 	if (m_pInputKeyboard->GetTrigger(DIK_F2))
 	{

@@ -52,7 +52,7 @@ private:
 class CMeshField : public CMesh
 {
 public:
-	CMeshField();
+	CMeshField(int nPriority = 2);
 	~CMeshField();
 
 	static CMeshField* Create(const D3DXVECTOR3 pos,const int nSegX,const int nSegZ,const D3DXVECTOR2 Size, const D3DXVECTOR3 rot = VEC3_NULL);

@@ -23,6 +23,8 @@
 #include"modelManager.h"
 #include"player.h"
 #include"meshfield.h"
+#include"slow.h"
+#include "cylinder.h"
 
 //***************************************************
 // マネージャークラスの定義
@@ -53,6 +55,8 @@ public:
 	static void EnablePause(void);
 	static void SetPause(void) { m_bPause = true; }
 	static CMeshField* GetMeshField(void);
+	static CSlow* GetSlow(void) { return m_pSlow; }
+	static CMeshCylinder* GetCylinder(void) { return m_pCylinder; }
 private:
 	static CRenderer* m_pRenderer;				// レンダラーのポインタ
 	static CInputKeyboard* m_pInputKeyboard;	// キーボードのポインタ
@@ -69,5 +73,7 @@ private:
 	static CPlayer* m_pPlayer;					// プレイヤークラスへのポインタ
 	static bool m_bPause;						// ポーズ
 	static CMeshField* m_pMeshField;			// メッシュフィールドへのポインタ
+	static CSlow* m_pSlow;						// スローモーションクラスへのポインタ
+	static CMeshCylinder* m_pCylinder;			// シリンダーのクラスへのポインタ 
 };
 #endif

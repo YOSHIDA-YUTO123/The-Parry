@@ -38,26 +38,29 @@ public:
 	CCharacter3D(int nPriority = 2);
 	~CCharacter3D();
 
-	HRESULT Init(void);
-	void Uninit(void);
-	void Update(void);
-	void Draw(void);
+	HRESULT Init(void) override;
+	void Uninit(void) override;
+	void Update(void) override;
+	void Draw(void) override;
 
+	bool Hit(int nDamage);
+
+	// ゲッター
 	CPosition* GetPosition(void) const { return m_pPos; }
 	CRotation* GetRotation(void) const { return m_pRot; }
-
-	void SetCharacter(const int nLife) { m_nLife = nLife; }
-	bool HitCharacter(int nDamage);
-
-	void SetState(const STATE state,const int nTime);
 	STATE GetState(void) { return m_state; }
+	float GetSpeed(void) { return m_fSpeed; }
+
+	// セッター
+	void SetCharacter(const int nLife, const float fSpeed);
+	void SetState(const STATE state,const int nTime);
 private:
 	CPosition *m_pPos;		// 位置クラスへのポインタ
 	CRotation *m_pRot;		// 向きクラスへのポインタ
 	STATE m_state;			// 状態
-	int m_nCounterState;	// 状態のカウンター
-
 	D3DXMATRIX m_mtxWorld;	// ワールドマトリックス
+	float m_fSpeed;			// 足の速さ
+	int m_nCounterState;	// 状態のカウンター
 	int m_nLife;			// 寿命
 };
 

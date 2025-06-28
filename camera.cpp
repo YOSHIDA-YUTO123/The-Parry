@@ -50,7 +50,7 @@ CCamera::~CCamera()
 //===================================================
 HRESULT CCamera::Init(void)
 {
-	m_posV = D3DXVECTOR3(0.0f, 590.0f, -500.0f);		// Ž‹“_
+	m_posV = D3DXVECTOR3(0.0f, 250.0f, -350.0f);		// Ž‹“_
 
 	m_rot = D3DXVECTOR3(D3DX_PI * 0.65f, 0.0f, 0.0f);	// Šp“x
 
@@ -342,7 +342,7 @@ void CCamera::Rockon(D3DXVECTOR3 playerPos, D3DXVECTOR3 enemyPos)
 
 	dir *= m_fDistance;
 
-	dir.y = playerPos.y + 200.0f;
+	dir.y = playerPos.y + 100.0f;
 
 	m_posVDest = playerPos + dir;
 

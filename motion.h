@@ -92,6 +92,7 @@ public:
 	int GetBlendMotionType(void) const { return m_nTypeBlend; }
 	bool IsIventFrame(const int nStartFrame, const int nEndFrame, const int nType);
 	bool GetLoadResult(void);
+	bool FinishLoopMotion(void);
 
 	void Debug(void);
 private:

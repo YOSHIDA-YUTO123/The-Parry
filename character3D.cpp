@@ -24,6 +24,7 @@ CCharacter3D::CCharacter3D(int nPriority) : CObject(nPriority)
 	memset(m_mtxWorld, NULL, sizeof(m_mtxWorld));
 	m_nLife = NULL;
 	m_state = STATE::STATE_NORMAL;
+	m_fSpeed = NULL;
 }
 
 //===================================================
@@ -144,27 +145,31 @@ void CCharacter3D::Draw(void)
 }
 
 //===================================================
+// キャラクターの設定処理
+//===================================================
+void CCharacter3D::SetCharacter(const int nLife, const float fSpeed)
+{
+	m_nLife = nLife;
+	m_fSpeed = fSpeed;
+}
+
+//===================================================
 // キャラクターのヒット処理
 //===================================================
-bool CCharacter3D::HitCharacter(int nDamage)
+bool CCharacter3D::Hit(int nDamage)
 {
-	// 死んだかどうか
-	bool bDeath = false;
-
+	// 体力を減らす
 	m_nLife -= nDamage;
 
 	if (m_nLife <= 0)
 	{
+		// 終了処理
 		Uninit();
 
-		return bDeath;
-	}
-	else
-	{
-
+		return true;
 	}
 
-	return bDeath;
+	return false;
 }
 
 //===================================================

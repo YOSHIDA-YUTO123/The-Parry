@@ -31,6 +31,9 @@ public:
 	void Update(void);
 	void Draw(void);
 	void SetCylinder(const int nSegX, const int nSegZ, const float fRadius, const float fHeight);
+	bool Collision(D3DXVECTOR3* pPos);
 private:
+	D3DXVECTOR3 m_CenterPos; // ‰~’Œ‚Ì’†S‚ÌÀ•W
+	float m_fRadius;		 // ”¼Œa
 };
 #endif

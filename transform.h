@@ -70,7 +70,7 @@ public:
 	void SetInertia2D(const float fcoef);
 	void Gravity(const float gravity);
 	void Bound(D3DXVECTOR3 nor, float coef = 0.8f);
-	void Jump(const float jumpHeight) { m_move.y = jumpHeight; }
+	void Jump(const float jumpHeight);
 private:
 	D3DXVECTOR3 m_move; // ˆÚ“®—Ê
 };

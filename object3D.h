@@ -24,7 +24,7 @@
 class CObject3D : public CObject
 {
 public:
-	CObject3D();
+	CObject3D(int nPriority = 4);
 	~CObject3D();
 	HRESULT Init(void);
 	void Uninit(void);

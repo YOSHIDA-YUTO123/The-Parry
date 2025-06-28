@@ -36,7 +36,7 @@ public:
 		TYPE_MAX
 	}TYPE;
 
-	CRubble(int nPriority = 1);
+	CRubble(int nPriority = 3);
 	~CRubble();
 
 	static CRubble* Create(const D3DXVECTOR3 pos,const D3DXVECTOR3 dir, const int nLife);

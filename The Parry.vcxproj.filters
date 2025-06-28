@@ -19,20 +19,8 @@
     <Filter Include="ヘッダー ファイル\base">
       <UniqueIdentifier>{e69b9407-98f9-4e55-98e6-37d1063dbadb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\object2D">
-      <UniqueIdentifier>{6753876b-b0c9-4ef2-b2ce-ad2e8ea3bb32}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\object2D">
       <UniqueIdentifier>{98331734-6a9c-4aad-a717-41fb144cc8e8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\object3D">
-      <UniqueIdentifier>{f0bcda6d-5732-4d1c-9241-5a4881c54806}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\objectX">
-      <UniqueIdentifier>{a95b7635-39f7-44ca-b8c8-98527c81730d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\objectBillboard">
-      <UniqueIdentifier>{9dee3842-422d-42c9-a5b0-f7d0d793c5d1}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\object3D">
       <UniqueIdentifier>{107250bc-e5d1-4da9-9d39-762e81141501}</UniqueIdentifier>
@@ -48,12 +36,6 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\mesh">
       <UniqueIdentifier>{3a026f48-31aa-41b5-8fe8-03fc064f0056}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\system">
-      <UniqueIdentifier>{0d9e7af1-69a8-4ae7-b59f-3a1777b217c0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\number">
-      <UniqueIdentifier>{8aa9ff3b-a5c2-4c98-9d58-5c81647c7da2}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\number">
       <UniqueIdentifier>{5fa0e8f2-a1f9-41e8-9116-725bc289373b}</UniqueIdentifier>
@@ -73,6 +55,24 @@
     <Filter Include="ヘッダー ファイル\manager">
       <UniqueIdentifier>{ffcaf2b6-0309-4679-9998-beefdfac05de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\number">
+      <UniqueIdentifier>{8aa9ff3b-a5c2-4c98-9d58-5c81647c7da2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\object2D">
+      <UniqueIdentifier>{6753876b-b0c9-4ef2-b2ce-ad2e8ea3bb32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\object3D">
+      <UniqueIdentifier>{f0bcda6d-5732-4d1c-9241-5a4881c54806}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\objectBillboard">
+      <UniqueIdentifier>{9dee3842-422d-42c9-a5b0-f7d0d793c5d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\objectX">
+      <UniqueIdentifier>{a95b7635-39f7-44ca-b8c8-98527c81730d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\system">
+      <UniqueIdentifier>{0d9e7af1-69a8-4ae7-b59f-3a1777b217c0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="testword.cpp">
@@ -81,23 +81,8 @@
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル\base</Filter>
     </ClCompile>
-    <ClCompile Include="object2D.cpp">
-      <Filter>ソース ファイル\object2D</Filter>
-    </ClCompile>
     <ClCompile Include="object.cpp">
       <Filter>ソース ファイル\base</Filter>
-    </ClCompile>
-    <ClCompile Include="billboard.cpp">
-      <Filter>ソース ファイル\objectBillboard</Filter>
-    </ClCompile>
-    <ClCompile Include="object3D.cpp">
-      <Filter>ソース ファイル\object3D</Filter>
-    </ClCompile>
-    <ClCompile Include="objectX.cpp">
-      <Filter>ソース ファイル\objectX</Filter>
-    </ClCompile>
-    <ClCompile Include="particle.cpp">
-      <Filter>ソース ファイル\objectBillboard</Filter>
     </ClCompile>
     <ClCompile Include="mesh.cpp">
       <Filter>ソース ファイル\mesh</Filter>
@@ -117,41 +102,8 @@
     <ClCompile Include="Wave.cpp">
       <Filter>ソース ファイル\mesh</Filter>
     </ClCompile>
-    <ClCompile Include="camera.cpp">
-      <Filter>ソース ファイル\system</Filter>
-    </ClCompile>
-    <ClCompile Include="Collision.cpp">
-      <Filter>ソース ファイル\system</Filter>
-    </ClCompile>
-    <ClCompile Include="dust.cpp">
-      <Filter>ソース ファイル\objectX</Filter>
-    </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <Filter>ソース ファイル\system</Filter>
-    </ClCompile>
     <ClCompile Include="renderer.cpp">
       <Filter>ソース ファイル\base</Filter>
-    </ClCompile>
-    <ClCompile Include="effect.cpp">
-      <Filter>ソース ファイル\objectBillboard</Filter>
-    </ClCompile>
-    <ClCompile Include="score.cpp">
-      <Filter>ソース ファイル\number</Filter>
-    </ClCompile>
-    <ClCompile Include="number.cpp">
-      <Filter>ソース ファイル\number</Filter>
-    </ClCompile>
-    <ClCompile Include="character2D.cpp">
-      <Filter>ソース ファイル\object2D</Filter>
-    </ClCompile>
-    <ClCompile Include="character3D.cpp">
-      <Filter>ソース ファイル\model</Filter>
-    </ClCompile>
-    <ClCompile Include="enemy.cpp">
-      <Filter>ソース ファイル\model</Filter>
-    </ClCompile>
-    <ClCompile Include="explosion.cpp">
-      <Filter>ソース ファイル\objectBillboard</Filter>
     </ClCompile>
     <ClCompile Include="input.cpp">
       <Filter>ソース ファイル\base</Filter>
@@ -159,44 +111,95 @@
     <ClCompile Include="light.cpp">
       <Filter>ソース ファイル\base</Filter>
     </ClCompile>
-    <ClCompile Include="debugproc.cpp">
-      <Filter>ソース ファイル\system</Filter>
-    </ClCompile>
     <ClCompile Include="LoadManager.cpp">
       <Filter>ソース ファイル\manager</Filter>
     </ClCompile>
     <ClCompile Include="manager.cpp">
       <Filter>ソース ファイル\manager</Filter>
     </ClCompile>
-    <ClCompile Include="math.cpp">
-      <Filter>ソース ファイル\system</Filter>
-    </ClCompile>
-    <ClCompile Include="model.cpp">
-      <Filter>ソース ファイル\model</Filter>
-    </ClCompile>
     <ClCompile Include="modelManager.cpp">
       <Filter>ソース ファイル\manager</Filter>
     </ClCompile>
-    <ClCompile Include="motion.cpp">
-      <Filter>ソース ファイル\system</Filter>
+    <ClCompile Include="textureManager.cpp">
+      <Filter>ソース ファイル\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="character3D.cpp">
+      <Filter>ソース ファイル\model</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy.cpp">
+      <Filter>ソース ファイル\model</Filter>
     </ClCompile>
     <ClCompile Include="player.cpp">
       <Filter>ソース ファイル\model</Filter>
     </ClCompile>
-    <ClCompile Include="shadow.cpp">
-      <Filter>ソース ファイル\object3D</Filter>
+    <ClCompile Include="model.cpp">
+      <Filter>ソース ファイル\model</Filter>
     </ClCompile>
-    <ClCompile Include="sound.cpp">
+    <ClCompile Include="billboard.cpp">
+      <Filter>ソース ファイル\objectBillboard</Filter>
+    </ClCompile>
+    <ClCompile Include="particle.cpp">
+      <Filter>ソース ファイル\objectBillboard</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
       <Filter>ソース ファイル\system</Filter>
     </ClCompile>
     <ClCompile Include="transform.cpp">
       <Filter>ソース ファイル\system</Filter>
     </ClCompile>
-    <ClCompile Include="textureManager.cpp">
-      <Filter>ソース ファイル\manager</Filter>
+    <ClCompile Include="sound.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="slow.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="shadow.cpp">
+      <Filter>ソース ファイル\object3D</Filter>
+    </ClCompile>
+    <ClCompile Include="object3D.cpp">
+      <Filter>ソース ファイル\object3D</Filter>
+    </ClCompile>
+    <ClCompile Include="object2D.cpp">
+      <Filter>ソース ファイル\object2D</Filter>
+    </ClCompile>
+    <ClCompile Include="motion.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="objectX.cpp">
+      <Filter>ソース ファイル\objectX</Filter>
+    </ClCompile>
+    <ClCompile Include="score.cpp">
+      <Filter>ソース ファイル\number</Filter>
+    </ClCompile>
+    <ClCompile Include="number.cpp">
+      <Filter>ソース ファイル\number</Filter>
+    </ClCompile>
+    <ClCompile Include="explosion.cpp">
+      <Filter>ソース ファイル\objectBillboard</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="debugproc.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="effect.cpp">
+      <Filter>ソース ファイル\objectBillboard</Filter>
+    </ClCompile>
+    <ClCompile Include="dust.cpp">
+      <Filter>ソース ファイル\objectX</Filter>
+    </ClCompile>
+    <ClCompile Include="math.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="character2D.cpp">
+      <Filter>ソース ファイル\object2D</Filter>
     </ClCompile>
     <ClCompile Include="word.cpp">
-      <Filter>ソース ファイル\object3D</Filter>
+      <Filter>ソース ファイル\system</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -321,6 +324,9 @@
       <Filter>ヘッダー ファイル\system</Filter>
     </ClInclude>
     <ClInclude Include="transform.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="slow.h">
       <Filter>ヘッダー ファイル\system</Filter>
     </ClInclude>
   </ItemGroup>

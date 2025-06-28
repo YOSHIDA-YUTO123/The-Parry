@@ -15,7 +15,7 @@
 //================================================
 // コンストラクタ
 //================================================
-CMesh::CMesh()
+CMesh::CMesh(int nPriority) : CObject(nPriority)
 {
 	m_pVtxBuffMesh = nullptr;
 	m_pIdxBuffMesh = nullptr;

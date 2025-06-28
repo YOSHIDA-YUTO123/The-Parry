@@ -105,6 +105,18 @@ bool CMotion::GetLoadResult(void)
 }
 
 //===================================================
+// ループモーションの終了判定
+//===================================================
+bool CMotion::FinishLoopMotion(void)
+{
+	if (m_aInfo[m_nType].bLoop == true && m_aInfo[m_nType].nNumkey - 1 <= m_nKey)
+	{
+		return true;
+	}
+	return false;
+}
+
+//===================================================
 // デバッグ
 //===================================================
 void CMotion::Debug(void)
@@ -138,19 +150,12 @@ void CMotion::FinishFirstBlend(void)
 		// もとに戻す
 		m_bFirst = false;
 
-		m_nKey = m_nKeyBlend;
+		m_nKey = 0;
 
 		// モーションをブレンドしたモーションにする
 		m_nType = m_nTypeBlend;
 
-		for (int nCnt = 0; nCnt < m_aInfo[m_nType].nNumkey; nCnt++)
-		{
-			if (m_nFrameBlend >= m_aInfo[m_nType].aKeyInfo[nCnt].nFrame)
-			{
-				m_nFrameBlend -= m_aInfo[m_nType].aKeyInfo[nCnt].nFrame;
-			}
-		}
-		m_nCount += m_nFrameBlend;
+		m_nCount = m_nCounterMotionBlend;
 		m_nAllCounter = m_nCount;
 
 		m_nCounterBlend = 0;
@@ -218,7 +223,7 @@ void CMotion::UpdateBlendMotion(CModel** pModel, int nIdx)
 	Key_Info* pKeyInfo = &m_aInfo[m_nType].aKeyInfo[m_nKey];
 
 	float fRateMotion = (float)m_nCount / (float)pKeyInfo->nFrame; // 相対値
-	float fRateMotionBlend = (float)m_nCounterBlend / (float)m_aInfo[m_nTypeBlend].aKeyInfo[m_nKeyBlend].nFrame;
+	float fRateMotionBlend = (float)m_nCounterMotionBlend / (float)m_aInfo[m_nTypeBlend].aKeyInfo[m_nKeyBlend].nFrame;
 
 	float fRateBlend = (float)m_nCounterBlend / (float)m_nFrameBlend;
 
@@ -347,6 +352,7 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 	// モーションが終了したら
 	if (IsEndMotion())
 	{
+		m_nCounterMotionBlend = 0;
 		m_nKeyBlend = 0;
 		m_nAllCounter = 0;
 		m_nCounterBlend = 0;
@@ -363,8 +369,8 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 	{
 		m_bFinish = false;				// もとに戻す
 		m_bBlend = false;				// もとに戻す
-		m_nCount = m_nFrameBlend;	    // フレームをブレンドした先のフレームに合わせる
-		m_nAllCounter = m_nFrameBlend;
+		m_nCount = m_nCounterMotionBlend;	    // フレームをブレンドした先のフレームに合わせる
+		m_nAllCounter = m_nCounterMotionBlend;
 		m_nType = NEUTRAL;				// モーションタイプをニュートラルにする
 		m_nCounterBlend = 0;
 	}
@@ -383,13 +389,15 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 	}
 
 	// ブレンドキーを進める
-	if (m_nCounterBlend >= m_aInfo[m_nTypeBlend].aKeyInfo[m_nKeyBlend].nFrame && (m_bFinish == true || m_bFirst == true))
+	if (m_nCounterMotionBlend >= m_aInfo[m_nTypeBlend].aKeyInfo[m_nKeyBlend].nFrame && (m_bFinish == true || m_bFirst == true))
 	{
 		// キーを増やす
 		m_nKeyBlend++;
 
 		// 範囲内にラップする
 		m_nKeyBlend = Wrap(m_nKeyBlend, 0, m_aInfo[m_nTypeBlend].nNumkey - 1);
+
+		m_nCounterMotionBlend = 0;
 	}
 
 	if (m_bFirst == false)
@@ -417,6 +425,7 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 	// 最大を超えたら
 	if (m_nAllCounter >= m_nAllFrame)
 	{
+		m_nCounterMotionBlend++;
 		m_nAllCounter = 0;
 	}
 
@@ -462,7 +471,7 @@ void CMotion::SetMotion(const int motiontype,bool bBlend,const int nBlendFrame)
 	}
 
 	m_bBlend = bBlend; // ブレンドするかどうか判定
-
+	m_nCounterMotionBlend = 0;
 	m_nAllCounter = 0; // 全体のフレームのカウンターをリセットする
 }
 
@@ -516,12 +525,6 @@ CMotionLoader::~CMotionLoader()
 //===================================================
 CLoderText* CLoderText::LoadTextFile(const char* pFileName, vector<CMotion::Info>& Info, CModel** ppModel, int* OutNumModel, const int nMaxSize,const int nNumMotion)
 {
-	// モーションを生成
-	CLoderText* pLoder = new CLoderText;
-
-	// モーション情報構造体のメモリの確保
-	pLoder->m_aInfo.resize(nNumMotion);
-
 	// ファイルをロードする
 	ifstream File(pFileName);
 	string line;
@@ -535,6 +538,12 @@ CLoderText* CLoderText::LoadTextFile(const char* pFileName, vector<CMotion::Info
 
 	if (File.is_open() == true)
 	{
+		// モーションを生成
+		CLoderText* pLoder = new CLoderText;
+
+		// モーション情報構造体のメモリの確保
+		pLoder->m_aInfo.resize(nNumMotion);
+
 		// 最後の行になるまで読み込む
 		while (getline(File, line))
 		{
@@ -567,31 +576,26 @@ CLoderText* CLoderText::LoadTextFile(const char* pFileName, vector<CMotion::Info
 				break;
 			}
 		}
+
+		// 情報の受け渡し
+		Info = pLoder->m_aInfo;
+
+		// モデルの情報の受け渡し
+		*OutNumModel = nNumModel;
+
 		// ファイルを閉じる
 		File.close();
+
+		return pLoder;
 	}
 	else
 	{
-		// メモリの破棄
-		if (pLoder != nullptr)
-		{
-			delete pLoder;
-			pLoder = nullptr;
-		}
-
 		// メッセージボックス
 		MessageBox(NULL, pFileName, "ファイルが開けませんでした", MB_OK);
 
 		return nullptr;
 	}
 
-	// モデルの情報の受け渡し
-	*OutNumModel = nNumModel;
-
-	// 情報の受け渡し
-	Info = pLoder->m_aInfo;
-
-	return pLoder;
 }
 
 //===================================================

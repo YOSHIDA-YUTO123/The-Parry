@@ -15,7 +15,7 @@
 //===================================================
 // コンストラクタ
 //===================================================
-CObject3D::CObject3D()
+CObject3D::CObject3D(int nPriority) : CObject(nPriority)
 {
 	memset(m_mtxWorld, NULL, sizeof(D3DXMATRIX));
 	m_pPos = nullptr;

@@ -10,12 +10,18 @@
 //************************************************
 #include "cylinder.h"
 #include "player.h"
+#include "manager.h"
+#include"math.h"
+
+using namespace math; // 名前空間mathを使用
 
 //================================================
 // コンストラクタ
 //================================================
 CMeshCylinder::CMeshCylinder()
 {
+	m_CenterPos = VEC3_NULL;
+	m_fRadius = NULL;
 }
 
 //================================================
@@ -74,6 +80,8 @@ CMeshCylinder* CMeshCylinder::Create(const D3DXVECTOR3 pos, const int nSegX, con
 	pMesh->SetPosition(pos);
 	pMesh->SetRotation(rot);
 	pMesh->SetCylinder(nSegX, nSegZ, fRadius, fHeight);
+	pMesh->m_CenterPos = pos;
+	pMesh->m_fRadius = fRadius;
 
 	return pMesh;
 }
@@ -144,7 +152,7 @@ void CMeshCylinder::SetCylinder(const int nSegX, const int nSegZ, const float fR
 			posWk.z = cosf(fAngle) * fRadius;
 
 			// 頂点バッファの設定
-			SetVtxBuffer(posWk, nCntVtx, D3DXVECTOR2((fTexPosX * nCntX), (fTexPosY * nCntZ)));
+			SetVtxBuffer(posWk, nCntVtx, D3DXVECTOR2((fTexPosX * nCntX), (fTexPosY * nCntZ)),VEC3_NULL,D3DXCOLOR(1.0f,1.0f,1.0f,0.0f));
 
 			// 法線の正規化
 			D3DXVECTOR3 nor = NormalizeNormal(nCntVtx);
@@ -181,4 +189,65 @@ void CMeshCylinder::SetCylinder(const int nSegX, const int nSegZ, const float fR
 			IdxCnt += 2;
 		}
 	}
+}
+
+//================================================
+// 当たり判定
+//================================================
+bool CMeshCylinder::Collision(D3DXVECTOR3 *pPos)
+{
+	// 横の分割数の取得
+	int nSegX = GetSegX();
+
+	// 横の分割数分調べる
+	for (int nCnt = 0; nCnt <= nSegX; nCnt++)
+	{
+		int nNextIndx = (nCnt + 1) % nSegX; // 次の頂点のインデックス
+		int nIndx = nCnt;					// 今の頂点のインデックス
+
+		// 頂点座標の取得
+		D3DXVECTOR3 vtx0 = GetVtxPos(nIndx), vtx1 = GetVtxPos(nNextIndx);
+
+		// 辺ベクトルの作成
+		D3DXVECTOR3 edge = GetVector(vtx1, vtx0);
+
+		// プレイヤーまでのベクトルを作成
+		D3DXVECTOR3 playerVec = GetVector(*pPos, vtx0);
+
+		D3DXVECTOR3 cross; // 外積
+
+		// 外積する
+		D3DXVec3Cross(&cross, &edge, &playerVec);
+
+		// 正規化する
+		D3DXVec3Normalize(&cross, &cross);
+
+		// プレイヤーがシリンダーの外に出たら
+		if (cross.y < 0.0f)
+		{
+			D3DXVECTOR3 objectPos = *pPos;
+			objectPos.y = 0.0f;
+
+			// シリンダーの中心までのベクトルを作成
+			D3DXVECTOR3 CenterDir = GetVector(objectPos, m_CenterPos);
+
+			// 中心からプレイヤーまでの距離を求める
+			float fDistance = GetDistance(objectPos - m_CenterPos);
+
+			// めり込んだ深さを求める
+			float fDepth = (m_fRadius - 10.0f) - fDistance;
+
+			// プレイヤーの位置から中心までの方向×めり込んだ深さを足す
+			D3DXVECTOR3 pos = objectPos + CenterDir * fDepth;
+			
+			// y座標は考慮しない
+			pos.y = pPos->y;
+
+			// 位置を設定
+			*pPos = pos;
+
+			return true;
+		}
+	}
+	return false;
 }

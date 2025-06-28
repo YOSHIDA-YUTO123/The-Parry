@@ -64,9 +64,10 @@ public:
 	void Draw(void);
 	bool MoveKeyboard(CInputKeyboard *pKeyboard);
 	void MoveJoypad(CInputJoypad* pJoypad);
-	void LoadPlayerParam(void);
+	void Load(void);
 	CCollisionSphere* GetSphere(void);
 	void Parry(void);
+	CVelocity* GetMove(void) { return m_pMove; }
 private:
 	void TransitionMotion(void);
 
@@ -77,7 +78,6 @@ private:
 	CShadow* m_pShadow;					// 影クラスへのポインタ
 	CVelocity* m_pMove;					// 移動量
 	D3DXVECTOR3 m_posOld;				// 前回の位置
-	float m_fSpeed;						// 移動速度
 
 	int m_nParryTime;					// パリィの有効時間
 	int m_nParryCounter;				// パリィ―のカウンター
