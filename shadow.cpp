@@ -143,9 +143,9 @@ void CShadow::Setting(const D3DXVECTOR3 player, const D3DXVECTOR3 pos, const flo
 	float SetWidth = fWidth + (fWidthWk * fWidth);
 	float SetHeight = fHeight + (fHeightWk * fHeight);
 
-	UpdatePosition(pos, D3DXVECTOR3(SetWidth, 0.0f, SetHeight));
+	UpdatePosition(D3DXVECTOR3(pos.x,pos.y,pos.z), D3DXVECTOR3(SetWidth, 0.0f, SetHeight));
 
-	float fAvalue = player.y / fMaxHeight;
+	float fAvalue = fabsf(player.y / fMaxHeight);
 
 	UpdateCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, fAlv - fAvalue));
 }
@@ -156,6 +156,8 @@ void CShadow::Setting(const D3DXVECTOR3 player, const D3DXVECTOR3 pos, const flo
 D3DXVECTOR3 CShadow::GetFieldAngle(D3DXVECTOR3 Nor, D3DXVECTOR3 up)
 {
 	D3DXVECTOR3 axis; // âÒì]é≤
+
+	D3DXVec3Normalize(&Nor, &Nor);
 
 	// é≤ÇãÅÇﬂÇÈÇƒê≥ãKâªÇ∑ÇÈ
 	D3DXVec3Cross(&axis, &up, &Nor);

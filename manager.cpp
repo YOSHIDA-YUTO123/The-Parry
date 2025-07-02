@@ -13,6 +13,7 @@
 #include "testword.h"
 #include "dome.h"
 #include "enemy.h"
+#include "object3D.h"
 
 //***************************************************
 // 静的メンバ変数の宣言
@@ -99,25 +100,34 @@ HRESULT CManager::Init(HINSTANCE hInstance,HWND hWnd, BOOL bWindow)
 	// ライトの生成
 	m_pLight = new CLight;
 	m_pLight->Init();
-	m_pLight->SetLight(D3DLIGHT_DIRECTIONAL, D3DXCOLOR(1.0f,1.0f, 1.0f,1.0f), D3DXVECTOR3(-0.3f, -0.56f, 0.74f), D3DXVECTOR3(3000.0f, 0.0f, 0.0f));
-	m_pLight->SetLight(D3DLIGHT_DIRECTIONAL, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(-0.18f, -0.29f, -0.74f), D3DXVECTOR3(3000.0f, 0.0f, 0.0f));
+	m_pLight->SetLight(D3DLIGHT_DIRECTIONAL, D3DXCOLOR(1.0f,1.0f, 1.0f,1.0f), D3DXVECTOR3(0.0f, -0.56f, 0.74f), D3DXVECTOR3(0.0f, 100.0f, 0.0f));
+	m_pLight->SetLight(D3DLIGHT_DIRECTIONAL, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, -0.56f, -0.74f), D3DXVECTOR3(0.0f, 100.0f, 0.0f));
+
+	//m_pLight->SetLight(D3DLIGHT_DIRECTIONAL, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(-0.18f, -0.29f, -0.74f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+	//m_pLight->SetLight(D3DLIGHT_DIRECTIONAL, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(0.5f, -1.0f, -0.74f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	// スローモーションの生成処理
 	m_pSlow = new CSlow;
 
-	// フィールドの設定
-	m_pMeshField = CMeshField::Create(VEC3_NULL ,32,32, D3DXVECTOR2(5500.0f,5500.0f));
+	//CObject3D::Create(D3DXVECTOR3(0.0f,150.0f,0.0f), VEC3_NULL, D3DXVECTOR3(150.0f, 150.0f, 0.0f), NULL);
 
-	// シリンダーの生成
-	m_pCylinder = CMeshCylinder::Create(D3DXVECTOR3(0.0f,0.0f,0.0f), 32, 1,1900.0f,1900.0f);
+	// フィールドの設定
+	m_pMeshField = CMeshField::Create(VEC3_NULL ,48,48, D3DXVECTOR2(5500.0f,5500.0f));
 
 	// ドームの生成
 	CMeshDome::Create(VEC3_NULL,10,10,60000.0f,20000.0f);
 
+	// ドームの生成
+	CMeshDome::Create(VEC3_NULL, 10, 10, 60000.0f, -20000.0f);
+
+	// シリンダーの生成
+	m_pCylinder = CMeshCylinder::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 32, 1, 1900.0f, 1900.0f);
+
 	//CObject3D::Create(D3DXVECTOR3(0.0f,250.0f,0.0f), VEC3_NULL, D3DXVECTOR3(500.0f, 500.0f, 500.0f), "data/TEXTURE/field.png");
 
 	// プレイヤーの生成
-	m_pPlayer = CPlayer::Create();
+	m_pPlayer = CPlayer::Create(D3DXVECTOR3(1.0f,0.0f,-1500.0f));
 
 	CObjectX::Create(VEC3_NULL, "data/MODEL/field/arena.x");
 
@@ -183,9 +193,6 @@ void CManager::Uninit(void)
 	// ライトの破棄
 	if (m_pLight != nullptr)
 	{
-		// 終了処理
-		m_pLight->Uninit();
-
 		delete m_pLight;
 
 		m_pLight = nullptr;
@@ -327,7 +334,7 @@ void CManager::Update(void)
 //===================================================
 void CManager::Draw(void)
 {
-	// 更新処理
+	// 描画処理
 	m_pRenderer->Draw(m_fps);
 
 }

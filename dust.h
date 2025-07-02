@@ -39,8 +39,7 @@ public:
 	CRubble(int nPriority = 3);
 	~CRubble();
 
-	static CRubble* Create(const D3DXVECTOR3 pos,const D3DXVECTOR3 dir, const int nLife);
-	static void Creates(const int nNumDust, const D3DXVECTOR3 move, const D3DXVECTOR3 pos, const int nLife);
+	static CRubble* Create(const D3DXVECTOR3 pos,const D3DXVECTOR3 dir, const int nLife, int nType);
 
 	HRESULT Init(void);
 	void Uninit(void);
@@ -53,6 +52,7 @@ private:
 	CRotation m_rot;	  // 向きクラス
 	CVelocity m_move;	  // 移動クラス
 
+	float m_fShadowSize;  // 影の大きさ
 	float m_fDecAlv;	  // アルファ値の減少スピード
 	int m_nLife;		  // 寿命
 	int m_nMaxLife;		  // 最大のHP

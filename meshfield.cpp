@@ -15,12 +15,15 @@
 #include "explosion.h"
 #include "dust.h"
 #include "LoadManager.h"
+#include "effect.h"
+#include"impact.h"
 
-//************************************************
-// マクロ定義
-//************************************************
-#define NUM_POLYGON (2)		 // 判定するポリゴンの数
-#define NULL_VECTOR (999.0f) // vectorの空配列
+// 匿名の名前空間を使用
+namespace
+{
+	constexpr int NUM_POLYGON = 2; // 判定するポリゴンの数
+	constexpr int NUM_SIRCLE = 5;  // メッシュサークルを出す数
+}
 
 //================================================
 // コンストラクタ
@@ -30,6 +33,7 @@ CMeshField::CMeshField(int nPriority) : CMesh(nPriority)
 	m_fWidth = NULL;
 	m_fHeight = NULL;
 	m_Nor = VEC3_NULL;
+	m_pImpact = nullptr;
 	//m_pWave = nullptr;
 }
 
@@ -116,6 +120,7 @@ HRESULT CMeshField::Init(void)
 //================================================
 void CMeshField::Uninit(void)
 {
+	// 波の破棄
 	for (int nCnt = 0; nCnt < (int)m_pWave.size(); nCnt++)
 	{
 		if (m_pWave[nCnt] != nullptr)
@@ -124,7 +129,16 @@ void CMeshField::Uninit(void)
 			m_pWave[nCnt] = nullptr;
 		}
 	}
+	// 要素のクリア
 	m_pWave.clear();
+
+	// インパクトの破棄
+	if (m_pImpact != nullptr)
+	{
+		m_pImpact->Uninit();
+		delete m_pImpact;
+		m_pImpact = nullptr;
+	}
 
 	// 終了処理
 	CMesh::Uninit();
@@ -137,6 +151,9 @@ void CMeshField::Update(void)
 {
 	//CPlayer* pPlayer = CManager::GetPlayer();
 	//CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
+
+	// 法線の再設定
+	UpdateNor();
 
 	int nSegX = GetSegX();
 	int nSegZ = GetSegZ();
@@ -163,6 +180,50 @@ void CMeshField::Update(void)
 			}
 		}
 	}
+
+	// nullじゃないなら
+	if (m_pImpact != nullptr)
+	{
+		// インパクトの更新処理
+		bool bResult = m_pImpact->Update(this, nNumVtx);
+
+		// インパクトの破棄
+		if (bResult == false && m_pImpact != nullptr)
+		{
+			m_pImpact->Uninit();
+			delete m_pImpact;
+			m_pImpact = nullptr;
+		}
+	}
+
+	// 要素分調べる
+	for (int nCnt = 0; nCnt < (int)m_pWave.size(); nCnt++)
+	{
+		// 波が使われているなら
+		if (m_pWave[nCnt] != nullptr)
+		{
+			return;
+		}
+	}
+
+	// インパクトが使われているなら
+	if (m_pImpact != nullptr)
+	{
+		return;
+	}
+
+	// 頂点の高さを0に戻す
+	for (int nCnt = 0; nCnt < nNumVtx; nCnt++)
+	{
+		D3DXVECTOR3 vtxPos = GetVtxPos(nCnt);
+
+		if (vtxPos.y >= 0.0f)
+		{
+			vtxPos.y += (0.0f - vtxPos.y) * 0.01f;
+			SetVtxPos(vtxPos, nCnt);
+		}
+	}
+
 #endif // 0
 
 	
@@ -185,9 +246,6 @@ void CMeshField::Update(void)
 		SetVtxPos(pos, nCnt);
 	}
 #endif // 0
-
-	// 法線の再設定
-	UpdateNor();
 }
 
 //================================================
@@ -378,7 +436,7 @@ bool CMeshField::Collision(const D3DXVECTOR3 pos,float *pOutHeight)
 
 			*pOutHeight = field.y + PosY;
 
-			if (dot > 0.0f)
+			if (dot >= 0.0f)
 			{
 				bLanding = true;
 				break;
@@ -631,6 +689,19 @@ void CMeshField::SetWave(const D3DXVECTOR3 epicenter, const float InR, const flo
 }
 
 //================================================
+// インパクトの設定処理
+//================================================
+void CMeshField::SetImpact(const D3DXVECTOR3 pos, D3DXVECTOR3 dir, const float fHeight, const float fRadius, const int nTime, const float fSpeed, CMeshFieldImpact::OBJ attacker)
+{
+	// インパクトの生成
+	if (m_pImpact == nullptr)
+	{
+		// インパクトの生成
+		m_pImpact = CMeshFieldImpact::Create(pos, dir, fHeight, fRadius, nTime, fSpeed, attacker);
+	}
+}
+
+//================================================
 // メッシュフィールドのロード
 //================================================
 void CMeshField::Load(void)
@@ -786,10 +857,7 @@ bool CMeshFieldWave::Update(CMeshField* pMeshField,const int nNumVtx)
 		}
 		else
 		{
-			//// 色の変更
-			//pMeshField->SetColor(WHITE, nCnt);
-
-			// だんだん0に戻す
+			// 目的の高さに近づける
 			pos.y += (0.0f - pos.y) * 0.05f;
 		}
 
@@ -807,4 +875,208 @@ bool CMeshFieldWave::Update(CMeshField* pMeshField,const int nNumVtx)
 	}
 
 	return true;
+}
+
+//================================================
+// コンストラクタ
+//================================================
+CMeshFieldImpact::CMeshFieldImpact()
+{
+	m_fHeight = NULL;
+	m_fRadius = NULL;
+	m_nCounter = NULL;
+	m_nTime = NULL;
+	m_pMove = nullptr;
+	m_pos = VEC3_NULL;
+	m_pSphere = nullptr;
+	m_ObjType = OBJ::OBJ_NONE;
+	m_FirstPos = VEC3_NULL;
+	m_fSpeed = NULL;
+}
+
+//================================================
+// デストラクタ
+//================================================
+CMeshFieldImpact::~CMeshFieldImpact()
+{
+}
+
+//================================================
+// 生成処理
+//================================================
+CMeshFieldImpact* CMeshFieldImpact::Create(const D3DXVECTOR3 pos,D3DXVECTOR3 dir,const float fHeight,const float fRadius,const int nTime, const float fSpeed, const OBJ attacker)
+{
+	// 衝撃波の生成
+	CMeshFieldImpact* pImpact = new CMeshFieldImpact;
+
+	// 移動量の生成
+	pImpact->m_pMove = new CVelocity;
+
+	// 当たり判定の生成
+	pImpact->m_pSphere = CCollisionSphere::Create(pos, fRadius);
+
+	// 方向ベクトルにする
+	D3DXVec3Normalize(&dir, &dir);
+
+	// yは考慮しない
+	dir.y = 0.0f;
+
+	// 移動量の設定
+	pImpact->m_pMove->Set(dir * fSpeed);
+
+	// 設定処理
+	pImpact->m_pos = pos;
+	pImpact->m_FirstPos = pos;
+	pImpact->m_fHeight = fHeight;
+	pImpact->m_fRadius = fRadius;
+	pImpact->m_nCounter = 0;
+	pImpact->m_nTime = nTime;
+	pImpact->m_ObjType = attacker;
+	pImpact->m_fSpeed = fSpeed;
+
+	return pImpact;
+}
+
+//================================================
+// 終了処理
+//================================================
+void CMeshFieldImpact::Uninit(void)
+{
+	// 移動量の破棄
+	if (m_pMove != nullptr)
+	{
+		delete m_pMove;
+		m_pMove = nullptr;
+	}
+
+	// 円の判定の破棄
+	if (m_pSphere != nullptr)
+	{
+		delete m_pSphere;
+		m_pSphere = nullptr;
+	}
+}
+
+//================================================
+// 更新処理
+//================================================
+bool CMeshFieldImpact::Update(CMeshField* pMeshField, const int nNumVtx)
+{
+	// nullじゃないなら
+	if (m_pMove != nullptr)
+	{
+		// 移動量の更新処理
+		m_pos += m_pMove->Get();
+	}
+
+	// 吹っ飛び量を選出
+	float dir = rand() % 15 + 5.0f;
+	float Jump = rand() % 15 + 25.0f;
+
+	float fAngle = (float)(rand() % 629 - 314);
+
+	// 方向に応じた吹っ飛び量を計算
+	float fMoveX = sinf(fAngle) * dir;
+	float fMoveZ = cosf(fAngle) * dir;
+
+	// 寿命を選出
+	int nLife = rand() % 120 + 60;
+
+	// 瓦礫を生成
+	CRubble::Create(m_pos, D3DXVECTOR3(fMoveX, Jump, fMoveZ), nLife, CRubble::TYPE_THREE);
+
+	// nullじゃないなら
+	if (m_pSphere != nullptr)
+	{
+		// 位置の更新処理
+		m_pSphere->SetPos(m_pos);
+	}
+
+#ifdef _DEBUG
+
+	CEffect3D::Create(m_pos, m_fRadius, VEC3_NULL, WHITE, 10);
+#endif // _DEBUG
+
+	// 波のカウンターを進める
+	m_nCounter++;
+
+	// インパクトを出すタイミングを求める
+	int SetImpact = m_nTime / NUM_SIRCLE;
+
+	// いちばん最初に出す、
+	if (SetImpact != 0 && (m_nCounter % SetImpact == 0 || m_nCounter == 0))
+	{
+		// 角度を求める
+		float rotY = atan2f(m_pMove->Get().x, m_pMove->Get().z);
+
+		// サークルの生成
+		CMeshCircle::Create(m_pos, 0.0f, 50.0f, 10.0f, 60, 50.0f, 32, WHITE, D3DXVECTOR3(D3DX_PI * 0.5f, rotY, 0.0f), false);
+	}
+
+	// 頂点数分調べる
+	for (int nCnt = 0; nCnt < nNumVtx; nCnt++)
+	{
+		// 頂点の位置の取得
+		D3DXVECTOR3 vtxPos = pMeshField->GetVtxPos(nCnt);
+
+		// nullじゃないなら
+		if (m_pSphere != nullptr)
+		{
+			// コライダーの作成
+			CCollisionSphere spere = m_pSphere->CreateCollider(vtxPos, 50.0f);
+
+			// 円と円の判定
+			if (m_pSphere->Collision(&spere))
+			{
+				vtxPos.y += (m_fHeight - vtxPos.y) * 0.3f;
+			}
+			else
+			{
+				// 目的の高さに近づける
+				vtxPos.y += (0.0f - vtxPos.y) * 0.05f;
+			}
+
+			pMeshField->SetVtxPos(vtxPos, nCnt);
+		}
+	}
+
+	// 最大値だったら
+	if (m_nCounter >= m_nTime)
+	{
+		// カウンターをリセット
+		m_nCounter = 0;
+
+		return false;
+	}
+
+	return true;
+}
+
+//================================================
+// 当たり判定
+//================================================
+bool CMeshFieldImpact::Collision(const D3DXVECTOR3 pos, const float fRadius,const OBJ myObj)
+{
+	// コライダーの作成
+	CCollisionSphere sphere = m_pSphere->CreateCollider(pos, fRadius);
+
+	// 当たり判定
+	if (m_pSphere->Collision(&sphere) && myObj != m_ObjType)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+//================================================
+// 設定処理
+//================================================
+void CMeshFieldImpact::Reset(D3DXVECTOR3 dir,const OBJ obj,const D3DXVECTOR3 FirstPos)
+{
+	m_nCounter = 0; 				// カウンターをリセット
+	m_FirstPos = FirstPos; 			// 発射地点を設定
+	m_ObjType = obj;				// 発射したオブジェクトを設定
+	D3DXVec3Normalize(&dir, &dir);	// 方向の正規化
+	m_pMove->Set(dir * m_fSpeed);	// 移動量を設定
 }

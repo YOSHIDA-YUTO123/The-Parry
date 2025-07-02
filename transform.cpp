@@ -92,7 +92,13 @@ CSizeCircle::~CSizeCircle()
 //=================================================
 void CPosition::UpdatePosition(const D3DXVECTOR3 move)
 {
-	m_pos += move;
+	// スローモーションの取得
+	CSlow* pSlow = CManager::GetSlow();
+
+	// スローモーションのレベル
+	float fSlowLevel = pSlow->GetLevel(false);
+
+	m_pos += move * fSlowLevel;
 }
 
 //=================================================
@@ -100,12 +106,6 @@ void CPosition::UpdatePosition(const D3DXVECTOR3 move)
 //=================================================
 void CVelocity::SetInertia3D(const float fcoef)
 {
-	// スローモーションの取得
-	CSlow* pSlow = CManager::GetSlow();
-
-	// スローモーションのレベル
-	float fSlowLevel = pSlow->GetLevel(false);
-
 	// 0.0fに近づける
 	m_move.x = LerpDest(0.0f, m_move.x, fcoef);
 	m_move.z = LerpDest(0.0f, m_move.z, fcoef);
@@ -126,13 +126,13 @@ void CVelocity::SetInertia2D(const float fcoef)
 //=================================================
 void CVelocity::Gravity(const float gravity)
 {
-	//// スローモーションの取得
-	//CSlow* pSlow = CManager::GetSlow();
+	// スローモーションの取得
+	CSlow* pSlow = CManager::GetSlow();
 
-	//// スローモーションのレベル
-	//float fSlowLevel = pSlow->GetLevel(false);
+	// スローモーションのレベル
+	float fSlowLevel = pSlow->GetLevel(false);
 
-	m_move.y += gravity;
+	m_move.y += gravity * fSlowLevel;
 }
 
 //=================================================
@@ -155,12 +155,6 @@ void CVelocity::Bound(D3DXVECTOR3 nor, float coef)
 //=================================================
 void CVelocity::Jump(const float jumpHeight)
 {
-	// スローモーションの取得
-	CSlow* pSlow = CManager::GetSlow();
-
-	// スローモーションのレベル
-	float fSlowLevel = pSlow->GetLevel(true);
-
 	m_move.y = jumpHeight;
 }
 

@@ -25,7 +25,7 @@
 #define MAX_OBJECT (256)							// オブジェクトの最大数
 #define FRAME (60)									// 一フレーム
 #define NUM_PRIORITY (8)							// 優先順位の数
-#define MAX_WORD (1024)								// 最大の文字数
+#define MAX_WORD (5024)								// 最大の文字数
 #define MAX_GRABITY (1.0f)							// 重力の大きさ
 
 //***************************************************

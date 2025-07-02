@@ -18,6 +18,8 @@
 #include"character3D.h"
 #include "Collision.h"
 #include<vector>
+#include"math.h"
+#include"model.h"
 
 //***************************************************
 // マクロ定義
@@ -29,7 +31,6 @@
 //***************************************************
 class CInputKeyboard;
 class CInputJoypad;
-class CModel;
 class CMotion;
 class CShadow;
 class CScoreLerper;
@@ -50,6 +51,8 @@ public:
 		MOTIONTYPE_JUMP,
 		MOTIONTYPE_LANDING,
 		MOTIONTYPE_DASH,
+		MOTIONTYPE_DAMAGE,
+		MOTIONTYPE_PARRY,
 		MOTIONTYPE_MAX
 	}MOTIONTYPE;
 
@@ -66,11 +69,16 @@ public:
 	void MoveJoypad(CInputJoypad* pJoypad);
 	void Load(void);
 	CCollisionSphere* GetSphere(void);
-	void Parry(void);
-	CVelocity* GetMove(void) { return m_pMove; }
-private:
-	void TransitionMotion(void);
+	void UpdateParry(void);
+	D3DXVECTOR3 GetModelPos(const int nIdx) { return math::GetPositionFromMatrix(m_apModel[nIdx]->GetMatrixWorld()); }
+	CCollisionFOV* GetFOV(void) { return m_pFOV; }
+	void SetMotion(const int type, bool bBlend, const int nFrameBlend);
+	void BlowOff(const D3DXVECTOR3 attacker, const float blowOff,const float jump);
 
+private:
+	void TransitionMotion(void);					// モーションの遷移
+
+	CCollisionFOV* m_pFOV;				// 視界の判定
 	CCollisionSphere* m_pCollision;		// 当たり判定
 	CMotion *m_pMotion;					// モーションのクラスへのポインタ
 	CScoreLerper *m_pScore;				// スコアクラスへのポインタ

@@ -29,7 +29,7 @@ public:
 	virtual void Uninit(void);
 	virtual void Update(void) = 0;
 	virtual void Draw(void);
-	virtual void SetUpDraw(void);
+	void SetUpDraw(void);
 
 	int GetSegX(void) const { return m_nSegmentX; }
 	int GetSegZ(void) const { return m_nSegmentZ; }

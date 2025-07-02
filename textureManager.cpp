@@ -51,6 +51,7 @@ int CTextureManager::Register(const char* pFilename)
 		// どちらかがnullだったら
 		if (m_apTextureInfo[nCnt].filepath == NULL || pFilename == NULL)
 		{
+			nIdx = -1;
 			continue;
 		}
 
@@ -65,9 +66,12 @@ int CTextureManager::Register(const char* pFilename)
 		if (m_nNumAll < nCnt)
 		{
 			// テクスチャの読み込み
-			D3DXCreateTextureFromFile(pDevice,
+			if (FAILED(D3DXCreateTextureFromFile(pDevice,
 				pFilename,
-				&m_apTextureInfo[nCnt].pTexture);
+				&m_apTextureInfo[nCnt].pTexture)))
+			{
+				return -1;
+			}
 
 			m_nNumAll++;
 

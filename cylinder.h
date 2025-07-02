@@ -22,7 +22,7 @@
 class CMeshCylinder : public CMesh
 {
 public:
-	CMeshCylinder();
+	CMeshCylinder(int nPriority = 7);
 	~CMeshCylinder();
 
 	static CMeshCylinder* Create(const D3DXVECTOR3 pos, const int nSegX, const int nSegZ,const float fRadius, const float fHeight, const D3DXVECTOR3 rot = VEC3_NULL);

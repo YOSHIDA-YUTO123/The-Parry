@@ -21,7 +21,7 @@ CParticle3D::CParticle3D()
 {
 	m_col = WHITE;
 	m_fRadius = NULL;
-	m_move = VEC3_NULL;
+	m_pMove = nullptr;
 	m_pos = VEC3_NULL;
 	m_nLife = NULL;
 	m_nMaxLife = NULL;
@@ -71,6 +71,9 @@ CParticle3D* CParticle3D::Create(const D3DXVECTOR3 pos, const D3DXCOLOR col, con
 	// èâä˙âªèàóù
 	pParticle->Init();
 
+	// à⁄ìÆó ÇÃê∂ê¨
+	pParticle->m_pMove = new CVelocity;
+
 	// ê›íËèàóù
 	pParticle->m_pos = pos;
 	pParticle->m_fRadius = fRadius;
@@ -91,7 +94,6 @@ HRESULT CParticle3D::Init(void)
 {
 	m_col = WHITE;
 	m_fRadius = NULL;
-	m_move = VEC3_NULL;
 	m_nLife = NULL;
 
 	return S_OK;
@@ -109,6 +111,13 @@ void CParticle3D::Uninit(void)
 		{
 			m_apEffect[nCnt] = nullptr;
 		}
+	}
+
+	// à⁄ìÆó ÇÃîjä¸
+	if (m_pMove != nullptr)
+	{
+		delete m_pMove;
+		m_pMove = nullptr;
 	}
 
 	// é©ï™é©êgÇÃîjä¸
@@ -137,9 +146,13 @@ void CParticle3D::Update(void)
 		// à⁄ìÆó 
 		float fMove = (float)(rand() % speed + m_fSpeed * 0.5f);
 
-		m_move.x = sinf(fAngleX) * sinf(fAngleY) * fMove;
-		m_move.y = cosf(fAngleX) * fMove;
-		m_move.z = cosf(fAngleX) * sinf(fAngleY) * fMove;
+		D3DXVECTOR3 moveWk = VEC3_NULL;
+
+		moveWk.x = sinf(fAngleX) * sinf(fAngleY) * fMove;
+		moveWk.y = cosf(fAngleX) * fMove;
+		moveWk.z = cosf(fAngleX) * sinf(fAngleY) * fMove;
+
+		m_pMove->Set(moveWk);
 
 		// îºåaÇintå^Ç…ïœä∑
 		int radius = (int)m_fRadius;
@@ -153,7 +166,7 @@ void CParticle3D::Update(void)
 		if (m_nTime > 0 && m_apEffect[nCnt] == nullptr)
 		{
 			// ÉGÉtÉFÉNÉgÇÃê∂ê¨
-			m_apEffect[nCnt] = CEffect3D::Create(pos, fRadius, m_move, m_col, nLife);
+			m_apEffect[nCnt] = CEffect3D::Create(pos, fRadius, moveWk, m_col, nLife);
 		}
 	}
 

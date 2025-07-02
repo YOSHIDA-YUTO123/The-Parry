@@ -25,7 +25,7 @@ public:
 	CMeshCircle();
 	~CMeshCircle();
 
-	static CMeshCircle* Create(const D3DXVECTOR3 pos, const float InRadius, const float OutRadius,const float speed,const int nLife, const int nSegX = 32, const D3DXCOLOR col = WHITE,const D3DXVECTOR3 rot = VEC3_NULL);
+	static CMeshCircle* Create(const D3DXVECTOR3 pos, const float InRadius, const float OutRadius,const float speed,const int nLife,const float fHeight = 0.0f, const int nSegX = 32, const D3DXCOLOR col = WHITE,const D3DXVECTOR3 rot = VEC3_NULL,bool bField = true);
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
@@ -33,7 +33,9 @@ public:
 	void SetCircle(const int nSegX, const float InRadius,const float OutRadius); // 頂点の設定
 private:
 	D3DXCOLOR m_Incol,m_Outcol;	// 色
+	bool m_bFiledCollision;		// 地面の高さに合わせるかどうか
 	int m_nLife;				// 寿命
+	float m_fHeight;			// 高さ
 	float m_fDecAlv;			// α値の減少スピード
 	float m_fSpeed;				// 速さ
 	float m_fInRadius;			// 内側の半径

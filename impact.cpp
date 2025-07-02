@@ -23,6 +23,8 @@ CMeshCircle::CMeshCircle()
 	m_fOutRadius = NULL;
 	m_fSpeed = NULL;
 	m_nLife = NULL;
+	m_fHeight = NULL;
+	m_bFiledCollision = false;
 }
 
 //================================================
@@ -35,7 +37,7 @@ CMeshCircle::~CMeshCircle()
 //================================================
 // 生成処理
 //================================================
-CMeshCircle* CMeshCircle::Create(const D3DXVECTOR3 pos, const float InRadius, const float OutRadius, const float speed, const int nLife, const int nSegX, const D3DXCOLOR col, const D3DXVECTOR3 rot)
+CMeshCircle* CMeshCircle::Create(const D3DXVECTOR3 pos, const float InRadius, const float OutRadius, const float speed, const int nLife, const float fHeight, const int nSegX, const D3DXCOLOR col, const D3DXVECTOR3 rot, bool bField)
 {
 	// メッシュインパクトを生成
 	CMeshCircle* pMesh = new CMeshCircle;
@@ -90,6 +92,8 @@ CMeshCircle* CMeshCircle::Create(const D3DXVECTOR3 pos, const float InRadius, co
 	pMesh->m_Outcol = col;
 	pMesh->m_Incol = D3DXCOLOR(col.r, col.g, col.b, col.a * 0.5f);
 	pMesh->m_fDecAlv = col.a / nLife;
+	pMesh->m_fHeight = fHeight;
+	pMesh->m_bFiledCollision = bField;
 
 	pMesh->SetCircle(nSegX, InRadius, OutRadius);
 
@@ -133,9 +137,14 @@ void CMeshCircle::Update(void)
 
 	float fTexPosX = 1.0f / nSegX; // テクスチャ座標の割合を求める
 
+	// スローモーションの取得
+	CSlow* pSlow = CManager::GetSlow();
+
+	float fSlowLevel = pSlow->GetLevel(false);
+
 	// 半径を拡大する
-	m_fInRadius += m_fSpeed;
-	m_fOutRadius += m_fSpeed;
+	m_fInRadius += m_fSpeed * fSlowLevel;
+	m_fOutRadius += m_fSpeed * fSlowLevel;
 
 	// メッシュフィールドの取得
 	CMeshField* pMesh = CManager::GetMeshField();
@@ -160,7 +169,8 @@ void CMeshCircle::Update(void)
 
 		D3DXVECTOR3 pos = GetPosition();
 
-		if(pMesh->Collision(posWk + pos, &fHeight))
+		// 地面との当たり判定
+		if (pMesh->Collision(posWk + pos, &fHeight) && m_bFiledCollision)
 		{
 			posWk.y = fHeight;
 		}
@@ -187,7 +197,8 @@ void CMeshCircle::Update(void)
 
 		D3DXVECTOR3 pos = GetPosition();
 
-		if (pMesh->Collision(posWk + pos, &fHeight))
+		// 地面との当たり判定
+		if (pMesh->Collision(posWk + pos, &fHeight) && m_bFiledCollision)
 		{
 			posWk.y = fHeight;
 		}
@@ -259,7 +270,7 @@ void CMeshCircle::SetCircle(const int nSegX,const float InRadius, const float Ou
 
 		// 円形に点を撃つ
 		posWk.x = sinf(fAngle) * InRadius;
-		posWk.y = 0.0f;
+		posWk.y = m_fHeight;
 		posWk.z = cosf(fAngle) * InRadius;
 
 		// 頂点座標の設定

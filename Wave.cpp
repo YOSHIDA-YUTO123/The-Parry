@@ -131,8 +131,6 @@ void CMeshWave::Update(void)
 	// ‰¡‚Ì•ªŠ„”‚Ìæ“¾
 	int nSegX = GetSegX();
 
-	float fPosTexV = 1.0f / nSegX; // ‰¡‚Ì•ªŠ„”
-
 	// Z‚Ì•ªŠ„”‚Ìæ“¾
 	int nSegZ = GetSegZ();
 

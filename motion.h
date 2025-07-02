@@ -88,8 +88,8 @@ public:
 	void SetMotion(const int motiontype, bool bBlend, const int nBlendFrame);
 	bool IsEndMotion(void);
 	bool IsFinishEndBlend(void);
-	int GetMotionType(void) const { return m_nType; }
-	int GetBlendMotionType(void) const { return m_nTypeBlend; }
+	int GetType(void) const { return m_nType; }
+	int GetBlendType(void) const { return m_nTypeBlend; }
 	bool IsIventFrame(const int nStartFrame, const int nEndFrame, const int nType);
 	bool GetLoadResult(void);
 	bool FinishLoopMotion(void);

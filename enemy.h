@@ -38,7 +38,7 @@ public:
 		ACTION_IDLE = 0, // 何もしない
 		ACTION_MOVE,	 // 移動
 		ACTION_ATTACK,	 // 攻撃
-		ACTION_WAIT,
+		ACTION_WAIT,	 // 待機
 		ACTION_MAX
 	}ACTION;
 
@@ -52,6 +52,7 @@ public:
 private:
 	CMotion* m_pMotion;			// モーションのクラスへのポインタ
 	ACTION m_Action;			// 敵の行動パターン
+	int m_nNextCounter;			// 次の行動の抽選カウンター
 	int m_nCounterAction;		// 行動のカウンター
 };
 
@@ -71,6 +72,7 @@ public:
 		MOTIONTYPE_JUMP,
 		MOTIONTYPE_LANDING,
 		MOTIONTYPE_DAMAGE,
+		MOTIONTYPE_ACTION2,
 		MOTIONTYPE_MAX
 	}MOTIONTYPE;
 
@@ -83,9 +85,10 @@ public:
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
+	void BlowOff(const D3DXVECTOR3 attacker, const float blowOff, const float jump);
+	bool CollisionWepon(void);
 private:
 	void UpdateMoveMotion(void);
-	void UpdateDamageMotion(void);
 	void TransitionMotion(void);
 	void SetParent(const int nCnt);
 	void Load(void);

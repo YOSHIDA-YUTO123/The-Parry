@@ -18,7 +18,7 @@ using namespace math; // 名前空間mathを使用
 //================================================
 // コンストラクタ
 //================================================
-CMeshCylinder::CMeshCylinder()
+CMeshCylinder::CMeshCylinder(int nPriority) : CMesh(nPriority)
 {
 	m_CenterPos = VEC3_NULL;
 	m_fRadius = NULL;
@@ -240,11 +240,9 @@ bool CMeshCylinder::Collision(D3DXVECTOR3 *pPos)
 			// プレイヤーの位置から中心までの方向×めり込んだ深さを足す
 			D3DXVECTOR3 pos = objectPos + CenterDir * fDepth;
 			
-			// y座標は考慮しない
-			pos.y = pPos->y;
-
 			// 位置を設定
-			*pPos = pos;
+			pPos->x = pos.x;
+			pPos->z = pos.z;
 
 			return true;
 		}

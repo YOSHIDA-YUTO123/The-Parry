@@ -10,6 +10,7 @@
 //************************************************
 #include "Collision.h"
 #include"math.h"
+#include"effect.h"
 
 using namespace math; // 名前空間を使用
 
@@ -19,6 +20,7 @@ using namespace math; // 名前空間を使用
 CCollision::CCollision()
 {
 	m_pos = VEC3_NULL;
+	m_type = TYPE::TYPE_AABB;
 }
 
 //================================================
@@ -26,6 +28,40 @@ CCollision::CCollision()
 //================================================
 CCollision::~CCollision()
 {
+}
+
+//================================================
+// 当たり判定の生成処理
+//================================================
+CCollision* CCollision::Create(const D3DXVECTOR3 pos, const TYPE type)
+{
+	// 当たり判定のポインタ
+	CCollision* pCollision = nullptr;
+
+	// 種類の遷移
+	switch (type)
+	{
+	case TYPE::TYPE_AABB:
+		pCollision = new CCollisionAABB;
+		break;
+	case TYPE::TYPE_SPHERE:
+		pCollision = new CCollisionSphere;
+		break;
+	case TYPE::TYPE_FOV:
+		pCollision = new CCollisionFOV;
+		break;
+	default:
+		break;
+	}
+
+	// 位置の設定
+	pCollision->m_pos = pos;
+
+	// 種類を代入
+	pCollision->m_type = type;
+
+	// 判定を返す
+	return pCollision;
 }
 
 //================================================
@@ -47,7 +83,7 @@ CCollisionAABB::~CCollisionAABB()
 //================================================
 // AABBの作成処理
 //================================================
-CCollisionAABB* CCollisionAABB::CreateAABB(const D3DXVECTOR3 pos, const D3DXVECTOR3 Size)
+CCollisionAABB* CCollisionAABB::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 Size)
 {
 	// AABBの作成処理
 	CCollisionAABB* pAABB = new CCollisionAABB;
@@ -173,7 +209,7 @@ CCollisionSphere::~CCollisionSphere()
 //================================================
 // 円の判定の生成処理
 //================================================
-CCollisionSphere* CCollisionSphere::CreateSphere(const D3DXVECTOR3 pos, const float fRadius)
+CCollisionSphere* CCollisionSphere::Create(const D3DXVECTOR3 pos, const float fRadius)
 {
 	// 円の作成処理
 	CCollisionSphere* pSphere = new CCollisionSphere;
@@ -183,6 +219,22 @@ CCollisionSphere* CCollisionSphere::CreateSphere(const D3DXVECTOR3 pos, const fl
 	pSphere->m_fRadius = fRadius;
 
 	return pSphere;
+}
+
+//================================================
+// コライダーの生成処理
+//================================================
+CCollisionSphere CCollisionSphere::CreateCollider(const D3DXVECTOR3 pos, const float fRadius)
+{
+	// アウトプット用
+	CCollisionSphere sphere;
+
+	// 判定に必要な情報の設定
+	sphere.SetPos(pos);
+	sphere.m_fRadius = fRadius;
+
+	// コライダーを返す
+	return sphere;
 }
 
 //================================================
@@ -208,6 +260,87 @@ bool CCollisionSphere::Collision(CCollisionSphere* other)
 
 	// 距離が半径以下だったら当たっている
 	if (fDistance <= fRadius)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+//================================================
+// コンストラクタ
+//================================================
+CCollisionFOV::CCollisionFOV()
+{
+	m_fLength = NULL;
+}
+
+//================================================
+// デストラクタ
+//================================================
+CCollisionFOV::~CCollisionFOV()
+{
+}
+
+//================================================
+// 生成処理
+//================================================
+CCollisionFOV* CCollisionFOV::Create(const D3DXVECTOR3 pos, const float fLength)
+{
+	// 視界判定の生成
+	CCollisionFOV* pCollision = new CCollisionFOV;
+
+	pCollision->SetPos(pos);
+	pCollision->m_fLength = fLength;
+
+	return pCollision;
+}
+
+//================================================
+// 視界の判定
+//================================================
+bool CCollisionFOV::Collision(const D3DXVECTOR3 pos,const float fAngle, const float fAngleLeft, const float fAngleRight)
+{
+	// 位置の取得
+	D3DXVECTOR3 objectPos = GetPosition();
+
+	// 前方までのベクトル
+	D3DXVECTOR3 vecFront = GetVector(pos, objectPos);
+
+	D3DXVECTOR3 LeftPos; // 左の位置
+
+	// 左側の視界の端の位置を求める
+	LeftPos.x = objectPos.x + sinf(fAngle + fAngleLeft) * m_fLength;
+	LeftPos.y = 0.0f;
+	LeftPos.z = objectPos.z + cosf(fAngle + fAngleLeft) * m_fLength;
+
+	// 左側の視界のベクトルの作成
+	D3DXVECTOR3 VecLeft = GetVector(LeftPos, objectPos);
+
+	D3DXVECTOR3 RightPos; // 右の位置
+
+	// 右側の視界の端の位置を求める
+	RightPos.x = objectPos.x + sinf(fAngle + fAngleRight) * m_fLength;
+	RightPos.y = 0.0f;
+	RightPos.z = objectPos.z + cosf(fAngle + fAngleRight) * m_fLength;
+
+	// 右側の視界のベクトルの作成
+	D3DXVECTOR3 VecRight = GetVector(RightPos, objectPos);
+
+	D3DXVECTOR3 Cross0,Cross1; // 判定用外積ベクトル
+
+#ifdef _DEBUG
+
+	CEffect3D::Create(RightPos, 50.0f, VEC3_NULL, WHITE, 10);
+	CEffect3D::Create(LeftPos, 50.0f, VEC3_NULL, WHITE, 10);
+#endif // _DEBUG
+
+	// 外積を出す
+	D3DXVec3Cross(&Cross0, &VecLeft, &vecFront);
+	D3DXVec3Cross(&Cross1, &vecFront, &VecRight);
+
+	// 2本とも上向きだったら
+	if (Cross0.y >= 0.0f && Cross1.y >= 0.0f)
 	{
 		return true;
 	}

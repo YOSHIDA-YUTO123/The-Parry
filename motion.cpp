@@ -84,10 +84,16 @@ CMotion* CMotion::Load(const char* pLoadFileName, CModel** ppModel, const int nM
 //===================================================
 bool CMotion::IsIventFrame(const int nStartFrame, const int nEndFrame,const int nType)
 {
-	// イベントフレームの範囲に入ったら
-	if (m_nAllCounter >= nStartFrame &&
-		m_nAllCounter <= nEndFrame &&
-		m_nType == nType)
+	// スローモーションの取得
+	CSlow* pSlow = CManager::GetSlow();
+
+	int Start = nStartFrame * (int)pSlow->GetLevel(true);
+	int End = nEndFrame * (int)pSlow->GetLevel(true);
+
+	if (m_nAllCounter >= Start &&
+		m_nAllCounter <= End &&
+		m_nType == nType &&
+		m_bFinish == false)
 	{
 		return true;
 	}
@@ -190,8 +196,13 @@ void CMotion::UpdateCurrentMotion(CModel** pModel, int nIdx)
 	NormalizeRot(&fDiffRotY);
 	NormalizeRot(&fDiffRotZ);
 
+	// スローモーションの取得
+	CSlow* pSlow = CManager::GetSlow();
+
+	float fFrame = (float)pKeyInfo->nFrame * pSlow->GetLevel(true);
+
 	// フレームと最大フレームの割合を求める
-	float fRateFrame = (float)m_nCount / (float)pKeyInfo->nFrame;
+	float fRateFrame = m_nCount / fFrame;
 
 	// 次のキーの位置までフレームに応じた位置を設定する
 	float fPosX = LerpDiff(pKey->fPosX, fDiffPosX, fRateFrame);
@@ -222,10 +233,19 @@ void CMotion::UpdateBlendMotion(CModel** pModel, int nIdx)
 	// キー情報のアドレスの取得
 	Key_Info* pKeyInfo = &m_aInfo[m_nType].aKeyInfo[m_nKey];
 
-	float fRateMotion = (float)m_nCount / (float)pKeyInfo->nFrame; // 相対値
-	float fRateMotionBlend = (float)m_nCounterMotionBlend / (float)m_aInfo[m_nTypeBlend].aKeyInfo[m_nKeyBlend].nFrame;
+	// スローモーションの取得
+	CSlow* pSlow = CManager::GetSlow();
 
-	float fRateBlend = (float)m_nCounterBlend / (float)m_nFrameBlend;
+	// 現在のフレームを計算
+	float fCurrentFrame = (float)pKeyInfo->nFrame * pSlow->GetLevel(true);
+
+	// ブレンドフレームを計算
+	float fBlendFrame = (float)m_aInfo[m_nTypeBlend].aKeyInfo[m_nKeyBlend].nFrame * pSlow->GetLevel(true);
+
+	float fRateMotion = m_nCount / fCurrentFrame; // 相対値
+
+	float fRateMotionBlend = m_nCounterMotionBlend / fBlendFrame;
+	float fRateBlend = m_nCounterBlend / (float)m_nFrameBlend;
 
 	// 現在のモーションの角度の差分
 	float fDiffMotionRX = pNextKey->fRotX - pCurrentKey->fRotX;
@@ -352,13 +372,18 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 	// モーションが終了したら
 	if (IsEndMotion())
 	{
-		m_nCounterMotionBlend = 0;
-		m_nKeyBlend = 0;
-		m_nAllCounter = 0;
-		m_nCounterBlend = 0;
-		m_bFinish = true;
-		m_nFrameBlend = m_aInfo[m_nType].aKeyInfo[m_nNumKey - 1].nFrame;
-		m_nTypeBlend = NEUTRAL;
+		// スローモーションの取得
+		CSlow* pSlow = CManager::GetSlow();
+
+		// ブレンドのフレームを計算
+		int nBlendFrame = m_aInfo[m_nType].aKeyInfo[m_nNumKey - 1].nFrame * (int)pSlow->GetLevel(true);
+
+		m_nCounterMotionBlend = 0;		// ブレンドモーションのカウンターをリセット
+		m_nKeyBlend = 0;				// ブレンドキーをリセット
+		m_nCounterBlend = 0;			// ブレンドフレームをリセット
+		m_bFinish = true;				// モーションが終わった
+		m_nFrameBlend = nBlendFrame;	// ブレンドフレームを設定
+		m_nTypeBlend = NEUTRAL;			// ニュートラルにブレンドする
 	}
 
 	// モーションの出だしのブレンドが終了した
@@ -373,10 +398,17 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 		m_nAllCounter = m_nCounterMotionBlend;
 		m_nType = NEUTRAL;				// モーションタイプをニュートラルにする
 		m_nCounterBlend = 0;
+		m_nKey = m_nKeyBlend;
 	}
 
+	// スローモーションの取得
+	CSlow* pSlow = CManager::GetSlow();
+
+	// フレームを計算
+	int nFrame = m_aInfo[m_nType].aKeyInfo[m_nKey].nFrame * (int)pSlow->GetLevel(true);
+
 	// フレームが最大フレームを超えたら
-	if (m_nCount >= m_aInfo[m_nType].aKeyInfo[m_nKey].nFrame)
+	if (m_nCount >= nFrame)
 	{
 		// キーを増やす
 		m_nKey++;
@@ -388,8 +420,11 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 		m_nCount = 0;
 	}
 
+	// ブレンドフレームを計算
+	nFrame = m_aInfo[m_nTypeBlend].aKeyInfo[m_nKeyBlend].nFrame * (int)pSlow->GetLevel(true);
+
 	// ブレンドキーを進める
-	if (m_nCounterMotionBlend >= m_aInfo[m_nTypeBlend].aKeyInfo[m_nKeyBlend].nFrame && (m_bFinish == true || m_bFirst == true))
+	if (m_nCounterMotionBlend >= nFrame && (m_bFinish == true || m_bFirst == true))
 	{
 		// キーを増やす
 		m_nKeyBlend++;
@@ -400,6 +435,7 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 		m_nCounterMotionBlend = 0;
 	}
 
+	// 最初のブレンドじゃないなら
 	if (m_bFirst == false)
 	{
 		m_nAllCounter++;
@@ -412,7 +448,7 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 		m_nCounterBlend++;
 	}
 
-
+	// 計算用ALLフレーム
 	int nAllFrame = 0;
 
 	for (int nCnt = 0; nCnt < m_aInfo[m_nType].nNumkey; nCnt++)
@@ -422,14 +458,17 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 
 	m_nAllFrame = nAllFrame;
 
+	// ブレンドフレームを計算
+	nFrame = m_nAllFrame * (int)pSlow->GetLevel(true);
+
 	// 最大を超えたら
-	if (m_nAllCounter >= m_nAllFrame)
+	if (m_nAllCounter >= nFrame)
 	{
 		m_nCounterMotionBlend++;
 		m_nAllCounter = 0;
 	}
 
-	CDebugProc::Print("%d / %d\n", m_nAllCounter, m_nAllFrame);
+	CDebugProc::Print("%d / %d\n", m_nAllCounter, nFrame);
 }
 
 //===================================================
@@ -446,6 +485,9 @@ void CMotion::SetMotion(const int motiontype,bool bBlend,const int nBlendFrame)
 		return;
 	}
 
+	// スローモーションの取得
+	CSlow* pSlow = CManager::GetSlow();
+
 	// ブレンドがあるなら
 	if (bBlend == true)
 	{
@@ -453,8 +495,11 @@ void CMotion::SetMotion(const int motiontype,bool bBlend,const int nBlendFrame)
 
 		if (m_bFirst == false)
 		{
+			// フレームを計算
+			int nFrame = nBlendFrame * (int)pSlow->GetLevel(true);
+
 			m_nCounterBlend = 0;		 // ブレンドカウンターをリセット
-			m_nFrameBlend = nBlendFrame; // ブレンドフレームを設定する
+			m_nFrameBlend = nFrame;		 // ブレンドフレームを設定する
 			m_bFirst = true;			 // 最初のブレンド開始フラグをtrueにする
 		}
 

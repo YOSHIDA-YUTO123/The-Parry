@@ -146,8 +146,15 @@ void CObject3D::Draw(void)
 	//頂点フォーマットの設定
 	pDevice->SetFVF(FVF_VERTEX_3D);
 
+#if 0
+	LPDIRECT3DTEXTURE9 pTextureMT = pRenderer->GetTextureMT();
+
+	// テクスチャ設定
+	pDevice->SetTexture(0, pTextureMT);
+#else
 	// テクスチャ設定
 	pDevice->SetTexture(0, pTexture->GetAdress(m_nTextureIdx));
+#endif
 
 	// ポリゴンの描画
 	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
@@ -343,10 +350,10 @@ CObject3D* CObject3D::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot, const
 	// テクスチャクラスの取得
 	CTextureManager* pTexture = CManager::GetTexture();
 
+	pObject3D->Init();
 	pObject3D->m_pPos->Set(pos);
 	pObject3D->m_pRot->Set(rot);
 	pObject3D->m_pSize->Set(size);
-	pObject3D->Init();
 	pObject3D->SetOffsetVtx();
 	pObject3D->m_nTextureIdx = pTexture->Register(pTextureName);
 

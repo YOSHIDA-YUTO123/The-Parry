@@ -42,14 +42,14 @@ public:
 private:
 
 	CEffect3D* m_apEffect[MAX_PARTICLE];	// エフェクトクラスへのポインタ
-	D3DXVECTOR3 m_pos;					// 位置
-	D3DXVECTOR3 m_move;					// 移動量
-	D3DXCOLOR m_col;					// 色
-	float m_fRadius;					// 半径
-	float m_fSpeed;						// 速さ
-	int m_nLife;						// 寿命
-	int m_nMaxLife;						// 最大のHP
-	int m_nNumParticle;					// 粒子の数
-	int m_nTime;						// パーティクルを出す時間
+	D3DXVECTOR3 m_pos;						// 位置
+	CVelocity *m_pMove;						// 移動量
+	D3DXCOLOR m_col;						// 色
+	float m_fRadius;						// 半径
+	float m_fSpeed;							// 速さ
+	int m_nLife;							// 寿命
+	int m_nMaxLife;							// 最大のHP
+	int m_nNumParticle;						// 粒子の数
+	int m_nTime;							// パーティクルを出す時間
 };
 #endif

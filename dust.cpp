@@ -16,7 +16,10 @@
 //***************************************************
 // É}ÉNÉçíËã`
 //***************************************************
-#define SHADOW_SIZE (50.0f)		// âeÇÃëÂÇ´Ç≥
+#define SHADOW_SIZE_000 (50.0f)	// âeÇÃëÂÇ´Ç≥000
+#define SHADOW_SIZE_001 (25.0f)	// âeÇÃëÂÇ´Ç≥001
+#define SHADOW_SIZE_002 (10.0f)	// âeÇÃëÂÇ´Ç≥002
+
 #define SHADOW_MAX_HEIGHT (700.0f)  // âeÇ™å©Ç¶ÇÈç≈ëÂÇÃçÇÇ≥
 #define SHADOW_A_LEVEL (0.9f)       // âeÇÃÉAÉãÉtÉ@ílÇÃÉIÉtÉZÉbÉg
 
@@ -33,6 +36,7 @@ CRubble::CRubble(int nPriority) : CObject(nPriority)
 	m_nMaxLife = NULL;
 	m_fDecAlv = NULL;
 	m_pShadow = nullptr;
+	m_fShadowSize = NULL;
 }
 
 //===================================================
@@ -45,7 +49,7 @@ CRubble::~CRubble()
 //===================================================
 // ê∂ê¨èàóù
 //===================================================
-CRubble* CRubble::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 dir, const int nLife)
+CRubble* CRubble::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 dir, const int nLife,int nType)
 {
 	CRubble* pDust = nullptr;
 
@@ -73,18 +77,19 @@ CRubble* CRubble::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 dir, const int
 
 	if (pDust == nullptr) return nullptr;
 
-	int random = rand() % TYPE::TYPE_MAX;
-
-	switch (random)
+	switch (nType)
 	{
 	case TYPE::TYPE_ONE:
 		pDust->m_pObjectX = CObjectX::Create(pos, "data/MODEL/dust/dust000.x");
+		pDust->m_fShadowSize = SHADOW_SIZE_000;
 		break;
 	case TYPE::TYPE_TWO:
 		pDust->m_pObjectX = CObjectX::Create(pos, "data/MODEL/dust/dust001.x");
+		pDust->m_fShadowSize = SHADOW_SIZE_001;
 		break;
 	case TYPE::TYPE_THREE:
 		pDust->m_pObjectX = CObjectX::Create(pos, "data/MODEL/dust/dust002.x");
+		pDust->m_fShadowSize = SHADOW_SIZE_002;
 		break;
 	default:
 		break;
@@ -104,28 +109,12 @@ CRubble* CRubble::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 dir, const int
 }
 
 //===================================================
-// ä¢‚IÇÃê∂ê¨èàóù(â~å`)
-//===================================================
-void CRubble::Creates(const int nNumDust,const D3DXVECTOR3 move, const D3DXVECTOR3 pos, const int nLife)
-{
-	for (int nCnt = 0; nCnt < nNumDust; nCnt++)
-	{
-		float fAngle = (D3DX_PI * 2.0f) / nNumDust * nCnt;
-
-		float dirX = sinf(fAngle) * move.x;
-		float dirZ = cosf(fAngle) * move.z;
-
-		CRubble::Create(pos, D3DXVECTOR3(dirX, move.y, dirZ), nLife);
-	}
-}
-
-//===================================================
 // èâä˙âªèàóù
 //===================================================
 HRESULT CRubble::Init(void)
 {
 	// âeÇÃê∂ê¨
-	m_pShadow = CShadow::Create(m_pos.Get(), SHADOW_SIZE, SHADOW_SIZE, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.9f));
+	m_pShadow = CShadow::Create(m_pos.Get(), m_fShadowSize, m_fShadowSize, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.9f));
 
 	return S_OK;
 }
@@ -220,7 +209,7 @@ void CRubble::Update(void)
 		D3DXVECTOR3 Shadowrot = m_pShadow->GetFieldAngle(FieldNor, PlayerRay);
 
 		// âeÇÃê›íËèàóù
-		m_pShadow->Setting(D3DXVECTOR3(pos.x, pos.y - fHeight, pos.z), D3DXVECTOR3(pos.x, fHeight + 2.0f, pos.z), SHADOW_SIZE, SHADOW_SIZE, SHADOW_MAX_HEIGHT, SHADOW_A_LEVEL);
+		m_pShadow->Setting(D3DXVECTOR3(pos.x, pos.y - fHeight, pos.z), D3DXVECTOR3(pos.x, fHeight + 2.0f, pos.z), m_fShadowSize, m_fShadowSize, SHADOW_MAX_HEIGHT, SHADOW_A_LEVEL);
 
 		// âeÇÃå¸Ç´ÇÃê›íË
 		m_pShadow->GetRotaition()->Set(Shadowrot);

@@ -18,8 +18,15 @@
 //***************************************************
 // マクロ定義
 //***************************************************
-#define MAX_VIEWUP (2.90f) // カメラの制限
-#define MAX_VIEWDOWN (0.1f) // カメラの制限
+
+// 匿名の名前空間を使用
+namespace
+{
+	constexpr float MAX_VIEW_TOP = 2.90f;	// カメラの制限(上)
+	constexpr float MAX_VIEW_BOTTOM = 0.1f; // カメラの制限(下)
+	constexpr float HEIGHT_OFFSET = 20.0f;	// カメラの高さのオフセット
+	constexpr float ROCKON_HEIGHT = 300.0f;	// ロックオンの時のカメラの高さ
+}
 
 //===================================================
 // コンストラクタ
@@ -65,6 +72,11 @@ HRESULT CCamera::Init(void)
 	m_posR.x = m_posV.x + sinf(m_rot.x) * sinf(m_rot.y) * m_fDistance;
 	m_posR.y = m_posV.y + cosf(m_rot.x) * m_fDistance;
 	m_posR.z = m_posV.z + sinf(m_rot.x) * cosf(m_rot.y) * m_fDistance;
+
+	// カメラの視点の情報
+	m_posV.x = m_posR.x - sinf(m_rot.x) * sinf(m_rot.y) * m_fDistance;
+	m_posV.y = m_posR.y - cosf(m_rot.x) * m_fDistance;
+	m_posV.z = m_posR.z - sinf(m_rot.x) * cosf(m_rot.y) * m_fDistance;
 
 	m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);				// 上方向ベクトル
 
@@ -112,6 +124,23 @@ void CCamera::Update(void)
 	m_posV.z += ((m_posVDest.z - m_posV.z) * 0.07f);
 
 #endif
+
+	// メッシュシリンダーの取得
+	CMeshCylinder* pCylinder = CManager::GetCylinder();
+
+	// メッシュフィールドの取得
+	CMeshField* pField = CManager::GetMeshField();
+
+	float fHeight = 0.0f;
+
+	if (pField->Collision(m_posV, &fHeight))
+	{
+		// 高さを設定
+		m_posV.y = fHeight + HEIGHT_OFFSET;
+	}
+
+	// シリンダーの当たり判定
+	pCylinder->Collision(&m_posV);
 
 	// 角度の正規化
 	NormalizeRot(&m_rot.x);
@@ -209,11 +238,11 @@ void CCamera::MouseView(void)
 		m_rot.x += fAngle.y * 0.01f;
 
 		//回転量を制限
-		if (m_rot.x > MAX_VIEWUP)
+		if (m_rot.x > MAX_VIEW_TOP)
 		{
 			m_rot.x -= fAngle.y * 0.01f;
 		}
-		else if (m_rot.x < MAX_VIEWDOWN)
+		else if (m_rot.x < MAX_VIEW_BOTTOM)
 		{
 			m_rot.x -= fAngle.y * 0.01f;
 		}
@@ -231,11 +260,11 @@ void CCamera::MouseView(void)
 		m_rot.x += fAngle.y * 0.01f;
 
 		//回転量を制限
-		if (m_rot.x > MAX_VIEWUP)
+		if (m_rot.x > MAX_VIEW_TOP)
 		{
 			m_rot.x -= fAngle.y * 0.01f;
 		}
-		else if (m_rot.x < MAX_VIEWDOWN)
+		else if (m_rot.x < MAX_VIEW_BOTTOM)
 		{
 			m_rot.x -= fAngle.y * 0.01f;
 		}
@@ -300,9 +329,9 @@ void CCamera::SetTracking(const D3DXVECTOR3 posRDest, const float fSpeed, const 
 	D3DXVECTOR3 playerPos(pos.x, pos.y + 200.0f, pos.z);
 	D3DXVECTOR3 playerRot = pPlayer->GetRotation()->Get();
 
-	m_posRDest.x = posRDest.x * 1.0f;
-	m_posRDest.y = posRDest.y * 1.0f;
-	m_posRDest.z = posRDest.z * 1.0f;
+	m_posRDest.x = posRDest.x * fSpeed;
+	m_posRDest.y = posRDest.y * fSpeed;
+	m_posRDest.z = posRDest.z * fSpeed;
 
 	m_posVDest.x = playerPos.x - sinf(m_rot.y) * m_fDistance;
 	m_posVDest.y = playerPos.y - cosf(m_rot.y) * m_fDistance;
@@ -321,35 +350,50 @@ void CCamera::SetTracking(const D3DXVECTOR3 posRDest, const float fSpeed, const 
 //===================================================
 void CCamera::Rockon(D3DXVECTOR3 playerPos, D3DXVECTOR3 enemyPos)
 {
+	// カメラの状態がロックオンじゃないなら
 	if (m_state != STATE_ROCKON) return;
 
+	// プレイヤーまでの方向を求める
 	D3DXVECTOR3 dir = playerPos - enemyPos;
 
+	// 角度を求める
 	float fAngle = atan2f(dir.x, dir.z) + D3DX_PI;
 
+	// 注視点
 	D3DXVECTOR3 posR;
+
+	// 注視点を敵の位置にする
 	posR.x = enemyPos.x;
 	posR.y = enemyPos.y;
 	posR.z = enemyPos.z;
 
+	// 目的の注視点の設定
 	m_posRDest = posR;
 
+	// カメラのrotを設定
 	m_rot.y = fAngle;
-		
+	
+	// y座標は考慮しない
 	dir.y = 0.0f; 
 
+	// 方向ベクトルにする
 	D3DXVec3Normalize(&dir, &dir);
 
+	// 距離を掛ける
 	dir *= m_fDistance;
 
-	dir.y = playerPos.y + 100.0f;
+	// y座標を設定
+	dir.y = playerPos.y + ROCKON_HEIGHT;
 
+	// 目的の視点の設定
 	m_posVDest = playerPos + dir;
 
+	// 目的の注視点に近づける
 	m_posR.x += ((m_posRDest.x - m_posR.x) * 0.07f);
 	m_posR.y += ((m_posRDest.y - m_posR.y) * 0.07f);
 	m_posR.z += ((m_posRDest.z - m_posR.z) * 0.07f);
 
+	// 目的の視点に近づける
 	m_posV.x += ((m_posVDest.x - m_posV.x) * 0.07f);
 	m_posV.y += ((m_posVDest.y - m_posV.y) * 0.07f);
 	m_posV.z += ((m_posVDest.z - m_posV.z) * 0.07f);

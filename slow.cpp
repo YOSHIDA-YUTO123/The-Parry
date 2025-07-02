@@ -38,7 +38,7 @@ void CSlow::Update(void)
 	if (m_nCount >= 0)
 	{
 		m_nCount--;
-		//m_fLevel = 1.0f - fRate;
+		m_fLevel += (1.0f - m_fLevel) * (1.0f - fRate);
 	}
 	else
 	{

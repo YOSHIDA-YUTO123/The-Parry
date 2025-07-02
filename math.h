@@ -100,10 +100,10 @@ namespace math
 {
 	float GetDistance(const D3DXVECTOR3 diff);
 	D3DXVECTOR3 GetVector(const D3DXVECTOR3 dest, const D3DXVECTOR3 pos);
-	float GetTargetAngle(const D3DXVECTOR3 dest, const D3DXVECTOR3 pos);
-	D3DXVECTOR3 GetPositionFromMatrix(const D3DXMATRIX mtxWorld);
-	D3DXQUATERNION CreateQuaternion(D3DXQUATERNION* pOut, D3DXVECTOR3 axis, float fAngle);
+	float GetTargetAngle(const D3DXVECTOR3 dest, const D3DXVECTOR3 pos); // 目標までの角度の取得
+	D3DXVECTOR3 GetPositionFromMatrix(const D3DXMATRIX mtxWorld);		 // MATRIXの位置の情報をD3DXVECTOR3型に変換する
+	D3DXQUATERNION CreateQuaternion(D3DXQUATERNION* pOut, D3DXVECTOR3 axis, float fAngle); 
 	D3DXMATRIX SetMatrixRotationQuaternion(D3DXMATRIX* pOut, D3DXQUATERNION quaternion);
-	D3DXVECTOR3 MatrixToEulerXYZ(const D3DXMATRIX mtxWorld);
+	D3DXVECTOR3 MatrixToEulerXYZ(const D3DXMATRIX mtxWorld);			// 回転行列をオイラー角に変換
 }
 #endif
