@@ -122,7 +122,7 @@ void CEffect3D::Draw(void)
 
 	// aブレンディング
 	pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
-	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_DESTCOLOR);
 	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 
 	// 描画処理
@@ -161,7 +161,7 @@ CEffect3D* CEffect3D::Create(const D3DXVECTOR3 pos, const float fRadius, const D
 	if (nNumAll >= MAX_OBJECT && pEffect != nullptr)
 	{
 		// 自分自身の破棄
-		pEffect->Release();
+		pEffect->Uninit();
 
 		// nullにしておく
 		pEffect = nullptr;

@@ -322,6 +322,26 @@ int CMesh::GetIndex(const int nIdx)
 }
 
 //================================================
+// 色の取得
+//================================================
+D3DXCOLOR CMesh::GetColor(const int nIdx)
+{
+	VERTEX_3D* pVtx = NULL;
+
+	D3DXCOLOR out;
+
+	// 頂点バッファをロック
+	m_pVtxBuffMesh->Lock(0, 0, (void**)&pVtx, 0);
+
+	out = pVtx[nIdx].col;
+
+	// 頂点バッファをアンロック
+	m_pVtxBuffMesh->Unlock();
+
+	return out;
+}
+
+//================================================
 // 頂点の位置の設定
 //================================================
 void CMesh::SetVtxPos(const D3DXVECTOR3 pos,const int nIdx)
@@ -356,7 +376,7 @@ void CMesh::SetNormal(const D3DXVECTOR3 nor, const int nIdx)
 //================================================
 // 色の設定
 //================================================
-void CMesh::SetColor(const D3DXCOLOR col,const int nIdx)
+void CMesh::SetVtxColor(const D3DXCOLOR col,const int nIdx)
 {
 	VERTEX_3D* pVtx = NULL;
 

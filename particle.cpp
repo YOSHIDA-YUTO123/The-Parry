@@ -28,7 +28,6 @@ CParticle3D::CParticle3D()
 	m_nTime = NULL;
 	m_nNumParticle = NULL;
 	m_fSpeed = NULL;
-	memset(m_apEffect, NULL, sizeof(m_apEffect));
 }
 
 //===================================================
@@ -58,7 +57,7 @@ CParticle3D* CParticle3D::Create(const D3DXVECTOR3 pos, const D3DXCOLOR col, con
 	if (nNumAll >= MAX_OBJECT && pParticle != nullptr)
 	{
 		// 自分自身の破棄
-		pParticle->Release();
+		pParticle->Uninit();
 
 		// nullにしておく
 		pParticle = nullptr;
@@ -104,7 +103,7 @@ HRESULT CParticle3D::Init(void)
 //===================================================
 void CParticle3D::Uninit(void)
 {
-	for (int nCnt = 0; nCnt < MAX_PARTICLE; nCnt++)
+	for (int nCnt = 0; nCnt < (int)m_apEffect.size(); nCnt++)
 	{
 		// エフェクトの破棄
 		if (m_apEffect[nCnt] != nullptr)
@@ -129,9 +128,6 @@ void CParticle3D::Uninit(void)
 //===================================================
 void CParticle3D::Update(void)
 {
-	// 範囲内にクランプする
-	m_nNumParticle = Clamp(m_nNumParticle, 0, MAX_PARTICLE);
-
 	for (int nCnt = 0; nCnt < m_nNumParticle; nCnt++)
 	{
 		D3DXVECTOR3 pos = m_pos;
@@ -163,21 +159,23 @@ void CParticle3D::Update(void)
 		// 寿命の選出
 		int nLife = rand() % m_nMaxLife - (int)(m_nMaxLife * 0.5f);
 
-		if (m_nTime > 0 && m_apEffect[nCnt] == nullptr)
+
+		if (m_nTime > 0)
 		{
+			CEffect3D* pEffect = nullptr;
+
 			// エフェクトの生成
-			m_apEffect[nCnt] = CEffect3D::Create(pos, fRadius, moveWk, m_col, nLife);
+			pEffect = CEffect3D::Create(pos, fRadius, moveWk, m_col, nLife);
+
+			m_apEffect.push_back(pEffect);
 		}
 	}
 
 	m_nTime--;
 	m_nLife--;
 
-	if (m_nLife <= 0)
-	{
-		Uninit();
-		return;
-	}
+	// 終了処理
+	Uninit();	
 }
 
 //===================================================

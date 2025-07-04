@@ -158,7 +158,7 @@ void CMeshWave::Update(void)
 			SetVtxPos(posWk,nCntVtx);
 
 			// 頂点カラーの設定
-			SetColor(m_col, nCntVtx);
+			SetVtxColor(m_col, nCntVtx);
 
 			// 法線の設定
 			SetNormal(nor,nCntVtx);

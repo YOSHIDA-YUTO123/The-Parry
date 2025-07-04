@@ -20,11 +20,7 @@
 #include<vector>
 #include"math.h"
 #include"model.h"
-
-//***************************************************
-// マクロ定義
-//***************************************************
-#define NUM_PARTS (15) // モデルの最大数
+#include<memory>
 
 //***************************************************
 // 前方宣言
@@ -34,27 +30,16 @@ class CInputJoypad;
 class CMotion;
 class CShadow;
 class CScoreLerper;
+class CCharacter3D;
+class CCollisionFOV;
+class CPlayerMotionController;
 
 //***************************************************
 // プレイヤークラスの定義
 //***************************************************
-class CPlayer : public CCharacter3D
+class CPlayer : public CObject
 {
 public:
-
-	// モーションの種類
-	typedef enum
-	{
-		MOTIONTYPE_NEUTRAL = 0,
-		MOTIONTYPE_MOVE,
-		MOTIONTYPE_ACTION,
-		MOTIONTYPE_JUMP,
-		MOTIONTYPE_LANDING,
-		MOTIONTYPE_DASH,
-		MOTIONTYPE_DAMAGE,
-		MOTIONTYPE_PARRY,
-		MOTIONTYPE_MAX
-	}MOTIONTYPE;
 
 	CPlayer(int nPriority = 3);
 	~CPlayer();
@@ -67,32 +52,73 @@ public:
 	void Draw(void);
 	bool MoveKeyboard(CInputKeyboard *pKeyboard);
 	void MoveJoypad(CInputJoypad* pJoypad);
-	void Load(void);
-	CCollisionSphere* GetSphere(void);
+	CCollisionSphere* GetSphere(void) { return m_pSphere.get(); }
 	void UpdateParry(void);
+	D3DXVECTOR3 GetPos(void) const { return m_pCharacter3D->GetPosition(); }
 	D3DXVECTOR3 GetModelPos(const int nIdx) { return math::GetPositionFromMatrix(m_apModel[nIdx]->GetMatrixWorld()); }
-	CCollisionFOV* GetFOV(void) { return m_pFOV; }
-	void SetMotion(const int type, bool bBlend, const int nFrameBlend);
 	void BlowOff(const D3DXVECTOR3 attacker, const float blowOff,const float jump);
+	bool IsParry(const D3DXVECTOR3 pos);
+	CPlayerMotionController* GetMotionController(void) { return m_pMotion.get(); } // モーションコントローラーの取得
 
 private:
-	void TransitionMotion(void);					// モーションの遷移
 
-	CCollisionFOV* m_pFOV;				// 視界の判定
-	CCollisionSphere* m_pCollision;		// 当たり判定
-	CMotion *m_pMotion;					// モーションのクラスへのポインタ
-	CScoreLerper *m_pScore;				// スコアクラスへのポインタ
-	CModel* m_apModel[NUM_PARTS];		// モデルクラスへのポインタ
-	CShadow* m_pShadow;					// 影クラスへのポインタ
-	CVelocity* m_pMove;					// 移動量
-	D3DXVECTOR3 m_posOld;				// 前回の位置
+	std::unique_ptr<CCharacter3D> m_pCharacter3D;		// キャラクタークラス
+	std::unique_ptr<CCollisionFOV> m_pFOV;				// 視界の判定
+	std::unique_ptr<CCollisionSphere> m_pSphere;		// 円の当たり判定
+	std::unique_ptr<CPlayerMotionController> m_pMotion;	// プレイヤーのモーション制御のクラスのポインタ
+	CScoreLerper *m_pScore;							// スコアクラスへのポインタ
+	std::vector<CModel*> m_apModel;					// モデルクラスのポインタ
 
-	int m_nParryTime;					// パリィの有効時間
-	int m_nParryCounter;				// パリィ―のカウンター
+	std::unique_ptr<CShadow> m_pShadow;				// 影クラスへのポインタ
+	CVelocity* m_pMove;								// 移動量
+	D3DXVECTOR3 m_posOld;							// 前回の位置
 
-	int m_nNumModel;					// モデルの最大数
-	bool m_bJump;						// ジャンプできるかどうか
-	bool m_bDash;						// 走ってるかどうか
+	int m_nParryTime;								// パリィの有効時間
+	int m_nParryCounter;							// パリィ―のカウンター
+
+	int m_nNumModel;								// モデルの最大数
+	bool m_bJump;									// ジャンプできるかどうか
+	bool m_bDash;									// 走ってるかどうか
 };
 
+//***************************************************
+// プレイヤーのモーションの制御クラスの定義
+//***************************************************
+class CPlayerMotionController
+{
+public:
+
+	// モーションの種類
+	typedef enum
+	{
+		TYPE_NEUTRAL = 0,
+		TYPE_MOVE,
+		TYPE_ACTION,
+		TYPE_JUMP,
+		TYPE_LANDING,
+		TYPE_DASH,
+		TYPE_DAMAGE,
+		TYPE_PARRY,
+		TYPE_MAX
+	}TYPE;
+
+	CPlayerMotionController();
+	~CPlayerMotionController();
+
+	void Load(std::vector<CModel*> &pModel,int *pOutNumModel); // モーションのロード
+	void Uninit(void);
+	void Update(CModel**ppModel,const int nNumModel);
+
+	// ロードできたかどうか
+	bool IsLoad(void) const;
+	void SetMotion(const int type, bool bBlend, const int nFrameBlend);
+
+	bool IsParryEvent(const int start, const int end);
+	int GetBlendType(void) const;
+private:
+
+	// モーションの遷移
+	void TransitionMotion(void);
+	std::unique_ptr<CMotion> m_pMotion; // モーションのクラスへのポインタ
+};
 #endif

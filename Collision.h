@@ -16,6 +16,7 @@
 //************************************************
 #include"main.h"
 #include"object.h"
+#include<memory>
 
 //************************************************
 // 当たり判定AABBのクラスの定義
@@ -68,7 +69,7 @@ class CCollisionSphere : public CCollision
 public:
 	CCollisionSphere();
 	~CCollisionSphere();
-	static CCollisionSphere* Create(const D3DXVECTOR3 pos, const float fRadius);
+	static std::unique_ptr<CCollisionSphere> Create(const D3DXVECTOR3 pos, const float fRadius);
 
 	// コライダーの作成処理
 	CCollisionSphere CreateCollider(const D3DXVECTOR3 pos, const float fRadius);
@@ -87,7 +88,7 @@ class CCollisionFOV : public CCollision
 public:
 	CCollisionFOV();
 	~CCollisionFOV();
-	static CCollisionFOV* Create(const D3DXVECTOR3 pos,const float fLength);
+	static std::unique_ptr<CCollisionFOV> Create(const D3DXVECTOR3 pos,const float fLength);
 
 	bool Collision(const D3DXVECTOR3 pos, const float fAngle,const float fAngleLeft,const float fAngleRight);
 private:

@@ -323,11 +323,10 @@ void CCamera::SetTracking(const D3DXVECTOR3 posRDest, const float fSpeed, const 
 	// プレイヤーの取得
 	CPlayer* pPlayer = CManager::GetPlayer();
 
-	D3DXVECTOR3 pos = pPlayer->GetPosition()->Get();
+	D3DXVECTOR3 pos = pPlayer->GetPos();
 
 	// プレイヤーの取得
 	D3DXVECTOR3 playerPos(pos.x, pos.y + 200.0f, pos.z);
-	D3DXVECTOR3 playerRot = pPlayer->GetRotation()->Get();
 
 	m_posRDest.x = posRDest.x * fSpeed;
 	m_posRDest.y = posRDest.y * fSpeed;

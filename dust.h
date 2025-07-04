@@ -19,6 +19,7 @@
 #include"transform.h"
 #include"objectX.h"
 #include"shadow.h"
+#include<memory>
 
 //***************************************************
 // 瓦礫クラスの定義
@@ -47,7 +48,8 @@ public:
 	void Draw(void);
 private:
 	CObjectX* m_pObjectX; // オブジェクトXへのポインタ
-	CShadow* m_pShadow;	  // 影クラスの定義
+
+	std::unique_ptr<CShadow>m_pShadow; // 影クラスの定義
 	CPosition m_pos;	  // 位置クラス
 	CRotation m_rot;	  // 向きクラス
 	CVelocity m_move;	  // 移動クラス

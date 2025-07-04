@@ -38,8 +38,7 @@ public:
 	D3DXVECTOR3 GetOffPos(void) const { return m_offpos; }
 	D3DXVECTOR3 GetOffRot(void) const { return m_offrot; }
 
-	D3DXMATRIX GetModelMatrix(void) const;
-	D3DXVECTOR3 GetSize(void) const { return GetVector; }
+	D3DXVECTOR3 GetSize(void) const { return m_Size; }
 
 	void SetPosition(const D3DXVECTOR3 pos) { m_pos = pos; }
 	void SetRotaition(const D3DXVECTOR3 rot) { m_rot = rot; }
@@ -49,7 +48,7 @@ public:
 	void SetParent(CModel* pModel) { m_pParent = pModel; }
 	D3DXMATRIX GetMatrixWorld(void) const { return m_mtxWorld; }
 private:
-	D3DXVECTOR3 GetVector;				// ëÂÇ´Ç≥
+	D3DXVECTOR3 m_Size;			// ëÂÇ´Ç≥
 	D3DXVECTOR3 m_offpos;			// äÓèÄÇÃà íu
 	D3DXVECTOR3 m_offrot;			// äÓèÄÇÃå¸Ç´
 	D3DXVECTOR3 m_pos;				// à íu

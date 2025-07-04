@@ -17,9 +17,9 @@
 //===================================================
 // コンストラクタ
 //===================================================
-CCharacter3D::CCharacter3D(int nPriority) : CObject(nPriority)
+CCharacter3D::CCharacter3D()
 {
-	m_pPos = nullptr;
+	m_pos = VEC3_NULL;
 	m_pRot = nullptr;
 	memset(m_mtxWorld, NULL, sizeof(m_mtxWorld));
 	m_nLife = NULL;
@@ -40,7 +40,6 @@ CCharacter3D::~CCharacter3D()
 HRESULT CCharacter3D::Init(void)
 {
 	// 位置、向きの生成
-	m_pPos = new CPosition;
 	m_pRot = new CRotation;
 
 	return S_OK;
@@ -51,22 +50,12 @@ HRESULT CCharacter3D::Init(void)
 //===================================================
 void CCharacter3D::Uninit(void)
 {
-	// 位置の破棄
-	if (m_pPos != nullptr)
-	{
-		delete m_pPos;
-		m_pPos = nullptr;
-	}
-
 	// 向きの破棄
 	if (m_pRot != nullptr)
 	{
 		delete m_pRot;
 		m_pRot = nullptr;
 	}
-
-	// 自分自身の破棄
-	Release();
 }
 
 //===================================================
@@ -133,11 +122,8 @@ void CCharacter3D::Draw(void)
 	D3DXMatrixRotationYawPitchRoll(&mtxRot, rot.y, rot.x, rot.z);
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
 
-	// 位置の取得
-	D3DXVECTOR3 pos = m_pPos->Get();
-
 	//位置を反映
-	D3DXMatrixTranslation(&mtxTrans, pos.x, pos.y, pos.z);
+	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
 
 	//ワールドマトリックスの設定

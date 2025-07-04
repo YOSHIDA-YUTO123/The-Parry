@@ -53,7 +53,6 @@ public:
 	static void UpdateAll(void);
 	static void DrawAll(void);
 	static int GetNumObject(const int nPriority) { return m_nNumAll[nPriority]; }
-	static CObject* GetObject(const int nPriority, const int nIdx);
 
 	virtual HRESULT Init(void) = 0;
 	virtual void Uninit(void) = 0;

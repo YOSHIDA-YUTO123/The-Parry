@@ -17,11 +17,7 @@
 #include"main.h"
 #include"object.h"
 #include"effect.h"
-
-//***************************************************
-// マクロ定義
-//***************************************************
-#define MAX_PARTICLE (256) // パーティクルの最大数
+#include<vector>
 
 //***************************************************
 // オブジェクト3Dクラスの定義
@@ -41,7 +37,7 @@ public:
 
 private:
 
-	CEffect3D* m_apEffect[MAX_PARTICLE];	// エフェクトクラスへのポインタ
+	std::vector<CEffect3D*> m_apEffect;		// エフェクトクラスへのポインタ
 	D3DXVECTOR3 m_pos;						// 位置
 	CVelocity *m_pMove;						// 移動量
 	D3DXCOLOR m_col;						// 色

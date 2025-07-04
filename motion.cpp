@@ -15,6 +15,8 @@
 #include "debugproc.h"
 #include "manager.h"
 
+using namespace std; // 名前空間stdを使用
+
 //***************************************************
 // マクロ定義
 //***************************************************
@@ -57,10 +59,10 @@ CMotion::~CMotion()
 //===================================================
 // モーションのロード処理
 //===================================================
-CMotion* CMotion::Load(const char* pLoadFileName, CModel** ppModel, const int nMaxSize, int* pOutModel,const int nNumMotion, LOAD type)
+unique_ptr<CMotion> CMotion::Load(const char* pLoadFileName, vector<CModel*>& pModel, int* pOutModel,const int nNumMotion, LOAD type)
 {
 	// モーションを生成
-	CMotion* pMotion = new CMotion;
+	unique_ptr<CMotion> pMotion = make_unique<CMotion>();
 
 	if (pMotion != nullptr)
 	{
@@ -68,7 +70,7 @@ CMotion* CMotion::Load(const char* pLoadFileName, CModel** ppModel, const int nM
 		{
 		case LOAD_TEXT:
 			// モーションのロード処理(textFile)
-			pMotion->m_pLoader = CLoderText::LoadTextFile(pLoadFileName, pMotion->m_aInfo, ppModel, pOutModel, nMaxSize, nNumMotion);
+			pMotion->m_pLoader = CLoderText::LoadTextFile(pLoadFileName, pMotion->m_aInfo, pModel, pOutModel, nNumMotion);
 			break;
 		default:
 			MessageBox(NULL, "この形式は読み込めません", "エラー", MB_OK | MB_ICONWARNING);
@@ -82,7 +84,7 @@ CMotion* CMotion::Load(const char* pLoadFileName, CModel** ppModel, const int nM
 //===================================================
 // イベントフレームの判定
 //===================================================
-bool CMotion::IsIventFrame(const int nStartFrame, const int nEndFrame,const int nType)
+bool CMotion::IsEventFrame(const int nStartFrame, const int nEndFrame,const int nType)
 {
 	// スローモーションの取得
 	CSlow* pSlow = CManager::GetSlow();
@@ -104,7 +106,7 @@ bool CMotion::IsIventFrame(const int nStartFrame, const int nEndFrame,const int 
 //===================================================
 // ロードできたかどうか
 //===================================================
-bool CMotion::GetLoadResult(void)
+bool CMotion::IsLoad(void)
 {
 	// 読み込み ? 成功true : 失敗false
 	return m_pLoader ? true : false;
@@ -335,7 +337,7 @@ void CMotion::UpdateBlendMotion(CModel** pModel, int nIdx)
 //===================================================
 void CMotion::Update(CModel** pModel,const int nNumModel)
 {
-	if (GetLoadResult() == false) return;
+	if (IsLoad() == false) return;
 
 	for (int nCntModel = 0; nCntModel < nNumModel; nCntModel++)
 	{
@@ -568,7 +570,7 @@ CMotionLoader::~CMotionLoader()
 //===================================================
 // テキストファイルのロード処理
 //===================================================
-CLoderText* CLoderText::LoadTextFile(const char* pFileName, vector<CMotion::Info>& Info, CModel** ppModel, int* OutNumModel, const int nMaxSize,const int nNumMotion)
+CLoderText* CLoderText::LoadTextFile(const char* pFileName, vector<CMotion::Info>& Info, std::vector<CModel*>& pModel, int* OutNumModel,const int nNumMotion)
 {
 	// ファイルをロードする
 	ifstream File(pFileName);
@@ -598,18 +600,15 @@ CLoderText* CLoderText::LoadTextFile(const char* pFileName, vector<CMotion::Info
 			input = line.substr(equal_pos + 1);
 
 			// モデルのロード処理
-			if (pLoder->LoadModel(ppModel, nMaxSize, nNumModel, input, line))
+			if (pLoder->LoadModel(pModel, nNumModel, input, line))
 			{
-				if (nNumModel <= nMaxSize - 1)
-				{
-					nNumModel++;
-				}
+				nNumModel++;
 			}
 
 			// パーツの設定が終わって無かったら
 			if (bCharacterSet == false)
 			{
-				bCharacterSet = pLoder->LoadCharacterSet(ppModel, line, input);
+				bCharacterSet = pLoder->LoadCharacterSet(pModel, line, input);
 			}
 
 			// モーションの設定の読み込み
@@ -646,8 +645,23 @@ CLoderText* CLoderText::LoadTextFile(const char* pFileName, vector<CMotion::Info
 //===================================================
 // モデルのロード処理
 //===================================================
-bool CLoderText::LoadModel(CModel** ppModel, const int nMaxSize, int nCnt, string input, string line)
+bool CLoderText::LoadModel(std::vector<CModel*>& pModel, int nCnt, string input, string line)
 {
+	int nNumParts = 0;
+
+	// モデルのメモリの確保
+	if (line.find("NUM_MODEL") != string::npos)
+	{
+		// 数値を読み込む準備
+		istringstream value_Input = SetInputvalue(input);
+
+		// 数値を代入する
+		value_Input >> nNumParts;
+
+		// モデルのサイズの獲得
+		pModel.resize(nNumParts);
+	}
+
 	if (line.find("MODEL_FILENAME") != string::npos)
 	{
 		// 数値を読み込む準備
@@ -662,18 +676,9 @@ bool CLoderText::LoadModel(CModel** ppModel, const int nMaxSize, int nCnt, strin
 		// モデルの名前を代入
 		const char* MODEL_NAME = modelName.c_str();
 
-		// サイズ以上に読み込むとエラーが出るため制限
-		if (nCnt <= nMaxSize - 1)
-		{
-			// モデルの生成
-			ppModel[nCnt] = CModel::Create(MODEL_NAME);
-
-			return true;
-		}
-		else
-		{
-			MessageBox(NULL, MODEL_NAME, "これ以上読み込めません", MB_OK);
-		}
+		// モデルの生成
+		pModel[nCnt] = CModel::Create(MODEL_NAME);
+		return true;
 	}
 	return false;
 }
@@ -681,7 +686,7 @@ bool CLoderText::LoadModel(CModel** ppModel, const int nMaxSize, int nCnt, strin
 //===================================================
 // キャラクターのロード処理
 //===================================================
-bool CLoderText::LoadCharacterSet(CModel** ppModel, string line, string input)
+bool CLoderText::LoadCharacterSet(std::vector<CModel*>& pModel, string line, string input)
 {
 	static int nIdx = 0;
 	int nNumParts = 0;
@@ -720,11 +725,11 @@ bool CLoderText::LoadCharacterSet(CModel** ppModel, string line, string input)
 		if (nParent != -1)
 		{// 親が存在していたら
 			// 親のモデルの設定
-			ppModel[nIdx]->SetParent(ppModel[nParent]);
+			pModel[nIdx]->SetParent(pModel[nParent]);
 		}
 		else
 		{// 親が存在していなかったら
-			ppModel[nIdx]->SetParent(nullptr);
+			pModel[nIdx]->SetParent(nullptr);
 		}
 	}
 
@@ -738,7 +743,7 @@ bool CLoderText::LoadCharacterSet(CModel** ppModel, string line, string input)
 		value_Input >> offset.y;
 		value_Input >> offset.z;
 
-		ppModel[nIdx]->SetOffPos(offset);
+		pModel[nIdx]->SetOffPos(offset);
 	}
 
 	if (line.find("ROT") != string::npos)
@@ -751,7 +756,7 @@ bool CLoderText::LoadCharacterSet(CModel** ppModel, string line, string input)
 		value_Input >> offset.y;
 		value_Input >> offset.z;
 
-		ppModel[nIdx]->SetOffRot(offset);
+		pModel[nIdx]->SetOffRot(offset);
 	}
 
 	if (line.find("END_CHARACTERSET") != string::npos)

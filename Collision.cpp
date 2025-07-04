@@ -209,16 +209,15 @@ CCollisionSphere::~CCollisionSphere()
 //================================================
 // ‰~‚Ì”»’è‚Ì¶¬ˆ—
 //================================================
-CCollisionSphere* CCollisionSphere::Create(const D3DXVECTOR3 pos, const float fRadius)
+std::unique_ptr<CCollisionSphere> CCollisionSphere::Create(const D3DXVECTOR3 pos, const float fRadius)
 {
-	// ‰~‚Ìì¬ˆ—
-	CCollisionSphere* pSphere = new CCollisionSphere;
+	// ƒ|ƒCƒ“ƒ^‚Ì¶¬
+	std::unique_ptr<CCollisionSphere> out = std::make_unique<CCollisionSphere>();
 
 	// İ’èˆ—
-	pSphere->SetPos(pos);
-	pSphere->m_fRadius = fRadius;
-
-	return pSphere;
+	out->SetPos(pos);
+	out->m_fRadius = fRadius;
+	return out;
 }
 
 //================================================
@@ -283,19 +282,33 @@ CCollisionFOV::~CCollisionFOV()
 }
 
 //================================================
-// ¶¬ˆ—
+// ‹ŠE‚Ì¶¬
 //================================================
-CCollisionFOV* CCollisionFOV::Create(const D3DXVECTOR3 pos, const float fLength)
+std::unique_ptr<CCollisionFOV> CCollisionFOV::Create(const D3DXVECTOR3 pos, const float fLength)
 {
-	// ‹ŠE”»’è‚Ì¶¬
-	CCollisionFOV* pCollision = new CCollisionFOV;
+	// ƒ|ƒCƒ“ƒ^‚Ì¶¬
+	std::unique_ptr<CCollisionFOV> out = std::make_unique<CCollisionFOV>();
 
-	pCollision->SetPos(pos);
-	pCollision->m_fLength = fLength;
-
-	return pCollision;
+	// İ’èˆ—
+	out->SetPos(pos);
+	out->m_fLength = fLength;
+	return out;
 }
 
+////================================================
+//// ¶¬ˆ—
+////================================================
+//CCollisionFOV* CCollisionFOV::Create(const D3DXVECTOR3 pos, const float fLength)
+//{
+//	//// ‹ŠE”»’è‚Ì¶¬
+//	//CCollisionFOV* pCollision = new CCollisionFOV;
+//
+//	//pCollision->SetPos(pos);
+//	//pCollision->m_fLength = fLength;
+//
+//	//return pCollision;
+//}
+//
 //================================================
 // ‹ŠE‚Ì”»’è
 //================================================

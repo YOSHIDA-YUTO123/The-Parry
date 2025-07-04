@@ -47,7 +47,7 @@ HRESULT CDebugProc::Init(void)
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	// デバッグ表示用のフォントを設定
-	D3DXCreateFont(pDevice, 18, 0, 0, 0,
+	D3DXCreateFont(pDevice, 18, 0, FW_BOLD, 0,
 		FALSE,
 		DEFAULT_CHARSET,
 		OUT_DEFAULT_PRECIS,

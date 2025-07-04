@@ -21,8 +21,7 @@
 #include<string>
 #include<sstream>
 #include<vector>
-
-using namespace std;
+#include<memory>
 
 //***************************************************
 // マクロ定義
@@ -68,7 +67,7 @@ public:
 	struct Key_Info
 	{
 		int nFrame;						// 再生フレーム
-		vector <Key> aKey;				// 各キーパーツのキー要素
+		std::vector <Key> aKey;				// 各キーパーツのキー要素
 	};
 
 	// モーション情報の構造体
@@ -76,13 +75,13 @@ public:
 	{
 		bool bLoop;						// ループするかどうか
 		int nNumkey;					// キーの総数
-		vector<Key_Info> aKeyInfo;		// キー情報
+		std::vector<Key_Info> aKeyInfo;		// キー情報
 	};
 
 	CMotion();
 	~CMotion();
 
-	static CMotion* Load(const char* pLoadFileName, CModel** ppModel, const int nMaxSize, int* pOutModel, const int nNumMotion, LOAD type);
+	static std::unique_ptr<CMotion> Load(const char* pLoadFileName, std::vector<CModel*> &pModel, int* pOutModel, const int nNumMotion, LOAD type);
 	void Uninit(void);
 	void Update(CModel** pModel, const int nNumModel);
 	void SetMotion(const int motiontype, bool bBlend, const int nBlendFrame);
@@ -90,8 +89,8 @@ public:
 	bool IsFinishEndBlend(void);
 	int GetType(void) const { return m_nType; }
 	int GetBlendType(void) const { return m_nTypeBlend; }
-	bool IsIventFrame(const int nStartFrame, const int nEndFrame, const int nType);
-	bool GetLoadResult(void);
+	bool IsEventFrame(const int nStartFrame, const int nEndFrame, const int nType);
+	bool IsLoad(void);
 	bool FinishLoopMotion(void);
 
 	void Debug(void);
@@ -101,7 +100,7 @@ private:
 	void FinishFirstBlend(void);
 
 	CMotionLoader* m_pLoader;   // モーションのローダー
-	vector<Info> m_aInfo;		// モーション情報へのポインタ
+	std::vector<Info> m_aInfo;		// モーション情報へのポインタ
 	int m_nType;				// モーションの種類
 	int m_nNumKey;				// キーの総数
 	int m_nKey;					// 現在のキーNo.
@@ -142,7 +141,7 @@ public:
 	int GetNumMotion(void) const { return m_nNumMotion; }
 
 protected:
-	vector<CMotion::Info> m_aInfo;  // モーションの情報
+	std::vector<CMotion::Info> m_aInfo;  // モーションの情報
 private:
 	int m_nNumModel;				// モデルの最大数
 	int m_nNumMotion;				// モーションの総数
@@ -154,11 +153,11 @@ private:
 class CLoderText : public CMotionLoader
 {
 public:
-	static CLoderText* LoadTextFile(const char* pFileName, vector<CMotion::Info>& Info, CModel** ppModel, int* OutNumModel, const int nMaxSize, const int nNumMotion);
+	static CLoderText* LoadTextFile(const char* pFileName, std::vector<CMotion::Info>& Info, std::vector<CModel*>& pModel, int* OutNumModel, const int nNumMotion);
 private:
-	bool LoadModel(CModel** ppModel, const int nMaxSize, int nCnt, string input, string line);
-	bool LoadCharacterSet(CModel** ppModel, string line, string input);
-	void LoadMotionSet(CLoderText* pLoader, ifstream& File, string nowLine, const int nNumMotion);
-	istringstream SetInputvalue(string input);
+	bool LoadModel(std::vector<CModel*>& pModel, int nCnt, std::string input, std::string line);
+	bool LoadCharacterSet(std::vector<CModel*>& pModel, std::string line, std::string input);
+	void LoadMotionSet(CLoderText* pLoader, std::ifstream& File, std::string nowLine, const int nNumMotion);
+	std::istringstream SetInputvalue(std::string input);
 };
 #endif

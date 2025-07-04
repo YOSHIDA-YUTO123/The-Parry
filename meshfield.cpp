@@ -9,20 +9,22 @@
 // インクルードファイル
 //************************************************
 #include "meshfield.h"
-#include"manager.h"
+#include "manager.h"
 #include "math.h"
 #include "debugproc.h"
 #include "explosion.h"
 #include "dust.h"
 #include "LoadManager.h"
 #include "effect.h"
-#include"impact.h"
+#include "impact.h"
 
 // 匿名の名前空間を使用
 namespace
 {
-	constexpr int NUM_POLYGON = 2; // 判定するポリゴンの数
-	constexpr int NUM_SIRCLE = 5;  // メッシュサークルを出す数
+	constexpr int NUM_POLYGON = 2;			// 判定するポリゴンの数
+	constexpr int NUM_SIRCLE = 5;			// メッシュサークルを出す数
+	constexpr float MAX_COLOR = 1.0f;		// 色の最大値
+	constexpr float COLOR_EASE = 0.004f;	// 色のイージング値
 }
 
 //================================================
@@ -34,7 +36,6 @@ CMeshField::CMeshField(int nPriority) : CMesh(nPriority)
 	m_fHeight = NULL;
 	m_Nor = VEC3_NULL;
 	m_pImpact = nullptr;
-	//m_pWave = nullptr;
 }
 
 //================================================
@@ -222,6 +223,15 @@ void CMeshField::Update(void)
 			vtxPos.y += (0.0f - vtxPos.y) * 0.01f;
 			SetVtxPos(vtxPos, nCnt);
 		}
+
+		// 色の取得
+		D3DXCOLOR vtxcol = GetColor(nCnt);
+
+		// 色を白に近づける
+		vtxcol += (WHITE - vtxcol) * COLOR_EASE;
+
+		// 色の設定
+		SetVtxColor(vtxcol, nCnt);
 	}
 
 #endif // 0
@@ -679,10 +689,10 @@ void CMeshField::UpdateNor(void)
 //================================================
 // ウェーブの設定処理
 //================================================
-void CMeshField::SetWave(const D3DXVECTOR3 epicenter, const float InR, const float OutR, const float fHeight, const float fSpeed, const float fcoef, const int nTime)
+void CMeshField::SetWave(CMeshFieldWave::Config config)
 {
 	// ウェーブの生成
-	CMeshFieldWave *pWave = CMeshFieldWave::Create(epicenter, InR, OutR, fHeight, fSpeed, fcoef, nTime);
+	CMeshFieldWave *pWave = CMeshFieldWave::Create(config);
 
 	// 要素の追加
 	m_pWave.push_back(pWave);
@@ -691,13 +701,13 @@ void CMeshField::SetWave(const D3DXVECTOR3 epicenter, const float InR, const flo
 //================================================
 // インパクトの設定処理
 //================================================
-void CMeshField::SetImpact(const D3DXVECTOR3 pos, D3DXVECTOR3 dir, const float fHeight, const float fRadius, const int nTime, const float fSpeed, CMeshFieldImpact::OBJ attacker)
+void CMeshField::SetImpact(CMeshFieldImpact::Config config)
 {
 	// インパクトの生成
 	if (m_pImpact == nullptr)
 	{
 		// インパクトの生成
-		m_pImpact = CMeshFieldImpact::Create(pos, dir, fHeight, fRadius, nTime, fSpeed, attacker);
+		m_pImpact = CMeshFieldImpact::Create(config);
 	}
 }
 
@@ -759,16 +769,10 @@ void CMeshField::Load(void)
 //================================================
 CMeshFieldWave::CMeshFieldWave()
 {
-	m_epicenter = VEC3_NULL;
-	m_fSpeed = NULL;
-	m_nTime = NULL;
-	m_fInRadius = NULL;
-	m_fOutRadius = NULL;
-	m_fHeight = NULL;
-	m_fStartHeight = NULL;
-	m_nCounter = NULL;
-	m_fTime = NULL;
-	m_fcoef = NULL;
+	// 値のクリア
+	ZeroMemory(&m_Confing, sizeof(m_Confing));
+	ZeroMemory(&m_Info, sizeof(m_Info));
+
 }
 
 //================================================
@@ -781,7 +785,7 @@ CMeshFieldWave::~CMeshFieldWave()
 //================================================
 // 生成処理
 //================================================
-CMeshFieldWave* CMeshFieldWave::Create(const D3DXVECTOR3 epicenter, const float InR, const float OutR, const float fHeight, const float fSpeed, const float fcoef, const int nTime)
+CMeshFieldWave* CMeshFieldWave::Create(Config config)
 {
 	// 波の生成
 	CMeshFieldWave* pWave = new CMeshFieldWave;
@@ -791,14 +795,11 @@ CMeshFieldWave* CMeshFieldWave::Create(const D3DXVECTOR3 epicenter, const float 
 
 	pWave->Init(); // 初期化処理
 
-	pWave->m_epicenter = epicenter;		// 発生地点
-	pWave->m_fInRadius = InR;			// 内側の半径
-	pWave->m_fOutRadius = OutR;			// 外側のお半径
-	pWave->m_fHeight = fHeight;			// 波の高さ
-	pWave->m_fStartHeight = fHeight;	// 最初の波の高さ
-	pWave->m_fSpeed = fSpeed;			// 広がる速さ
-	pWave->m_fcoef = fcoef;				// 係数
-	pWave->m_nTime = nTime;				// 波の発生時間
+	// パラメーターの設定
+	pWave->m_Confing = config;
+
+	// 最初の高さを設定
+	pWave->m_Info.fStartHeight = config.fHeight;
 
 	return pWave;
 }
@@ -808,7 +809,7 @@ CMeshFieldWave* CMeshFieldWave::Create(const D3DXVECTOR3 epicenter, const float 
 //================================================
 void CMeshFieldWave::Init(void)
 {
-	m_nCounter = 0;
+	m_Info.nCounter = 0;
 }
 
 //================================================
@@ -817,16 +818,16 @@ void CMeshFieldWave::Init(void)
 bool CMeshFieldWave::Update(CMeshField* pMeshField,const int nNumVtx)
 {
 	// 波のカウンターを進める
-	m_nCounter++;
+	m_Info.nCounter++;
 
 	// 相対値を求める
-	float fRate = (float)m_nCounter / (float)m_nTime;
+	float fRate = (float)m_Info.nCounter / (float)m_Confing.nTime;
 
 	// 速さに応じた波の幅を設定
-	m_fTime += m_fSpeed;
+	m_Info.fTime += m_Confing.fSpeed;
 
 	// 波の高さをだんだん0に近づける
-	m_fHeight = m_fStartHeight + (0.0f - m_fStartHeight) * fRate;
+	m_Confing.fHeight = m_Info.fStartHeight + (0.0f - m_Info.fStartHeight) * fRate;
 
 	for (int nCnt = 0; nCnt < nNumVtx; nCnt++)
 	{
@@ -834,29 +835,32 @@ bool CMeshFieldWave::Update(CMeshField* pMeshField,const int nNumVtx)
 		D3DXVECTOR3 pos = pMeshField->GetVtxPos(nCnt);
 
 		// 震源地から頂点までの差分
-		D3DXVECTOR3 diff = m_epicenter - pos;
+		D3DXVECTOR3 diff = m_Confing.epicenter - pos;
 
 		// 距離をもとめる
 		float dis = sqrtf((diff.x * diff.x) + (diff.z * diff.z));
 
 		// 時間に応じた距離を設定
-		float fTimeInRadius = m_fInRadius + m_fTime;
-		float fTimeOutRadius = m_fOutRadius + m_fTime;
+		float fTimeInRadius = m_Confing.fInRadius + m_Info.fTime;
+		float fTimeOutRadius = m_Confing.fOutRadius + m_Info.fTime;
 
 		// 範囲内だったら
 		if (dis >= fTimeInRadius && dis <= fTimeOutRadius)
 		{
-			//// 色の変更
-			//pMeshField->SetColor(D3DXCOLOR(fRate, fRate, fRate, 1.0f), nCnt);
+			////頂点カラーの設定
+			//pMeshField->SetVtxColor(D3DXCOLOR(0.4f, 0.4f, 0.4f, 1.0f), nCnt);
 
 			// 高さの設定
-			float dest = m_fHeight + sinf(dis * m_fcoef);
+			float dest = m_Confing.fHeight + sinf(dis * m_Confing.fcoef);
 
 			// 目的の高さに近づける
 			pos.y += (dest - pos.y) * 0.1f;
 		}
 		else
 		{
+			//// 色の設定
+			//pMeshField->SetVtxColor(WHITE, nCnt);
+
 			// 目的の高さに近づける
 			pos.y += (0.0f - pos.y) * 0.05f;
 		}
@@ -866,10 +870,10 @@ bool CMeshFieldWave::Update(CMeshField* pMeshField,const int nNumVtx)
 	}
 
 	// 最大値だったら
-	if (m_nCounter >= m_nTime)
+	if (m_Info.nCounter >= m_Confing.nTime)
 	{
 		// カウンターをリセット
-		m_nCounter = 0;
+		m_Info.nCounter = 0;
 
 		return false;
 	}
@@ -882,16 +886,9 @@ bool CMeshFieldWave::Update(CMeshField* pMeshField,const int nNumVtx)
 //================================================
 CMeshFieldImpact::CMeshFieldImpact()
 {
-	m_fHeight = NULL;
-	m_fRadius = NULL;
-	m_nCounter = NULL;
-	m_nTime = NULL;
+	ZeroMemory(&m_Config, sizeof(m_Config));
+	ZeroMemory(&m_Info, sizeof(m_Info));
 	m_pMove = nullptr;
-	m_pos = VEC3_NULL;
-	m_pSphere = nullptr;
-	m_ObjType = OBJ::OBJ_NONE;
-	m_FirstPos = VEC3_NULL;
-	m_fSpeed = NULL;
 }
 
 //================================================
@@ -904,7 +901,7 @@ CMeshFieldImpact::~CMeshFieldImpact()
 //================================================
 // 生成処理
 //================================================
-CMeshFieldImpact* CMeshFieldImpact::Create(const D3DXVECTOR3 pos,D3DXVECTOR3 dir,const float fHeight,const float fRadius,const int nTime, const float fSpeed, const OBJ attacker)
+CMeshFieldImpact* CMeshFieldImpact::Create(Config config)
 {
 	// 衝撃波の生成
 	CMeshFieldImpact* pImpact = new CMeshFieldImpact;
@@ -913,26 +910,19 @@ CMeshFieldImpact* CMeshFieldImpact::Create(const D3DXVECTOR3 pos,D3DXVECTOR3 dir
 	pImpact->m_pMove = new CVelocity;
 
 	// 当たり判定の生成
-	pImpact->m_pSphere = CCollisionSphere::Create(pos, fRadius);
+	pImpact->m_pSphere = CCollisionSphere::Create(config.pos, config.fRadius);
 
 	// 方向ベクトルにする
-	D3DXVec3Normalize(&dir, &dir);
+	D3DXVec3Normalize(&config.dir, &config.dir);
 
 	// yは考慮しない
-	dir.y = 0.0f;
+	config.dir.y = 0.0f;
 
 	// 移動量の設定
-	pImpact->m_pMove->Set(dir * fSpeed);
+	pImpact->m_pMove->Set(config.dir * config.fSpeed);
 
 	// 設定処理
-	pImpact->m_pos = pos;
-	pImpact->m_FirstPos = pos;
-	pImpact->m_fHeight = fHeight;
-	pImpact->m_fRadius = fRadius;
-	pImpact->m_nCounter = 0;
-	pImpact->m_nTime = nTime;
-	pImpact->m_ObjType = attacker;
-	pImpact->m_fSpeed = fSpeed;
+	pImpact->m_Config = config;
 
 	return pImpact;
 }
@@ -948,13 +938,6 @@ void CMeshFieldImpact::Uninit(void)
 		delete m_pMove;
 		m_pMove = nullptr;
 	}
-
-	// 円の判定の破棄
-	if (m_pSphere != nullptr)
-	{
-		delete m_pSphere;
-		m_pSphere = nullptr;
-	}
 }
 
 //================================================
@@ -966,7 +949,7 @@ bool CMeshFieldImpact::Update(CMeshField* pMeshField, const int nNumVtx)
 	if (m_pMove != nullptr)
 	{
 		// 移動量の更新処理
-		m_pos += m_pMove->Get();
+		m_Config.pos += m_pMove->Get();
 	}
 
 	// 吹っ飛び量を選出
@@ -983,35 +966,39 @@ bool CMeshFieldImpact::Update(CMeshField* pMeshField, const int nNumVtx)
 	int nLife = rand() % 120 + 60;
 
 	// 瓦礫を生成
-	CRubble::Create(m_pos, D3DXVECTOR3(fMoveX, Jump, fMoveZ), nLife, CRubble::TYPE_THREE);
+	CRubble::Create(m_Config.pos, D3DXVECTOR3(fMoveX, Jump, fMoveZ), nLife, CRubble::TYPE_THREE);
 
 	// nullじゃないなら
 	if (m_pSphere != nullptr)
 	{
 		// 位置の更新処理
-		m_pSphere->SetPos(m_pos);
+		m_pSphere->SetPos(m_Config.pos);
 	}
 
 #ifdef _DEBUG
 
-	CEffect3D::Create(m_pos, m_fRadius, VEC3_NULL, WHITE, 10);
+	CEffect3D::Create(m_Config.pos, m_Config.fRadius, VEC3_NULL, m_Config.Circlecol, 10);
 #endif // _DEBUG
 
-	// 波のカウンターを進める
-	m_nCounter++;
-
 	// インパクトを出すタイミングを求める
-	int SetImpact = m_nTime / NUM_SIRCLE;
+	int SetImpact = m_Config.nTime / NUM_SIRCLE;
 
 	// いちばん最初に出す、
-	if (SetImpact != 0 && (m_nCounter % SetImpact == 0 || m_nCounter == 0))
+	if (SetImpact != 0 && (m_Info.nCounter % SetImpact == 0 || m_Info.nCounter == 0))
 	{
 		// 角度を求める
 		float rotY = atan2f(m_pMove->Get().x, m_pMove->Get().z);
 
+		// インパクトの設定
+		CMeshCircle::Confing Circleconfig = { 50.0f,10.0f,0.0f,50.0f,60,false };
+
 		// サークルの生成
-		CMeshCircle::Create(m_pos, 0.0f, 50.0f, 10.0f, 60, 50.0f, 32, WHITE, D3DXVECTOR3(D3DX_PI * 0.5f, rotY, 0.0f), false);
+		CMeshCircle::Create(Circleconfig,m_Config.Circlecol,m_Config.pos,32, D3DXVECTOR3(D3DX_PI * 0.5f, rotY, 0.0f));
 	}
+
+	// 波のカウンターを進める
+	m_Info.nCounter++;
+
 
 	// 頂点数分調べる
 	for (int nCnt = 0; nCnt < nNumVtx; nCnt++)
@@ -1028,7 +1015,10 @@ bool CMeshFieldImpact::Update(CMeshField* pMeshField, const int nNumVtx)
 			// 円と円の判定
 			if (m_pSphere->Collision(&spere))
 			{
-				vtxPos.y += (m_fHeight - vtxPos.y) * 0.3f;
+				//頂点カラーの設定
+				pMeshField->SetVtxColor(D3DXCOLOR(0.4f, 0.4f, 0.4f, 1.0f), nCnt);
+
+				vtxPos.y += (m_Config.fHeight - vtxPos.y) * 0.3f;
 			}
 			else
 			{
@@ -1041,10 +1031,10 @@ bool CMeshFieldImpact::Update(CMeshField* pMeshField, const int nNumVtx)
 	}
 
 	// 最大値だったら
-	if (m_nCounter >= m_nTime)
+	if (m_Info.nCounter >= m_Config.nTime)
 	{
 		// カウンターをリセット
-		m_nCounter = 0;
+		m_Info.nCounter = 0;
 
 		return false;
 	}
@@ -1061,7 +1051,7 @@ bool CMeshFieldImpact::Collision(const D3DXVECTOR3 pos, const float fRadius,cons
 	CCollisionSphere sphere = m_pSphere->CreateCollider(pos, fRadius);
 
 	// 当たり判定
-	if (m_pSphere->Collision(&sphere) && myObj != m_ObjType)
+	if (m_pSphere->Collision(&sphere) && myObj != m_Config.ObjType)
 	{
 		return true;
 	}
@@ -1072,11 +1062,12 @@ bool CMeshFieldImpact::Collision(const D3DXVECTOR3 pos, const float fRadius,cons
 //================================================
 // 設定処理
 //================================================
-void CMeshFieldImpact::Reset(D3DXVECTOR3 dir,const OBJ obj,const D3DXVECTOR3 FirstPos)
+void CMeshFieldImpact::Reset(D3DXVECTOR3 dir,const OBJ obj,const D3DXVECTOR3 FirstPos, const D3DXCOLOR Circlecol)
 {
-	m_nCounter = 0; 				// カウンターをリセット
-	m_FirstPos = FirstPos; 			// 発射地点を設定
-	m_ObjType = obj;				// 発射したオブジェクトを設定
-	D3DXVec3Normalize(&dir, &dir);	// 方向の正規化
-	m_pMove->Set(dir * m_fSpeed);	// 移動量を設定
+	m_Info.nCounter = 0; 				 // カウンターをリセット
+	m_Config.FirstPos = FirstPos; 		 // 発射地点を設定
+	m_Config.ObjType = obj;				 // 発射したオブジェクトを設定
+	D3DXVec3Normalize(&dir, &dir);		 // 方向の正規化
+	m_pMove->Set(dir * m_Config.fSpeed); // 移動量を設定
+	m_Config.Circlecol = Circlecol;		 // サークルの色
 }

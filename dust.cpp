@@ -35,7 +35,6 @@ CRubble::CRubble(int nPriority) : CObject(nPriority)
 	ZeroMemory(&m_move, sizeof(m_move));
 	m_nMaxLife = NULL;
 	m_fDecAlv = NULL;
-	m_pShadow = nullptr;
 	m_fShadowSize = NULL;
 }
 
@@ -131,11 +130,7 @@ void CRubble::Uninit(void)
 	}
 
 	// ‰e‚Ì”jŠü
-	if (m_pShadow != nullptr)
-	{
-		m_pShadow->Uninit();
-		m_pShadow = nullptr;
-	}
+	m_pShadow->Uninit();
 
 	// Ž©•ªŽ©g‚Ì”jŠü
 	Release();
@@ -205,14 +200,11 @@ void CRubble::Update(void)
 		D3DXVECTOR3 FieldNor = pMesh->GetNor(); 				// ’n–Ê‚Ì–@üƒxƒNƒgƒ‹‚ÌŽæ“¾
 		D3DXVECTOR3 PlayerRay = D3DXVECTOR3(0.0f, 1.0f, 0.0f);  // ã•ûŒüƒxƒNƒgƒ‹‚Ìì¬
 
-		// ’n–Ê‚ÌŠp“x‚É‡‚í‚¹‚½Šp“x‚ðŽæ“¾
-		D3DXVECTOR3 Shadowrot = m_pShadow->GetFieldAngle(FieldNor, PlayerRay);
+		// ’n–Ê‚ÌŠp“x‚É‡‚í‚¹‚½Šp“x‚ðÝ’è
+		m_pShadow->SetFieldAngle(FieldNor, PlayerRay);
 
 		// ‰e‚ÌÝ’èˆ—
-		m_pShadow->Setting(D3DXVECTOR3(pos.x, pos.y - fHeight, pos.z), D3DXVECTOR3(pos.x, fHeight + 2.0f, pos.z), m_fShadowSize, m_fShadowSize, SHADOW_MAX_HEIGHT, SHADOW_A_LEVEL);
-
-		// ‰e‚ÌŒü‚«‚ÌÝ’è
-		m_pShadow->GetRotaition()->Set(Shadowrot);
+		m_pShadow->Update(D3DXVECTOR3(pos.x, pos.y - fHeight, pos.z), D3DXVECTOR3(pos.x, fHeight + 2.0f, pos.z), m_fShadowSize, m_fShadowSize, SHADOW_MAX_HEIGHT, SHADOW_A_LEVEL);
 	}
 
 	if (m_pObjectX != nullptr)
@@ -245,6 +237,12 @@ void CRubble::Draw(void)
 {
 	// Š„‡‚ð‹‚ß‚é
 	float fRate = m_nLife / (float)m_nMaxLife;
+
+	// ‰e‚Ì•`‰æˆ—
+	if (m_pShadow != nullptr)
+	{
+		m_pShadow->Draw();
+	}
 
 	if (m_pObjectX != nullptr)
 	{
