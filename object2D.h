@@ -50,7 +50,7 @@ public:
 
 	void SetSize(const float fWidth, const float fHeight);
 	void SetSize(const float leftWidth,const float rightWdth,const float topHeight,const float buttom);
-	void SetOffsetVtx(const D3DXCOLOR col = WHITE, const int nPosX = 1, const int nPosY = 1);
+	void SetOffsetVtx(const D3DXCOLOR col = Const::WHITE, const int nPosX = 1, const int nPosY = 1);
 	void UpdateVertex(void);
 	void SetUvPos(const D3DXVECTOR2 OffPosTex,const D3DXVECTOR2 PosTex);
 	void SetColor(const D3DXCOLOR col);

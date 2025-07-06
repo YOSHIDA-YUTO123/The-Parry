@@ -12,6 +12,8 @@
 #include"manager.h"
 #include"renderer.h"
 
+using namespace Const;							// 名前空間Constを使用する
+
 //===================================================
 // コンストラクタ
 //===================================================
@@ -19,10 +21,10 @@ CObjectX::CObjectX(int nPriority) : CObject(nPriority)
 {
 	memset(m_mtxWorld, NULL, sizeof(D3DXMATRIX));
 
-	m_pPos = nullptr;
+	m_pos = VEC3_NULL;
 	m_pRot = nullptr;
 	m_pTextureIdx = nullptr;
-	m_nModelIdx = NULL;
+	m_nModelIdx = -1;
 }
 
 //===================================================
@@ -65,7 +67,7 @@ CObjectX* CObjectX::Create(const D3DXVECTOR3 pos, const char* pModelName)
 	if (pObjectX == nullptr) return nullptr;
 
 	pObjectX->Init();
-	pObjectX->m_pPos->Set(pos);
+	pObjectX->m_pos = pos;
 	pObjectX->LoadModel(pModelName);
 
 	return pObjectX;
@@ -77,7 +79,6 @@ CObjectX* CObjectX::Create(const D3DXVECTOR3 pos, const char* pModelName)
 HRESULT CObjectX::Init(void)
 {
 	// 位置、向きの生成
-	m_pPos = new CPosition;
 	m_pRot = new CRotation;
 
 	return S_OK;
@@ -95,13 +96,6 @@ void CObjectX::Uninit(void)
 		m_pTextureIdx = nullptr;
 	}
 	
-	// 位置の破棄
-	if (m_pPos != nullptr)
-	{
-		delete m_pPos;
-		m_pPos = nullptr;
-	}
-
 	// 向きの破棄
 	if (m_pRot != nullptr)
 	{
@@ -151,11 +145,8 @@ void CObjectX::Draw(void)
 	D3DXMatrixRotationYawPitchRoll(&mtxRot, rot.y, rot.x, rot.z);
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
 
-	// 位置
-	D3DXVECTOR3 pos = m_pPos->Get();
-
 	//位置を反映
-	D3DXMatrixTranslation(&mtxTrans, pos.x, pos.y, pos.z);
+	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
 
 	//ワールドマトリックスの設定
@@ -235,11 +226,8 @@ void CObjectX::Draw(const float Diffuse)
 	D3DXMatrixRotationYawPitchRoll(&mtxRot, rot.y, rot.x, rot.z);
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
 
-	// 位置
-	D3DXVECTOR3 pos = m_pPos->Get();
-
 	//位置を反映
-	D3DXMatrixTranslation(&mtxTrans, pos.x, pos.y, pos.z);
+	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
 
 	//ワールドマトリックスの設定
@@ -399,5 +387,20 @@ HRESULT CObjectX::LoadModel(const char* pXFileName)
 	}
 
 	return S_OK;
+}
+
+//===================================================
+// 大きさの取得
+//===================================================
+D3DXVECTOR3 CObjectX::GetSize(void)
+{
+	// モデルクラスの取得
+	CModelManager* pModel = CManager::GetModel();
+
+	// 大きさの取得
+	D3DXVECTOR3 Size = pModel->GetSize(m_nModelIdx);
+
+	// 大きさを返す
+	return Size;
 }
 

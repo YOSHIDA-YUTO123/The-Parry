@@ -1,4 +1,6 @@
-TEXTURE_NAME = data/TEXTURE/effect000.jpg 	# エフェクトのテクスチャ
-TEXTURE_NAME = data/TEXTURE/field.jpg	  	# 地面のテクスチャ
-TEXTURE_NAME = data/TEXTURE/word001.png	  	# 文字のテクスチャ
-TEXTURE_NAME = data/TEXTURE/wave000.png		# 波のテクスチャ
+TEXTURE_NAME = data/TEXTURE/effect000.jpg 	# エフェクト
+TEXTURE_NAME = data/TEXTURE/field.jpg	  	# 地面
+TEXTURE_NAME = data/TEXTURE/word001.png	  	# 文字
+TEXTURE_NAME = data/TEXTURE/wave000.png		# 波
+TEXTURE_NAME = data/TEXTURE/orbit.png		# 剣の軌跡
+

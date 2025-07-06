@@ -12,6 +12,9 @@
 #include "manager.h"
 #include"renderer.h"
 #include <stdio.h>
+
+using namespace Const; // 名前空間Constを使用
+
 //***************************************************
 // 静的メンバ変数の宣言
 //***************************************************

@@ -15,6 +15,7 @@
 #include "enemy.h"
 #include "object3D.h"
 #include<ctime>
+#include"Obstacle.h"
 
 //***************************************************
 // 静的メンバ変数の宣言
@@ -35,6 +36,8 @@ bool CManager::m_bPause = false;						// ポーズ
 CMeshField* CManager::m_pMeshField = nullptr;			// メッシュフィールドのポインタ
 CSlow* CManager::m_pSlow = nullptr;						// スローモーションのポインタ
 CMeshCylinder* CManager::m_pCylinder = nullptr;			// シリンダーのクラスへのポインタ
+
+using namespace Const;							// 名前空間Constを使用する
 
 //===================================================
 // コンストラクタ
@@ -137,6 +140,7 @@ HRESULT CManager::Init(HINSTANCE hInstance,HWND hWnd, BOOL bWindow)
 
 	CEnemy::Create(D3DXVECTOR3(0.0f,0.0f,1500.0f));
 
+	CObstacle::Create(D3DXVECTOR3(-1840.0f, 0.0f, 0.0f),D3DXVECTOR3(0.0f,D3DX_PI * 0.5f,0.0f));
 	// 結果を返す
 	return S_OK;
 }

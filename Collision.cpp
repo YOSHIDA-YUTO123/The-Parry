@@ -12,6 +12,7 @@
 #include"math.h"
 #include"effect.h"
 
+using namespace Const; // 名前空間Constを使用
 using namespace math; // 名前空間を使用
 
 //================================================

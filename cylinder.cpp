@@ -13,6 +13,7 @@
 #include "manager.h"
 #include"math.h"
 
+using namespace Const; // 名前空間Constを使用
 using namespace math; // 名前空間mathを使用
 
 //================================================

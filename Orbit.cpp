@@ -12,6 +12,7 @@
 #include "manager.h"
 #include"renderer.h"
 
+using namespace Const;							// 名前空間Constを使用する
 
 //================================================
 // コンストラクタ
@@ -124,6 +125,9 @@ HRESULT CMeshOrbit::Init(void)
 	{
 		return E_FAIL;
 	}
+
+	// テクスチャのID
+	SetTextureID("data/TEXTURE/orbit.png");
 
 	return S_OK;
 }

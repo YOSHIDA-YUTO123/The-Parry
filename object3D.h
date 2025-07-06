@@ -39,7 +39,7 @@ public:
 	//void SetPosition(const D3DXVECTOR3 pos) { m_pos = pos; }
 	//void SetRotaition(const D3DXVECTOR3 rot) { m_rot = rot; }
 	//void SetSize(const D3DXVECTOR3 size) { GetVector = size; }
-	void SetOffsetVtx(const D3DXCOLOR col = WHITE, const int nPosX = 1, const int nPosY = 1);
+	void SetOffsetVtx(const D3DXCOLOR col = Const::WHITE, const int nPosX = 1, const int nPosY = 1);
 	void SetTextureID(const char* pTextureName);
 	void UpdatePosition(const D3DXVECTOR3 pos, const D3DXVECTOR3 Size);
 	void UpdateCol(const D3DXCOLOR col);

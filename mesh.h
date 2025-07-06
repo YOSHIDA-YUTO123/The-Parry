@@ -41,7 +41,7 @@ public:
 	void UpdatePosition(const D3DXVECTOR3 speed) { m_pos += speed; }
 	void UpdateRotation(const D3DXVECTOR3 speed) { m_rot += speed; }
 
-	void SetVtxBuffer(const D3DXVECTOR3 pos, const int nIdx,const D3DXVECTOR2 tex, const D3DXVECTOR3 nor = { 0.0f,1.0f,0.0f }, const D3DXCOLOR col = WHITE);
+	void SetVtxBuffer(const D3DXVECTOR3 pos, const int nIdx,const D3DXVECTOR2 tex, const D3DXVECTOR3 nor = { 0.0f,1.0f,0.0f }, const D3DXCOLOR col = Const::WHITE);
 	void SetIndexBuffer(const WORD Idx, const int nCnt);
 	void SetTextureID(const char* pTextureName = NULL);
 	void SetVtxElement(const int vertex,const int polygon,const int index);

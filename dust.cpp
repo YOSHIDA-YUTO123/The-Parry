@@ -13,15 +13,13 @@
 #include "manager.h"
 #include"math.h"
 
-//***************************************************
-// マクロ定義
-//***************************************************
-#define SHADOW_SIZE_000 (50.0f)	// 影の大きさ000
-#define SHADOW_SIZE_001 (25.0f)	// 影の大きさ001
-#define SHADOW_SIZE_002 (10.0f)	// 影の大きさ002
+using namespace Const; // 名前空間Constを使用
 
-#define SHADOW_MAX_HEIGHT (700.0f)  // 影が見える最大の高さ
-#define SHADOW_A_LEVEL (0.9f)       // 影のアルファ値のオフセット
+constexpr float SHADOW_SIZE_000 = 50.0f;	 // 影の大きさ000
+constexpr float SHADOW_SIZE_001 = 25.0f;	 // 影の大きさ001
+constexpr float SHADOW_SIZE_002 = 10.0f;	 // 影の大きさ002
+constexpr float SHADOW_MAX_HEIGHT = 700.0f;  // 影が見える最大の高さ
+constexpr float SHADOW_A_LEVEL = 0.9f;       // 影のアルファ値のオフセット
 
 //===================================================
 // コンストラクタ
@@ -94,8 +92,16 @@ CRubble* CRubble::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 dir, const int
 		break;
 	}
 	
+	// 初期化に失敗したら
+	if (FAILED(pDust->Init()))
+	{
+		// 終了処理
+		pDust->m_pObjectX->Uninit();
+		pDust->Uninit();
+		pDust = nullptr;
 
-	pDust->Init();
+		return nullptr;
+	}
 	pDust->m_nLife = nLife;
 	pDust->m_nMaxLife = nLife;
 	pDust->m_fDecAlv = 1.0f / nLife;
@@ -210,7 +216,7 @@ void CRubble::Update(void)
 	if (m_pObjectX != nullptr)
 	{
 		// 位置の設定処理
-		m_pObjectX->GetPosition()->Set(pos);
+		m_pObjectX->SetPosition(pos);
 
 		// 向きの設定処理
 		m_pObjectX->GetRotaition()->Set(rot);

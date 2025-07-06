@@ -36,7 +36,7 @@ public:
 	CMeshWave();
 	~CMeshWave();
 
-	static CMeshWave* Create(Config config ,const D3DXVECTOR3 pos, const int nSegH = 32, const D3DXVECTOR3 rot = VEC3_NULL);
+	static CMeshWave* Create(Config config ,const D3DXVECTOR3 pos, const int nSegH = 32, const D3DXVECTOR3 rot = Const::VEC3_NULL);
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);

@@ -17,16 +17,20 @@
 #include"main.h"
 
 //***************************************************
-// マクロ定義
+// 定数の名前空間
 //***************************************************
-#define VEC3_NULL (D3DXVECTOR3(0.0f,0.0f,0.0f))		// 初期化
-#define VEC2_NULL (D3DXVECTOR2(0.0f,0.0f))			// 初期化
-#define WHITE (D3DXCOLOR(1.0f,1.0f,1.0f,1.0f))		// 色の初期化
-#define MAX_OBJECT (256)							// オブジェクトの最大数
-#define FRAME (60)									// 一フレーム
-#define NUM_PRIORITY (8)							// 優先順位の数
-#define MAX_WORD (5024)								// 最大の文字数
-#define MAX_GRABITY (1.0f)							// 重力の大きさ
+namespace Const
+{
+	const D3DXVECTOR3 VEC3_NULL = { 0.0f,0.0f,0.0f };		// VECTOR3の初期化
+	const D3DXVECTOR2 VEC2_NULL = { 0.0f,0.0f };			// VECTOR2の初期化
+	const D3DXCOLOR WHITE = { 1.0f,1.0f,1.0f,1.0f };		// 色の初期カラー
+	constexpr int FRAME = 60;								// 一フレーム
+	constexpr int MAX_WORD = 5024;							// 最大の文字数
+	constexpr float MAX_GRABITY = 1.0f;						// 重力量
+	constexpr int MAX_OBJECT = 256;							// オブジェクトの最大数
+	constexpr int NUM_PRIORITY = 8;							// オブジェクトの優先順位の数
+
+}
 
 //***************************************************
 // オブジェクトクラスの定義
@@ -65,8 +69,8 @@ public:
 protected:
 	void Release(void);
 private:
-	static CObject* m_apObject[MAX_OBJECT][NUM_PRIORITY];	// オブジェクトのポインタ
-	static int	m_nNumAll[NUM_PRIORITY];					// オブジェクトの総数
+	static CObject* m_apObject[Const::MAX_OBJECT][Const::NUM_PRIORITY];	// オブジェクトのポインタ
+	static int	m_nNumAll[Const::NUM_PRIORITY];					// オブジェクトの総数
 	TYPE m_type;											// オブジェクトの種類
 	int	m_nID;												// オブジェクトのID
 	int m_nPriority;										// 優先順位

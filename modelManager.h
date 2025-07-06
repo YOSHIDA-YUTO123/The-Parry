@@ -43,11 +43,11 @@ private:
 	// モデルの情報の定義
 	struct ModelInfo
 	{
-		D3DXVECTOR3 vtxMin, vtxMax;		 // 最大、最小の頂点
-		LPD3DXMESH pMesh;				 // メッシュ(頂点情報)へのポインタ
-		LPD3DXBUFFER pBuffMat;			 // マテリアルへのポインタ
-		DWORD dwNumMat;					 // マテリアルの数
-		char filepath[MAX_WORD];		 // ファイルパス
+		D3DXVECTOR3 vtxMin, vtxMax;		  // 最大、最小の頂点
+		LPD3DXMESH pMesh;				  // メッシュ(頂点情報)へのポインタ
+		LPD3DXBUFFER pBuffMat;			  // マテリアルへのポインタ
+		DWORD dwNumMat;					  // マテリアルの数
+		char filepath[Const::MAX_WORD]; // ファイルパス
 	};
 
 	std::vector<ModelInfo> m_apModelInfo; // モデルの情報

@@ -73,6 +73,9 @@
     <Filter Include="ソース ファイル\system">
       <UniqueIdentifier>{0d9e7af1-69a8-4ae7-b59f-3a1777b217c0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\model\enemy">
+      <UniqueIdentifier>{fd292d7d-09b3-445b-8f3d-97f8dde83115}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="testword.cpp">
@@ -124,9 +127,6 @@
       <Filter>ソース ファイル\manager</Filter>
     </ClCompile>
     <ClCompile Include="character3D.cpp">
-      <Filter>ソース ファイル\model</Filter>
-    </ClCompile>
-    <ClCompile Include="enemy.cpp">
       <Filter>ソース ファイル\model</Filter>
     </ClCompile>
     <ClCompile Include="model.cpp">
@@ -201,11 +201,17 @@
     <ClCompile Include="player.cpp">
       <Filter>ソース ファイル\model</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyState.cpp">
-      <Filter>ソース ファイル\system</Filter>
-    </ClCompile>
     <ClCompile Include="Orbit.cpp">
       <Filter>ソース ファイル\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy.cpp">
+      <Filter>ソース ファイル\model\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyState.cpp">
+      <Filter>ソース ファイル\model\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Obstacle.cpp">
+      <Filter>ソース ファイル\objectX</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -340,6 +346,9 @@
     </ClInclude>
     <ClInclude Include="Orbit.h">
       <Filter>ヘッダー ファイル\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Obstacle.h">
+      <Filter>ヘッダー ファイル\objectX</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

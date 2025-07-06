@@ -18,6 +18,8 @@
 #include "effect.h"
 #include "impact.h"
 
+using namespace Const;							// 名前空間Constを使用する
+
 // 匿名の名前空間を使用
 namespace
 {
@@ -1055,8 +1057,14 @@ bool CMeshFieldImpact::Update(CMeshField* pMeshField, const int nNumVtx)
 //================================================
 bool CMeshFieldImpact::Collision(const D3DXVECTOR3 pos, const float fRadius,const OBJ myObj)
 {
+	// 位置を保存
+	D3DXVECTOR3 NewPos = pos;
+
+	// y座標を考慮しない
+	NewPos.y = 0.0f;
+
 	// コライダーの作成
-	CCollisionSphere sphere = m_pSphere->CreateCollider(pos, fRadius);
+	CCollisionSphere sphere = m_pSphere->CreateCollider(NewPos, fRadius);
 
 	// 当たり判定
 	if (m_pSphere->Collision(&sphere) && myObj != m_Config.ObjType)

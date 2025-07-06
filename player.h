@@ -44,7 +44,7 @@ public:
 	CPlayer();
 	~CPlayer();
 
-	static CPlayer* Create(const D3DXVECTOR3 pos = VEC3_NULL, const D3DXVECTOR3 rot = VEC3_NULL);
+	static CPlayer* Create(const D3DXVECTOR3 pos = Const::VEC3_NULL, const D3DXVECTOR3 rot = Const::VEC3_NULL);
 
 	HRESULT Init(void);
 	void Uninit(void);
@@ -58,6 +58,7 @@ public:
 	D3DXVECTOR3 GetModelPos(const int nIdx) { return math::GetPositionFromMatrix(m_apModel[nIdx]->GetMatrixWorld()); }
 	void BlowOff(const D3DXVECTOR3 attacker, const float blowOff,const float jump);
 	bool IsParry(const D3DXVECTOR3 pos);
+	void SetAngle(const float angleY);
 	CPlayerMotionController* GetMotionController(void) { return m_pMotion.get(); } // モーションコントローラーの取得
 
 private:

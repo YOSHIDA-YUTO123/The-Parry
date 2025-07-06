@@ -19,11 +19,6 @@
 #include<vector>
 
 //**********************************************
-// マクロ定義
-//**********************************************
-//#define MAX_TEXTURE (128) // テクスチャの最大数
-
-//**********************************************
 // テクスチャのマネージャークラスの定義
 //**********************************************
 class CTextureManager
@@ -42,7 +37,7 @@ private:
 	struct TextureInfo
 	{
 		LPDIRECT3DTEXTURE9 pTexture;			 // テクスチャへのポインタ
-		char filepath[MAX_WORD];				 // ファイルパス
+		char filepath[Const::MAX_WORD];				 // ファイルパス
 	}; 
 
 	std::vector<TextureInfo> m_apTextureInfo;	 // テクスチャの情報

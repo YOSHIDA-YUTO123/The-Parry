@@ -16,6 +16,7 @@
 #include "manager.h"
 
 using namespace std; // 名前空間stdを使用
+using namespace Const;							// 名前空間Constを使用する
 
 //***************************************************
 // マクロ定義

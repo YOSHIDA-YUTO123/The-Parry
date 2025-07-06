@@ -35,7 +35,7 @@ public:
 	CPosition* GetPosition(void) const { return m_pPos; }
 	CSize3D* GetSize(void) const { return m_pSize; }
 	
-	void SetOffsetVtx(const D3DXCOLOR col = WHITE, const int nPosX = 1, const int nPosY = 1);
+	void SetOffsetVtx(const D3DXCOLOR col = Const::WHITE, const int nPosX = 1, const int nPosY = 1);
 	void SetColor(const D3DXCOLOR col);
 	void SetTextureID(const char* pTextureName);
 	void UpdateVertexPos(const D3DXVECTOR3 pos);

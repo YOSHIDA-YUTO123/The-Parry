@@ -12,11 +12,13 @@
 #include "camera.h"
 #include "manager.h"
 
+using namespace Const; // 名前空間Constを使用
+
 //***************************************************
 // 静的メンバ変数の宣言
 //***************************************************
 CObject* CObject::m_apObject[MAX_OBJECT][NUM_PRIORITY] = {};	// オブジェクトのポインタ
-int CObject::m_nNumAll[NUM_PRIORITY] = { NULL };										// オブジェクトの総数
+int CObject::m_nNumAll[NUM_PRIORITY] = { NULL };				// オブジェクトの総数
 
 //===================================================
 // コンストラクタ(オーバーロード)

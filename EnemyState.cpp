@@ -10,12 +10,14 @@
 //***************************************************
 #include "EnemyState.h"
 #include"enemy.h"
+#include"motion.h"
 
 constexpr int NEXT_STAE_TIME = 180; // 次の行動に移るまでの時間
 constexpr int START_IMPACT = 55;	// インパクト攻撃の開始確率
 constexpr int SPIN_TIME = 100;		// 回転モーションの時間
 
 using namespace std; // 名前空間stdを使用
+using MOTION = CEnemy::MOTIONTYPE;
 
 //===================================================
 // コンストラクタ
@@ -53,8 +55,8 @@ CStateIdle::~CStateIdle()
 //===================================================
 void CStateIdle::Update(CEnemy* pEnemy)
 {
-	// モーションの制御クラスの取得
-	CEnemyMotionController* pMotion = pEnemy->GetMotionController();
+	// モーションクラスの取得
+	CMotion* pMotion = pEnemy->GetMotion();
 
 	// 次の行動に移るまでの時間が0だったら
 	if (m_nNextStateCount <= 0)
@@ -70,7 +72,7 @@ void CStateIdle::Update(CEnemy* pEnemy)
 			pEnemy->SetState(make_unique<CStateMove>());
 
 			// モーションの設定処理
-			pMotion->SetMotion(pMotion->TYPE_MOVE, true, 10);
+			pMotion->SetMotion(MOTION::MOTIONTYPE_NEUTRAL, true, 10);
 		}
 	}
 	else
@@ -100,8 +102,8 @@ CStateMove::~CStateMove()
 //===================================================
 void CStateMove::Update(CEnemy* pEnemy)
 {
-	// モーションの制御クラスの取得
-	CEnemyMotionController* pMotion = pEnemy->GetMotionController();
+	// モーションクラスの取得
+	CMotion* pMotion = pEnemy->GetMotion();
 
 	// 距離が近かったら
 	if (pEnemy->CheckDistane(250.0f))
@@ -151,7 +153,7 @@ void CStateMove::Update(CEnemy* pEnemy)
 	pEnemy->ChasePlayer(0.9f);
 
 	// モーションの設定処理
-	pMotion->SetMotion(pMotion->TYPE_MOVE, true, 10);
+	pMotion->SetMotion(MOTION::MOTIONTYPE_MOVE, true, 10);
 }
 
 //===================================================
@@ -174,16 +176,22 @@ CStateAttackSmash::~CStateAttackSmash()
 //===================================================
 void CStateAttackSmash::Update(CEnemy* pEnemy)
 {
-	// モーションの制御クラスの取得
-	CEnemyMotionController* pMotion = pEnemy->GetMotionController();
+	// モーションクラスの取得
+	CMotion* pMotion = pEnemy->GetMotion();
 
 	// 攻撃モーションの設定
-	pMotion->SetMotion(pMotion->TYPE_SMASH, true, 20);
+	pMotion->SetMotion(MOTION::MOTIONTYPE_SMASH, true, 20);
 
-	if (pMotion->IsEventFrame(64, 72, pMotion->TYPE_SMASH))
+	if (pMotion->IsEventFrame(1, 64, MOTION::MOTIONTYPE_SMASH))
+	{
+		// プレイヤーの方向を見る処理
+		pEnemy->AngleToPlayer();
+	}
+
+	if (pMotion->IsEventFrame(64, 72, MOTION::MOTIONTYPE_SMASH))
 	{
 		// 軌跡の処理
-		pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 0.5f, 0.8f), 120);
+		pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f), 120);
 	}
 	
 	// 攻撃モーションが終わったら
@@ -214,8 +222,8 @@ CStateDamage::~CStateDamage()
 //===================================================
 void CStateDamage::Update(CEnemy* pEnemy)
 {
-	// モーションの制御クラスの取得
-	CEnemyMotionController* pMotion = pEnemy->GetMotionController();
+	// モーションクラスの取得
+	CMotion* pMotion = pEnemy->GetMotion();
 
 	// モーションを最後まで行ったら
 	if (pMotion->IsFinishEndBlend())
@@ -244,16 +252,22 @@ CStateAttackImpact::~CStateAttackImpact()
 //===================================================
 void CStateAttackImpact::Update(CEnemy* pEnemy)
 {
-	// モーションの制御クラスの取得
-	CEnemyMotionController* pMotion = pEnemy->GetMotionController();
+	// モーションクラスの取得
+	CMotion* pMotion = pEnemy->GetMotion();
 
 	// 攻撃モーションの設定
-	pMotion->SetMotion(pMotion->TYPE_IMPACT, true, 10);
+	pMotion->SetMotion(MOTION::MOTIONTYPE_IMPACT, true, 10);
 
-	if (pMotion->IsEventFrame(93, 116, pMotion->TYPE_IMPACT))
+	if (pMotion->IsEventFrame(1, 93, MOTION::MOTIONTYPE_IMPACT))
+	{
+		// プレイヤーの方向を見る処理
+		pEnemy->AngleToPlayer();
+	}
+
+	if (pMotion->IsEventFrame(93, 116, MOTION::MOTIONTYPE_IMPACT))
 	{
 		// 軌跡の処理
-		pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 0.5f, 0.5f), 120);
+		pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f), 120);
 	}
 
 	// 攻撃モーションが終わったら
@@ -284,14 +298,14 @@ CStateRoar::~CStateRoar()
 //===================================================
 void CStateRoar::Update(CEnemy* pEnemy)
 {
-	// モーションの制御クラスの取得
-	CEnemyMotionController* pMotion = pEnemy->GetMotionController();
+	// モーションクラスの取得
+	CMotion* pMotion = pEnemy->GetMotion();
 
 	// 攻撃モーションの設定
-	pMotion->SetMotion(pMotion->TYPE_ROAR, true, 10);
+	pMotion->SetMotion(MOTION::MOTIONTYPE_ROAR, true, 10);
 
 	// 攻撃モーションが終わったら
-	if (pMotion->IsFinishMotion())
+	if (pMotion->FinishMotion())
 	{
 		// Dashにする
 		pEnemy->SetState(make_unique<CStateDash>());
@@ -318,11 +332,11 @@ CStateDash::~CStateDash()
 //===================================================
 void CStateDash::Update(CEnemy* pEnemy)
 {
-	// モーションの制御クラスの取得
-	CEnemyMotionController* pMotion = pEnemy->GetMotionController();
+	// モーションクラスの取得
+	CMotion* pMotion = pEnemy->GetMotion();
 
 	// ダッシュ
-	pMotion->SetMotion(pMotion->TYPE_DASH, true, 10);
+	pMotion->SetMotion(MOTION::MOTIONTYPE_DASH, true, 10);
 
 	// プレイヤーを追いかける
 	pEnemy->ChasePlayer(0.1f,5.0f);
@@ -355,15 +369,15 @@ CStateSpin::~CStateSpin()
 //===================================================
 void CStateSpin::Update(CEnemy* pEnemy)
 {
-	// モーションの制御クラスの取得
-	CEnemyMotionController* pMotion = pEnemy->GetMotionController();
+	// モーションクラスの取得
+	CMotion* pMotion = pEnemy->GetMotion();
 
 	// 向いている方向に移動する
 	pEnemy->MoveForWard(15.0f);
 
-	pMotion->SetMotion(pMotion->TYPE_SPIN, true, 10);
+	pMotion->SetMotion(MOTION::MOTIONTYPE_SPIN, true, 10);
 
-	if (pMotion->IsEventFrame(1, 116, pMotion->TYPE_SPIN))
+	if (pMotion->IsEventFrame(1, 116, MOTION::MOTIONTYPE_SPIN))
 	{
 		// 軌跡の処理
 		pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 0.5f, 0.5f), 120);
@@ -372,12 +386,12 @@ void CStateSpin::Update(CEnemy* pEnemy)
 	m_nTime--;
 
 	// モーションが終わったら
-	if (m_nTime <= 0 && pMotion->IsFinishMotion())
+	if (m_nTime <= 0 && pMotion->FinishMotion())
 	{
 		// 状態をIdleにする
 		pEnemy->SetState(make_unique<CStateIdle>(60));
 
 		// モーションの設定
-		pMotion->SetMotion(pMotion->TYPE_NEUTRAL, true, 60);
+		pMotion->SetMotion(MOTION::MOTIONTYPE_NEUTRAL, true, 60);
 	}
 }

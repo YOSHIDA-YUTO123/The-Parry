@@ -39,16 +39,18 @@ public:
 	void Update(void) override;
 	void Draw(void) override;
 	void Draw(const float Diffuse); // 透明度を変更できる描画処理
-
 	void DrawShadow(void);
 
 	HRESULT LoadModel(const char* pXFileName);
 
-	CPosition* GetPosition(void) const { return m_pPos; }
+	void SetPosition(const D3DXVECTOR3 pos) { m_pos = pos; }
+
+	D3DXVECTOR3 GetSize(void);
+	D3DXVECTOR3 GetPosition(void) const { return m_pos; }
 	CRotation* GetRotaition(void) const { return m_pRot; }
 
 private:
-	CPosition* m_pPos;		// 位置クラスへのポインタ
+	D3DXVECTOR3 m_pos;		// 位置
 	CRotation* m_pRot;		// 向きクラスへのポインタ
 	D3DXMATRIX m_mtxWorld;	// ワールドマトリックス
 	int m_nModelIdx;		// モデルのインデックス

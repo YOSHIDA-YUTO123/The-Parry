@@ -34,6 +34,6 @@ public:
 private:
 	static int m_nIdx;				// インデックス
 	static LPD3DXFONT m_pFont;		// フォントへのポインタ
-	static char m_aStr[MAX_WORD];	// 文字列を格納するバッファ
+	static char m_aStr[Const::MAX_WORD];	// 文字列を格納するバッファ
 };
 #endif

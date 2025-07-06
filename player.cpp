@@ -26,6 +26,7 @@
 
 using namespace math; // 名前空間mathを使用
 using namespace std;  // 名前空間をstdを使用する
+using namespace Const;							// 名前空間Constを使用する
 
 using MOTION = CPlayerMotionController::TYPE; // 列挙型を使用する
 using STATE = CCharacter3D::STATE;			  // キャラクターの状態
@@ -268,10 +269,10 @@ void CPlayer::Update(void)
 			CMeshCircle::Confing Circleconfig = { 50.0f,10.0f,0.0f,50.0f,30,false };
 
 			// インパクトを生成
-			CMeshCircle::Create(Circleconfig,D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f),pos,32, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
+			CMeshCircle::Create(Circleconfig,D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), playerHandR,32, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
 
 			// 再設定
-			pImpact->Reset(dir,pImpact->OBJ_PLAYER, pos,D3DXCOLOR(1.0f,1.0f,0.5f,1.0f));
+			pImpact->Reset(dir,pImpact->OBJ_PLAYER, playerHandR,D3DXCOLOR(1.0f,1.0f,0.5f,1.0f));
 		}
 		// インパクトの当たり判定
 		else if (bCollision && m_pMotion->GetBlendType() != MOTION::TYPE_DAMAGE)
@@ -766,7 +767,13 @@ bool CPlayer::IsParry(const D3DXVECTOR3 pos)
 	return false;
 }
 
-
+//===================================================
+// 向きの設定
+//===================================================
+void CPlayer::SetAngle(const float angleY)
+{
+	m_pCharacter3D->GetRotation()->SetDest(D3DXVECTOR3(0.0f, angleY, 0.0f));
+}
 
 //===================================================
 // 生成処理

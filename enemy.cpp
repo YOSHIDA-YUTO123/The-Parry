@@ -32,7 +32,7 @@ constexpr int NUM_MATRIX = 8;					// 武器につけるマトリックスの数
 constexpr int NEXT_ACTION_TIME = 300;			// 次の行動の抽選までの時間
 constexpr float ROCKON_HEIGHT = 100.0f;			// ロックオン時の見る場所
 
-using MOTION = CEnemyMotionController::TYPE;    // モーションの種類の列挙型を使用
+using namespace Const;							// 名前空間Constを使用する
 using namespace math;							// 名前空間mathを使用する
 using namespace std;							// 名前空間stdを使用
 
@@ -102,26 +102,16 @@ HRESULT CEnemy::Init(void)
 	m_pState = make_unique<CStateIdle>(0);
 
 	// 移動クラスの生成
-	m_pMove = make_shared<CVelocity>();
+	m_pMove = make_unique<CVelocity>();
 
-	// モーション制御クラスの生成
-	m_pMotion = make_unique<CEnemyMotionController>();
-
-	// ロード処理
-	m_pMotion->Load(m_apModel,&m_nNumModel);
-	m_pMotion->Init(m_pMove);
+	// モーションロード処理
+	Load();
 
 	// キャラクターの作成
 	m_pCharactor = make_unique<CCharacter3D>();
 
 	// キャラクターの設定処理
 	m_pCharactor->SetCharacter(10, 5.0f);
-
-	//// 敵のAIの生成
-	//m_pAI = make_unique<CEnemyAI>();
-
-	//// 敵のAI初期化処理
-	//m_pAI->Init(m_pMotion);
 
 	// 位置の取得処理
 	D3DXVECTOR3 pos = m_pCharactor->GetPosition();
@@ -193,6 +183,30 @@ void CEnemy::Update(void)
 
 	D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
 
+	// キーボードの取得
+	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
+
+#ifdef _DEBUG
+
+	CDebugProc::Print("ボスの攻撃(スマッシュ) [ F3 ]\n");
+	CDebugProc::Print("ボスの攻撃(衝撃波) [ F4 ]\n");
+	CDebugProc::Print("ボスの攻撃(方向→ダッシュ→回転) [ F5 ]\n");
+
+	if (pKeyboard->GetPress(DIK_F3))
+	{
+		SetState(make_unique<CStateAttackSmash>());
+	}
+	if (pKeyboard->GetPress(DIK_F4))
+	{
+		SetState(make_unique<CStateAttackImpact>());
+	}
+	if (pKeyboard->GetPress(DIK_F5))
+	{
+		SetState(make_unique<CStateRoar>());
+	}
+
+#endif // _DEBUG
+
 	// モーションの制御クラスの取得
 	CPlayerMotionController* pPlayerMotion = pPlayer->GetMotionController();
 
@@ -202,6 +216,7 @@ void CEnemy::Update(void)
 	// 移動量の取得
 	D3DXVECTOR3 move = m_pMove->Get();
 
+	// 位置の更新処理
 	pos += move;
 
 	// メッシュフィールドの取得
@@ -254,7 +269,7 @@ void CEnemy::Update(void)
 		const bool bCollision = pImpact->Collision(pos, 150.0f, pImpact->OBJ_ENEMY);
 
 		// インパクトの当たり判定
-		if (bCollision && m_pMotion->GetBlendType() != MOTION::TYPE_DAMAGE)
+		if (bCollision && m_pMotion->GetBlendType() != MOTIONTYPE_DAMAGE)
 		{
 			// インパクトの位置の取得
 			D3DXVECTOR3 impactPos = pImpact->GetPosition();
@@ -266,7 +281,7 @@ void CEnemy::Update(void)
 			SetState(make_unique<CStateDamage>());
 
 			// モーションの設定
-			m_pMotion->SetMotion(MOTION::TYPE_DAMAGE, true, 5);
+			m_pMotion->SetMotion(MOTIONTYPE_DAMAGE, true, 5);
 		}
 	}
 
@@ -278,12 +293,12 @@ void CEnemy::Update(void)
 	D3DXVECTOR3 chestpos = GetPositionFromMatrix(m_apModel[2]->GetMatrixWorld());
 
 	// 敵の攻撃のカウンターの目安の表示
-	if (m_pMotion->IsEventFrame(50, 50, MOTION::TYPE_SMASH))
+	if (m_pMotion->IsEventFrame(50, 50, MOTIONTYPE_SMASH))
 	{
 		// パーティクルの生成
 		CParticle3D::Create(chestpos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), 240, 100.0f, 50, 120, 15.0f);
 	}
-	else if (m_pMotion->IsEventFrame(50, 50, MOTION::TYPE_IMPACT))
+	else if (m_pMotion->IsEventFrame(50, 50, MOTIONTYPE_IMPACT))
 	{
 		CMeshWave::Config WaveConfig = { WHITE,50.0f,50.0f,0.0f,30 };
 		CMeshWave::Create(WaveConfig, pos);
@@ -291,7 +306,7 @@ void CEnemy::Update(void)
 
 
 	// イベントフレームの判定
-	if (m_pMotion->IsEventFrame(64, 71, MOTION::TYPE_SMASH) && m_pMotion->GetBlendType() != MOTION::TYPE_DAMAGE)
+	if (m_pMotion->IsEventFrame(64, 71, MOTIONTYPE_SMASH) && m_pMotion->GetBlendType() != MOTIONTYPE_DAMAGE)
 	{
 		// 当たり判定がnullじゃなかったら
 		if (m_pSphere != nullptr)
@@ -318,7 +333,7 @@ void CEnemy::Update(void)
 	}
 
 	// パリィモーションのパンチになったら
-	if (pPlayerMotion->IsParryEvent(11, 11) && m_pMotion->GetBlendType() == MOTION::TYPE_SMASH)
+	if (pPlayerMotion->IsParryEvent(11, 11) && m_pMotion->GetBlendType() == MOTIONTYPE_SMASH)
 	{
 		// スローモーションの取得
 		CSlow* pSlow = CManager::GetSlow();
@@ -335,6 +350,9 @@ void CEnemy::Update(void)
 		// ボスまでの角度を取得
 		float fAngle = GetTargetAngle(pos, playerHandR);
 
+		// 向きの設定
+		pPlayer->SetAngle(fAngle + D3DX_PI);
+
 		// 吹き飛び処理
 		BlowOff(PlayerPos, 150.0f, 5.0f);
 
@@ -345,14 +363,14 @@ void CEnemy::Update(void)
 		CMeshCircle::Create(Circleconfig, D3DXCOLOR(1.0f, 1.0f, 0.4f, 0.8f), playerHandR, 32, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
 
 		// モーションをダメージにする
-		m_pMotion->SetMotion(MOTION::TYPE_DAMAGE, true, 2);
+		m_pMotion->SetMotion(MOTIONTYPE_DAMAGE, true, 2);
 
 		// 状態の設定
 		SetState(make_unique<CStateDamage>());
 	}
 
 	// 攻撃モーションのたたきつけになったら
-	if (m_pMotion->IsEventFrame(72,72, MOTION::TYPE_SMASH))
+	if (m_pMotion->IsEventFrame(72,72, MOTIONTYPE_SMASH))
 	{
 		// フィールドの波の設定
 		CMeshFieldWave::Config config = { WeponPos,250.0f,380.0f,280.0f,12.0f,0.01f,120 };
@@ -392,13 +410,13 @@ void CEnemy::Update(void)
 	}
 
 	// 衝撃波の生成
-	if (m_pMotion->IsEventFrame(102, 102, MOTION::TYPE_IMPACT))
+	if (m_pMotion->IsEventFrame(102, 102, MOTIONTYPE_IMPACT))
 	{
 		// プレイヤーまでの方向
 		D3DXVECTOR3 dir = PlayerPos - WeponPos;
 
 		// インパクトの設定
-		CMeshFieldImpact::Config config = { WeponPos,chestpos,dir,D3DXCOLOR(1.0f,0.5f,0.5f,1.0f),CMeshFieldImpact::OBJ_ENEMY,100.0f,750.0f,26.0f,60 };
+		CMeshFieldImpact::Config config = { WeponPos,chestpos,dir,D3DXCOLOR(1.0f,0.5f,0.5f,1.0f),CMeshFieldImpact::OBJ_ENEMY,150.0f,750.0f,26.0f,60 };
 
 		// インパクトの生成
 		pMesh->SetImpact(config);
@@ -406,9 +424,6 @@ void CEnemy::Update(void)
 
 	// 状態の更新処理
 	m_pState->Update(this);
-
-	// モーションの遷移
-	m_pMotion->TransitionMotion(m_pCharactor.get());
 
 	// 位置の設定処理
     m_pCharactor->SetPosition(pos);
@@ -430,12 +445,6 @@ void CEnemy::Draw(void)
 	if (m_pShadow != nullptr)
 	{
 		m_pShadow->Draw();
-	}
-
-	// モーションのデバッグ表示
-	if (m_pMotion != nullptr)
-	{
-		//m_pMotion->Debug();
 	}
 
 	// キャラクターの描画
@@ -609,6 +618,27 @@ void CEnemy::ChasePlayer(float chaseScal, const float speedScal)
 }
 
 //===================================================
+// プレイヤーの方向を見る処理
+//===================================================
+void CEnemy::AngleToPlayer(void)
+{
+	// プレイヤーの取得
+	CPlayer* pPlayer = CManager::GetPlayer();
+
+	// プレイヤーの位置
+	D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
+
+	// 自分の位置の取得
+	D3DXVECTOR3 pos = m_pCharactor->GetPosition();
+
+	// プレイヤーまでの角度を求める
+	float fAngle = GetTargetAngle(pos, PlayerPos);
+
+	// 向きの設定
+	m_pCharactor->GetRotation()->SetDest(D3DXVECTOR3(0.0f, fAngle, 0.0f));
+}
+
+//===================================================
 // 距離の判定
 //===================================================
 bool CEnemy::CheckDistane(const float fRadius)
@@ -676,6 +706,59 @@ void CEnemy::Orbit(const int nSegH, const D3DXCOLOR col, const int nLife)
 }
 
 //===================================================
+// 読み込み処理
+//===================================================
+void CEnemy::Load(void)
+{
+	fstream file("data/system.ini"); // ファイルを開く
+	string line; // ファイルの文字列読み取り用
+	string input; // 値を代入する
+
+	// ファイルを開けたら
+	if (file.is_open())
+	{
+		// ロードのマネージャの生成
+		CLoadManager* pLoadManager = new CLoadManager;
+
+		// 最後じゃないなら
+		while (getline(file, line))
+		{
+			// プレイヤーのモーションファイルを読み取ったら
+			if (line.find("ENEMY000_MOTION_FILE") != string::npos)
+			{
+				size_t equal_pos = line.find("="); // =の位置
+
+				// [=] から先を求める
+				input = line.substr(equal_pos + 1);
+
+				// ファイルの名前を取得
+				string file_name = pLoadManager->GetString(input);
+
+				// ファイルの名前を代入
+				const char* FILE_NAME = file_name.c_str();
+
+				// モーションのロード処理
+				m_pMotion = CMotion::Load(FILE_NAME, m_apModel, &m_nNumModel, MOTIONTYPE_MAX, m_pMotion->LOAD_TEXT);
+			}
+		}
+
+		// ロードのマネージャーの破棄
+		if (pLoadManager != nullptr)
+		{
+			delete pLoadManager;
+			pLoadManager = nullptr;
+		}
+		// ファイルを閉じる
+		file.close();
+	}
+	else
+	{
+		MessageBox(NULL, "system.iniが開けません", "ファイルが存在しません。", MB_OK | MB_ICONWARNING);
+		return;
+	}
+}
+
+//===================================================
 // 親子関係の設定処理
 //===================================================
 void CEnemy::SetParent(const int nCnt)
@@ -712,228 +795,4 @@ void CEnemy::SetParent(const int nCnt)
 
 	// ワールドマトリックスの設定
 	pDevice->SetTransform(D3DTS_WORLD, &m_weponMatrix);
-}
-
-//===================================================
-// コンストラクタ
-//===================================================
-CEnemyMotionController::CEnemyMotionController()
-{
-
-}
-
-//===================================================
-// デストラクタ
-//===================================================
-CEnemyMotionController::~CEnemyMotionController()
-{
-
-}
-
-//===================================================
-// ロード処理
-//===================================================
-void CEnemyMotionController::Load(std::vector<CModel*>& pModel, int* pOutNumModel)
-{
-	fstream file("data/system.ini"); // ファイルを開く
-	string line; // ファイルの文字列読み取り用
-	string input; // 値を代入する
-
-	// ファイルを開けたら
-	if (file.is_open())
-	{
-		// ロードのマネージャの生成
-		CLoadManager* pLoadManager = new CLoadManager;
-
-		// 最後じゃないなら
-		while (getline(file, line))
-		{
-			// プレイヤーのモーションファイルを読み取ったら
-			if (line.find("ENEMY000_MOTION_FILE") != string::npos)
-			{
-				size_t equal_pos = line.find("="); // =の位置
-
-				// [=] から先を求める
-				input = line.substr(equal_pos + 1);
-
-				// ファイルの名前を取得
-				string file_name = pLoadManager->GetString(input);
-
-				// ファイルの名前を代入
-				const char* FILE_NAME = file_name.c_str();
-
-				// モーションのロード処理
-				m_pMotion = CMotion::Load(FILE_NAME, pModel, pOutNumModel, TYPE_MAX, m_pMotion->LOAD_TEXT);
-			}
-		}
-
-		// ロードのマネージャーの破棄
-		if (pLoadManager != nullptr)
-		{
-			delete pLoadManager;
-			pLoadManager = nullptr;
-		}
-		// ファイルを閉じる
-		file.close();
-	}
-	else
-	{
-		MessageBox(NULL, "system.iniが開けません", "ファイルが存在しません。", MB_OK | MB_ICONWARNING);
-		return;
-	}
-}
-
-//===================================================
-// 初期化処理
-//===================================================
-void CEnemyMotionController::Init(shared_ptr<CVelocity> pMove)
-{
-	// 共有ポインタの取得
-	m_pMove = pMove;
-}
-
-//===================================================
-// 終了処理
-//===================================================
-void CEnemyMotionController::Uninit(void)
-{
-	// モーションの破棄
-	if (m_pMotion != nullptr)
-	{
-		m_pMotion->Uninit();
-	}
-}
-
-//===================================================
-// 更新処理
-//===================================================
-void CEnemyMotionController::Update(CModel** ppModel, const int nNumModel)
-{
-	if (m_pMotion != nullptr)
-	{
-		// モーションの更新処理
-		m_pMotion->Update(ppModel, nNumModel);
-	}
-}
-
-//===================================================
-// ロードできたかどうか
-//===================================================
-bool CEnemyMotionController::IsLoad(void) const
-{
-	// ロードできたかどうか
-	if (m_pMotion->IsLoad())
-	{
-		return true;
-	}
-	return false;
-}
-
-//===================================================
-// モーションの設定処理
-//===================================================
-void CEnemyMotionController::SetMotion(const int type, bool bBlend, const int nFrameBlend)
-{
-	m_pMotion->SetMotion(type, bBlend, nFrameBlend);
-}
-
-//===================================================
-// ブレンドモーションの種類の取得処理
-//===================================================
-int CEnemyMotionController::GetBlendType(void) const
-{
-	return m_pMotion->GetBlendType();
-}
-
-//===================================================
-// モーションの種類の取得処理
-//===================================================
-int CEnemyMotionController::GetType(void) const
-{
-	return m_pMotion->GetType();
-}
-
-//===================================================
-// イベントフレームの判定
-//===================================================
-bool CEnemyMotionController::IsEventFrame(const int start, const int end, const TYPE type)
-{
-	// イベントフレーム内だったら
-	if (m_pMotion->IsEventFrame(start, end, type))
-	{
-		return true;
-	}
-
-	return false;
-}
-
-//===================================================
-// モーションのブレンドが完了したら
-//===================================================
-bool CEnemyMotionController::IsFinishEndBlend(void)
-{
-	// 最後のブレンドが終わったら
-	if (m_pMotion->IsFinishEndBlend())
-	{
-		return true;
-	}
-	return false;
-}
-
-//===================================================
-// モーションが終わったら
-//===================================================
-bool CEnemyMotionController::IsFinishMotion(void)
-{
-	return m_pMotion->FinishMotion();
-}
-
-//===================================================
-// モーションの遷移処理
-//===================================================
-void CEnemyMotionController::TransitionMotion(CCharacter3D *pCharacter)
-{
-	// モーションの種類の取得
-	TYPE type = (TYPE)m_pMotion->GetBlendType();
-
-	CPlayer* pPlayer = CManager::GetPlayer();
-
-	D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
-
-	D3DXVECTOR3 pos = pCharacter->GetPosition();
-
-	switch (type)
-	{
-	case TYPE_NEUTRAL:
-		break;
-	case TYPE_MOVE:
-
-		break;
-	case TYPE_SMASH:
-	{
-		if (m_pMotion->IsEventFrame(1, 64, TYPE_SMASH))
-		{
-			// プレイヤーまでの角度を求める
-			float fAngle = GetTargetAngle(pos, PlayerPos);
-
-			pCharacter->GetRotation()->SetDest(D3DXVECTOR3(0.0f, fAngle, 0.0f));
-		}
-	}
-		break;
-	case TYPE_DAMAGE:
-		break;
-	case TYPE_IMPACT:
-	{
-		if (m_pMotion->IsEventFrame(1, 91, TYPE_IMPACT))
-		{
-			// プレイヤーまでの角度を求める
-			float fAngle = GetTargetAngle(pos, PlayerPos);
-
-			pCharacter->GetRotation()->SetDest(D3DXVECTOR3(0.0f, fAngle, 0.0f));
-		}
-	}
-		break;
-	default:
-		break;
-	}
 }

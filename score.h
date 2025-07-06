@@ -40,7 +40,7 @@ public:
 		TYPE_MAX
 	}TYPE;
 
-	CScore(int nPriority = NUM_PRIORITY - 1);
+	CScore(int nPriority = Const::NUM_PRIORITY - 1);
 	~CScore();
 	virtual HRESULT Init(void);
 	virtual void Uninit(void);
@@ -70,7 +70,7 @@ private:
 class CScoreLerper : public CScore
 {
 public:
-	CScoreLerper(int nPriority = NUM_PRIORITY - 1);
+	CScoreLerper(int nPriority = Const::NUM_PRIORITY - 1);
 	~CScoreLerper();
 	HRESULT Init(void);
 	void Uninit(void);

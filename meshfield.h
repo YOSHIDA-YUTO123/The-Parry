@@ -125,7 +125,7 @@ public:
 	CMeshField(int nPriority = 2);
 	~CMeshField();
 
-	static CMeshField* Create(const D3DXVECTOR3 pos,const int nSegH,const int nSegV,const D3DXVECTOR2 Size, const D3DXVECTOR3 rot = VEC3_NULL);
+	static CMeshField* Create(const D3DXVECTOR3 pos,const int nSegH,const int nSegV,const D3DXVECTOR2 Size, const D3DXVECTOR3 rot = Const::VEC3_NULL);
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
