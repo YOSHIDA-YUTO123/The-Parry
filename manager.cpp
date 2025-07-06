@@ -14,6 +14,7 @@
 #include "dome.h"
 #include "enemy.h"
 #include "object3D.h"
+#include<ctime>
 
 //***************************************************
 // 静的メンバ変数の宣言
@@ -53,6 +54,9 @@ CManager::~CManager()
 //===================================================
 HRESULT CManager::Init(HINSTANCE hInstance,HWND hWnd, BOOL bWindow)
 {
+	// 乱数の種の設定
+	srand(static_cast<unsigned int>(time(nullptr)));
+
 	// レンダラーを生成
 	m_pRenderer = new CRenderer;
 

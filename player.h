@@ -41,7 +41,7 @@ class CPlayer : public CObject
 {
 public:
 
-	CPlayer(int nPriority = 3);
+	CPlayer();
 	~CPlayer();
 
 	static CPlayer* Create(const D3DXVECTOR3 pos = VEC3_NULL, const D3DXVECTOR3 rot = VEC3_NULL);
@@ -113,6 +113,7 @@ public:
 	bool IsLoad(void) const;
 	void SetMotion(const int type, bool bBlend, const int nFrameBlend);
 
+	void ParryEffect(CModel** ppModel);
 	bool IsParryEvent(const int start, const int end);
 	int GetBlendType(void) const;
 private:

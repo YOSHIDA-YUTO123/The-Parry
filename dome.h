@@ -25,12 +25,12 @@ public:
 	CMeshDome();
 	~CMeshDome();
 
-	static CMeshDome* Create(const D3DXVECTOR3 pos, const int nSegX, const int nSegZ, const float fRadius, const float fHeight, const D3DXVECTOR3 rot = VEC3_NULL);
+	static CMeshDome* Create(const D3DXVECTOR3 pos, const int nSegH, const int nSegV, const float fRadius, const float fHeight, const D3DXVECTOR3 rot = VEC3_NULL);
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
-	void SetDome(const int nSegX, const int nSegZ, const float fRadius, const float fHeight);
+	void SetDome(const int nSegH, const int nSegV, const float fRadius, const float fHeight);
 private:
 	int m_nOffsetIdx;
 };

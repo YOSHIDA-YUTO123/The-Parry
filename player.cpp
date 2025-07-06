@@ -28,19 +28,18 @@ using namespace math; // 名前空間mathを使用
 using namespace std;  // 名前空間をstdを使用する
 
 using MOTION = CPlayerMotionController::TYPE; // 列挙型を使用する
+using STATE = CCharacter3D::STATE;			  // キャラクターの状態
 
-//***************************************************
-// マクロ定義
-//***************************************************
-#define PLAYER_JUMP_HEIGHT (25.0f)  // ジャンプ量
-#define SHADOW_SIZE (50.0f)			// 影の大きさ
-#define SHADOW_MAX_HEIGHT (500.0f)  // 影が見える最大の高さ
-#define SHADOW_A_LEVEL (0.9f)       // 影のアルファ値のオフセット
+constexpr float JUMP_HEIGHT = 25.0f;		// ジャンプ量
+constexpr float SHADOW_SIZE = 50.0f;		// 影の大きさ
+constexpr float SHADOW_MAX_HEIGHT = 500.0f; // 影が見える最大の高さ
+constexpr float SHADOW_A_LEVEL = 0.9f;		// 影のアルファ値のオフセット
+constexpr int PARRY_TIME = 25;				// パリィの有効時間
 
 //===================================================
 // コンストラクタ
 //===================================================
-CPlayer::CPlayer(int nPriority) : CObject(nPriority)
+CPlayer::CPlayer() : CObject(3)
 {
 	m_pMove = nullptr;
 	m_bJump = true;
@@ -176,6 +175,8 @@ void CPlayer::Update(void)
 
 		// モーションの設定
 		m_pMotion->SetMotion(motiontype, true, 5);
+
+		m_pCharacter3D->SetState(STATE::STATE_MOVE, 1);
 	}
 	
 	// ダッシュボタンを押したら
@@ -220,7 +221,7 @@ void CPlayer::Update(void)
 			m_pMotion->SetMotion(MOTION::TYPE_LANDING, true, 5);
 
 			// インパクトの設定
-			CMeshCircle::Confing Circleconfig = { 0.0f,10.0f,10.0f,50.0f,30,false };
+			CMeshCircle::Confing Circleconfig = { 0.0f,10.0f,10.0f,50.0f,30,true };
 
 			// サークルを生成
 			CMeshCircle::Create(Circleconfig, D3DCOLOR_RGBA(220, 220, 220, 200),pos,32);
@@ -245,7 +246,7 @@ void CPlayer::Update(void)
 		// インパクトとの判定
 		const bool bCollision = pImpact->Collision(pos, 150.0f, pImpact->OBJ_PLAYER);
 
-		if (bCollision && m_pCharacter3D->GetState() == m_pCharacter3D->STATE_ACTION)
+		if (bCollision && m_pCharacter3D->GetState() == STATE::STATE_ACTION)
 		{
 			// 最初の位置
 			D3DXVECTOR3 firstPos = pImpact->GetFirstPos();
@@ -309,7 +310,7 @@ void CPlayer::Update(void)
 		m_pMotion->SetMotion(MOTION::TYPE_JUMP, true, 2);
 
 		// 移動量を上方向に設定
-		m_pMove->Jump(PLAYER_JUMP_HEIGHT);
+		m_pMove->Jump(JUMP_HEIGHT);
 		m_bJump = false;
 	}
 
@@ -340,7 +341,7 @@ void CPlayer::Update(void)
 	{
 		m_pMotion->SetMotion(MOTION::TYPE_ACTION, true,6);
 	
-		m_pCharacter3D->SetState(m_pCharacter3D->STATE_ACTION, 25);
+		m_pCharacter3D->SetState(m_pCharacter3D->STATE_ACTION, PARRY_TIME);
 	}
 
 	// ロックオン
@@ -898,6 +899,8 @@ void CPlayerMotionController::Update(CModel** ppModel, const int nNumModel)
 		m_pMotion->Update(ppModel, nNumModel);
 	}
 
+	ParryEffect(ppModel);
+
 	// モーションの遷移
 	TransitionMotion();
 }
@@ -921,6 +924,20 @@ void CPlayerMotionController::SetMotion(const int type, bool bBlend, const int n
 {
 	// モーションの設定
 	m_pMotion->SetMotion(type, bBlend, nFrameBlend);
+}
+
+//===================================================
+// パリィのエフェクト
+//===================================================
+void CPlayerMotionController::ParryEffect(CModel **ppModel)
+{
+	if (m_pMotion->IsEventFrame(1, PARRY_TIME, TYPE::TYPE_ACTION))
+	{
+		// ワールドマトリックスの41_42_43の要素を取得
+		D3DXVECTOR3 handPos = GetPositionFromMatrix(ppModel[8]->GetMatrixWorld());
+
+		CParticle3D::Create(handPos, WHITE, 50, 5.0f, 10, 10, 3.0f);
+	}
 }
 
 //===================================================

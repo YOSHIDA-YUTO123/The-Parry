@@ -125,12 +125,12 @@ public:
 	CMeshField(int nPriority = 2);
 	~CMeshField();
 
-	static CMeshField* Create(const D3DXVECTOR3 pos,const int nSegX,const int nSegZ,const D3DXVECTOR2 Size, const D3DXVECTOR3 rot = VEC3_NULL);
+	static CMeshField* Create(const D3DXVECTOR3 pos,const int nSegH,const int nSegV,const D3DXVECTOR2 Size, const D3DXVECTOR3 rot = VEC3_NULL);
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
-	void SetMeshField(const int nSegX, const int nSegZ, const  D3DXVECTOR3 pos, const D3DXVECTOR2 Size);
+	void SetMeshField(const int nSegH, const int nSegV, const  D3DXVECTOR3 pos, const D3DXVECTOR2 Size);
 	bool Collision(const D3DXVECTOR3 pos, float* pOutHeight);
 	void UpdateNor(void); // ñ@ê¸ÇÃçƒê›íË
 

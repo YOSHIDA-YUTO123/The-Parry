@@ -22,8 +22,8 @@ CMesh::CMesh(int nPriority) : CObject(nPriority)
 	m_pos = VEC3_NULL;
 	m_rot = VEC3_NULL;
 	D3DXMatrixIdentity(&m_mtxWorld);
-	m_nSegmentX = NULL;	
-	m_nSegmentZ = NULL;	
+	m_nSegmentH = NULL;	
+	m_nSegmentV = NULL;	
 	m_nIdexTexture = -1;
 	m_nNumVtx = NULL;	
 	m_nNumPolygon = NULL;
@@ -276,10 +276,10 @@ void CMesh::SetVtxElement(const int vertex, const int polygon, const int index)
 //================================================
 // •ªŠ„”‚Ìİ’èˆ—
 //================================================
-void CMesh::SetSegment(const int nSegX, const int nSegZ)
+void CMesh::SetSegment(const int nSegH, const int nSegV)
 {
-	m_nSegmentX = nSegX;
-	m_nSegmentZ = nSegZ;
+	m_nSegmentH = nSegH;
+	m_nSegmentV = nSegV;
 }
 
 //================================================

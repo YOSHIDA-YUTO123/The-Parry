@@ -162,6 +162,7 @@
     <ClCompile Include="dust.cpp" />
     <ClCompile Include="effect.cpp" />
     <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="EnemyState.cpp" />
     <ClCompile Include="explosion.cpp" />
     <ClCompile Include="impact.cpp" />
     <ClCompile Include="input.cpp" />
@@ -180,6 +181,7 @@
     <ClCompile Include="object2D.cpp" />
     <ClCompile Include="object3D.cpp" />
     <ClCompile Include="objectX.cpp" />
+    <ClCompile Include="Orbit.cpp" />
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -211,6 +213,7 @@
     <ClInclude Include="dust.h" />
     <ClInclude Include="effect.h" />
     <ClInclude Include="enemy.h" />
+    <ClInclude Include="EnemyState.h" />
     <ClInclude Include="explosion.h" />
     <ClInclude Include="impact.h" />
     <ClInclude Include="input.h" />
@@ -229,6 +232,7 @@
     <ClInclude Include="object2D.h" />
     <ClInclude Include="object3D.h" />
     <ClInclude Include="objectX.h" />
+    <ClInclude Include="Orbit.h" />
     <ClInclude Include="particle.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="player.h" />

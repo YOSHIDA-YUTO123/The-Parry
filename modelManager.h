@@ -16,11 +16,11 @@
 //**********************************************
 #include"main.h"
 #include"object.h"
-
+#include<vector>
 //**********************************************
 // マクロ定義
 //**********************************************
-#define MAX_MODEL (256) // モデルの最大数
+//#define MAX_MODEL (256) // モデルの最大数
 
 //**********************************************
 // モデルのマネージャークラスの定義
@@ -50,8 +50,8 @@ private:
 		char filepath[MAX_WORD];		 // ファイルパス
 	};
 
-	ModelInfo m_apModelInfo[MAX_MODEL];	 // モデルの情報
-	static int m_nNumAll;				 // テクスチャの番号
+	std::vector<ModelInfo> m_apModelInfo; // モデルの情報
+	static int m_nNumAll;				  // テクスチャの番号
 };
 
 #endif

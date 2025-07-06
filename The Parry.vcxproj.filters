@@ -201,6 +201,12 @@
     <ClCompile Include="player.cpp">
       <Filter>ソース ファイル\model</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyState.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="Orbit.cpp">
+      <Filter>ソース ファイル\mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="testword.h">
@@ -328,6 +334,12 @@
     </ClInclude>
     <ClInclude Include="slow.h">
       <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyState.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="Orbit.h">
+      <Filter>ヘッダー ファイル\mesh</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

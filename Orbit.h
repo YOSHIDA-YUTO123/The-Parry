@@ -1,6 +1,6 @@
 //================================================
 //
-// メッシュシリンダー [cylinder.h]
+// 軌跡 [orbit.h]
 // Author: YUTO YOSHIDA
 //
 //================================================
@@ -8,32 +8,36 @@
 //*************************************************
 // 多重インクルード防止
 //*************************************************
-#ifndef _CYLINDER_H_
-#define _CYLINDER_H_
+#ifndef _ORBIT_H_
+#define _ORBIT_H_
 
 //************************************************
 // インクルードファイル
 //************************************************
+#include"main.h"
 #include"mesh.h"
 
 //************************************************
-// メッシュフィールドクラスの定義
+// 軌跡のクラスの定義
 //************************************************
-class CMeshCylinder : public CMesh
+class CMeshOrbit : public CMesh
 {
 public:
-	CMeshCylinder(int nPriority = 7);
-	~CMeshCylinder();
+	CMeshOrbit();
+	~CMeshOrbit();
 
-	static CMeshCylinder* Create(const D3DXVECTOR3 pos, const int nSegH, const int nSegV,const float fRadius, const float fHeight, const D3DXVECTOR3 rot = VEC3_NULL);
+	static CMeshOrbit* Create(const D3DXVECTOR3 Top, const D3DXVECTOR3 Bottom, const int nSegH, const D3DXCOLOR col, const int nLife);
+
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
-	void SetCylinder(const int nSegH, const int nSegV, const float fRadius, const float fHeight);
-	bool Collision(D3DXVECTOR3* pPos);
+	bool SetPosition(const D3DXVECTOR3 Top, const D3DXVECTOR3 Bottom);
 private:
-	D3DXVECTOR3 m_CenterPos; // 円柱の中心の座標
-	float m_fRadius;		 // 半径
+	D3DXVECTOR3 m_Top;		// 上の位置
+	D3DXVECTOR3 m_Bottom;	// 下の位置
+	D3DXCOLOR m_col;		// 色
+	int m_nLife;			// 寿命
 };
+
 #endif

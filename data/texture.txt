@@ -1,17 +1,4 @@
-+--------------------------------------+
-+          プレイヤーのテクスチャ      +
-+--------------------------------------+
-
-+--------------------------------------+
-+         エフェクトのテクスチャ       +
-+--------------------------------------+
-TEXTURE_NAME = data/TEXTURE/effect000.jpg
-
-+--------------------------------------+
-+          地面のテクスチャ            +
-+--------------------------------------+
-TEXTURE_NAME = data/TEXTURE/field.jpg
-
-TEXTURE_NAME = data/TEXTURE/word001.png
-
-
+TEXTURE_NAME = data/TEXTURE/effect000.jpg 	# エフェクトのテクスチャ
+TEXTURE_NAME = data/TEXTURE/field.jpg	  	# 地面のテクスチャ
+TEXTURE_NAME = data/TEXTURE/word001.png	  	# 文字のテクスチャ
+TEXTURE_NAME = data/TEXTURE/wave000.png		# 波のテクスチャ

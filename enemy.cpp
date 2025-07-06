@@ -20,10 +20,13 @@
 #include "LoadManager.h"
 #include"particle.h"
 #include"motion.h"
+#include"Wave.h"
+#include"EnemyState.h"
+#include "Orbit.h"
 
 constexpr float SHADOW_ALEVEL = 0.7f;			// 影のアルファ値
 constexpr float SHADOW_MAX_HEIGHT = 500.0f;		// 影が見える最大の高さ
-constexpr float SHADOW_SIZE = 200.0f;			// 影の大きさ
+constexpr float SHADOW_SIZE = 150.0f;			// 影の大きさ
 constexpr int NUM_RUBBLE = 16;					// 瓦礫を出す数
 constexpr int NUM_MATRIX = 8;					// 武器につけるマトリックスの数
 constexpr int NEXT_ACTION_TIME = 300;			// 次の行動の抽選までの時間
@@ -41,6 +44,7 @@ CEnemy::CEnemy()
 	m_pMove = nullptr;
 	m_nNumModel = NULL;
 	D3DXMatrixIdentity(&m_weponMatrix);
+	m_pOrbit = nullptr;
 }
 
 //===================================================
@@ -94,6 +98,9 @@ CEnemy* CEnemy::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 //===================================================
 HRESULT CEnemy::Init(void)
 {
+	// 状態パターンの生成
+	m_pState = make_unique<CStateIdle>(0);
+
 	// 移動クラスの生成
 	m_pMove = make_shared<CVelocity>();
 
@@ -110,11 +117,11 @@ HRESULT CEnemy::Init(void)
 	// キャラクターの設定処理
 	m_pCharactor->SetCharacter(10, 5.0f);
 
-	// 敵のAIの生成
-	m_pAI = make_unique<CEnemyAI>();
+	//// 敵のAIの生成
+	//m_pAI = make_unique<CEnemyAI>();
 
-	// 敵のAI初期化処理
-	m_pAI->Init(m_pMotion);
+	//// 敵のAI初期化処理
+	//m_pAI->Init(m_pMotion);
 
 	// 位置の取得処理
 	D3DXVECTOR3 pos = m_pCharactor->GetPosition();
@@ -158,6 +165,9 @@ void CEnemy::Uninit(void)
 		// 影クラスの破棄
 		m_pShadow->Uninit();
 	}
+
+	// nullにする
+	m_pOrbit = nullptr;
 
 	if (m_pCharactor != nullptr)
 	{
@@ -232,39 +242,6 @@ void CEnemy::Update(void)
 	// モーションがnullじゃないなら
 	if (m_pMotion != nullptr)
 	{
-		float fAngle = GetTargetAngle(PlayerPos, pos);		  // ターゲットまでの角度の取得
-
-		// 待機じゃなかったら
-		if (m_pAI != nullptr && m_pAI->Wait() == false)
-		{
-			// 一定の距離にいたら
-			if (m_pAI->CheckDistance(PlayerPos, pos, 250.0f) == CEnemyAI::ACTION_MOVE)
-			{
-				m_pMotion->ConfigMove(m_pCharactor.get(), PlayerPos);
-				m_pMotion->SetMotion(MOTION::TYPE_MOVE, true, 10);
-			}
-			// いなかったら
-			else if (m_pAI->CheckDistance(PlayerPos, pos, 250.0f) == CEnemyAI::ACTION_IDLE)
-			{
-				m_pMotion->SetMotion(MOTION::TYPE_NEUTRAL, true, 10);
-			}
-
-			// 攻撃可能だったら
-			if (m_pAI->IsAttack() == CEnemyAI::ACTION_ATTACK)
-			{
-				m_pMotion->SetMotion(MOTION::TYPE_ACTION, true, 10);
-
-				// 目的の角度の設定
-				m_pCharactor->GetRotation()->SetDest(D3DXVECTOR3(0.0f, fAngle + D3DX_PI, 0.0f));
-			}
-		}
-
-		// AIの更新処理
-		if (m_pAI != nullptr)
-		{
-			m_pAI->Update();
-		}
-
 		// モーションの更新処理
 		m_pMotion->Update(&m_apModel[0], m_nNumModel);
 	}
@@ -285,6 +262,9 @@ void CEnemy::Update(void)
 			// 吹き飛び処理
 			BlowOff(impactPos, 150.0f, 10.0f);
 
+			// 状態の設定
+			SetState(make_unique<CStateDamage>());
+
 			// モーションの設定
 			m_pMotion->SetMotion(MOTION::TYPE_DAMAGE, true, 5);
 		}
@@ -292,19 +272,26 @@ void CEnemy::Update(void)
 
 	// 武器の先端の位置
 	D3DXVECTOR3 WeponPos = GetPositionFromMatrix(m_weponMatrix);
+	D3DXVECTOR3 WeponBottom = GetPositionFromMatrix(m_apModel[15]->GetMatrixWorld());
 
 	// 胸の位置の取得
 	D3DXVECTOR3 chestpos = GetPositionFromMatrix(m_apModel[2]->GetMatrixWorld());
 
 	// 敵の攻撃のカウンターの目安の表示
-	if (m_pMotion->IsEventFrame(50, 50, MOTION::TYPE_ACTION))
+	if (m_pMotion->IsEventFrame(50, 50, MOTION::TYPE_SMASH))
 	{
 		// パーティクルの生成
 		CParticle3D::Create(chestpos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), 240, 100.0f, 50, 120, 15.0f);
 	}
+	else if (m_pMotion->IsEventFrame(50, 50, MOTION::TYPE_IMPACT))
+	{
+		CMeshWave::Config WaveConfig = { WHITE,50.0f,50.0f,0.0f,30 };
+		CMeshWave::Create(WaveConfig, pos);
+	}
+
 
 	// イベントフレームの判定
-	if (m_pMotion->IsEventFrame(64, 71, MOTION::TYPE_ACTION) && m_pMotion->GetBlendType() != MOTION::TYPE_DAMAGE)
+	if (m_pMotion->IsEventFrame(64, 71, MOTION::TYPE_SMASH) && m_pMotion->GetBlendType() != MOTION::TYPE_DAMAGE)
 	{
 		// 当たり判定がnullじゃなかったら
 		if (m_pSphere != nullptr)
@@ -315,12 +302,6 @@ void CEnemy::Update(void)
 			// 当たったら
 			if (CollisionWepon() && bParry)
 			{
-				//// スローモーションの取得
-				//CSlow* pSlow = CManager::GetSlow();
-
-				//// スローモーション
-				//pSlow->Start(540, 12);
-
 				// パリィモーションの再生
 				pPlayerMotion->SetMotion(pPlayerMotion->TYPE_PARRY, true, 2);
 			}
@@ -337,8 +318,14 @@ void CEnemy::Update(void)
 	}
 
 	// パリィモーションのパンチになったら
-	if (pPlayerMotion->IsParryEvent(11, 11))
+	if (pPlayerMotion->IsParryEvent(11, 11) && m_pMotion->GetBlendType() == MOTION::TYPE_SMASH)
 	{
+		// スローモーションの取得
+		CSlow* pSlow = CManager::GetSlow();
+
+		// スローモーション
+		pSlow->Start(540, 12);
+
 		// プレイヤーの右手の位置
 		D3DXVECTOR3 playerHandR = pPlayer->GetModelPos(5);
 
@@ -349,20 +336,23 @@ void CEnemy::Update(void)
 		float fAngle = GetTargetAngle(pos, playerHandR);
 
 		// 吹き飛び処理
-		BlowOff(PlayerPos, 150.0f, 12.0f);
+		BlowOff(PlayerPos, 150.0f, 5.0f);
 
 		// インパクトの設定
-		CMeshCircle::Confing Circleconfig = { 35.0f,10.0f,0.0f,120.0f,30,false };
+		CMeshCircle::Confing Circleconfig = { 35.0f,10.0f,0.0f,120.0f,120,false };
 
 		// インパクトを生成
 		CMeshCircle::Create(Circleconfig, D3DXCOLOR(1.0f, 1.0f, 0.4f, 0.8f), playerHandR, 32, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
 
 		// モーションをダメージにする
 		m_pMotion->SetMotion(MOTION::TYPE_DAMAGE, true, 2);
+
+		// 状態の設定
+		SetState(make_unique<CStateDamage>());
 	}
 
 	// 攻撃モーションのたたきつけになったら
-	if (m_pMotion->IsEventFrame(72,72, MOTION::TYPE_ACTION))
+	if (m_pMotion->IsEventFrame(72,72, MOTION::TYPE_SMASH))
 	{
 		// フィールドの波の設定
 		CMeshFieldWave::Config config = { WeponPos,250.0f,380.0f,280.0f,12.0f,0.01f,120 };
@@ -402,7 +392,7 @@ void CEnemy::Update(void)
 	}
 
 	// 衝撃波の生成
-	if (m_pMotion->IsEventFrame(102, 102, MOTION::TYPE_ACTION2))
+	if (m_pMotion->IsEventFrame(102, 102, MOTION::TYPE_IMPACT))
 	{
 		// プレイヤーまでの方向
 		D3DXVECTOR3 dir = PlayerPos - WeponPos;
@@ -413,6 +403,9 @@ void CEnemy::Update(void)
 		// インパクトの生成
 		pMesh->SetImpact(config);
 	}
+
+	// 状態の更新処理
+	m_pState->Update(this);
 
 	// モーションの遷移
 	m_pMotion->TransitionMotion(m_pCharactor.get());
@@ -527,8 +520,8 @@ bool CEnemy::CollisionWepon(void)
 
 #ifdef _DEBUG
 
-		// 武器のマトリックス確認用
-		CEffect3D::Create(pos, 50.0f, VEC3_NULL, WHITE, 10);
+		//// 武器のマトリックス確認用
+		//CEffect3D::Create(pos, 50.0f, VEC3_NULL, WHITE, 10);
 #endif // _DEBUG
 
 		// 敵の武器に当たったら
@@ -539,6 +532,147 @@ bool CEnemy::CollisionWepon(void)
 	}
 
 	return false;
+}
+
+//===================================================
+// 新しい状態の設定処理
+//===================================================
+void CEnemy::SetState(std::unique_ptr<CEnemyState> NewState)
+{
+	// 違うポインタなら
+	if (m_pState != nullptr && m_pState->GetID() != NewState->GetID())
+	{
+		// 新しい状態の設定(所有権を移動させる)
+		m_pState = std::move(NewState);
+	}
+}
+
+//===================================================
+// プレイヤーを追いかける処理
+//===================================================
+void CEnemy::ChasePlayer(float chaseScal, const float speedScal)
+{
+	// プレイヤーの取得
+	CPlayer* pPlayer = CManager::GetPlayer();
+
+	// プレイヤーの位置の取得
+	D3DXVECTOR3 playerPos = pPlayer->GetPos();
+	
+	// 位置の取得
+	D3DXVECTOR3 pos = m_pCharactor->GetPosition();
+
+	// 移動量の取得
+	D3DXVECTOR3 move = m_pMove->Get();
+
+	// 現在の移動方向を求める
+	float fRotMove = atan2f(move.x, move.z);
+
+	// 目的までの差分を求める
+	D3DXVECTOR3 Diff = playerPos - pos;
+
+	// 目的の方向を求める
+	float fDest = atan2f(Diff.x, Diff.z);
+
+	// 目的までの差分を求める
+	float fDiffRot = fDest - fRotMove;
+
+	// 角度の差分を求める
+	if (fDiffRot < -D3DX_PI)
+	{
+		fDiffRot += D3DX_PI * 2.0f;
+	}
+	else if (fDiffRot > D3DX_PI)
+	{
+		fDiffRot += -D3DX_PI * 2.0f;
+	}
+
+	// 範囲制限
+	chaseScal = Clamp(chaseScal, 0.0f, 1.0f);
+
+	// 目的までだんだん近づける
+	fRotMove += fDiffRot * chaseScal;
+
+	// 速さの取得
+	float fSpeed = m_pCharactor->GetSpeed();
+
+	move.x = sinf(fRotMove) * (fSpeed * speedScal);
+	move.z = cosf(fRotMove) * (fSpeed * speedScal);
+
+	D3DXVECTOR3 TargetDir = GetVector(playerPos, pos);	  // ターゲットまでの方向を取得
+	float fAngle = GetTargetAngle(playerPos, pos);		  // 目標までの角度の取得
+
+	// 移動量の設定
+	m_pMove->Set(move);
+
+	// 目的の角度の設定
+	m_pCharactor->GetRotation()->SetDest(D3DXVECTOR3(0.0f, fAngle + D3DX_PI, 0.0f));
+}
+
+//===================================================
+// 距離の判定
+//===================================================
+bool CEnemy::CheckDistane(const float fRadius)
+{
+	// プレイヤーの取得
+	CPlayer* pPlayer = CManager::GetPlayer();
+
+	// プレイヤーの位置の取得
+	D3DXVECTOR3 playerpos = pPlayer->GetPos();
+
+	// 敵の位置の取得
+	D3DXVECTOR3 enemypos = m_pCharactor->GetPosition();
+	
+	// 距離の取得
+	float distance = GetDistance(playerpos - enemypos);
+
+	// 一定の範囲に入ったら
+	if (distance <= fRadius)
+	{
+		return true;
+	}
+	return false;
+}
+
+//===================================================
+// 向いている方向に進む処理
+//===================================================
+void CEnemy::MoveForWard(const float fSpeed)
+{
+	// 向きの取得
+	D3DXVECTOR3 rot = m_pCharactor->GetRotation()->Get();
+
+	// 移動量の取得
+	D3DXVECTOR3 move = m_pMove->Get();
+
+	// 移動量の設定
+	move.x = sinf(rot.y + D3DX_PI) * fSpeed;
+	move.z = cosf(rot.y + D3DX_PI) * fSpeed;
+
+	// 移動量の設定
+	m_pMove->Set(move);
+}
+
+//===================================================
+// 軌跡の処理
+//===================================================
+void CEnemy::Orbit(const int nSegH, const D3DXCOLOR col, const int nLife)
+{
+	// 武器の先端の位置
+	D3DXVECTOR3 WeponTop = GetPositionFromMatrix(m_weponMatrix);
+	D3DXVECTOR3 WeponBottom = GetPositionFromMatrix(m_apModel[15]->GetMatrixWorld());
+
+	// 軌跡の生成
+	if (m_pOrbit == nullptr)
+	{
+		m_pOrbit = CMeshOrbit::Create(WeponTop, WeponBottom, nSegH, col, nLife);
+	}
+	
+	// 軌跡が使われていて寿命が無かったら
+	if (m_pOrbit != nullptr && m_pOrbit->SetPosition(WeponTop, WeponBottom) == false)
+	{
+		// nullにする
+		m_pOrbit = nullptr;
+	}
 }
 
 //===================================================
@@ -581,157 +715,11 @@ void CEnemy::SetParent(const int nCnt)
 }
 
 //===================================================
-// 敵のAIのコンストラクタ
-//===================================================
-CEnemyAI::CEnemyAI()
-{
-	m_pMotion = nullptr;
-	m_Action = ACTION_IDLE;
-	m_nCounterAction = NULL;
-	m_nNextCounter = NULL;
-}
-
-//===================================================
-// 敵のAIのデストラクタ
-//===================================================
-CEnemyAI::~CEnemyAI()
-{
-
-}
-
-//===================================================
-// 敵のAIの初期化処理
-//===================================================
-void CEnemyAI::Init(std::shared_ptr<CEnemyMotionController> pMotion, const int nBlendFrame, const int nFirstMotion)
-{
-	// モーションの情報の取得
-	m_pMotion = pMotion;
-
-	m_pMotion->SetMotion(nFirstMotion, true, nBlendFrame);
-}
-
-//===================================================
-// 更新処理
-//===================================================
-void CEnemyAI::Update(void)
-{
-	switch (m_Action)
-	{
-	case ACTION_WAIT:
-		m_nCounterAction--;
-
-		if (m_nCounterAction <= 0)
-		{
-			m_Action = ACTION_IDLE;
-		}
-		break;
-	default:
-		break;
-	}
-}
-
-//===================================================
-// 敵の移動のAI
-//===================================================
-int CEnemyAI::CheckDistance(const D3DXVECTOR3 dest, const D3DXVECTOR3 pos,const float fRadius)
-{
-	if (m_Action != ACTION_IDLE && m_Action != ACTION_MOVE) return -1;
-
-	// 差分を求める
-	D3DXVECTOR3 Diff = dest - pos;
-
-	// 次の行動の抽選までのカウンター
-	m_nNextCounter++;
-
-	int random = -1;
-
-	// 次の行動の抽選タイムに達したら
-	if (m_nNextCounter >= NEXT_ACTION_TIME)
-	{
-		// 行動を抽選
-		random = rand() % 100 + 1;
-
-		// カウンターをリセット
-		m_nNextCounter = 0;
-	}
-
-	// 距離を求める
-	float fDistance = GetDistance(Diff);
-
-	// 範囲内に入ったら
-	if (fDistance >= fRadius)
-	{
-		// 55%の確率で攻撃
-		if (random <= 55 && random != -1)
-		{
-			m_Action = ACTION_ATTACK;
-			m_pMotion->SetMotion(m_pMotion->TYPE_ACTION2, true, 10);
-		}
-		else
-		{
-			m_Action = ACTION_MOVE;
-		}
-
-		return m_Action;
-	}
-
-	m_Action = ACTION_IDLE;
-
-	return ACTION_IDLE;
-}
-
-//===================================================
-// 攻撃開始判定
-//===================================================
-int CEnemyAI::IsAttack(void)
-{
-	if (m_Action != ACTION_IDLE) return -1;
-
-	//int random = rand() % 100;
-
-	m_Action = ACTION_ATTACK;
-
-	return ACTION_ATTACK;
-}
-
-//===================================================
-// 待機状態
-//===================================================
-bool CEnemyAI::Wait(void)
-{
-	if (m_pMotion->IsFinishEndBlend() == true)
-	{
-		m_Action = ACTION_WAIT;
-
-		// モーションの種類を取得
-		int moyiontype = m_pMotion->GetType();
-
-		switch (moyiontype)
-		{
-		case MOTION::TYPE_ACTION:
-			m_nCounterAction = 60;
-			break;
-		case MOTION::TYPE_DAMAGE:
-			m_nCounterAction = 30;
-			break;
-		default:
-			break;
-		}
-
-		m_pMotion->SetMotion(MOTION::TYPE_NEUTRAL, true, 10);
-
-
-		return true;
-	}
-
-	return false;
-}
-
-//===================================================
 // コンストラクタ
 //===================================================
 CEnemyMotionController::CEnemyMotionController()
 {
+
 }
 
 //===================================================
@@ -739,6 +727,7 @@ CEnemyMotionController::CEnemyMotionController()
 //===================================================
 CEnemyMotionController::~CEnemyMotionController()
 {
+
 }
 
 //===================================================
@@ -879,7 +868,7 @@ bool CEnemyMotionController::IsEventFrame(const int start, const int end, const 
 }
 
 //===================================================
-// 
+// モーションのブレンドが完了したら
 //===================================================
 bool CEnemyMotionController::IsFinishEndBlend(void)
 {
@@ -889,6 +878,14 @@ bool CEnemyMotionController::IsFinishEndBlend(void)
 		return true;
 	}
 	return false;
+}
+
+//===================================================
+// モーションが終わったら
+//===================================================
+bool CEnemyMotionController::IsFinishMotion(void)
+{
+	return m_pMotion->FinishMotion();
 }
 
 //===================================================
@@ -912,9 +909,9 @@ void CEnemyMotionController::TransitionMotion(CCharacter3D *pCharacter)
 	case TYPE_MOVE:
 
 		break;
-	case TYPE_ACTION:
+	case TYPE_SMASH:
 	{
-		if (m_pMotion->IsEventFrame(1, 64, TYPE_ACTION))
+		if (m_pMotion->IsEventFrame(1, 64, TYPE_SMASH))
 		{
 			// プレイヤーまでの角度を求める
 			float fAngle = GetTargetAngle(pos, PlayerPos);
@@ -925,9 +922,9 @@ void CEnemyMotionController::TransitionMotion(CCharacter3D *pCharacter)
 		break;
 	case TYPE_DAMAGE:
 		break;
-	case TYPE_ACTION2:
+	case TYPE_IMPACT:
 	{
-		if (m_pMotion->IsEventFrame(1, 91, TYPE_ACTION2))
+		if (m_pMotion->IsEventFrame(1, 91, TYPE_IMPACT))
 		{
 			// プレイヤーまでの角度を求める
 			float fAngle = GetTargetAngle(pos, PlayerPos);
@@ -939,32 +936,4 @@ void CEnemyMotionController::TransitionMotion(CCharacter3D *pCharacter)
 	default:
 		break;
 	}
-}
-
-//===================================================
-// 移動の構成処理
-//===================================================
-void CEnemyMotionController::ConfigMove(CCharacter3D* pCharacter, const D3DXVECTOR3 dest)
-{
-	// 位置の取得
-	D3DXVECTOR3 pos = pCharacter->GetPosition();
-
-	D3DXVECTOR3 TargetDir = GetVector(dest, pos);	  // ターゲットまでの方向を取得
-	float fAngle = GetTargetAngle(dest, pos);		  // 目標までの角度の取得
-
-	// 移動量の取得
-	D3DXVECTOR3 move = m_pMove->Get();
-
-	// 速度の取得
-	float fSpeed = pCharacter->GetSpeed();
-
-	// 移動量の設定
-	move.x = TargetDir.x * fSpeed;
-	move.z = TargetDir.z * fSpeed;
-
-	// 移動量の設定
-	m_pMove->Set(move);
-
-	// 目的の角度の設定
-	pCharacter->GetRotation()->SetDest(D3DXVECTOR3(0.0f, fAngle + D3DX_PI, 0.0f));
 }

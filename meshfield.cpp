@@ -48,7 +48,7 @@ CMeshField::~CMeshField()
 //================================================
 // 生成処理
 //================================================
-CMeshField* CMeshField::Create(const D3DXVECTOR3 pos, const int nSegX, const int nSegZ, const D3DXVECTOR2 Size, const D3DXVECTOR3 rot)
+CMeshField* CMeshField::Create(const D3DXVECTOR3 pos, const int nSegH, const int nSegV, const D3DXVECTOR2 Size, const D3DXVECTOR3 rot)
 {
 	// メッシュフィールドを生成
 	CMeshField* pMeshField = new CMeshField;
@@ -63,7 +63,7 @@ CMeshField* CMeshField::Create(const D3DXVECTOR3 pos, const int nSegX, const int
 	if (nNumAll >= MAX_OBJECT && pMeshField != nullptr)
 	{
 		// 自分のポインタの解放
-		pMeshField->Release();
+		pMeshField->Uninit();
 
 		// nullにする
 		pMeshField = nullptr;
@@ -75,25 +75,33 @@ CMeshField* CMeshField::Create(const D3DXVECTOR3 pos, const int nSegX, const int
 	if (pMeshField == nullptr) return nullptr;
 	
 	// 頂点数の設定
-	int nNumVtx = (nSegX + 1) * (nSegZ + 1);
+	int nNumVtx = (nSegH + 1) * (nSegV + 1);
 
 	// ポリゴン数の設定
-	int nNumPolygon = ((nSegX * nSegZ) * 2) + (4 * (nSegZ - 1));
+	int nNumPolygon = ((nSegH * nSegV) * 2) + (4 * (nSegV - 1));
 
 	// インデックス数の設定
 	int nNumIndex = nNumPolygon + 2;
 
 	// 頂点の設定
 	pMeshField->SetVtxElement(nNumVtx, nNumPolygon, nNumIndex);
-	pMeshField->SetSegment(nSegX, nSegZ);
+	pMeshField->SetSegment(nSegH, nSegV);
 
 	// 初期化処理
-	pMeshField->Init();
+	if (FAILED(pMeshField->Init()))
+	{
+		pMeshField->Uninit();
+
+		// nullにする
+		pMeshField = nullptr;
+
+		return nullptr;
+	}
 
 	// 設定処理
 	pMeshField->SetPosition(pos);
 	pMeshField->SetRotation(rot);
-	pMeshField->SetMeshField(nSegX, nSegZ, pos, Size);
+	pMeshField->SetMeshField(nSegH, nSegV, pos, Size);
 	pMeshField->m_fWidth = Size.x;
 	pMeshField->m_fHeight = Size.y;
 
@@ -156,11 +164,11 @@ void CMeshField::Update(void)
 	// 法線の再設定
 	UpdateNor();
 
-	int nSegX = GetSegX();
-	int nSegZ = GetSegZ();
+	int nSegH = GetSegH();
+	int nSegV = GetSegV();
 
 	// 頂点数の設定
-	int nNumVtx = (nSegX + 1) * (nSegZ + 1);
+	int nNumVtx = (nSegH + 1) * (nSegV + 1);
 #if 1
 
 	// 要素分調べる
@@ -270,23 +278,23 @@ void CMeshField::Draw(void)
 //================================================
 // メッシュフィールドの設定処理
 //================================================
-void CMeshField::SetMeshField(const int nSegX, const int nSegZ, const D3DXVECTOR3 pos,const D3DXVECTOR2 Size)
+void CMeshField::SetMeshField(const int nSegH, const int nSegV, const D3DXVECTOR3 pos,const D3DXVECTOR2 Size)
 {
 	int nCntVtx = 0;
 
-	float fTexPosX = 1.0f + 1.0f / nSegX;
-	float fTexPosY = 1.0f + 1.0f / nSegZ;
+	float fTexPosX = 1.0f + 1.0f / nSegH;
+	float fTexPosY = 1.0f + 1.0f / nSegV;
 
 	D3DXVECTOR3 posWk;
 
-	for (int nCntZ = 0; nCntZ <= nSegZ; nCntZ++)
+	for (int nCntZ = 0; nCntZ <= nSegV; nCntZ++)
 	{
-		for (int nCntX = 0; nCntX <= nSegX; nCntX++)
+		for (int nCntX = 0; nCntX <= nSegH; nCntX++)
 		{
 			// 位置の設定
-			posWk.x = ((Size.x / nSegX) * nCntX) - (Size.x * 0.5f);
+			posWk.x = ((Size.x / nSegH) * nCntX) - (Size.x * 0.5f);
 			posWk.y = pos.y;
-			posWk.z = Size.y - ((Size.y / nSegZ) * nCntZ) - (Size.y * 0.5f);
+			posWk.z = Size.y - ((Size.y / nSegV) * nCntZ) - (Size.y * 0.5f);
 
 			// 頂点バッファの設定
 			SetVtxBuffer(posWk, nCntVtx, D3DXVECTOR2((fTexPosX * nCntX), (fTexPosY * nCntZ)));
@@ -295,16 +303,16 @@ void CMeshField::SetMeshField(const int nSegX, const int nSegZ, const D3DXVECTOR
 		}
 	}
 
-	int IndxNum = nSegX + 1;//X
+	int IndxNum = nSegH + 1;//X
 
 	int IdxCnt = 0;//配列
 
 	int Num = 0;//
 
 	//インデックスの設定
-	for (int IndxCount1 = 0; IndxCount1 < nSegZ; IndxCount1++)
+	for (int IndxCount1 = 0; IndxCount1 < nSegV; IndxCount1++)
 	{
-		for (int IndxCount2 = 0; IndxCount2 <= nSegX; IndxCount2++, IndxNum++, Num++)
+		for (int IndxCount2 = 0; IndxCount2 <= nSegH; IndxCount2++, IndxNum++, Num++)
 		{
 			// インデックスバッファの設定
 			SetIndexBuffer((WORD)IndxNum, IdxCnt);
@@ -313,7 +321,7 @@ void CMeshField::SetMeshField(const int nSegX, const int nSegZ, const D3DXVECTOR
 		}
 
 		// NOTE:最後の行じゃなかったら
-		if (IndxCount1 < nSegZ - 1)
+		if (IndxCount1 < nSegV - 1)
 		{
 			SetIndexBuffer((WORD)Num - 1, IdxCnt);
 			SetIndexBuffer((WORD)IndxNum, IdxCnt + 1);
@@ -330,12 +338,12 @@ bool CMeshField::Collision(const D3DXVECTOR3 pos,float *pOutHeight)
 	// 着地判定
 	bool bLanding = false;
 
-	int nSegX = GetSegX();
-	int nSegZ = GetSegZ();
+	int nSegH = GetSegH();
+	int nSegV = GetSegV();
 
 	// 1マスのサイズ
-	float GridSizeX = m_fWidth / (float)nSegX;
-	float GridSizeZ = m_fHeight / (float)nSegZ;
+	float GridSizeX = m_fWidth / (float)nSegH;
+	float GridSizeZ = m_fHeight / (float)nSegV;
 
 	float X = pos.x + (m_fWidth * 0.5f);
 	float Z = (m_fHeight * 0.5f) - pos.z;
@@ -345,10 +353,10 @@ bool CMeshField::Collision(const D3DXVECTOR3 pos,float *pOutHeight)
 	int polyZ = (int)(Z / GridSizeZ);
 
 	// 現在のポリゴンのインデックス番号
-	int polyIndex = ((polyZ * (nSegX - 1) + polyX) * 2) + (polyZ * 6);
+	int polyIndex = ((polyZ * (nSegH - 1) + polyX) * 2) + (polyZ * 6);
 
 	// ポリゴン数の設定
-	int nNumPolygon = ((nSegX * nSegZ) * 2) + (4 * (nSegZ - 1));
+	int nNumPolygon = ((nSegH * nSegV) * 2) + (4 * (nSegV - 1));
 
 	// インデックス数の設定
 	int nNumIndex = nNumPolygon + 2;
@@ -463,13 +471,13 @@ bool CMeshField::Collision(const D3DXVECTOR3 pos,float *pOutHeight)
 void CMeshField::UpdateNor(void)
 {
 	int nCnt = 0;
-	int nSegX = GetSegX();
-	int nSegZ = GetSegZ();
+	int nSegH = GetSegH();
+	int nSegV = GetSegV();
 
 	// 頂点数分調べる
-	for (int nCntZ = 0; nCntZ <= nSegZ; nCntZ++)
+	for (int nCntZ = 0; nCntZ <= nSegV; nCntZ++)
 	{
-		for (int nCntX = 0; nCntX <= nSegX; nCntX++)
+		for (int nCntX = 0; nCntX <= nSegH; nCntX++)
 		{
 			// 計算用頂点0,1,2,3,4
 			D3DXVECTOR3 vtx0, vtx1, vtx2, vtx3, vtx4;
@@ -506,7 +514,7 @@ void CMeshField::UpdateNor(void)
 				{
 					nIdx0 = 0;
 					nIdx1 = 1;
-					nIdx2 = nSegX + 1;
+					nIdx2 = nSegH + 1;
 
 					vtx0 = GetVtxPos(nIdx0);
 					vtx1 = GetVtxPos(nIdx1);
@@ -518,11 +526,11 @@ void CMeshField::UpdateNor(void)
 					D3DXVec3Cross(&Normal, &vec0, &vec1);
 				}
 				// 左下だったら
-				else if (nCntZ == nSegZ)
+				else if (nCntZ == nSegV)
 				{
-					nIdx0 = (nSegX + 1) * nSegZ;
-					nIdx1 = (nSegX + 1) * (nSegZ - 1);
-					nIdx2 = ((nSegX + 1) * nSegZ) + 1;
+					nIdx0 = (nSegH + 1) * nSegV;
+					nIdx1 = (nSegH + 1) * (nSegV - 1);
+					nIdx2 = ((nSegH + 1) * nSegV) + 1;
 
 					vtx0 = GetVtxPos(nIdx0);
 					vtx1 = GetVtxPos(nIdx1);
@@ -534,11 +542,11 @@ void CMeshField::UpdateNor(void)
 					D3DXVec3Cross(&Normal, &vec0, &vec1);
 				}
 				// 左の辺(角以外)だったら
-				else if(nCnt == (nSegX + 1) * nCntZ)
+				else if(nCnt == (nSegH + 1) * nCntZ)
 				{
-					nIdx0 = nCnt - (nSegX + 1);
+					nIdx0 = nCnt - (nSegH + 1);
 					nIdx1 = nCnt + 1;
-					nIdx2 = nCnt + (nSegX + 1);
+					nIdx2 = nCnt + (nSegH + 1);
 
 					vtx0 = GetVtxPos(nIdx0);
 					vtx1 = GetVtxPos(nIdx1);
@@ -556,9 +564,9 @@ void CMeshField::UpdateNor(void)
 				}
 			}
 			// 上の辺だったら
-			else if (nCntZ == 0 && nCnt < nSegX)
+			else if (nCntZ == 0 && nCnt < nSegH)
 			{
-				nIdx0 = (nSegX + 1) + nCntX;
+				nIdx0 = (nSegH + 1) + nCntX;
 				nIdx1 = nCnt - 1;
 				nIdx2 = nCnt + 1;
 
@@ -577,11 +585,11 @@ void CMeshField::UpdateNor(void)
 				Normal = (Nor0 + Nor1) * 0.5f;
 			}
 			// 右上だったら
-			else if (nCntX == nSegX && nCntZ == 0)
+			else if (nCntX == nSegH && nCntZ == 0)
 			{
-				nIdx0 = nSegX;
-				nIdx1 = nSegX - 1;
-				nIdx2 = nSegX + 1 + nCntX;
+				nIdx0 = nSegH;
+				nIdx1 = nSegH - 1;
+				nIdx2 = nSegH + 1 + nCntX;
 
 				vtx0 = GetVtxPos(nIdx0);
 				vtx1 = GetVtxPos(nIdx1);
@@ -593,10 +601,10 @@ void CMeshField::UpdateNor(void)
 				D3DXVec3Cross(&Normal, &vec1, &vec0);
 			}
 			// 下の辺だったら
-			else if (nCntZ == nSegZ && nCnt < ((nSegX + 1) * (nSegZ + 1)) - 1)
+			else if (nCntZ == nSegV && nCnt < ((nSegH + 1) * (nSegV + 1)) - 1)
 			{
 				nIdx0 = nCnt - 1;
-				nIdx1 = nCnt - (nSegX + 1);
+				nIdx1 = nCnt - (nSegH + 1);
 				nIdx2 = nCnt + 1;
 
 				vtx0 = GetVtxPos(nCnt);
@@ -614,10 +622,10 @@ void CMeshField::UpdateNor(void)
 				Normal = (Nor0 + Nor1) * 0.5f;
 			}
 			// 右下だったら
-			else if (nCnt == ((nSegX + 1) * (nSegZ + 1)) - 1)
+			else if (nCnt == ((nSegH + 1) * (nSegV + 1)) - 1)
 			{
-				nIdx0 = ((nSegX + 1) * (nSegZ + 1)) - 1;
-				nIdx1 = nIdx0 - (nSegX + 1);
+				nIdx0 = ((nSegH + 1) * (nSegV + 1)) - 1;
+				nIdx1 = nIdx0 - (nSegH + 1);
 				nIdx2 = nIdx0 - 1;
 
 				vtx0 = GetVtxPos(nIdx0);
@@ -630,11 +638,11 @@ void CMeshField::UpdateNor(void)
 				D3DXVec3Cross(&Normal, &vec1, &vec0);
 			}
 			// 右の辺(角以外)だったら
-			else if (nCntX == nSegX && nCnt == (nCntX * (nCntZ + 1)) + nCntZ)
+			else if (nCntX == nSegH && nCnt == (nCntX * (nCntZ + 1)) + nCntZ)
 			{
-				nIdx0 = nCnt - (nSegX + 1);
+				nIdx0 = nCnt - (nSegH + 1);
 				nIdx1 = nCnt - 1;
-				nIdx2 = nCnt + (nSegX + 1);
+				nIdx2 = nCnt + (nSegH + 1);
 
 				vtx0 = GetVtxPos(nIdx0);
 				vtx1 = GetVtxPos(nIdx1);
@@ -654,9 +662,9 @@ void CMeshField::UpdateNor(void)
 			else
 			{
 				nIdx0 = nCnt - 1;
-				nIdx1 = nCnt - (nSegX + 1);
+				nIdx1 = nCnt - (nSegH + 1);
 				nIdx2 = nCnt + 1;
-				nIdx3 = nCnt + (nSegX + 1);
+				nIdx3 = nCnt + (nSegH + 1);
 
 				vtx0 = GetVtxPos(nCnt);
 				vtx1 = GetVtxPos(nIdx0);

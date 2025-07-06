@@ -17,12 +17,8 @@
 //================================================
 CMeshWave::CMeshWave()
 {
-	m_fRadius = NULL;
-	m_col = WHITE;
+	ZeroMemory(&m_Config, sizeof(m_Config));
 	m_fDecAlv = NULL;
-	m_fSpeed = NULL;
-	m_nLife = NULL;
-	m_fHeight = NULL;
 }
 
 //================================================
@@ -35,7 +31,7 @@ CMeshWave::~CMeshWave()
 //================================================
 // 生成処理
 //================================================
-CMeshWave* CMeshWave::Create(const D3DXVECTOR3 pos, const float fRadius, const float fHeight, const float speed, const int nLife, const int nSegX, const D3DXCOLOR col, const D3DXVECTOR3 rot)
+CMeshWave* CMeshWave::Create(Config config, const D3DXVECTOR3 pos, const int nSegH, const D3DXVECTOR3 rot)
 {
 	// メッシュウェーブを生成
 	CMeshWave* pMesh = new CMeshWave;
@@ -60,22 +56,22 @@ CMeshWave* CMeshWave::Create(const D3DXVECTOR3 pos, const float fRadius, const f
 	}
 
 	// zの分割数1固定
-	const int nSegZ = 1;
+	const int nSegV = 1;
 
 	if (pMesh == nullptr) return nullptr;
 
 	// 頂点数の設定
-	int nNumVtx = (nSegX + 1) * (nSegZ + 1);
+	int nNumVtx = (nSegH + 1) * (nSegV + 1);
 
 	// ポリゴン数の設定
-	int nNumPolygon = ((nSegX * nSegZ) * 2) + (4 * (nSegZ - 1));
+	int nNumPolygon = ((nSegH * nSegV) * 2) + (4 * (nSegV - 1));
 
 	// インデックス数の設定
 	int nNumIndex = nNumPolygon + 2;
 
 	// 頂点の設定
 	pMesh->SetVtxElement(nNumVtx, nNumPolygon, nNumIndex);
-	pMesh->SetSegment(nSegX, nSegZ);
+	pMesh->SetSegment(nSegH, nSegV);
 
 	// 初期化処理
 	pMesh->Init();
@@ -83,14 +79,10 @@ CMeshWave* CMeshWave::Create(const D3DXVECTOR3 pos, const float fRadius, const f
 	// 設定処理
 	pMesh->SetPosition(pos);
 	pMesh->SetRotation(rot);
-	pMesh->m_fHeight = fHeight;
-	pMesh->m_fRadius = fRadius;
-	pMesh->m_nLife = nLife;
-	pMesh->m_fSpeed = speed;
-	pMesh->m_col = col;
-	pMesh->m_fDecAlv = col.a / nLife;
+	pMesh->m_Config = config;
+	pMesh->m_fDecAlv = config.col.a / config.nLife;
 
-	pMesh->SetWave(nSegX,fRadius, fHeight);
+	pMesh->SetWave(nSegH, config.fRadius, config.fHeight);
 
 	return pMesh;
 }
@@ -107,7 +99,7 @@ HRESULT CMeshWave::Init(void)
 	}
 
 	// テクスチャのIDの設定
-	CMesh::SetTextureID("data/TEXTURE/dog.png");
+	CMesh::SetTextureID("data/TEXTURE/wave000.png");
 
 	return S_OK;
 }
@@ -129,27 +121,27 @@ void CMeshWave::Update(void)
 	int nCntVtx = 0; // 頂点数のカウンター
 
 	// 横の分割数の取得
-	int nSegX = GetSegX();
+	int nSegH = GetSegH();
 
 	// Zの分割数の取得
-	int nSegZ = GetSegZ();
+	int nSegV = GetSegV();
 
 	// 半径の更新
-	m_fRadius += m_fSpeed;
+	m_Config.fRadius += m_Config.fSpeed;
 
-	for (int nCntZ = 0; nCntZ <= nSegZ; nCntZ++)
+	for (int nCntZ = 0; nCntZ <= nSegV; nCntZ++)
 	{
-		for (int nCntX = 0; nCntX <= nSegX; nCntX++)
+		for (int nCntX = 0; nCntX <= nSegH; nCntX++)
 		{
 			// 一周の割合を求める
-			float fAngle = (D3DX_PI * 2.0f) / nSegX * nCntX;
+			float fAngle = (D3DX_PI * 2.0f) / nSegH * nCntX;
 
 			// 計算用の位置
 			D3DXVECTOR3 posWk = VEC3_NULL;
 
-			posWk.x = sinf(fAngle) * m_fRadius;
-			posWk.y = m_fHeight - (m_fHeight / nSegZ * nCntZ);
-			posWk.z = cosf(fAngle) * m_fRadius;
+			posWk.x = sinf(fAngle) * m_Config.fRadius;
+			posWk.y = m_Config.fHeight - (m_Config.fHeight / nSegV * nCntZ);
+			posWk.z = cosf(fAngle) * m_Config.fRadius;
 
 			// 法線の正規化
 			D3DXVECTOR3 nor = NormalizeNormal(nCntVtx);
@@ -158,7 +150,7 @@ void CMeshWave::Update(void)
 			SetVtxPos(posWk,nCntVtx);
 
 			// 頂点カラーの設定
-			SetVtxColor(m_col, nCntVtx);
+			SetVtxColor(m_Config.col, nCntVtx);
 
 			// 法線の設定
 			SetNormal(nor,nCntVtx);
@@ -169,13 +161,13 @@ void CMeshWave::Update(void)
 	}
 
 	// 透明度を下げる
-	m_col.a -= m_fDecAlv;
+	m_Config.col.a -= m_fDecAlv;
 
 	// 寿命を減らす
-	m_nLife--;
+	m_Config.nLife--;
 
 	// 寿命が尽きた
-	if (m_nLife <= 0)
+	if (m_Config.nLife <= 0)
 	{
 		Uninit();
 
@@ -222,27 +214,27 @@ void CMeshWave::Draw(void)
 //================================================
 // 波の設定処理
 //================================================
-void CMeshWave::SetWave(const int nSegX, const float fRadius, const float fHeight)
+void CMeshWave::SetWave(const int nSegH, const float fRadius, const float fHeight)
 {
 	int nCntVtx = 0; // 頂点数のカウンター
 
-	float fPosTexV = 1.0f / nSegX; // 横の分割数
+	float fPosTexV = 1.0f / nSegH; // 横の分割数
 	
 	// Zの分割数の取得
-	int nSegZ = GetSegZ();
+	int nSegV = GetSegV();
 
-	for (int nCntZ = 0; nCntZ <= nSegZ; nCntZ++)
+	for (int nCntZ = 0; nCntZ <= nSegV; nCntZ++)
 	{
-		for (int nCntX = 0; nCntX <= nSegX; nCntX++)
+		for (int nCntX = 0; nCntX <= nSegH; nCntX++)
 		{
 			// 一周の割合を求める
-			float fAngle = (D3DX_PI * 2.0f) / nSegX * nCntX;
+			float fAngle = (D3DX_PI * 2.0f) / nSegH * nCntX;
 
 			// 計算用の位置
 			D3DXVECTOR3 posWk = VEC3_NULL;
 
 			posWk.x = sinf(fAngle) * fRadius;
-			posWk.y = fHeight - (fHeight / nSegZ * nCntZ);
+			posWk.y = fHeight - (fHeight / nSegV * nCntZ);
 			posWk.z = cosf(fAngle) * fRadius;
 
 			// 頂点バッファの設定
@@ -257,16 +249,16 @@ void CMeshWave::SetWave(const int nSegX, const float fRadius, const float fHeigh
 		}
 	}
 
-	int IndxNum = nSegX + 1; // インデックスの数値1
+	int IndxNum = nSegH + 1; // インデックスの数値1
 
 	int IdxCnt = 0; // 配列
 
 	int Num = 0; // インデックスの数値2
 
 	//インデックスの設定
-	for (int IndxCount1 = 0; IndxCount1 < nSegZ; IndxCount1++)
+	for (int IndxCount1 = 0; IndxCount1 < nSegV; IndxCount1++)
 	{
-		for (int IndxCount2 = 0; IndxCount2 <= nSegX; IndxCount2++, IndxNum++, Num++)
+		for (int IndxCount2 = 0; IndxCount2 <= nSegH; IndxCount2++, IndxNum++, Num++)
 		{
 			// インデックスバッファの設定
 			SetIndexBuffer((WORD)IndxNum, IdxCnt);
@@ -275,7 +267,7 @@ void CMeshWave::SetWave(const int nSegX, const float fRadius, const float fHeigh
 		}
 
 		// NOTE:最後の行じゃなかったら
-		if (IndxCount1 < nSegZ - 1)
+		if (IndxCount1 < nSegV - 1)
 		{
 			SetIndexBuffer((WORD)Num - 1, IdxCnt);
 			SetIndexBuffer((WORD)IndxNum, IdxCnt + 1);

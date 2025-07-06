@@ -31,8 +31,8 @@ public:
 	virtual void Draw(void);
 	void SetUpDraw(void);
 
-	int GetSegX(void) const { return m_nSegmentX; }
-	int GetSegZ(void) const { return m_nSegmentZ; }
+	int GetSegH(void) const { return m_nSegmentH; }
+	int GetSegV(void) const { return m_nSegmentV; }
 
 	D3DXVECTOR3 GetPosition(void) const { return m_pos; }
 	D3DXVECTOR3 NormalizeNormal(const int nIdx);
@@ -45,7 +45,7 @@ public:
 	void SetIndexBuffer(const WORD Idx, const int nCnt);
 	void SetTextureID(const char* pTextureName = NULL);
 	void SetVtxElement(const int vertex,const int polygon,const int index);
-	void SetSegment(const int nSegX, const int nSegZ);
+	void SetSegment(const int nSegH, const int nSegV);
 
 	D3DXVECTOR3 GetVtxPos(const int nIdx);
 	int GetIndex(const int nIdx);
@@ -60,8 +60,8 @@ private:
 	D3DXVECTOR3 m_pos;						// 位置
 	D3DXVECTOR3 m_rot;						// 向き
 	D3DXMATRIX m_mtxWorld;					// ワールドマトリックス
-	int m_nSegmentX;						// 横の分割数
-	int m_nSegmentZ;						// 縦の分割数
+	int m_nSegmentH;						// 横の分割数
+	int m_nSegmentV;						// 縦の分割数
 	int m_nIdexTexture;						// テクスチャのインデックス
 	int m_nNumVtx;							// 頂点数
 	int m_nNumPolygon;						// ポリゴン数

@@ -37,13 +37,13 @@ public:
 	CMeshCircle();
 	~CMeshCircle();
 
-	static CMeshCircle* Create(const Confing confing,const D3DXCOLOR col, const D3DXVECTOR3 pos,const int nSegX = 32, const D3DXVECTOR3 rot = VEC3_NULL);
+	static CMeshCircle* Create(const Confing confing,const D3DXCOLOR col, const D3DXVECTOR3 pos,const int nSegH = 32, const D3DXVECTOR3 rot = VEC3_NULL);
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
 private:
-	void SetCircle(const int nSegX, const float InRadius, const float OutRadius);  // 頂点の設定
+	void SetCircle(const int nSegH, const float InRadius, const float OutRadius);  // 頂点の設定
 	Confing m_Config;	// 構成
 	D3DXCOLOR m_Incol, m_Outcol; // 色
 	float m_fDecAlv;	// α値の減少スピード

@@ -30,7 +30,7 @@ CMeshDome::~CMeshDome()
 //================================================
 // 生成処理
 //================================================
-CMeshDome* CMeshDome::Create(const D3DXVECTOR3 pos, const int nSegX, const int nSegZ, const float fRadius, const float fHeight, const D3DXVECTOR3 rot)
+CMeshDome* CMeshDome::Create(const D3DXVECTOR3 pos, const int nSegH, const int nSegV, const float fRadius, const float fHeight, const D3DXVECTOR3 rot)
 {
 	// メッシュドームを生成
 	CMeshDome* pMesh = new CMeshDome;
@@ -57,18 +57,18 @@ CMeshDome* CMeshDome::Create(const D3DXVECTOR3 pos, const int nSegX, const int n
 	if (pMesh == nullptr) return nullptr;
 
 	// 頂点数の設定
-	int nNumFanVtx = nSegX + 2;
+	int nNumFanVtx = nSegH + 2;
 
 	//// ポリゴン数の設定
-	//int nNumFanPolygon = nSegX;
+	//int nNumFanPolygon = nSegH;
 
 	int nNumIdxFan = nNumFanVtx;
 
 	// 頂点数の設定
-	int nNumDomeVtx = (nSegX + 1) * (nSegZ + 1);
+	int nNumDomeVtx = (nSegH + 1) * (nSegV + 1);
 
 	// ポリゴン数の設定
-	int nNumDomePolygon = (((nSegX * nSegZ) * 2)) + (4 * (nSegZ - 1));
+	int nNumDomePolygon = (((nSegH * nSegV) * 2)) + (4 * (nSegV - 1));
 
 	// インデックス数の設定
 	int nNumDomeIndex = nNumDomePolygon + 2;
@@ -81,7 +81,7 @@ CMeshDome* CMeshDome::Create(const D3DXVECTOR3 pos, const int nSegX, const int n
 	// 頂点の設定
 	pMesh->SetVtxElement(nNumVtx, nNumDomePolygon, nNumIdx);
 
-	pMesh->SetSegment(nSegX, nSegZ);
+	pMesh->SetSegment(nSegH, nSegV);
 	
 	// 初期化処理
 	pMesh->Init();
@@ -90,7 +90,7 @@ CMeshDome* CMeshDome::Create(const D3DXVECTOR3 pos, const int nSegX, const int n
 	pMesh->SetPosition(pos);
 	pMesh->SetRotation(rot);
 
-	pMesh->SetDome(nSegX, nSegZ, fRadius, fHeight);
+	pMesh->SetDome(nSegH, nSegV, fRadius, fHeight);
 	return pMesh;
 }
 
@@ -144,20 +144,20 @@ void CMeshDome::Draw(void)
 
 	pDevice->SetRenderState(D3DRS_CULLMODE, TRUE);
 
-	int nSegX = GetSegX();
-	int nSegZ = GetSegZ();
+	int nSegH = GetSegH();
+	int nSegV = GetSegV();
 
 	// 頂点数の設定
-	int nNumFanVtx = nSegX + 2;
+	int nNumFanVtx = nSegH + 2;
 
 	// ポリゴン数の設定
-	int nNumFanPolygon = nSegX;
+	int nNumFanPolygon = nSegH;
 
 	// 頂点数の設定
-	int nNumDomeVtx = (nSegX + 1) * (nSegZ + 1);
+	int nNumDomeVtx = (nSegH + 1) * (nSegV + 1);
 
 	// ポリゴン数の設定
-	int nNumDomePolygon = (((nSegX * nSegZ) * 2)) + (4 * (nSegZ - 1));
+	int nNumDomePolygon = (((nSegH * nSegV) * 2)) + (4 * (nSegV - 1));
 
 	// 描画処理
 	CMesh::SetUpDraw();
@@ -174,24 +174,24 @@ void CMeshDome::Draw(void)
 //================================================
 // ドームの設定処理
 //================================================
-void CMeshDome::SetDome(const int nSegX, const int nSegZ, const float fRadius, const float fHeight)
+void CMeshDome::SetDome(const int nSegH, const int nSegV, const float fRadius, const float fHeight)
 {
 	int nCntVtx = 0;
 	// テクスチャのオフセット
-	float fTexX = 0.5f / nSegX;
-	float fTexY = 0.5f / nSegZ;
+	float fTexX = 0.5f / nSegH;
+	float fTexY = 0.5f / nSegV;
 
-	float fNowRadius = fRadius / (nSegZ + 1);
+	float fNowRadius = fRadius / (nSegV + 1);
 
 	// ドームのてっぺんの位置の設定
-	SetVtxBuffer(D3DXVECTOR3(0.0f, fHeight + (fHeight / nSegZ + 1), 0.0f), 0, D3DXVECTOR2(0.5f, 0.5f));
+	SetVtxBuffer(D3DXVECTOR3(0.0f, fHeight + (fHeight / nSegV + 1), 0.0f), 0, D3DXVECTOR2(0.5f, 0.5f));
 
 	nCntVtx++;
 
 	// 蓋の部分の作成
-	for (int nCntX = 0; nCntX <= nSegX; nCntX++)
+	for (int nCntX = 0; nCntX <= nSegH; nCntX++)
 	{
-		float fAngle = (D3DX_PI * 2.0f) / nSegX * nCntX;
+		float fAngle = (D3DX_PI * 2.0f) / nSegH * nCntX;
 
 		D3DXVECTOR3 posWk = VEC3_NULL;
 
@@ -213,7 +213,7 @@ void CMeshDome::SetDome(const int nSegX, const int nSegZ, const float fRadius, c
 	int nCntIdx = 0;
 
 	// 頂点数分
-	for (int nCnt = 0; nCnt < nSegX + 2; nCnt++)
+	for (int nCnt = 0; nCnt < nSegH + 2; nCnt++)
 	{
 		SetIndexBuffer((WORD)nCnt, nCntIdx++);
 	}
@@ -222,25 +222,25 @@ void CMeshDome::SetDome(const int nSegX, const int nSegZ, const float fRadius, c
 	m_nOffsetIdx = nCntIdx;
 
 	// テクスチャのオフセット
-	fTexX = 1.0f / nSegX;
-	fTexY = 1.0f / nSegZ;
+	fTexX = 1.0f / nSegH;
+	fTexY = 1.0f / nSegV;
 
 	// 半径
-	fNowRadius = fRadius / (nSegZ + 1);
+	fNowRadius = fRadius / (nSegV + 1);
 	float fRateRadius = fNowRadius;
 
 	//縦
-	for (int nCntZ = 0; nCntZ <= nSegZ; nCntZ++)
+	for (int nCntZ = 0; nCntZ <= nSegV; nCntZ++)
 	{
 		//横
-		for (int nCntX = 0; nCntX <= nSegX; nCntX++)
+		for (int nCntX = 0; nCntX <= nSegH; nCntX++)
 		{
-			float fAngel = (D3DX_PI * 2.0f) / nSegX * nCntX;
+			float fAngel = (D3DX_PI * 2.0f) / nSegH * nCntX;
 
 			D3DXVECTOR3 posWk = VEC3_NULL;
 
 			posWk.x = sinf(fAngel) * fNowRadius;
-			posWk.y = fHeight - (fHeight / nSegZ) * nCntZ;
+			posWk.y = fHeight - (fHeight / nSegV) * nCntZ;
 			posWk.z = cosf(fAngel) * fNowRadius;
 			
 			SetVtxBuffer(posWk, nCntVtx, D3DXVECTOR2(fTexX * nCntX, fTexY * nCntZ));
@@ -251,7 +251,7 @@ void CMeshDome::SetDome(const int nSegX, const int nSegZ, const float fRadius, c
 		fNowRadius += fRateRadius / (nCntZ + 1);
 	}
 
-	int IndxCount3 = nSegX + 1;//X
+	int IndxCount3 = nSegH + 1;//X
 
 	int IdxCnt = m_nOffsetIdx;//配列
 
@@ -261,9 +261,9 @@ void CMeshDome::SetDome(const int nSegX, const int nSegZ, const float fRadius, c
 	int Index1 = 0;
 
 	//インデックスの設定
-	for (int IndxCount1 = 0; IndxCount1 < nSegZ; IndxCount1++)
+	for (int IndxCount1 = 0; IndxCount1 < nSegV; IndxCount1++)
 	{
-		for (int IndxCount2 = 0; IndxCount2 <= nSegX; IndxCount2++, IndxCount3++, Num++)
+		for (int IndxCount2 = 0; IndxCount2 <= nSegH; IndxCount2++, IndxCount3++, Num++)
 		{
 			Index0 = IndxCount3 + OffsetIdx;
 			Index1 = Num + OffsetIdx;
@@ -274,7 +274,7 @@ void CMeshDome::SetDome(const int nSegX, const int nSegZ, const float fRadius, c
 			IdxCnt += 2;
 		}
 
-		if (IndxCount1 < nSegZ - 1)
+		if (IndxCount1 < nSegV - 1)
 		{
 			// インデックスバッファの設定
 			SetIndexBuffer((WORD)(Num - 1 + OffsetIdx), IdxCnt);

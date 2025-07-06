@@ -115,9 +115,9 @@ bool CMotion::IsLoad(void)
 //===================================================
 // ループモーションの終了判定
 //===================================================
-bool CMotion::FinishLoopMotion(void)
+bool CMotion::FinishMotion(void)
 {
-	if (m_aInfo[m_nType].bLoop == true && m_aInfo[m_nType].nNumkey - 1 <= m_nKey)
+	if (m_aInfo[m_nType].nNumkey - 1 <= m_nKey)
 	{
 		return true;
 	}
@@ -254,10 +254,10 @@ void CMotion::UpdateBlendMotion(CModel** pModel, int nIdx)
 	float fDiffMotionRY = pNextKey->fRotY - pCurrentKey->fRotY;
 	float fDiffMotionRZ = pNextKey->fRotZ - pCurrentKey->fRotZ;
 
-	// 角度の正規化
-	NormalizeRot(&fDiffMotionRX);
-	NormalizeRot(&fDiffMotionRY);
-	NormalizeRot(&fDiffMotionRZ);
+	//// 角度の正規化
+	//NormalizeRot(&fDiffMotionRX);
+	//NormalizeRot(&fDiffMotionRY);
+	//NormalizeRot(&fDiffMotionRZ);
 
 	// 現在のモーションのフレームに応じた角度を設定
 	float fRotXCurrent = LerpDiff(pCurrentKey->fRotX, fDiffMotionRX, fRateMotion);
@@ -275,10 +275,10 @@ void CMotion::UpdateBlendMotion(CModel** pModel, int nIdx)
 	float fDiffMotionBlendRY = pNextBlendKey->fRotY - pCurrentBlendKey->fRotY;
 	float fDiffMotionBlendRZ = pNextBlendKey->fRotZ - pCurrentBlendKey->fRotZ;
 
-	// 角度の正規化
-	NormalizeRot(&fDiffMotionBlendRX);
-	NormalizeRot(&fDiffMotionBlendRY);
-	NormalizeRot(&fDiffMotionBlendRZ);
+	//// 角度の正規化
+	//NormalizeRot(&fDiffMotionBlendRX);
+	//NormalizeRot(&fDiffMotionBlendRY);
+	//NormalizeRot(&fDiffMotionBlendRZ);
 
 	// ブレンドモーションのフレームに応じた角度の設定
 	float fRotXBlend = LerpDiff(pCurrentBlendKey->fRotX, fDiffMotionBlendRX, fRateMotionBlend);
@@ -309,6 +309,11 @@ void CMotion::UpdateBlendMotion(CModel** pModel, int nIdx)
 	float fDiffBlendRX = fRotXBlend - fRotXCurrent;
 	float fDiffBlendRY = fRotYBlend - fRotYCurrent;
 	float fDiffBlendRZ = fRotZBlend - fRotZCurrent;
+
+	// 角度の正規化
+	NormalizeRot(&fDiffBlendRX);
+	NormalizeRot(&fDiffBlendRY);
+	NormalizeRot(&fDiffBlendRZ);
 
 	// ブレンドのフレームに応じた向きの設定
 	float fRotX = LerpDiff(fRotXCurrent, fDiffBlendRX, fRateBlend);
@@ -639,7 +644,6 @@ CLoderText* CLoderText::LoadTextFile(const char* pFileName, vector<CMotion::Info
 
 		return nullptr;
 	}
-
 }
 
 //===================================================

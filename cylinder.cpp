@@ -34,7 +34,7 @@ CMeshCylinder::~CMeshCylinder()
 //================================================
 // 生成処理
 //================================================
-CMeshCylinder* CMeshCylinder::Create(const D3DXVECTOR3 pos, const int nSegX, const int nSegZ,const float fRadius, const float fHeight, const D3DXVECTOR3 rot)
+CMeshCylinder* CMeshCylinder::Create(const D3DXVECTOR3 pos, const int nSegH, const int nSegV,const float fRadius, const float fHeight, const D3DXVECTOR3 rot)
 {
 	// メッシュフィールドを生成
 	CMeshCylinder* pMesh = new CMeshCylinder;
@@ -61,17 +61,17 @@ CMeshCylinder* CMeshCylinder::Create(const D3DXVECTOR3 pos, const int nSegX, con
 	if (pMesh == nullptr) return nullptr;
 
 	// 頂点数の設定
-	int nNumVtx = (nSegX + 1) * (nSegZ + 1);
+	int nNumVtx = (nSegH + 1) * (nSegV + 1);
 
 	// ポリゴン数の設定
-	int nNumPolygon = ((nSegX * nSegZ) * 2) + (4 * (nSegZ - 1));
+	int nNumPolygon = ((nSegH * nSegV) * 2) + (4 * (nSegV - 1));
 
 	// インデックス数の設定
 	int nNumIndex = nNumPolygon + 2;
 
 	// 頂点の設定
 	pMesh->SetVtxElement(nNumVtx, nNumPolygon, nNumIndex);
-	pMesh->SetSegment(nSegX, nSegZ);
+	pMesh->SetSegment(nSegH, nSegV);
 
 	// 初期化処理
 	pMesh->Init();
@@ -79,7 +79,7 @@ CMeshCylinder* CMeshCylinder::Create(const D3DXVECTOR3 pos, const int nSegX, con
 	// 設定処理
 	pMesh->SetPosition(pos);
 	pMesh->SetRotation(rot);
-	pMesh->SetCylinder(nSegX, nSegZ, fRadius, fHeight);
+	pMesh->SetCylinder(nSegH, nSegV, fRadius, fHeight);
 	pMesh->m_CenterPos = pos;
 	pMesh->m_fRadius = fRadius;
 
@@ -131,24 +131,24 @@ void CMeshCylinder::Draw(void)
 //================================================
 // シリンダーの設定処理
 //================================================
-void CMeshCylinder::SetCylinder(const int nSegX, const int nSegZ, const float fRadius,const float fHeight)
+void CMeshCylinder::SetCylinder(const int nSegH, const int nSegV, const float fRadius,const float fHeight)
 {
 	int nCntVtx = 0;
 
-	float fTexPosX = 1.0f / nSegX;
-	float fTexPosY = 1.0f / nSegZ;
+	float fTexPosX = 1.0f / nSegH;
+	float fTexPosY = 1.0f / nSegV;
 
-	for (int nCntZ = 0; nCntZ <= nSegZ; nCntZ++)
+	for (int nCntZ = 0; nCntZ <= nSegV; nCntZ++)
 	{
-		for (int nCntX = 0; nCntX <= nSegX; nCntX++)
+		for (int nCntX = 0; nCntX <= nSegH; nCntX++)
 		{
 			D3DXVECTOR3 posWk = VEC3_NULL;
 
 			// 横の分割数
-			float fAngle = (D3DX_PI * 2.0f) / nSegX * nCntX;
+			float fAngle = (D3DX_PI * 2.0f) / nSegH * nCntX;
 
 			posWk.x = sinf(fAngle) * fRadius;
-			posWk.y = fHeight - (fHeight / nSegZ * nCntZ);
+			posWk.y = fHeight - (fHeight / nSegV * nCntZ);
 			posWk.z = cosf(fAngle) * fRadius;
 
 			// 頂点バッファの設定
@@ -164,16 +164,16 @@ void CMeshCylinder::SetCylinder(const int nSegX, const int nSegZ, const float fR
 		}
 	}
 
-	int IndxNum = nSegX + 1; // インデックスの数値1
+	int IndxNum = nSegH + 1; // インデックスの数値1
 
 	int IdxCnt = 0; // 配列
 
 	int Num = 0; // インデックスの数値2
 
 	//インデックスの設定
-	for (int IndxCount1 = 0; IndxCount1 < nSegZ; IndxCount1++)
+	for (int IndxCount1 = 0; IndxCount1 < nSegV; IndxCount1++)
 	{
-		for (int IndxCount2 = 0; IndxCount2 <= nSegX; IndxCount2++, IndxNum++, Num++)
+		for (int IndxCount2 = 0; IndxCount2 <= nSegH; IndxCount2++, IndxNum++, Num++)
 		{
 			// インデックスバッファの設定
 			SetIndexBuffer((WORD)IndxNum, IdxCnt);
@@ -182,7 +182,7 @@ void CMeshCylinder::SetCylinder(const int nSegX, const int nSegZ, const float fR
 		}
 
 		// NOTE:最後の行じゃなかったら
-		if (IndxCount1 < nSegZ - 1)
+		if (IndxCount1 < nSegV - 1)
 		{
 			SetIndexBuffer((WORD)Num - 1, IdxCnt);
 			SetIndexBuffer((WORD)IndxNum, IdxCnt + 1);
@@ -197,12 +197,12 @@ void CMeshCylinder::SetCylinder(const int nSegX, const int nSegZ, const float fR
 bool CMeshCylinder::Collision(D3DXVECTOR3 *pPos)
 {
 	// 横の分割数の取得
-	int nSegX = GetSegX();
+	int nSegH = GetSegH();
 
 	// 横の分割数分調べる
-	for (int nCnt = 0; nCnt <= nSegX; nCnt++)
+	for (int nCnt = 0; nCnt <= nSegH; nCnt++)
 	{
-		int nNextIndx = (nCnt + 1) % nSegX; // 次の頂点のインデックス
+		int nNextIndx = (nCnt + 1) % nSegH; // 次の頂点のインデックス
 		int nIndx = nCnt;					// 今の頂点のインデックス
 
 		// 頂点座標の取得
