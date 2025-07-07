@@ -17,7 +17,10 @@ using namespace Const; // 名前空間Constを使用
 //***************************************************
 // 静的メンバ変数の宣言
 //***************************************************
-CObject* CObject::m_apObject[MAX_OBJECT][NUM_PRIORITY] = {};	// オブジェクトのポインタ
+CObject* CObject::m_pTop[NUM_PRIORITY] = { nullptr }; // 先頭オブジェクトへのポインタ
+CObject* CObject::m_pCur[NUM_PRIORITY] = { nullptr }; // 最後尾オブジェクトへのポインタ
+
+//CObject* CObject::m_apObject[MAX_OBJECT][NUM_PRIORITY] = {};	// オブジェクトのポインタ
 int CObject::m_nNumAll[NUM_PRIORITY] = { NULL };				// オブジェクトの総数
 
 //===================================================
@@ -25,23 +28,45 @@ int CObject::m_nNumAll[NUM_PRIORITY] = { NULL };				// オブジェクトの総数
 //===================================================
 CObject::CObject(int nPriority)
 {
-	m_nID = NULL;
 	m_type = TYPE_NONE;
-	m_nPriority = NULL;
+	m_nPriority = nPriority;
 
-	// オブジェクトの最大数分回す
-	for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++)
+	// 先頭がnullだったら
+	if (m_pTop[nPriority] == nullptr)
 	{
-		// オブジェクトがNULLなら
-		if (m_apObject[nCntObject][nPriority] == nullptr)
-		{
-			m_apObject[nCntObject][nPriority] = this;	// 自分自身のポインタを代入
-			m_nNumAll[nPriority]++;						// オブジェクトの総数をカウントアップ
-			m_nID = nCntObject;							// オブジェクトのIDを渡す
-			m_nPriority = nPriority;					// 優先順位
-			break;
-		}
+		// 先頭を設定
+		m_pTop[nPriority] = this;
+		m_pTop[nPriority]->m_pPrev = nullptr;
+		m_pTop[nPriority]->m_pNext = nullptr;
 	}
+
+	// 最後尾がnullだったら
+	if (m_pCur[nPriority] == nullptr)
+	{
+		// 最後尾を設定
+		m_pCur[nPriority] = this;
+		m_pPrev = nullptr;
+		m_pNext = nullptr;
+	}
+	else
+	{
+		// 今の最後尾を一つ前にする
+		m_pPrev = m_pCur[nPriority];
+
+		if (m_pPrev != nullptr)
+		{
+			// 最後尾から見た次に代入
+			m_pPrev->m_pNext = this;
+		}
+
+		// 最後尾を変更
+		m_pCur[nPriority] = this;
+		m_pCur[nPriority]->m_pNext = nullptr;
+		m_pCur[nPriority]->m_pPrev = m_pPrev;
+	}
+
+	// 総数をカウント
+	m_nNumAll[nPriority]++;
 }
 //===================================================
 // デストラクタ
@@ -56,15 +81,20 @@ void CObject::ReleaseAll(void)
 {
 	for (int nCntPriority = 0; nCntPriority < NUM_PRIORITY; nCntPriority++)
 	{
-		// オブジェクトの最大数分回す
-		for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++)
+		// 先頭オブジェクトを代入
+		CObject* pObject = m_pTop[nCntPriority]; 
+
+		// nullじゃないなら
+		while (pObject != nullptr)
 		{
-			// オブジェクトがNULLなら
-			if (m_apObject[nCntObject][nCntPriority] != nullptr)
-			{
-				// オブジェクトの終了処理
-				m_apObject[nCntObject][nCntPriority]->Uninit();
-			}
+			// 次のオブジェクトのポインタを代入
+			CObject* pObjectNext = pObject->m_pNext; 
+
+			// 更新処理
+			pObject->Uninit();
+
+			// 次のオブジェクトを代入
+			pObject = pObjectNext; 
 		}
 	}
 }
@@ -75,15 +105,20 @@ void CObject::UpdateAll(void)
 {
 	for (int nCntPriority = 0; nCntPriority < NUM_PRIORITY; nCntPriority++)
 	{
-		// オブジェクトの数分回す
-		for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++)
+		// 先頭オブジェクトを代入
+		CObject* pObject = m_pTop[nCntPriority]; 
+
+		// nullじゃないなら
+		while (pObject != nullptr)
 		{
-			// オブジェクトがNULLなら
-			if (m_apObject[nCntObject][nCntPriority] != nullptr)
-			{
-				// すべてのオブジェクトの更新
-				m_apObject[nCntObject][nCntPriority]->Update();
-			}
+			// 次のオブジェクトのポインタを代入
+			CObject* pObjectNext = pObject->m_pNext; 
+
+			// 更新処理
+			pObject->Update();
+
+			// 次のオブジェクトを代入
+			pObject = pObjectNext;
 		}
 	}
 }
@@ -99,15 +134,17 @@ void CObject::DrawAll(void)
 
 	for (int nCntPriority = 0; nCntPriority < NUM_PRIORITY; nCntPriority++)
 	{
-		// オブジェクトの数分回す
-		for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++)
+		CObject* pObject = m_pTop[nCntPriority]; // 先頭オブジェクトを代入
+
+		// nullじゃないなら
+		while (pObject != nullptr)
 		{
-			// オブジェクトがNULLなら
-			if (m_apObject[nCntObject][nCntPriority] != nullptr)
-			{
-				// すべてのオブジェクトの更新
-				m_apObject[nCntObject][nCntPriority]->Draw();
-			}
+			CObject* pObjectNext = pObject->m_pNext; // 次のオブジェクトのポインタを代入
+
+			// 更新処理
+			pObject->Draw();
+
+			pObject = pObjectNext; // 次のオブジェクトを代入
 		}
 	}
 }
@@ -117,21 +154,48 @@ void CObject::DrawAll(void)
 //===================================================
 void CObject::Release(void)
 {
-	// 自分自身のIDを取得
-	int nID = this->m_nID;
-
 	// 自分の優先順位
-	int nPriority = this->m_nPriority;
+	int nPriority = m_nPriority;
 
-	// オブジェクト破棄
-	if (m_apObject[nID][nPriority] != nullptr)
+	// 先頭だったら
+	if (this == m_pTop[nPriority] && m_pNext != nullptr)
 	{
-		// メモリの解放
-		delete m_apObject[nID][nPriority];
-
-		m_apObject[nID][nPriority] = nullptr;
-
-		// 総数を減らす
-		m_nNumAll[nPriority]--;
+		// 先頭を次のオブジェクトにする
+		m_pTop[nPriority] = m_pNext;
+		m_pNext->m_pPrev = nullptr;
 	}
+	if (this == m_pCur[nPriority] && m_pPrev != nullptr)
+	{
+		// 先頭を次のオブジェクトにする
+		m_pCur[nPriority] = m_pPrev;
+		m_pPrev->m_pNext = nullptr;
+	}
+	if(m_pPrev != nullptr && m_pNext != nullptr)
+	{
+		m_pPrev->m_pNext = m_pNext;
+		m_pNext->m_pPrev = m_pPrev;
+	}
+	
+	
+	if (this != nullptr)
+	{
+		// 残りが一つしか無かったら
+		if (m_pTop[nPriority] == this)
+		{
+			m_pTop[nPriority] = nullptr;
+		}
+
+		// 残りが一つしか無かったら
+		if (m_pCur[nPriority] == this)
+		{
+			m_pCur[nPriority] = nullptr;
+		}
+
+		delete this;
+
+		m_pNext = nullptr;
+		m_pPrev = nullptr;
+
+		m_nNumAll[nPriority]--;
+	}	
 }

@@ -233,6 +233,10 @@ void CPlayer::Update(void)
 		m_bJump = false;
 	}
 
+	if (pKeyboard->GetTrigger(DIK_0))
+	{
+		CEffect3D::Create(pos, 50.0f, VEC3_NULL, WHITE, 1);
+	}
 	// メッシュシリンダーの取得
 	CMeshCylinder* pCylinder = CManager::GetCylinder();
 

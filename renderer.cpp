@@ -455,7 +455,10 @@ void CRenderer::Draw(const int fps)
 
 		CDebugProc::Print("ワイヤーフレーム : [ F6 ]");
 
+#ifdef _DEBUG
+
 		CDebugProc::Draw();
+#endif // _DEBUG
 
 		CDebugProc::Reset();
 		// 描画終了

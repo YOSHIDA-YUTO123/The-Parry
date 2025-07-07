@@ -69,10 +69,15 @@ public:
 protected:
 	void Release(void);
 private:
-	static CObject* m_apObject[Const::MAX_OBJECT][Const::NUM_PRIORITY];	// オブジェクトのポインタ
+	//static CObject* m_apObject[Const::MAX_OBJECT][Const::NUM_PRIORITY];	// オブジェクトのポインタ
 	static int	m_nNumAll[Const::NUM_PRIORITY];					// オブジェクトの総数
+
+	static CObject* m_pTop[Const::NUM_PRIORITY]; // 先頭オブジェクトへのポインタ
+	static CObject* m_pCur[Const::NUM_PRIORITY]; // 最後尾オブジェクトへのポインタ
+	CObject* m_pPrev; // 前のオブジェクトへのポインタ
+	CObject* m_pNext; // 次のオブジェクトへのポインタ
+
 	TYPE m_type;											// オブジェクトの種類
-	int	m_nID;												// オブジェクトのID
 	int m_nPriority;										// 優先順位
 };
 #endif

@@ -117,8 +117,6 @@ HRESULT CManager::Init(HINSTANCE hInstance,HWND hWnd, BOOL bWindow)
 	// スローモーションの生成処理
 	m_pSlow = new CSlow;
 
-	//CObject3D::Create(D3DXVECTOR3(0.0f,150.0f,0.0f), VEC3_NULL, D3DXVECTOR3(150.0f, 150.0f, 0.0f), NULL);
-
 	// フィールドの設定
 	m_pMeshField = CMeshField::Create(VEC3_NULL ,48,48, D3DXVECTOR2(5500.0f,5500.0f));
 
@@ -131,8 +129,6 @@ HRESULT CManager::Init(HINSTANCE hInstance,HWND hWnd, BOOL bWindow)
 	// シリンダーの生成
 	m_pCylinder = CMeshCylinder::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 32, 1, 1900.0f, 1900.0f);
 
-	//CObject3D::Create(D3DXVECTOR3(0.0f,250.0f,0.0f), VEC3_NULL, D3DXVECTOR3(500.0f, 500.0f, 500.0f), "data/TEXTURE/field.png");
-
 	// プレイヤーの生成
 	m_pPlayer = CPlayer::Create(D3DXVECTOR3(1.0f,0.0f,-1500.0f));
 
@@ -140,7 +136,7 @@ HRESULT CManager::Init(HINSTANCE hInstance,HWND hWnd, BOOL bWindow)
 
 	CEnemy::Create(D3DXVECTOR3(0.0f,0.0f,1500.0f));
 
-	CObstacle::Create(D3DXVECTOR3(-1840.0f, 0.0f, 0.0f),D3DXVECTOR3(0.0f,D3DX_PI * 0.5f,0.0f));
+	//CObstacle::Create(D3DXVECTOR3(-1840.0f, 0.0f, 0.0f),D3DXVECTOR3(0.0f,D3DX_PI * 0.5f,0.0f));
 	// 結果を返す
 	return S_OK;
 }
