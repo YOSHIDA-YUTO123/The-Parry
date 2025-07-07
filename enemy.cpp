@@ -24,13 +24,16 @@
 #include"EnemyState.h"
 #include "Orbit.h"
 
+//***************************************************
+// 定数定義
+//***************************************************
 constexpr float SHADOW_ALEVEL = 0.7f;			// 影のアルファ値
 constexpr float SHADOW_MAX_HEIGHT = 500.0f;		// 影が見える最大の高さ
 constexpr float SHADOW_SIZE = 150.0f;			// 影の大きさ
+constexpr float ROCKON_HEIGHT = 100.0f;			// ロックオン時の見る場所
 constexpr int NUM_RUBBLE = 16;					// 瓦礫を出す数
 constexpr int NUM_MATRIX = 8;					// 武器につけるマトリックスの数
 constexpr int NEXT_ACTION_TIME = 300;			// 次の行動の抽選までの時間
-constexpr float ROCKON_HEIGHT = 100.0f;			// ロックオン時の見る場所
 
 using namespace Const;							// 名前空間Constを使用する
 using namespace math;							// 名前空間mathを使用する

@@ -60,10 +60,11 @@ public:
 
 	static CEnemy* Create(const D3DXVECTOR3 pos = Const::VEC3_NULL, const D3DXVECTOR3 rot = Const::VEC3_NULL);
 
-	HRESULT Init(void);
-	void Uninit(void);
-	void Update(void);
-	void Draw(void);
+	HRESULT Init(void) override;
+	void Uninit(void) override;
+	void Update(void) override;
+	void Draw(void) override;
+
 	void BlowOff(const D3DXVECTOR3 attacker, const float blowOff, const float jump);
 	bool CollisionWepon(void);
 	void SetState(std::unique_ptr<CEnemyState> NewState);				// êVÇµÇ¢èÛë‘ÇÃê›íËèàóù

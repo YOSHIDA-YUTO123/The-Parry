@@ -46,10 +46,11 @@ public:
 
 	static CPlayer* Create(const D3DXVECTOR3 pos = Const::VEC3_NULL, const D3DXVECTOR3 rot = Const::VEC3_NULL);
 
-	HRESULT Init(void);
-	void Uninit(void);
-	void Update(void);
-	void Draw(void);
+	HRESULT Init(void) override;
+	void Uninit(void) override;
+	void Update(void) override;
+	void Draw(void) override;
+
 	bool MoveKeyboard(CInputKeyboard *pKeyboard);
 	void MoveJoypad(CInputJoypad* pJoypad);
 	CCollisionSphere* GetSphere(void) { return m_pSphere.get(); }
