@@ -113,14 +113,23 @@ CCollisionAABB CCollisionAABB::CreateCollider(const D3DXVECTOR3 pos, const D3DXV
 //================================================
 // AABB対AABBの当たり判定
 //================================================
-bool CCollisionAABB::Collision(CCollisionAABB* other)
+bool CCollisionAABB::Collision(CCollision* other)
 {
 	// 自分の位置と大きさの取得
 	D3DXVECTOR3 pos = GetPosition();
 
 	// 相手の位置と大きさの取得
 	D3DXVECTOR3 otherPos = other->GetPosition();
-	D3DXVECTOR3 otherSize = other->m_Size;
+
+	// キャストする
+	CCollisionAABB* pAABB = dynamic_cast<CCollisionAABB*>(other);
+
+	if (pAABB == nullptr)
+	{
+		return false;
+	}
+
+	D3DXVECTOR3 otherSize = pAABB->m_Size;
 
 	bool bHit = false;
 
@@ -254,11 +263,21 @@ CCollisionSphere CCollisionSphere::CreateCollider(const D3DXVECTOR3 pos, const f
 //================================================
 // 当たり判定(円vs円)
 //================================================
-bool CCollisionSphere::Collision(CCollisionSphere* other)
+bool CCollisionSphere::Collision(CCollision* other)
 {
 	// 位置の取得
 	D3DXVECTOR3 pos = GetPosition();
-	D3DXVECTOR3 otherPos = other->GetPosition();
+
+	// 円の判定にキャストする
+	CCollisionSphere* pSpehere = dynamic_cast<CCollisionSphere*>(other);
+
+	// キャストに失敗したら
+	if (pSpehere == nullptr)
+	{
+		return false;
+	}
+
+	D3DXVECTOR3 otherPos = pSpehere->GetPosition();
 
 	// 差分を求める
 	D3DXVECTOR3 diff = otherPos - pos;
@@ -267,7 +286,7 @@ bool CCollisionSphere::Collision(CCollisionSphere* other)
 	float fDistance = (diff.x * diff.x) + (diff.y * diff.y) + (diff.z * diff.z);
 
 	// 半径足す
-	float fRadius = m_fRadius + other->m_fRadius;
+	float fRadius = m_fRadius + pSpehere->m_fRadius;
 
 	// 半径を2乗する
 	fRadius = fRadius * fRadius;
@@ -310,37 +329,49 @@ std::unique_ptr<CCollisionFOV> CCollisionFOV::Create(const D3DXVECTOR3 pos, cons
 	return out;
 }
 
-////================================================
-//// 生成処理
-////================================================
-//CCollisionFOV* CCollisionFOV::Create(const D3DXVECTOR3 pos, const float fLength)
-//{
-//	//// 視界判定の生成
-//	//CCollisionFOV* pCollision = new CCollisionFOV;
-//
-//	//pCollision->SetPos(pos);
-//	//pCollision->m_fLength = fLength;
-//
-//	//return pCollision;
-//}
-//
+//================================================
+// コライダーの作成
+//================================================
+CCollisionFOV CCollisionFOV::CreateCollider(const D3DXVECTOR3 pos, const float fAngle, const float fAngleLeft, const float fAngleRight)
+{
+	CCollisionFOV out;
+
+	// 設定処理
+	out.SetPos(pos);
+	out.m_fNowAngle = fAngle;
+	out.m_fAngleLeft = fAngleLeft;
+	out.m_fAngleRight = fAngleRight;
+
+	return out;
+}
+
 //================================================
 // 視界の判定
 //================================================
-bool CCollisionFOV::Collision(const D3DXVECTOR3 pos,const float fAngle, const float fAngleLeft, const float fAngleRight)
+bool CCollisionFOV::Collision(CCollision* fov)
 {
+	// キャストする
+	CCollisionFOV* pFOV = dynamic_cast<CCollisionFOV*>(fov);
+
+	if (pFOV == nullptr)
+	{
+		return false;
+	}
+
+	D3DXVECTOR3 otherPos = fov->GetPosition();
+
 	// 位置の取得
 	D3DXVECTOR3 objectPos = GetPosition();
 
 	// 前方までのベクトル
-	D3DXVECTOR3 vecFront = GetVector(pos, objectPos);
+	D3DXVECTOR3 vecFront = GetVector(otherPos, objectPos);
 
 	D3DXVECTOR3 LeftPos; // 左の位置
 
 	// 左側の視界の端の位置を求める
-	LeftPos.x = objectPos.x + sinf(fAngle + fAngleLeft) * m_fLength;
+	LeftPos.x = objectPos.x + sinf(pFOV->m_fNowAngle + pFOV->m_fAngleLeft) * m_fLength;
 	LeftPos.y = 0.0f;
-	LeftPos.z = objectPos.z + cosf(fAngle + fAngleLeft) * m_fLength;
+	LeftPos.z = objectPos.z + cosf(pFOV->m_fNowAngle + pFOV->m_fAngleLeft) * m_fLength;
 
 	// 左側の視界のベクトルの作成
 	D3DXVECTOR3 VecLeft = GetVector(LeftPos, objectPos);
@@ -348,9 +379,9 @@ bool CCollisionFOV::Collision(const D3DXVECTOR3 pos,const float fAngle, const fl
 	D3DXVECTOR3 RightPos; // 右の位置
 
 	// 右側の視界の端の位置を求める
-	RightPos.x = objectPos.x + sinf(fAngle + fAngleRight) * m_fLength;
+	RightPos.x = objectPos.x + sinf(pFOV->m_fNowAngle + pFOV->m_fAngleRight) * m_fLength;
 	RightPos.y = 0.0f;
-	RightPos.z = objectPos.z + cosf(fAngle + fAngleRight) * m_fLength;
+	RightPos.z = objectPos.z + cosf(pFOV->m_fNowAngle + pFOV->m_fAngleRight) * m_fLength;
 
 	// 右側の視界のベクトルの作成
 	D3DXVECTOR3 VecRight = GetVector(RightPos, objectPos);

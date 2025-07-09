@@ -40,25 +40,6 @@ CMeshOrbit* CMeshOrbit::Create(const D3DXVECTOR3 Top, const D3DXVECTOR3 Bottom, 
 	// 軌跡を生成
 	CMeshOrbit* pMesh = new CMeshOrbit;
 
-	// 優先順位の取得
-	int nPriority = pMesh->GetPriority();
-
-	// 現在のオブジェクトの最大数
-	const int nNumAll = CObject::GetNumObject(nPriority);
-
-	// オブジェクトが最大数まであったら
-	if (nNumAll >= MAX_OBJECT && pMesh != nullptr)
-	{
-		// 自分のポインタの解放
-		pMesh->Uninit();
-
-		// nullにする
-		pMesh = nullptr;
-
-		// オブジェクトを消す
-		return nullptr;
-	}
-
 	// nullなら処理を通さない
 	if (pMesh == nullptr) return nullptr;
 
@@ -171,6 +152,10 @@ void CMeshOrbit::Update(void)
 
 	m_nLife--;
 
+	if (m_nLife <= 0)
+	{
+		Uninit();
+	}
 }
 
 //================================================
@@ -208,12 +193,6 @@ bool CMeshOrbit::SetPosition(const D3DXVECTOR3 Top, const D3DXVECTOR3 Bottom)
 {
 	m_Top = Top;
 	m_Bottom = Bottom;
-
-	if (m_nLife <= 0)
-	{
-		Uninit();
-		return false;
-	}
 
 	return true;
 }

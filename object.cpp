@@ -32,38 +32,22 @@ CObject::CObject(int nPriority)
 	m_nPriority = nPriority;
 	m_bDeath = false;
 
+	m_pPrev = nullptr;
+	m_pNext = nullptr;
+
 	// 先頭がnullだったら
 	if (m_pTop[nPriority] == nullptr)
 	{
 		// 先頭を設定
 		m_pTop[nPriority] = this;
-		m_pTop[nPriority]->m_pPrev = nullptr;
-		m_pTop[nPriority]->m_pNext = nullptr;
-	}
-
-	// 最後尾がnullだったら
-	if (m_pCur[nPriority] == nullptr)
-	{
-		// 最後尾を設定
 		m_pCur[nPriority] = this;
-		m_pPrev = nullptr;
-		m_pNext = nullptr;
 	}
 	else
 	{
-		// 今の最後尾を一つ前にする
+		// 既存リストの最後尾に追加
 		m_pPrev = m_pCur[nPriority];
-
-		if (m_pPrev != nullptr)
-		{
-			// 最後尾から見た次に代入
-			m_pPrev->m_pNext = this;
-		}
-
-		// 最後尾を変更
+		m_pCur[nPriority]->m_pNext = this;
 		m_pCur[nPriority] = this;
-		m_pCur[nPriority]->m_pNext = nullptr;
-		m_pCur[nPriority]->m_pPrev = m_pPrev;
 	}
 
 	// 総数をカウント
@@ -93,12 +77,34 @@ void CObject::ReleaseAll(void)
 
 			// 更新処理
 			pObject->Uninit();
-			pObject->Destroy();
 
 			// 次のオブジェクトを代入
 			pObject = pObjectNext; 
 		}
 	}
+
+	for (int nCntPriority = 0; nCntPriority < NUM_PRIORITY; nCntPriority++)
+	{
+		// 先頭オブジェクトを代入
+		CObject* pObject = m_pTop[nCntPriority];
+
+		// nullじゃないなら
+		while (pObject != nullptr)
+		{
+			// 次のオブジェクトのポインタを代入
+			CObject* pObjectNext = pObject->m_pNext;
+
+			// 死亡フラグがたっていたら
+			if (pObject->m_bDeath == true)
+			{
+				// オブジェクトの破棄
+				pObject->Destroy(pObject);
+			}
+			// 次のオブジェクトを代入
+			pObject = pObjectNext;
+		}
+	}
+
 }
 //===================================================
 // すべてのオブジェクトの更新処理
@@ -139,7 +145,7 @@ void CObject::UpdateAll(void)
 			if (pObject->m_bDeath == true)
 			{
 				// オブジェクトの破棄
-				pObject->Destroy();
+				pObject->Destroy(pObject);
 			}
 			// 次のオブジェクトを代入
 			pObject = pObjectNext;
@@ -185,20 +191,20 @@ void CObject::Release(void)
 //===================================================
 // オブジェクトの破棄
 //===================================================
-void CObject::Destroy(void)
+void CObject::Destroy(CObject *pObject)
 {
 	// 自分の優先順位
 	int nPriority = m_nPriority;
 
 	// 先頭だったら
-	if (this == m_pTop[nPriority] && m_pNext != nullptr)
+	if (pObject == m_pTop[nPriority] && m_pNext != nullptr)
 	{
 		// 先頭を次のオブジェクトにする
 		m_pTop[nPriority] = m_pNext;
 		m_pNext->m_pPrev = nullptr;
 	}
 	// 最後尾だったら
-	if (this == m_pCur[nPriority] && m_pPrev != nullptr)
+	if (pObject == m_pCur[nPriority] && m_pPrev != nullptr)
 	{
 		// 最後尾をひとつ前のオブジェクトにする
 		m_pCur[nPriority] = m_pPrev;
@@ -212,25 +218,24 @@ void CObject::Destroy(void)
 		m_pNext->m_pPrev = m_pPrev;
 	}
 
-	if (this != nullptr)
+	// 残りが一つしか無かったら
+	if (m_pTop[nPriority] == pObject)
 	{
-		// 残りが一つしか無かったら
-		if (m_pTop[nPriority] == this)
-		{
-			m_pTop[nPriority] = nullptr;
-		}
-
-		// 残りが一つしか無かったら
-		if (m_pCur[nPriority] == this)
-		{
-			m_pCur[nPriority] = nullptr;
-		}
-
-		delete this;
-
-		m_pNext = nullptr;
-		m_pPrev = nullptr;
-
-		m_nNumAll[nPriority]--;
+		m_pTop[nPriority] = nullptr;
 	}
+
+	// 残りが一つしか無かったら
+	if (m_pCur[nPriority] == pObject)
+	{
+		m_pCur[nPriority] = nullptr;
+	}
+
+	m_pNext = nullptr;
+	m_pPrev = nullptr;
+
+	m_nNumAll[nPriority]--;
+
+	delete pObject;
+
+	pObject = nullptr;
 }

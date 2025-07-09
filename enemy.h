@@ -80,7 +80,6 @@ private:
 	void SetParent(const int nCnt);
 	void Load(void);
 
-	CObject3D* m_pObject; 
 	std::unique_ptr<CStateMachine> m_pMachine;
 	//std::unique_ptr<CEnemyState> m_pState;				// 敵の状態パターン
 	std::unique_ptr<CCharacter3D> m_pCharactor;			// キャラクタークラス

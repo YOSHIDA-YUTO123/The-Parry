@@ -219,6 +219,9 @@
     <ClCompile Include="statebase.cpp">
       <Filter>ソース ファイル\system</Filter>
     </ClCompile>
+    <ClCompile Include="obstaclemanager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="testword.h">
@@ -358,6 +361,9 @@
     </ClInclude>
     <ClInclude Include="EnemyState.h">
       <Filter>ヘッダー ファイル\model\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="obstaclemanager.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

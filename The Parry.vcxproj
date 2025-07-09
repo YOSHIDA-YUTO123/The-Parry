@@ -182,6 +182,7 @@
     <ClCompile Include="object3D.cpp" />
     <ClCompile Include="objectX.cpp" />
     <ClCompile Include="Obstacle.cpp" />
+    <ClCompile Include="obstaclemanager.cpp" />
     <ClCompile Include="Orbit.cpp" />
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="pch.cpp">
@@ -235,6 +236,7 @@
     <ClInclude Include="object3D.h" />
     <ClInclude Include="objectX.h" />
     <ClInclude Include="Obstacle.h" />
+    <ClInclude Include="obstaclemanager.h" />
     <ClInclude Include="Orbit.h" />
     <ClInclude Include="particle.h" />
     <ClInclude Include="pch.h" />

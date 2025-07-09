@@ -10,7 +10,9 @@
 //**************************************************
 #include "main.h"
 #include<stdlib.h>
-//#include<crtdbg.h>
+#define _CRTDBG_MAP_ALLOC
+#include <cstdlib>
+#include <crtdbg.h>
 #include "manager.h"
 
 //**************************************************
@@ -90,10 +92,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 	dwFrameCount = 0;
 	dwFPSLastTime = timeGetTime();
 
-	CManager* pManager = NULL;
+	CManager* pManager = nullptr;
 
 	// レンダラーがNULLなら
-	if (pManager == NULL)
+	if (pManager == nullptr)
 	{
 		// レンダラーの生成
 		pManager = new CManager;
@@ -133,8 +135,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 				// FPSを計算する
 				int fps = (dwFrameCount * 1000) / (dwCurrentTime - dwFPSLastTime);
 
-				// FPSの設定
-				pManager->SetFps(fps);
+				if (pManager != nullptr)
+				{
+					// FPSの設定
+					pManager->SetFps(fps);
+				}
 
 				dwFPSLastTime = dwCurrentTime; // FPSを計測した時刻を保存
 				dwFrameCount = 0; // フレームカウントをクリア
@@ -146,11 +151,14 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 
 				dwFrameCount++; //フレームカウントを加算
 
-				// 更新処理
-				pManager->Update();
+				if (pManager != nullptr)
+				{
+					// 更新処理
+					pManager->Update();
 
-				// 描画処理
-				pManager->Draw();
+					// 描画処理
+					pManager->Draw();
+				}
 			}	
 		}	
 	}
@@ -165,17 +173,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 
 		pManager = nullptr;
 	}
-
-#ifdef _DEBUG
-
-	// メモリーリーク検知
-	if (_CrtDumpMemoryLeaks())
-	{
-		MessageBox(NULL, "メモリリークが検出されました", "エラー", MB_OK | MB_ICONERROR);
-		exit(1);
-	}
-
-#endif
 
 	// ウインドウクラスの登録を解除
 	UnregisterClass(CLASS_NAME, wcex.hInstance);

@@ -23,6 +23,8 @@
 //**********************************************
 class CObjectX;
 class CVelocity;
+class CCollision;
+class CCollisionAABB;
 
 //**********************************************
 // 障害物のクラスの定義
@@ -37,11 +39,17 @@ public:
 	virtual void Uninit(void) override;
 	virtual void Update(void) override;
 	virtual void Draw(void) override;
+	//virtual bool Collision(CCollision* other) = 0;
+
 	void Release(void);
 
 	void SetPosition(const D3DXVECTOR3 pos);
 	void SetRotaition(const D3DXVECTOR3 rot);
 	void SetModelName(const char* pModelName);
+
+	D3DXVECTOR3 GetPosition(void) const;
+	D3DXVECTOR3 GetSize(void) const;
+
 private:
 	CObjectX* m_pObjectX;							  // Xファイルモデルクラスのポインタ
 	std::unique_ptr<CVelocity> m_pMove;				  // 移動量
@@ -61,7 +69,9 @@ public:
 	void Uninit(void) override;
 	void Update(void) override;
 	void Draw(void) override;
+	//bool Collision(CCollision* other) override;
 private:
-	//std::unique_ptr<CCollisionAABB> m_pAABB; // 矩形の判定
+	std::unique_ptr<CCollisionAABB> m_pAABB; // 矩形の判定
+	D3DXVECTOR3 m_CenterPos;				 // 真ん中の位置
 };
 #endif

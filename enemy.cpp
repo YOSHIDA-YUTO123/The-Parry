@@ -84,8 +84,6 @@ CEnemy* CEnemy::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 //===================================================
 HRESULT CEnemy::Init(void)
 {
-	m_pObject = CObject3D::Create(VEC3_NULL, VEC3_NULL, VEC3_NULL, NULL);
-
 	// モーションロード処理
 	Load();
 
@@ -131,12 +129,6 @@ void CEnemy::Uninit(void)
 
 			m_apModel[nCnt] = nullptr;
 		}
-	}
-
-	if (m_pObject != nullptr)
-	{
-		// モーションの終了処理
-		m_pObject = nullptr;
 	}
 
 	if (m_pMotion != nullptr)
@@ -201,8 +193,6 @@ void CEnemy::Update(void)
 	}
 	if (pKeyboard->GetTrigger(DIK_1))
 	{
-		m_pObject->Uninit();
-		m_pObject = nullptr;
 		Uninit();
 		return;
 	}
@@ -424,8 +414,11 @@ void CEnemy::Update(void)
 		pMesh->SetImpact(config);
 	}
 
-	// 状態の更新処理
-	m_pMachine->Update();
+	if (m_pMachine != nullptr)
+	{
+		// 状態の更新処理
+		m_pMachine->Update();
+	}
 
 	// 位置の設定処理
     m_pCharactor->SetPosition(pos);

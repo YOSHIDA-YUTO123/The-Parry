@@ -763,8 +763,11 @@ bool CPlayer::IsParry(const D3DXVECTOR3 pos)
 	// Œü‚«‚ÌŽæ“¾
 	D3DXVECTOR3 rot = m_pCharacter3D->GetRotation()->Get();
 
+	// Ž‹ŠE‚Ì”»’è‚Ìì¬
+	CCollisionFOV Collider = m_pFOV->CreateCollider(pos, rot.y, D3DX_PI * 0.5f, -D3DX_PI * 0.5f);
+
 	// Ž‹ŠE“à‚©‚Âó‘Ô‚ªUŒ‚‚ÌŽž
-	if (m_pCharacter3D->GetState() == CCharacter3D::STATE_ACTION && m_pFOV->Collision(pos, rot.y, D3DX_PI * 0.5f, -D3DX_PI * 0.5f))
+	if (m_pCharacter3D->GetState() == CCharacter3D::STATE_ACTION && m_pFOV->Collision(&Collider))
 	{
 		return true;
 	}

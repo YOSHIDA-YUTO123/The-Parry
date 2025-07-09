@@ -123,22 +123,22 @@ void CCamera::Update(void)
 
 #endif
 
-	// メッシュシリンダーの取得
-	CMeshCylinder* pCylinder = CManager::GetCylinder();
+	//// メッシュシリンダーの取得
+	//CMeshCylinder* pCylinder = CManager::GetCylinder();
 
-	// メッシュフィールドの取得
-	CMeshField* pField = CManager::GetMeshField();
+	//// メッシュフィールドの取得
+	//CMeshField* pField = CManager::GetMeshField();
 
-	float fHeight = 0.0f;
+	//float fHeight = 0.0f;
 
-	if (pField->Collision(m_posV, &fHeight))
-	{
-		// 高さを設定
-		m_posV.y = fHeight + HEIGHT_OFFSET;
-	}
+	//if (pField->Collision(m_posV, &fHeight))
+	//{
+	//	// 高さを設定
+	//	m_posV.y = fHeight + HEIGHT_OFFSET;
+	//}
 
-	// シリンダーの当たり判定
-	pCylinder->Collision(&m_posV);
+	//// シリンダーの当たり判定
+	//pCylinder->Collision(&m_posV);
 
 	// 角度の正規化
 	NormalizeRot(&m_rot.x);

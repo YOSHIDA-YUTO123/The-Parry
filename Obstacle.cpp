@@ -159,10 +159,34 @@ void CObstacle::SetModelName(const char* pModelName)
 }
 
 //==============================================
+// 位置の取得
+//==============================================
+D3DXVECTOR3 CObstacle::GetPosition(void) const
+{
+	// 位置の取得
+	if(m_pObjectX != nullptr) return m_pObjectX->GetPosition();
+
+	return VEC3_NULL;
+}
+
+//==============================================
+// 大きさの取得
+//==============================================
+D3DXVECTOR3 CObstacle::GetSize(void) const
+{
+	// 大きさの取得
+	if (m_pObjectX != nullptr) return m_pObjectX->GetSize();
+
+	return VEC3_NULL;
+}
+
+//==============================================
 // コンストラクタ
 //==============================================
 CSpikeTrap::CSpikeTrap()
 {
+	m_pAABB = nullptr;
+	m_CenterPos = VEC3_NULL;
 }
 
 //==============================================
@@ -220,8 +244,16 @@ HRESULT CSpikeTrap::Init(void)
 	// モデルの読み込み
 	SetModelName("data/MODEL/obstacle/spiketrap.x");
 
-	//// AABBの生成
-	//m_pAABB = make_unique<CCollisionAABB>();
+ 	D3DXVECTOR3 pos = GetPosition();
+	D3DXVECTOR3 Size = GetSize();
+
+	// 中心座標の設定
+	m_CenterPos.x = pos.x;
+	m_CenterPos.y = pos.y + (Size.y * 0.5f);
+	m_CenterPos.z = pos.z;
+
+	// AABBの生成
+	m_pAABB = CCollisionAABB::Create(m_CenterPos, Size);
 
 	return S_OK;
 }
@@ -252,3 +284,15 @@ void CSpikeTrap::Draw(void)
 	// 描画処理
 	CObstacle::Draw();
 }
+
+////==============================================
+//// 当たり判定
+////==============================================
+//bool CSpikeTrap::Collision(CCollision* other)
+//{
+//	//if (m_pAABB->Collision(other))
+//	//{
+//	//	return true;
+//	//}
+//	//return false;
+//}

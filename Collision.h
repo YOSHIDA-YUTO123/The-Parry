@@ -37,7 +37,10 @@ public:
 	virtual ~CCollision();
 
 	static CCollision* Create(const D3DXVECTOR3 pos,const TYPE type);
+	virtual bool Collision(CCollision* other) = 0;
+
 	void SetPos(const D3DXVECTOR3 pos) { m_pos = pos; }
+
 	D3DXVECTOR3 GetPosition(void) const { return m_pos; }
 	TYPE GetType(void) const { return m_type; }
 private:
@@ -56,7 +59,7 @@ public:
 
 	static std::unique_ptr<CCollisionAABB> Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 Size);
 	CCollisionAABB CreateCollider(const D3DXVECTOR3 pos, const D3DXVECTOR3 Size);
-	bool Collision(CCollisionAABB* other);
+	bool Collision(CCollision* other) override;
 	void SetOldPos(const D3DXVECTOR3 posOld) { m_posOld = posOld; }
 private:
 	D3DXVECTOR3 m_posOld;
@@ -76,7 +79,7 @@ public:
 	// ÉRÉâÉCÉ_Å[ÇÃçÏê¨èàóù
 	CCollisionSphere CreateCollider(const D3DXVECTOR3 pos, const float fRadius);
 
-	bool Collision(CCollisionSphere* other);
+	bool Collision(CCollision* other) override;
 	void SetRadius(const float fRadius) { m_fRadius = fRadius; }
 private:
 	float m_fRadius; // îºåa
@@ -92,9 +95,13 @@ public:
 	~CCollisionFOV();
 	static std::unique_ptr<CCollisionFOV> Create(const D3DXVECTOR3 pos,const float fLength);
 
-	bool Collision(const D3DXVECTOR3 pos, const float fAngle,const float fAngleLeft,const float fAngleRight);
+	bool Collision(CCollision *fov) override;
+	CCollisionFOV CreateCollider(const D3DXVECTOR3 pos, const float fAngle, const float fAngleLeft, const float fAngleRight);
 private:
-	float m_fLength; // éãäEÇÃí∑Ç≥
+	float m_fLength;		// éãäEÇÃí∑Ç≥
+	float m_fNowAngle;		// ç°ÇÃäpìx
+	float m_fAngleLeft;		// éãñÏç∂
+	float m_fAngleRight;	// éãñÏâE
 };
 
 #endif

@@ -294,23 +294,39 @@ void CManager::Update(void)
 		m_pRenderer->Update();
 	}
 
-	// キーボードの更新処理
-	m_pInputKeyboard->Update();
+	if (m_pInputKeyboard != nullptr)
+	{
+		// キーボードの更新処理
+		m_pInputKeyboard->Update();
+	}
 
-	// パッドの更新処理
-	m_pInputJoypad->Update();
+	if (m_pInputJoypad != nullptr)
+	{
+		// パッドの更新処理
+		m_pInputJoypad->Update();
+	}
 
-	// マウスの更新処理
-	m_pInputMouse->Update();
+	if (m_pInputMouse != nullptr)
+	{
+		// マウスの更新処理
+		m_pInputMouse->Update();
+	}
 
-	// カメラの更新処理
-	m_pCamera->Update();
+	if (m_pCamera != nullptr)
+	{
+		// カメラの更新処理
+		m_pCamera->Update();
+	}
 
-	// ライトの更新処理
-	m_pLight->Update();
+	if (m_pLight != nullptr)
+	{	// ライトの更新処理
+		m_pLight->Update();
+	}
 
-	// スローモーションの更新処理
-	m_pSlow->Update();
+	if (m_pSlow != nullptr)
+	{		// スローモーションの更新処理
+		m_pSlow->Update();
+	}
 
 	if (m_pInputKeyboard->GetTrigger(DIK_F2))
 	{
