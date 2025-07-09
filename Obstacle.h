@@ -32,16 +32,36 @@ class CObstacle : public CObject
 public:
 	CObstacle();
 	~CObstacle();
-	static CObstacle* Create(const D3DXVECTOR3 pos,const D3DXVECTOR3 rot);
+
+	virtual HRESULT Init(void) override;
+	virtual void Uninit(void) override;
+	virtual void Update(void) override;
+	virtual void Draw(void) override;
+	void Release(void);
+
+	void SetPosition(const D3DXVECTOR3 pos);
+	void SetRotaition(const D3DXVECTOR3 rot);
+	void SetModelName(const char* pModelName);
+private:
+	CObjectX* m_pObjectX;							  // Xファイルモデルクラスのポインタ
+	std::unique_ptr<CVelocity> m_pMove;				  // 移動量
+};
+
+//**********************************************
+// スパイクトラップクラスの定義
+//**********************************************
+class CSpikeTrap : public CObstacle
+{
+public:
+	CSpikeTrap();
+	~CSpikeTrap();
+	static CSpikeTrap* Create(const D3DXVECTOR3 pos,const D3DXVECTOR3 rot);
 
 	HRESULT Init(void) override;
 	void Uninit(void) override;
 	void Update(void) override;
 	void Draw(void) override;
-
 private:
-	CObjectX* m_pObjectX;				  // Xファイルモデルクラスのポインタ
-	std::unique_ptr<CVelocity> m_pMove;	  // 移動量
+	//std::unique_ptr<CCollisionAABB> m_pAABB; // 矩形の判定
 };
-
 #endif

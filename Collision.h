@@ -33,12 +33,13 @@ public:
 		TYPE_MAX
 	}TYPE;
 
-	CCollision();
+	CCollision(TYPE type);
 	virtual ~CCollision();
 
 	static CCollision* Create(const D3DXVECTOR3 pos,const TYPE type);
 	void SetPos(const D3DXVECTOR3 pos) { m_pos = pos; }
 	D3DXVECTOR3 GetPosition(void) const { return m_pos; }
+	TYPE GetType(void) const { return m_type; }
 private:
 	D3DXVECTOR3 m_pos; // ˆÊ’u
 	TYPE m_type;	   // “–‚½‚è”»’è‚ÌŽí—Þ
@@ -53,7 +54,8 @@ public:
 	CCollisionAABB();
 	~CCollisionAABB();
 
-	static CCollisionAABB* Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 Size);
+	static std::unique_ptr<CCollisionAABB> Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 Size);
+	CCollisionAABB CreateCollider(const D3DXVECTOR3 pos, const D3DXVECTOR3 Size);
 	bool Collision(CCollisionAABB* other);
 	void SetOldPos(const D3DXVECTOR3 posOld) { m_posOld = posOld; }
 private:

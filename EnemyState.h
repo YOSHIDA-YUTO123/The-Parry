@@ -16,6 +16,7 @@
 //***************************************************
 #include"main.h"
 #include<memory>
+#include"statebase.h"
 
 //***************************************************
 // 前方宣言
@@ -26,41 +27,31 @@ class CMotion;
 //***************************************************
 // 敵の状態クラスの定義(基底クラス)
 //***************************************************
-class CEnemyState
+class CEnemyState : public CStateBase
 {
 public:
 
-	// 敵の状態のID
-	typedef enum
-	{
-		TYPE_IDLE = 0,
-		TYPE_MOVE,
-		TYPE_SMASH,
-		TYPE_IMPACT,
-		TYPE_ROAR,
-		TYPE_DAMAGE,
-		TYPE_DASH,
-		TYPE_SPIN,
-		TYPE_MAX
-	}TYPE;
-
-	CEnemyState(TYPE id);
+	CEnemyState();
 	virtual ~CEnemyState();
-	virtual void Update(CEnemy *pEnemy) = 0;
-	TYPE GetID(void) const { return m_ID; }
+	virtual void Init(void);
+	virtual void Update(void);
+	virtual void Uninit(void);
+
+	void SetOwner(CEnemy* pEnemy) { m_pEnemy = pEnemy; }
+protected:
+	CEnemy* m_pEnemy; // 敵クラスへのポインタ
 private:
-	TYPE m_ID; // 状態のID
 };
 
 //***************************************************
 // 敵の状態(IDLE)クラスの定義
 //***************************************************
-class CStateIdle : public CEnemyState
+class CEnemyIdle : public CEnemyState
 {
 public:
-	CStateIdle(int nNextCount);
-	~CStateIdle();
-	void Update(CEnemy* pEnemy) override;
+	CEnemyIdle(int nNextCount);
+	~CEnemyIdle();
+	void Update(void) override;
 private:
 	int m_nNextStateCount; // 次のステートに移るカウンター
 };
@@ -68,12 +59,12 @@ private:
 //***************************************************
 // 敵の状態(Move)クラスの定義
 //***************************************************
-class CStateMove : public CEnemyState
+class CEnemyMove : public CEnemyState
 {
 public:
-	CStateMove();
-	~CStateMove();
-	void Update(CEnemy* pEnemy) override;
+	CEnemyMove();
+	~CEnemyMove();
+	void Update(void) override;
 private:
 	int m_nNextStateCount;  // 次のステートに移るカウンター
 };
@@ -81,72 +72,72 @@ private:
 //***************************************************
 // 敵の状態(ATTACK)クラスの定義
 //***************************************************
-class CStateAttackSmash : public CEnemyState
+class CEnemyAttackSmash : public CEnemyState
 {
 public:
-	CStateAttackSmash();
-	~CStateAttackSmash();
-	void Update(CEnemy* pEnemy) override;
+	CEnemyAttackSmash();
+	~CEnemyAttackSmash();
+	void Update(void) override;
 private:
 };
 
 //***************************************************
 // 敵の状態(ATTACKImpact)クラスの定義
 //***************************************************
-class CStateAttackImpact : public CEnemyState
+class CEnemyAttackImpact : public CEnemyState
 {
 public:
-	CStateAttackImpact();
-	~CStateAttackImpact();
-	void Update(CEnemy* pEnemy) override;
+	CEnemyAttackImpact();
+	~CEnemyAttackImpact();
+	void Update(void) override;
 private:
 };
 
 //***************************************************
 // 敵の状態(DAMAGE)クラスの定義
 //***************************************************
-class CStateDamage : public CEnemyState
+class CEnemyDamage : public CEnemyState
 {
 public:
-	CStateDamage();
-	~CStateDamage();
-	void Update(CEnemy* pEnemy) override;
+	CEnemyDamage();
+	~CEnemyDamage();
+	void Update(void) override;
 private:
 };
 
 //***************************************************
 // 敵の状態(ROAR)クラスの定義
 //***************************************************
-class CStateRoar : public CEnemyState
+class CEnemyRoar : public CEnemyState
 {
 public:
-	CStateRoar();
-	~CStateRoar();
-	void Update(CEnemy* pEnemy) override;
+	CEnemyRoar();
+	~CEnemyRoar();
+	void Update(void) override;
 private:
 };
 
 //***************************************************
 // 敵の状態(DASH)クラスの定義
 //***************************************************
-class CStateDash : public CEnemyState
+class CEnemyDash : public CEnemyState
 {
 public:
-	CStateDash();
-	~CStateDash();
-	void Update(CEnemy* pEnemy) override;
+	CEnemyDash();
+	~CEnemyDash();
+	void Update(void) override;
 private:
 };
 
 //***************************************************
 // 敵の状態(SPIN)クラスの定義
 //***************************************************
-class CStateSpin : public CEnemyState
+class CEnemySpin : public CEnemyState
 {
 public:
-	CStateSpin(const int nTime);
-	~CStateSpin();
-	void Update(CEnemy* pEnemy) override;
+	CEnemySpin(const int nTime);
+	~CEnemySpin();
+	void Update(void) override;
 private:
 	int m_nTime; // 回転する時間
 };

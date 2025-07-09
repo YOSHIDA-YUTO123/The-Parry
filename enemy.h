@@ -29,8 +29,9 @@ class CMotion;
 class CEnemyMotionController;
 class CModel;
 class CEnemyState;
-class CStateIdle;
+class CEnemyIdle;
 class CMeshOrbit;
+class CStateMachine;
 
 //***************************************************
 // 敵クラスの定義
@@ -67,18 +68,19 @@ public:
 
 	void BlowOff(const D3DXVECTOR3 attacker, const float blowOff, const float jump);
 	bool CollisionWepon(void);
-	void SetState(std::unique_ptr<CEnemyState> NewState);				// 新しい状態の設定処理
 	void ChasePlayer(float chaseScal, const float speedScal = 1.0f);	// プレイヤーを追いかける処理
 	void AngleToPlayer(void);												// プレイヤーの方向を見る処理
 	bool CheckDistane(const float fRadius);								// 距離の判定
 	void MoveForWard(const float fSpeed);								// 自分の向いている方向に向かって進む処理
 	void Orbit(const int nSegH, const D3DXCOLOR col, const int nLife);	// 軌跡の設定
 	CMotion* GetMotion(void) { return m_pMotion.get(); }
+	void ChangeState(std::shared_ptr<CEnemyState> pNewState);
 private:
 	void SetParent(const int nCnt);
 	void Load(void);
 
-	std::unique_ptr<CEnemyState> m_pState;				// 敵の状態パターン
+	std::unique_ptr<CStateMachine> m_pMachine;
+	//std::unique_ptr<CEnemyState> m_pState;				// 敵の状態パターン
 	std::unique_ptr<CCharacter3D> m_pCharactor;			// キャラクタークラス
 	std::unique_ptr<CCollisionSphere> m_pSphere;		// 円の当たり判定クラス
 	std::unique_ptr<CShadow> m_pShadow;					// 影のクラスへのポインタ

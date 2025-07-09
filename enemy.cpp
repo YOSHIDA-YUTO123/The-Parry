@@ -23,6 +23,7 @@
 #include"Wave.h"
 #include"EnemyState.h"
 #include "Orbit.h"
+#include"statebase.h"
 
 //***************************************************
 // 定数定義
@@ -45,6 +46,7 @@ using namespace std;							// 名前空間stdを使用
 CEnemy::CEnemy()
 {
 	m_pMove = nullptr;
+	m_pMachine = nullptr;
 	m_nNumModel = NULL;
 	D3DXMatrixIdentity(&m_weponMatrix);
 	m_pOrbit = nullptr;
@@ -102,13 +104,17 @@ CEnemy* CEnemy::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 HRESULT CEnemy::Init(void)
 {
 	// 状態パターンの生成
-	m_pState = make_unique<CStateIdle>(0);
-
-	// 移動クラスの生成
-	m_pMove = make_unique<CVelocity>();
+	//m_pState = make_unique<CStateIdle>(0);
 
 	// モーションロード処理
 	Load();
+
+	m_pMachine = make_unique<CStateMachine>();
+
+	ChangeState(make_shared<CEnemyIdle>(10));
+
+	// 移動クラスの生成
+	m_pMove = make_unique<CVelocity>();
 
 	// キャラクターの作成
 	m_pCharactor = make_unique<CCharacter3D>();
@@ -197,15 +203,15 @@ void CEnemy::Update(void)
 
 	if (pKeyboard->GetPress(DIK_F3))
 	{
-		SetState(make_unique<CStateAttackSmash>());
+		ChangeState(make_shared<CEnemyAttackSmash>());
 	}
 	if (pKeyboard->GetPress(DIK_F4))
 	{
-		SetState(make_unique<CStateAttackImpact>());
+		ChangeState(make_shared<CEnemyAttackImpact>());
 	}
 	if (pKeyboard->GetPress(DIK_F5))
 	{
-		SetState(make_unique<CStateRoar>());
+		ChangeState(make_shared<CEnemyRoar>());
 	}
 
 #endif // _DEBUG
@@ -281,7 +287,7 @@ void CEnemy::Update(void)
 			BlowOff(impactPos, 150.0f, 10.0f);
 
 			// 状態の設定
-			SetState(make_unique<CStateDamage>());
+			ChangeState(make_shared<CEnemyDamage>());
 
 			// モーションの設定
 			m_pMotion->SetMotion(MOTIONTYPE_DAMAGE, true, 5);
@@ -369,7 +375,7 @@ void CEnemy::Update(void)
 		m_pMotion->SetMotion(MOTIONTYPE_DAMAGE, true, 2);
 
 		// 状態の設定
-		SetState(make_unique<CStateDamage>());
+		ChangeState(make_shared<CEnemyDamage>());
 	}
 
 	// 攻撃モーションのたたきつけになったら
@@ -426,7 +432,7 @@ void CEnemy::Update(void)
 	}
 
 	// 状態の更新処理
-	m_pState->Update(this);
+	m_pMachine->Update();
 
 	// 位置の設定処理
     m_pCharactor->SetPosition(pos);
@@ -544,19 +550,6 @@ bool CEnemy::CollisionWepon(void)
 	}
 
 	return false;
-}
-
-//===================================================
-// 新しい状態の設定処理
-//===================================================
-void CEnemy::SetState(std::unique_ptr<CEnemyState> NewState)
-{
-	// 違うポインタなら
-	if (m_pState != nullptr && m_pState->GetID() != NewState->GetID())
-	{
-		// 新しい状態の設定(所有権を移動させる)
-		m_pState = std::move(NewState);
-	}
 }
 
 //===================================================
@@ -706,6 +699,18 @@ void CEnemy::Orbit(const int nSegH, const D3DXCOLOR col, const int nLife)
 		// nullにする
 		m_pOrbit = nullptr;
 	}
+}
+
+//===================================================
+// 状態の変更
+//===================================================
+void CEnemy::ChangeState(std::shared_ptr<CEnemyState> pNewState)
+{
+	// オーナの設定
+	pNewState->SetOwner(this);
+
+	// 状態の変更
+	m_pMachine->Change(pNewState);
 }
 
 //===================================================

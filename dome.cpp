@@ -37,25 +37,6 @@ CMeshDome* CMeshDome::Create(const D3DXVECTOR3 pos, const int nSegH, const int n
 	// メッシュドームを生成
 	CMeshDome* pMesh = new CMeshDome;
 
-	// 優先順位の取得
-	int nPriority = pMesh->GetPriority();
-
-	// 現在のオブジェクトの最大数
-	const int nNumAll = CObject::GetNumObject(nPriority);
-
-	// オブジェクトが最大数まであったら
-	if (nNumAll >= MAX_OBJECT && pMesh != nullptr)
-	{
-		// 自分のポインタの解放
-		pMesh->Release();
-
-		// nullにする
-		pMesh = nullptr;
-
-		// オブジェクトを消す
-		return nullptr;
-	}
-
 	if (pMesh == nullptr) return nullptr;
 
 	// 頂点数の設定
@@ -83,6 +64,7 @@ CMeshDome* CMeshDome::Create(const D3DXVECTOR3 pos, const int nSegH, const int n
 	// 頂点の設定
 	pMesh->SetVtxElement(nNumVtx, nNumDomePolygon, nNumIdx);
 
+	// 分割数の設定処理
 	pMesh->SetSegment(nSegH, nSegV);
 	
 	// 初期化処理

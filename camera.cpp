@@ -225,53 +225,32 @@ void CCamera::MouseView(void)
 
 	D3DXVECTOR2 fAngle = Move - MoveOld;
 
+#ifdef _DEBUG
+	// マウスホイール
 	CCamera::MouseWheel();
+#endif
 
+	// パッドの視点操作
 	CCamera::PadView();
 
-	if (pMouse->OnMousePress(1))
+	//回転量を更新
+	m_rot.y += fAngle.x * 0.01f;
+	m_rot.x += fAngle.y * 0.01f;
+
+	//回転量を制限
+	if (m_rot.x > MAX_VIEW_TOP)
 	{
-		//回転量を更新
-		m_rot.y += fAngle.x * 0.01f;
-		m_rot.x += fAngle.y * 0.01f;
-
-		//回転量を制限
-		if (m_rot.x > MAX_VIEW_TOP)
-		{
-			m_rot.x -= fAngle.y * 0.01f;
-		}
-		else if (m_rot.x < MAX_VIEW_BOTTOM)
-		{
-			m_rot.x -= fAngle.y * 0.01f;
-		}
-
-		//カメラ座標を更新
-		m_posR.x = m_posV.x + sinf(m_rot.x) * sinf(m_rot.y) * m_fDistance;
-		m_posR.y = m_posV.y + cosf(m_rot.x) * m_fDistance;
-		m_posR.z = m_posV.z + sinf(m_rot.x) * cosf(m_rot.y) * m_fDistance;
-
+		m_rot.x -= fAngle.y * 0.01f;
 	}
-	else if (pMouse->OnMousePress(0))
+	else if (m_rot.x < MAX_VIEW_BOTTOM)
 	{
-		//回転量を更新
-		m_rot.y += fAngle.x * 0.01f;
-		m_rot.x += fAngle.y * 0.01f;
-
-		//回転量を制限
-		if (m_rot.x > MAX_VIEW_TOP)
-		{
-			m_rot.x -= fAngle.y * 0.01f;
-		}
-		else if (m_rot.x < MAX_VIEW_BOTTOM)
-		{
-			m_rot.x -= fAngle.y * 0.01f;
-		}
-
-		// カメラの視点の情報
-		m_posV.x = m_posR.x - sinf(m_rot.x) * sinf(m_rot.y) * m_fDistance;
-		m_posV.y = m_posR.y - cosf(m_rot.x) * m_fDistance;
-		m_posV.z = m_posR.z - sinf(m_rot.x) * cosf(m_rot.y) * m_fDistance;
+		m_rot.x -= fAngle.y * 0.01f;
 	}
+
+	// カメラの視点の情報
+	m_posV.x = m_posR.x - sinf(m_rot.x) * sinf(m_rot.y) * m_fDistance;
+	m_posV.y = m_posR.y - cosf(m_rot.x) * m_fDistance;
+	m_posV.z = m_posR.z - sinf(m_rot.x) * cosf(m_rot.y) * m_fDistance;
 }
 
 //===================================================

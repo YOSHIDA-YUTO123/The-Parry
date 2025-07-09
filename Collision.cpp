@@ -14,14 +14,14 @@
 
 using namespace Const; // 名前空間Constを使用
 using namespace math; // 名前空間を使用
+using namespace std; // 名前空間stdを処理使用
 
 //================================================
 // コンストラクタ
 //================================================
-CCollision::CCollision()
+CCollision::CCollision(TYPE type) : m_type(type)
 {
 	m_pos = VEC3_NULL;
-	m_type = TYPE::TYPE_AABB;
 }
 
 //================================================
@@ -68,7 +68,7 @@ CCollision* CCollision::Create(const D3DXVECTOR3 pos, const TYPE type)
 //================================================
 // コンストラクタ
 //================================================
-CCollisionAABB::CCollisionAABB()
+CCollisionAABB::CCollisionAABB() : CCollision(TYPE::TYPE_AABB)
 {
 	m_Size = VEC3_NULL;
 	m_posOld = VEC3_NULL;
@@ -84,16 +84,30 @@ CCollisionAABB::~CCollisionAABB()
 //================================================
 // AABBの作成処理
 //================================================
-CCollisionAABB* CCollisionAABB::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 Size)
+unique_ptr<CCollisionAABB> CCollisionAABB::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 Size)
 {
 	// AABBの作成処理
-	CCollisionAABB* pAABB = new CCollisionAABB;
+	unique_ptr<CCollisionAABB> pAABB = make_unique<CCollisionAABB>();
 
 	// 設定処理
 	pAABB->SetPos(pos);
 	pAABB->m_Size = Size;
 
 	return pAABB;
+}
+
+//================================================
+// コライダーの作成処理
+//================================================
+CCollisionAABB CCollisionAABB::CreateCollider(const D3DXVECTOR3 pos, const D3DXVECTOR3 Size)
+{
+	CCollisionAABB aabb;
+
+	// 要素の設定
+	aabb.SetPos(pos);
+	aabb.m_Size = Size;
+
+	return aabb;
 }
 
 //================================================
@@ -195,7 +209,7 @@ bool CCollisionAABB::Collision(CCollisionAABB* other)
 //================================================
 // コンストラクタ
 //================================================
-CCollisionSphere::CCollisionSphere()
+CCollisionSphere::CCollisionSphere() : CCollision(TYPE::TYPE_SPHERE)
 {
 	m_fRadius = NULL;
 }
@@ -270,7 +284,7 @@ bool CCollisionSphere::Collision(CCollisionSphere* other)
 //================================================
 // コンストラクタ
 //================================================
-CCollisionFOV::CCollisionFOV()
+CCollisionFOV::CCollisionFOV() : CCollision(TYPE::TYPE_FOV)
 {
 	m_fLength = NULL;
 }
