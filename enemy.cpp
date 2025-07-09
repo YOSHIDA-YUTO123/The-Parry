@@ -69,25 +69,6 @@ CEnemy* CEnemy::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 	// 敵オブジェクトの生成
 	pEnemy = new CEnemy;
 
-	// 優先順位の取得
-	int nPriority = pEnemy->GetPriority();
-
-	// 現在のオブジェクトの最大数
-	const int nNumAll = CObject::GetNumObject(nPriority);
-
-	// オブジェクトが最大数まであったら
-	if (nNumAll >= MAX_OBJECT && pEnemy != nullptr)
-	{
-		// 自分のポインタの解放
-		pEnemy->Uninit();
-
-		// nullにする
-		pEnemy = nullptr;
-
-		// オブジェクトを消す
-		return nullptr;
-	}
-
 	if (pEnemy == nullptr) return nullptr;
 
 	pEnemy->Init();
@@ -103,8 +84,7 @@ CEnemy* CEnemy::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 //===================================================
 HRESULT CEnemy::Init(void)
 {
-	// 状態パターンの生成
-	//m_pState = make_unique<CStateIdle>(0);
+	m_pObject = CObject3D::Create(VEC3_NULL, VEC3_NULL, VEC3_NULL, NULL);
 
 	// モーションロード処理
 	Load();
@@ -153,6 +133,12 @@ void CEnemy::Uninit(void)
 		}
 	}
 
+	if (m_pObject != nullptr)
+	{
+		// モーションの終了処理
+		m_pObject = nullptr;
+	}
+
 	if (m_pMotion != nullptr)
 	{
 		// モーションの終了処理
@@ -192,10 +178,10 @@ void CEnemy::Update(void)
 
 	D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
 
+#ifdef _DEBUG
+
 	// キーボードの取得
 	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
-
-#ifdef _DEBUG
 
 	CDebugProc::Print("ボスの攻撃(スマッシュ) [ F3 ]\n");
 	CDebugProc::Print("ボスの攻撃(衝撃波) [ F4 ]\n");
@@ -212,6 +198,13 @@ void CEnemy::Update(void)
 	if (pKeyboard->GetPress(DIK_F5))
 	{
 		ChangeState(make_shared<CEnemyRoar>());
+	}
+	if (pKeyboard->GetTrigger(DIK_1))
+	{
+		m_pObject->Uninit();
+		m_pObject = nullptr;
+		Uninit();
+		return;
 	}
 
 #endif // _DEBUG

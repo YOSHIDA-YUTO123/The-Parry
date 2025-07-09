@@ -30,6 +30,7 @@ CObject::CObject(int nPriority)
 {
 	m_type = TYPE_NONE;
 	m_nPriority = nPriority;
+	m_bDeath = false;
 
 	// 先頭がnullだったら
 	if (m_pTop[nPriority] == nullptr)
@@ -92,6 +93,7 @@ void CObject::ReleaseAll(void)
 
 			// 更新処理
 			pObject->Uninit();
+			pObject->Destroy();
 
 			// 次のオブジェクトを代入
 			pObject = pObjectNext; 
@@ -117,6 +119,28 @@ void CObject::UpdateAll(void)
 			// 更新処理
 			pObject->Update();
 
+			// 次のオブジェクトを代入
+			pObject = pObjectNext;
+		}
+	}
+
+	for (int nCntPriority = 0; nCntPriority < NUM_PRIORITY; nCntPriority++)
+	{
+		// 先頭オブジェクトを代入
+		CObject* pObject = m_pTop[nCntPriority];
+
+		// nullじゃないなら
+		while (pObject != nullptr)
+		{
+			// 次のオブジェクトのポインタを代入
+			CObject* pObjectNext = pObject->m_pNext;
+
+			// 死亡フラグがたっていたら
+			if (pObject->m_bDeath == true)
+			{
+				// オブジェクトの破棄
+				pObject->Destroy();
+			}
 			// 次のオブジェクトを代入
 			pObject = pObjectNext;
 		}
@@ -150,9 +174,18 @@ void CObject::DrawAll(void)
 }
 
 //===================================================
-// オブジェクトの破棄
+//死亡フラグの設定
 //===================================================
 void CObject::Release(void)
+{
+	// 死亡フラグをオンにする
+	m_bDeath = true;
+}
+
+//===================================================
+// オブジェクトの破棄
+//===================================================
+void CObject::Destroy(void)
 {
 	// 自分の優先順位
 	int nPriority = m_nPriority;
@@ -164,19 +197,21 @@ void CObject::Release(void)
 		m_pTop[nPriority] = m_pNext;
 		m_pNext->m_pPrev = nullptr;
 	}
+	// 最後尾だったら
 	if (this == m_pCur[nPriority] && m_pPrev != nullptr)
 	{
-		// 先頭を次のオブジェクトにする
+		// 最後尾をひとつ前のオブジェクトにする
 		m_pCur[nPriority] = m_pPrev;
 		m_pPrev->m_pNext = nullptr;
 	}
-	if(m_pPrev != nullptr && m_pNext != nullptr)
+	// 最後尾でも先頭でも無かったら
+	if (m_pPrev != nullptr && m_pNext != nullptr)
 	{
+		// 間をつなげる
 		m_pPrev->m_pNext = m_pNext;
 		m_pNext->m_pPrev = m_pPrev;
 	}
-	
-	
+
 	if (this != nullptr)
 	{
 		// 残りが一つしか無かったら
@@ -197,5 +232,5 @@ void CObject::Release(void)
 		m_pPrev = nullptr;
 
 		m_nNumAll[nPriority]--;
-	}	
+	}
 }

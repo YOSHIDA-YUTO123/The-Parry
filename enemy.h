@@ -32,6 +32,7 @@ class CEnemyState;
 class CEnemyIdle;
 class CMeshOrbit;
 class CStateMachine;
+class CObject3D;
 
 //***************************************************
 // 敵クラスの定義
@@ -79,6 +80,7 @@ private:
 	void SetParent(const int nCnt);
 	void Load(void);
 
+	CObject3D* m_pObject; 
 	std::unique_ptr<CStateMachine> m_pMachine;
 	//std::unique_ptr<CEnemyState> m_pState;				// 敵の状態パターン
 	std::unique_ptr<CCharacter3D> m_pCharactor;			// キャラクタークラス

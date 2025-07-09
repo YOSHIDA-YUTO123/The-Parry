@@ -72,14 +72,15 @@ public:
 protected:
 	void Release(void);
 private:
+	void Destroy(void);
 	static int m_nNumAll[Const::NUM_PRIORITY];	 // オブジェクトの総数
-
 	static CObject* m_pTop[Const::NUM_PRIORITY]; // 先頭オブジェクトへのポインタ
 	static CObject* m_pCur[Const::NUM_PRIORITY]; // 最後尾オブジェクトへのポインタ
 	CObject* m_pPrev;							 // 前のオブジェクトへのポインタ
 	CObject* m_pNext;							 // 次のオブジェクトへのポインタ
 	TYPE m_type;								 // オブジェクトの種類
 	int m_nPriority;							 // 優先順位
+	bool m_bDeath;								 // 死亡フラグ
 };
 
 #endif
