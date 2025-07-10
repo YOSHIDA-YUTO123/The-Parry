@@ -17,6 +17,7 @@
 #include "LoadManager.h"
 #include "effect.h"
 #include "impact.h"
+#include"Collider.h"
 
 using namespace Const;							// 名前空間Constを使用する
 
@@ -920,7 +921,7 @@ CMeshFieldImpact* CMeshFieldImpact::Create(Config config)
 	pImpact->m_pMove = new CVelocity;
 
 	// 当たり判定の生成
-	pImpact->m_pSphere = CCollisionSphere::Create(config.pos, config.fRadius);
+	pImpact->m_pSphere = CColliderSphere::Create(config.pos, config.fRadius);
 
 	// 方向ベクトルにする
 	D3DXVec3Normalize(&config.dir, &config.dir);
@@ -982,7 +983,7 @@ bool CMeshFieldImpact::Update(CMeshField* pMeshField, const int nNumVtx)
 	if (m_pSphere != nullptr)
 	{
 		// 位置の更新処理
-		m_pSphere->SetPos(m_Config.pos);
+		m_pSphere->SetPosition(m_Config.pos);
 	}
 
 #ifdef _DEBUG
@@ -1020,10 +1021,13 @@ bool CMeshFieldImpact::Update(CMeshField* pMeshField, const int nNumVtx)
 		if (m_pSphere != nullptr)
 		{
 			// コライダーの作成
-			CCollisionSphere spere = m_pSphere->CreateCollider(vtxPos, 50.0f);
+			CColliderSphere spere = m_pSphere->CreateCollider(vtxPos,50.0f);
+
+			// 当たり判定の取得
+			CCollisionSphere* pCollision = CCollisionSphere::GetInstance();
 
 			// 円と円の判定
-			if (m_pSphere->Collision(&spere))
+			if (pCollision != nullptr && pCollision->Collision(&spere, m_pSphere.get()))
 			{
 				//頂点カラーの設定
 				pMeshField->SetVtxColor(D3DXCOLOR(0.4f, 0.4f, 0.4f, 1.0f), nCnt);
@@ -1064,12 +1068,18 @@ bool CMeshFieldImpact::Collision(const D3DXVECTOR3 pos, const float fRadius,cons
 	NewPos.y = 0.0f;
 
 	// コライダーの作成
-	CCollisionSphere sphere = m_pSphere->CreateCollider(NewPos, fRadius);
+	CColliderSphere sphere = m_pSphere->CreateCollider(NewPos, fRadius);
 
-	// 当たり判定
-	if (m_pSphere->Collision(&sphere) && myObj != m_Config.ObjType)
+	// 当たり判定の取得
+	CCollisionSphere* pCollision = CCollisionSphere::GetInstance();
+
+	if (pCollision != nullptr)
 	{
-		return true;
+		// 当たり判定
+		if (pCollision->Collision(&sphere, m_pSphere.get()) && myObj != m_Config.ObjType)
+		{
+			return true;
+		}
 	}
 
 	return false;

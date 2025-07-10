@@ -33,6 +33,7 @@ class CEnemyIdle;
 class CMeshOrbit;
 class CStateMachine;
 class CObject3D;
+class CColliderSphere;
 
 //***************************************************
 // 敵クラスの定義
@@ -85,7 +86,7 @@ private:
 	std::unique_ptr<CColliderAABB> m_pAABB;				// AABBのコライダー
 	std::unique_ptr<CStateMachine> m_pMachine;
 	std::unique_ptr<CCharacter3D> m_pCharactor;			// キャラクタークラス
-	std::unique_ptr<CCollisionSphere> m_pSphere;		// 円の当たり判定クラス
+	std::unique_ptr<CColliderSphere> m_pSphere;		// 円の当たり判定クラス
 	std::unique_ptr<CShadow> m_pShadow;					// 影のクラスへのポインタ
 	std::unique_ptr<CMotion> m_pMotion;					// 敵のモーションの制御クラスのポインタ
 	std::unique_ptr<CVelocity> m_pMove;					// 移動クラスの生成

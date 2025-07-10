@@ -136,3 +136,82 @@ void CColliderAABB::UpdateData(const D3DXVECTOR3 pos, const D3DXVECTOR3 posOld)
 //
 //	return pFOV;
 //}
+
+//================================================
+// コンストラクタ
+//================================================
+CColliderSphere::CColliderSphere()
+{
+	m_fRadius = NULL;
+}
+
+//================================================
+// デストラクタ
+//================================================
+CColliderSphere::~CColliderSphere()
+{
+}
+
+//================================================
+// 円のコライダーの作成
+//================================================
+unique_ptr<CColliderSphere> CColliderSphere::Create(const D3DXVECTOR3 pos, const float fRadius)
+{
+	// sphereの生成
+	unique_ptr<CColliderSphere> pSphere = make_unique<CColliderSphere>();
+
+	// 設定処理
+	pSphere->m_pos = pos;
+	pSphere->m_fRadius = fRadius;
+
+	return pSphere;
+}
+
+//================================================
+// コライダーの作成処理
+//================================================
+CColliderSphere CColliderSphere::CreateCollider(const D3DXVECTOR3 pos, const float fRadius)
+{
+	// コライダー
+	CColliderSphere sphere;
+
+	// 設定処理
+	sphere.m_pos = pos;
+	sphere.m_fRadius = fRadius;
+
+	return sphere;
+}
+
+//================================================
+// コンストラクタ
+//================================================
+CColliderFOV::CColliderFOV()
+{
+	// メモリのクリア
+	memset(&m_Data, NULL, sizeof(m_Data));
+}
+
+//================================================
+// デストラクタ
+//================================================
+CColliderFOV::~CColliderFOV()
+{
+}
+
+//================================================
+// 生成処理
+//================================================
+unique_ptr<CColliderFOV> CColliderFOV::Create(const D3DXVECTOR3 pos, const float fAngle, const float fAngleLeft, const float fAngleRight, const float fLength)
+{
+	// sphereの生成
+	unique_ptr<CColliderFOV> pFOV = make_unique<CColliderFOV>();
+
+	// 設定処理
+	pFOV->m_pos = pos;
+	pFOV->m_Data.fAngleLeft = fAngleLeft;
+	pFOV->m_Data.fAngleRight = fAngleRight;
+	pFOV->m_Data.fLength = fLength;
+	pFOV->m_Data.fNowAngle = fAngle;
+
+	return pFOV;
+}

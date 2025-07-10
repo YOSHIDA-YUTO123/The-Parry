@@ -24,6 +24,7 @@
 // 前方宣言
 //************************************************
 class CMeshField;
+class CColliderSphere;
 
 //************************************************
 // メッシュのフィールドのウェーブクラスの定義
@@ -113,8 +114,8 @@ private:
 	Config m_Config;			 // 構成
 	Info m_Info;				 // 情報
 
-	std::unique_ptr<CCollisionSphere> m_pSphere; // 円の当たり判定
-	CVelocity* m_pMove;	         // 移動量クラスへのポインタ
+	std::unique_ptr<CColliderSphere> m_pSphere; // 円のコライダー
+	CVelocity* m_pMove;							// 移動量クラスへのポインタ
 };
 //************************************************
 // メッシュフィールドクラスの定義

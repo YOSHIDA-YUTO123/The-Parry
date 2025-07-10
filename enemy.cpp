@@ -112,7 +112,7 @@ HRESULT CEnemy::Init(void)
 	m_pShadow = CShadow::Create(pos, 100.0f, 100.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, SHADOW_ALEVEL));
 
 	// 当たり判定の生成
-	m_pSphere = CCollisionSphere::Create(pos,150.0f);
+	m_pSphere = CColliderSphere::Create(pos,150.0f);
 	
 	// 中心を求める
 	D3DXVECTOR3 CenterPos = VEC3_NULL;
@@ -559,8 +559,12 @@ bool CEnemy::CollisionWepon(void)
 		// 武器の根元(基準)から先まで点を打つ
 		D3DXVECTOR3 pos = WeponBottom + diff * fRate;
 
-		// 位置の更新
-		m_pSphere->SetPos(pos);
+		// 円の判定
+		if (m_pSphere != nullptr)
+		{
+			// 位置の更新
+			m_pSphere->SetPosition(pos);
+		}
 
 #ifdef _DEBUG
 
@@ -568,10 +572,18 @@ bool CEnemy::CollisionWepon(void)
 		//CEffect3D::Create(pos, 50.0f, VEC3_NULL, WHITE, 10);
 #endif // _DEBUG
 
+		// 円の判定の取得
+		CCollisionSphere* pCollision = CCollisionSphere::GetInstance();
+
 		// 敵の武器に当たったら
-		if (m_pSphere->Collision(pPlayer->GetSphere()))
+		if (pCollision != nullptr)
 		{
-			return true;
+			CColliderSphere *playersphere = pPlayer->GetSphereCollider();
+
+			if (pCollision->Collision(m_pSphere.get(), playersphere))
+			{
+				return true;
+			}
 		}
 	}
 

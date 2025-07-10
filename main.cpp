@@ -10,8 +10,8 @@
 //**************************************************
 #include "main.h"
 #include<stdlib.h>
-#define _CRTDBG_MAP_ALLOC
-#include <cstdlib>
+//#define _CRTDBG_MAP_ALLOC
+//#include <cstdlib>
 #include <crtdbg.h>
 #include "manager.h"
 
@@ -25,11 +25,11 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 //==================================================
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
-//#ifdef _DEBUG
+#ifdef _DEBUG
 
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF); //メモリーリーク検知用フラグ
 
-//#endif // _DEBUG
+#endif // _DEBUG
 
 	DWORD dwCurrentTime;					// 現在時刻
 	DWORD dwExecLastTime = timeGetTime();	// 最後に処理した時刻

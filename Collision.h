@@ -23,9 +23,11 @@
 //************************************************
 class CColliderAABB;
 class CCollider;
+class CColliderSphere;
+class CColliderFOV;
 
 //************************************************
-// 当たり判定AABBのクラスの定義
+// 当たり判定のクラスの定義
 //************************************************
 class CCollision
 {
@@ -43,7 +45,6 @@ public:
 	virtual ~CCollision();
 
 	static CCollision* Create(const D3DXVECTOR3 pos,const TYPE type);
-	virtual bool Collision(CCollision* other) = 0;
 
 	void SetPos(const D3DXVECTOR3 pos) { m_pos = pos; }
 
@@ -60,14 +61,12 @@ private:
 class CCollisionAABB : public CCollision
 {
 public:
-	CCollisionAABB();
 	~CCollisionAABB();
-
 	static void Create(void);
 	static CCollisionAABB* GetInstance(void) { return m_pAABB.get(); }
 	bool Collision(CColliderAABB *pMyBox, CColliderAABB *pTargetBox);
-	bool Collision(CCollision* other) { other = nullptr; return 0; }
 private:
+	CCollisionAABB();
 	static std::unique_ptr<CCollisionAABB> m_pAABB; // 自分のインスタンス
 };
 
@@ -77,17 +76,15 @@ private:
 class CCollisionSphere : public CCollision
 {
 public:
-	CCollisionSphere();
 	~CCollisionSphere();
-	static std::unique_ptr<CCollisionSphere> Create(const D3DXVECTOR3 pos, const float fRadius);
-
 	// コライダーの作成処理
-	CCollisionSphere CreateCollider(const D3DXVECTOR3 pos, const float fRadius);
+	static void Create(void);
+	static CCollisionSphere* GetInstance(void) { return m_pSphere.get(); }
 
-	bool Collision(CCollision* other) override;
-	void SetRadius(const float fRadius) { m_fRadius = fRadius; }
+	bool Collision(CColliderSphere* myCollider, CColliderSphere* otherCollider);
 private:
-	float m_fRadius; // 半径
+	CCollisionSphere();
+	static std::unique_ptr<CCollisionSphere> m_pSphere; // 自分のインスタンス
 };
 
 //************************************************
@@ -96,17 +93,15 @@ private:
 class CCollisionFOV : public CCollision
 {
 public:
-	CCollisionFOV();
 	~CCollisionFOV();
-	static std::unique_ptr<CCollisionFOV> Create(const D3DXVECTOR3 pos,const float fLength);
+	static void Create(void);
+	static CCollisionFOV* GetInstance(void) { return m_pFOV.get(); }
 
-	bool Collision(CCollision *fov) override;
-	CCollisionFOV CreateCollider(const D3DXVECTOR3 pos, const float fAngle, const float fAngleLeft, const float fAngleRight);
+	bool Collision(const D3DXVECTOR3 otherpos, CColliderFOV* pFOV);
+	//CCollisionFOV CreateCollider(const D3DXVECTOR3 pos, const float fAngle, const float fAngleLeft, const float fAngleRight);
 private:
-	float m_fLength;		// 視界の長さ
-	float m_fNowAngle;		// 今の角度
-	float m_fAngleLeft;		// 視野左
-	float m_fAngleRight;	// 視野右
+	CCollisionFOV();
+	static std::unique_ptr<CCollisionFOV> m_pFOV; // 自分のインスタンス
 };
 
 //************************************************

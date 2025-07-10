@@ -23,6 +23,7 @@
 #include "LoadManager.h"
 #include "Wave.h"
 #include "cylinder.h"
+#include"Collider.h"
 
 using namespace math; // –¼‘O‹óŠÔmath‚ðŽg—p
 using namespace std;  // –¼‘O‹óŠÔ‚ðstd‚ðŽg—p‚·‚é
@@ -78,7 +79,10 @@ HRESULT CPlayer::Init(void)
 	D3DXVECTOR3 pos = m_pCharacter3D->GetPosition();
 
 	// Ž‹ŠE”»’è‚Ì¶¬
-	m_pFOV = CCollisionFOV::Create(pos, 1000.0f);
+	m_pFOV = CColliderFOV::Create(pos, 0.0f, D3DX_PI * 0.5f, -D3DX_PI * 0.5f,1000.0f);
+
+	// ‰~‚Ì“–‚½‚è”»’è‚Ì¶¬
+	m_pSphere = CColliderSphere::Create(pos, 50.0f);
 
 	// ƒXƒRƒA‚Ì¶¬
 	m_pScore = (CScoreLerper*)CScore::Create(CScore::TYPE_LERPER,D3DXVECTOR3(1150.0f, 50.0f, 0.0f), 180.0f, 30.0f);
@@ -367,14 +371,14 @@ void CPlayer::Update(void)
 	if (m_pSphere != nullptr)
 	{
 		// ˆÊ’u‚ÌÝ’èˆ—
-		m_pSphere->SetPos(pos);
+		m_pSphere->SetPosition(pos);
 	}
 
 	// Ž‹ŠE”»’è
 	if (m_pFOV != nullptr)
 	{
 		// ˆÊ’u‚ÌÝ’è
-		m_pFOV->SetPos(pos);
+		m_pFOV->SetPosition(pos);
 	}
 
 	UpdateParry();
@@ -763,11 +767,14 @@ bool CPlayer::IsParry(const D3DXVECTOR3 pos)
 	// Œü‚«‚ÌŽæ“¾
 	D3DXVECTOR3 rot = m_pCharacter3D->GetRotation()->Get();
 
-	// Ž‹ŠE‚Ì”»’è‚Ìì¬
-	CCollisionFOV Collider = m_pFOV->CreateCollider(pos, rot.y, D3DX_PI * 0.5f, -D3DX_PI * 0.5f);
+	// Ž‹ŠE‚ÌXVˆ—
+	m_pFOV->UpdateData(rot.y);
+
+	// Ž‹ŠE”»’è‚ÌŽæ“¾
+	CCollisionFOV* pCollision = CCollisionFOV::GetInstance();
 
 	// Ž‹ŠE“à‚©‚Âó‘Ô‚ªUŒ‚‚ÌŽž
-	if (m_pCharacter3D->GetState() == CCharacter3D::STATE_ACTION && m_pFOV->Collision(&Collider))
+	if (m_pCharacter3D->GetState() == CCharacter3D::STATE_ACTION && pCollision->Collision(pos, m_pFOV.get()))
 	{
 		return true;
 	}
@@ -812,10 +819,6 @@ CPlayer* CPlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 	}
 
 	if (pPlayer == nullptr) return nullptr;
-
-
-	// “–‚½‚è”»’è‚Ì¶¬
-	pPlayer->m_pSphere = CCollisionSphere::Create(pos, 50.0f);
 
 	pPlayer->Init();
 	pPlayer->m_pCharacter3D->Init();

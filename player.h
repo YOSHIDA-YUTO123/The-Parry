@@ -33,6 +33,8 @@ class CScoreLerper;
 class CCharacter3D;
 class CCollisionFOV;
 class CPlayerMotionController;
+class CColliderSphere;
+class CColliderFOV;
 
 //***************************************************
 // プレイヤークラスの定義
@@ -53,8 +55,8 @@ public:
 
 	bool MoveKeyboard(CInputKeyboard *pKeyboard);
 	void MoveJoypad(CInputJoypad* pJoypad);
-	CCollisionSphere* GetSphere(void) { return m_pSphere.get(); }
 	void UpdateParry(void);
+	CColliderSphere* GetSphereCollider(void) { return m_pSphere.get(); }
 	D3DXVECTOR3 GetPos(void) const { return m_pCharacter3D->GetPosition(); }
 	D3DXVECTOR3 GetModelPos(const int nIdx) { return math::GetPositionFromMatrix(m_apModel[nIdx]->GetMatrixWorld()); }
 	void BlowOff(const D3DXVECTOR3 attacker, const float blowOff,const float jump);
@@ -65,8 +67,8 @@ public:
 private:
 
 	std::unique_ptr<CCharacter3D> m_pCharacter3D;		// キャラクタークラス
-	std::unique_ptr<CCollisionFOV> m_pFOV;				// 視界の判定
-	std::unique_ptr<CCollisionSphere> m_pSphere;		// 円の当たり判定
+	std::unique_ptr<CColliderFOV> m_pFOV;				// 視界の判定
+	std::unique_ptr<CColliderSphere> m_pSphere;		// 円のコライダー
 	std::unique_ptr<CPlayerMotionController> m_pMotion;	// プレイヤーのモーション制御のクラスのポインタ
 	CScoreLerper *m_pScore;							// スコアクラスへのポインタ
 	std::vector<CModel*> m_apModel;					// モデルクラスのポインタ

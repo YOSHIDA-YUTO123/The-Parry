@@ -16,6 +16,10 @@
 #include "object3D.h"
 #include<ctime>
 #include"Obstacle.h"
+#include"Collision.h"
+
+using namespace Const;			// 名前空間Constを使用する
+using namespace std;			// 名前空間stdを使用する
 
 //***************************************************
 // 静的メンバ変数の宣言
@@ -36,8 +40,8 @@ bool CManager::m_bPause = false;						// ポーズ
 CMeshField* CManager::m_pMeshField = nullptr;			// メッシュフィールドのポインタ
 CSlow* CManager::m_pSlow = nullptr;						// スローモーションのポインタ
 CMeshCylinder* CManager::m_pCylinder = nullptr;			// シリンダーのクラスへのポインタ
+unique_ptr<CCollisionManager> CManager::m_pCollisionManager = nullptr; // 当たり判定のマネージャー
 
-using namespace Const;							// 名前空間Constを使用する
 
 //===================================================
 // コンストラクタ
@@ -89,6 +93,12 @@ HRESULT CManager::Init(HINSTANCE hInstance,HWND hWnd, BOOL bWindow)
 
 	// マウスの初期化処理
 	if (FAILED(m_pInputMouse->Init(hWnd))) return E_FAIL;
+
+	// 当たり判定のマネージャーの生成
+	m_pCollisionManager = make_unique<CCollisionManager>();
+
+	// すべての当たり判定の生成
+	m_pCollisionManager->CreateAll();
 
 	// テクスチャの生成
 	m_pTexture = new CTextureManager;

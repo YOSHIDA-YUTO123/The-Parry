@@ -25,6 +25,9 @@
 #include"meshfield.h"
 #include"slow.h"
 #include "cylinder.h"
+#include<memory>
+
+class CCollisionManager;
 
 //***************************************************
 // マネージャークラスの定義
@@ -75,6 +78,7 @@ private:
 	static bool m_bPause;						// ポーズ
 	static CMeshField* m_pMeshField;			// メッシュフィールドへのポインタ
 	static CSlow* m_pSlow;						// スローモーションクラスへのポインタ
-	static CMeshCylinder* m_pCylinder;			// シリンダーのクラスへのポインタ 
+	static CMeshCylinder* m_pCylinder;			// シリンダーのクラスへのポインタ
+	static std::unique_ptr<CCollisionManager> m_pCollisionManager; // 当たり判定のマネージャー
 };
 #endif

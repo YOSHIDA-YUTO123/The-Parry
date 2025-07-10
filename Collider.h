@@ -63,7 +63,9 @@ class CColliderSphere : public CCollider
 public:
 	CColliderSphere();
 	~CColliderSphere();
-	static CColliderSphere* CreateCollider(const float fRadius);
+	static std::unique_ptr<CColliderSphere> Create(const D3DXVECTOR3 pos,const float fRadius);
+	CColliderSphere CreateCollider(const D3DXVECTOR3 pos, const float fRadius);
+	float GetRadius(void) const { return m_fRadius; }
 private:
 	float m_fRadius;	// ”¼Œa
 };
@@ -74,15 +76,22 @@ private:
 class CColliderFOV : public CCollider
 {
 public:
+
+	struct Data
+	{
+		float fLength;		// ‹ŠE‚Ì’·‚³
+		float fNowAngle;	// ¡‚ÌŠp“x
+		float fAngleLeft;	// ‹–ì¶
+		float fAngleRight;	// ‹–ì‰E
+	};
+
 	CColliderFOV();
 	~CColliderFOV();
-	static CColliderFOV* CreateCollider(const float fAngle, const float fAngleLeft, const float fAngleRight,const float fLength);
+	static std::unique_ptr<CColliderFOV> Create(const D3DXVECTOR3 pos,const float fAngle, const float fAngleLeft, const float fAngleRight,const float fLength);
+	Data GetData(void) const { return m_Data; }
+	void UpdateData(const float fNowAngle) { m_Data.fNowAngle = fNowAngle; }
 private:
-	float m_fLength;		// ‹ŠE‚Ì’·‚³
-	float m_fNowAngle;		// ¡‚ÌŠp“x
-	float m_fAngleLeft;		// ‹–ì¶
-	float m_fAngleRight;	// ‹–ì‰E
-
+	Data m_Data; // ƒf[ƒ^
 };
 
 #endif

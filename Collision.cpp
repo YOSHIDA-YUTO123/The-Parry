@@ -22,7 +22,9 @@ constexpr float HALF_VALUE = 0.5f; // 半分
 //************************************************
 // 静的メンバ変数宣言
 //************************************************
-unique_ptr<CCollisionAABB> CCollisionAABB::m_pAABB = nullptr; // 当たり判定AABB
+unique_ptr<CCollisionAABB> CCollisionAABB::m_pAABB = nullptr;		// 当たり判定AABB
+unique_ptr<CCollisionSphere> CCollisionSphere::m_pSphere = nullptr; // 当たり判定Sphere
+unique_ptr<CCollisionFOV> CCollisionFOV::m_pFOV = nullptr;			// 当たり判定視界
 
 //================================================
 // コンストラクタ
@@ -47,21 +49,21 @@ CCollision* CCollision::Create(const D3DXVECTOR3 pos, const TYPE type)
 	// 当たり判定のポインタ
 	CCollision* pCollision = nullptr;
 
-	// 種類の遷移
-	switch (type)
-	{
-	case TYPE::TYPE_AABB:
-		pCollision = new CCollisionAABB;
-		break;
-	case TYPE::TYPE_SPHERE:
-		pCollision = new CCollisionSphere;
-		break;
-	case TYPE::TYPE_FOV:
-		pCollision = new CCollisionFOV;
-		break;
-	default:
-		break;
-	}
+	//// 種類の遷移
+	//switch (type)
+	//{
+	//case TYPE::TYPE_AABB:
+	//	pCollision = new CCollisionAABB;
+	//	break;
+	//case TYPE::TYPE_SPHERE:
+	//	pCollision = new CCollisionSphere;
+	//	break;
+	//case TYPE::TYPE_FOV:
+	//	pCollision = new CCollisionFOV;
+	//	break;
+	//default:
+	//	break;
+	//}
 
 	// 位置の設定
 	pCollision->m_pos = pos;
@@ -96,7 +98,7 @@ void CCollisionAABB::Create(void)
 	if (m_pAABB == nullptr)
 	{
 		// AABBの作成処理
-		m_pAABB = make_unique<CCollisionAABB>();
+		m_pAABB.reset(new CCollisionAABB());
 	}
 }
 
@@ -217,7 +219,6 @@ bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox)
 //================================================
 CCollisionSphere::CCollisionSphere() : CCollision(TYPE::TYPE_SPHERE)
 {
-	m_fRadius = NULL;
 }
 
 //================================================
@@ -228,53 +229,34 @@ CCollisionSphere::~CCollisionSphere()
 }
 
 //================================================
-// 円の判定の生成処理
+// 生成処理
 //================================================
-std::unique_ptr<CCollisionSphere> CCollisionSphere::Create(const D3DXVECTOR3 pos, const float fRadius)
+void CCollisionSphere::Create(void)
 {
-	// ポインタの生成
-	std::unique_ptr<CCollisionSphere> out = std::make_unique<CCollisionSphere>();
-
-	// 設定処理
-	out->SetPos(pos);
-	out->m_fRadius = fRadius;
-	return out;
-}
-
-//================================================
-// コライダーの生成処理
-//================================================
-CCollisionSphere CCollisionSphere::CreateCollider(const D3DXVECTOR3 pos, const float fRadius)
-{
-	// アウトプット用
-	CCollisionSphere sphere;
-
-	// 判定に必要な情報の設定
-	sphere.SetPos(pos);
-	sphere.m_fRadius = fRadius;
-
-	// コライダーを返す
-	return sphere;
+	// nullだったら自分の生成(1つ以上作らない)
+	if (m_pSphere == nullptr)
+	{
+		// sphereの作成処理
+		m_pSphere.reset(new CCollisionSphere());
+	}
 }
 
 //================================================
 // 当たり判定(円vs円)
 //================================================
-bool CCollisionSphere::Collision(CCollision* other)
+bool CCollisionSphere::Collision(CColliderSphere* myCollider, CColliderSphere* otherCollider)
 {
 	// 位置の取得
-	D3DXVECTOR3 pos = GetPosition();
+	D3DXVECTOR3 pos = myCollider->GetPos();
 
-	// 円の判定にキャストする
-	CCollisionSphere* pSpehere = dynamic_cast<CCollisionSphere*>(other);
+	// 相手の位置
+	D3DXVECTOR3 otherPos = otherCollider->GetPos();
 
-	// キャストに失敗したら
-	if (pSpehere == nullptr)
-	{
-		return false;
-	}
+	// 相手の半径
+	float fOtherRadius = otherCollider->GetRadius();
 
-	D3DXVECTOR3 otherPos = pSpehere->GetPosition();
+	// 自分の半径
+	float fMyRadius = myCollider->GetRadius();
 
 	// 差分を求める
 	D3DXVECTOR3 diff = otherPos - pos;
@@ -283,7 +265,7 @@ bool CCollisionSphere::Collision(CCollision* other)
 	float fDistance = (diff.x * diff.x) + (diff.y * diff.y) + (diff.z * diff.z);
 
 	// 半径足す
-	float fRadius = m_fRadius + pSpehere->m_fRadius;
+	float fRadius = fMyRadius + fOtherRadius;
 
 	// 半径を2乗する
 	fRadius = fRadius * fRadius;
@@ -302,7 +284,6 @@ bool CCollisionSphere::Collision(CCollision* other)
 //================================================
 CCollisionFOV::CCollisionFOV() : CCollision(TYPE::TYPE_FOV)
 {
-	m_fLength = NULL;
 }
 
 //================================================
@@ -315,60 +296,52 @@ CCollisionFOV::~CCollisionFOV()
 //================================================
 // 視界の生成
 //================================================
-std::unique_ptr<CCollisionFOV> CCollisionFOV::Create(const D3DXVECTOR3 pos, const float fLength)
+void CCollisionFOV::Create(void)
 {
-	// ポインタの生成
-	std::unique_ptr<CCollisionFOV> out = std::make_unique<CCollisionFOV>();
-
-	// 設定処理
-	out->SetPos(pos);
-	out->m_fLength = fLength;
-	return out;
+	// nullだったら自分の生成(1つ以上作らない)
+	if (m_pFOV == nullptr)
+	{
+		// 視界の作成処理
+		m_pFOV.reset(new CCollisionFOV());
+	}
 }
 
-//================================================
-// コライダーの作成
-//================================================
-CCollisionFOV CCollisionFOV::CreateCollider(const D3DXVECTOR3 pos, const float fAngle, const float fAngleLeft, const float fAngleRight)
-{
-	CCollisionFOV out;
-
-	// 設定処理
-	out.SetPos(pos);
-	out.m_fNowAngle = fAngle;
-	out.m_fAngleLeft = fAngleLeft;
-	out.m_fAngleRight = fAngleRight;
-
-	return out;
-}
+////================================================
+//// コライダーの作成
+////================================================
+//CCollisionFOV CCollisionFOV::CreateCollider(const D3DXVECTOR3 pos, const float fAngle, const float fAngleLeft, const float fAngleRight)
+//{
+//	//CCollisionFOV out;
+//
+//	//// 設定処理
+//	//out.SetPos(pos);
+//	//out.m_fNowAngle = fAngle;
+//	//out.m_fAngleLeft = fAngleLeft;
+//	//out.m_fAngleRight = fAngleRight;
+//
+//	//return out;
+//}
 
 //================================================
 // 視界の判定
 //================================================
-bool CCollisionFOV::Collision(CCollision* fov)
+bool CCollisionFOV::Collision(const D3DXVECTOR3 otherpos, CColliderFOV* pFOV)
 {
-	// キャストする
-	CCollisionFOV* pFOV = dynamic_cast<CCollisionFOV*>(fov);
-
-	if (pFOV == nullptr)
-	{
-		return false;
-	}
-
-	D3DXVECTOR3 otherPos = fov->GetPosition();
-
 	// 位置の取得
-	D3DXVECTOR3 objectPos = GetPosition();
+	D3DXVECTOR3 objectPos = pFOV->GetPos();
 
 	// 前方までのベクトル
-	D3DXVECTOR3 vecFront = GetVector(otherPos, objectPos);
+	D3DXVECTOR3 vecFront = GetVector(otherpos, objectPos);
+
+	// データの取得
+	CColliderFOV::Data data = pFOV->GetData();
 
 	D3DXVECTOR3 LeftPos; // 左の位置
 
 	// 左側の視界の端の位置を求める
-	LeftPos.x = objectPos.x + sinf(pFOV->m_fNowAngle + pFOV->m_fAngleLeft) * m_fLength;
+	LeftPos.x = objectPos.x + sinf(data.fNowAngle + data.fAngleLeft) * data.fLength;
 	LeftPos.y = 0.0f;
-	LeftPos.z = objectPos.z + cosf(pFOV->m_fNowAngle + pFOV->m_fAngleLeft) * m_fLength;
+	LeftPos.z = objectPos.z + cosf(data.fNowAngle + data.fAngleLeft) * data.fLength;
 
 	// 左側の視界のベクトルの作成
 	D3DXVECTOR3 VecLeft = GetVector(LeftPos, objectPos);
@@ -376,9 +349,9 @@ bool CCollisionFOV::Collision(CCollision* fov)
 	D3DXVECTOR3 RightPos; // 右の位置
 
 	// 右側の視界の端の位置を求める
-	RightPos.x = objectPos.x + sinf(pFOV->m_fNowAngle + pFOV->m_fAngleRight) * m_fLength;
+	RightPos.x = objectPos.x + sinf(data.fNowAngle + data.fAngleRight) * data.fLength;
 	RightPos.y = 0.0f;
-	RightPos.z = objectPos.z + cosf(pFOV->m_fNowAngle + pFOV->m_fAngleRight) * m_fLength;
+	RightPos.z = objectPos.z + cosf(data.fNowAngle + data.fAngleRight) * data.fLength;
 
 	// 右側の視界のベクトルの作成
 	D3DXVECTOR3 VecRight = GetVector(RightPos, objectPos);
@@ -423,8 +396,14 @@ CCollisionManager::~CCollisionManager()
 //================================================
 void CCollisionManager::CreateAll(void)
 {
-	// AABBの作成処理(シングルトン)
+	// AABBの作成処理
 	CCollisionAABB::Create();
+
+	// sphereの作成
+	CCollisionSphere::Create();
+
+	// 視界判定の生成
+	CCollisionFOV::Create();
 }
 
 //================================================
