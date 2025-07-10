@@ -11,12 +11,18 @@
 #include "Collision.h"
 #include"math.h"
 #include"effect.h"
+#include"Collider.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace math; // 名前空間を使用
 using namespace std; // 名前空間stdを処理使用
 
 constexpr float HALF_VALUE = 0.5f; // 半分
+
+//************************************************
+// 静的メンバ変数宣言
+//************************************************
+unique_ptr<CCollisionAABB> CCollisionAABB::m_pAABB = nullptr; // 当たり判定AABB
 
 //================================================
 // コンストラクタ
@@ -72,8 +78,6 @@ CCollision* CCollision::Create(const D3DXVECTOR3 pos, const TYPE type)
 //================================================
 CCollisionAABB::CCollisionAABB() : CCollision(TYPE::TYPE_AABB)
 {
-	m_Size = VEC3_NULL;
-	m_posOld = VEC3_NULL;
 }
 
 //================================================
@@ -86,62 +90,44 @@ CCollisionAABB::~CCollisionAABB()
 //================================================
 // AABBの作成処理
 //================================================
-unique_ptr<CCollisionAABB> CCollisionAABB::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 Size)
+void CCollisionAABB::Create(void)
 {
-	// AABBの作成処理
-	unique_ptr<CCollisionAABB> pAABB = make_unique<CCollisionAABB>();
-
-	// 設定処理
-	pAABB->SetPos(pos);
-	pAABB->m_Size = Size;
-
-	return pAABB;
-}
-
-//================================================
-// コライダーの作成処理
-//================================================
-CCollisionAABB CCollisionAABB::CreateCollider(const D3DXVECTOR3 pos, const D3DXVECTOR3 Size)
-{
-	CCollisionAABB aabb;
-
-	// 要素の設定
-	aabb.SetPos(pos);
-	aabb.m_Size = Size;
-
-	return aabb;
+	// nullだったら自分の生成(1つ以上作らない)
+	if (m_pAABB == nullptr)
+	{
+		// AABBの作成処理
+		m_pAABB = make_unique<CCollisionAABB>();
+	}
 }
 
 //================================================
 // AABB対AABBの当たり判定
 //================================================
-bool CCollisionAABB::Collision(CCollision* other)
+bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox)
 {
 	// 自分の位置と大きさの取得
-	D3DXVECTOR3 pos = GetPosition();
+	D3DXVECTOR3 pos = pMyBox->GetPos();
 
 	// 相手の位置と大きさの取得
-	D3DXVECTOR3 TargetPos = other->GetPosition();
+	D3DXVECTOR3 TargetPos = pTargetBox->GetPos();
 
-	// キャストする
-	CCollisionAABB* pAABB = dynamic_cast<CCollisionAABB*>(other);
+	// 自分のデータの取得
+	CColliderAABB::Data myData = pMyBox->GetData();
 
-	if (pAABB == nullptr)
-	{
-		return false;
-	}
+	// 相手のデータの取得
+	CColliderAABB::Data targetData = pTargetBox->GetData();
 
 	// ターゲットの大きさ
-	D3DXVECTOR3 TargetSize = pAABB->m_Size;
-	D3DXVECTOR3 TargetPosOld = pAABB->m_posOld;
+	D3DXVECTOR3 TargetSize = targetData.Size;
+	D3DXVECTOR3 TargetPosOld = targetData.posOld;
 
 	// 自分の前回の位置
-	D3DXVECTOR3 posOldMin = m_posOld - (m_Size * HALF_VALUE);
-	D3DXVECTOR3 posOldMax = m_posOld + (m_Size * HALF_VALUE);
+	D3DXVECTOR3 posOldMin = myData.posOld - (myData.Size * HALF_VALUE);
+	D3DXVECTOR3 posOldMax = myData.posOld + (myData.Size * HALF_VALUE);
 
 	// 自分の位置
-	D3DXVECTOR3 posMin = pos - (m_Size * HALF_VALUE);
-	D3DXVECTOR3 posMax = pos + (m_Size * HALF_VALUE);
+	D3DXVECTOR3 posMin = pos - (myData.Size * HALF_VALUE);
+	D3DXVECTOR3 posMax = pos + (myData.Size * HALF_VALUE);
 
 	// ターゲットの前回の位置(tはターゲットのt)
 	D3DXVECTOR3 tPosOldMin = TargetPosOld - (TargetSize * HALF_VALUE);
@@ -153,8 +139,7 @@ bool CCollisionAABB::Collision(CCollision* other)
 
 	bool bHit = false;
 
-	if (m_posOld.y <= TargetPos.y + TargetSize.y
-		&& m_posOld.y + m_Size.y >= TargetPos.y)
+	if (posOldMin.y <= tPosOldMax.y && posOldMax.y >= tPosOldMin.y)
 	{
 		// 左右のめり込み判定
 		if (posMin.z < tPosMax.z && posMax.z > tPosMin.z)
@@ -417,4 +402,35 @@ bool CCollisionFOV::Collision(CCollision* fov)
 	}
 
 	return false;
+}
+
+//================================================
+// コンストラクタ
+//================================================
+CCollisionManager::CCollisionManager()
+{
+}
+
+//================================================
+// デストラクタ
+//================================================
+CCollisionManager::~CCollisionManager()
+{
+}
+
+//================================================
+// すべての判定の生成
+//================================================
+void CCollisionManager::CreateAll(void)
+{
+	// AABBの作成処理(シングルトン)
+	CCollisionAABB::Create();
+}
+
+//================================================
+// すべての判定の破棄
+//================================================
+void CCollisionManager::Uninit(void)
+{
+
 }

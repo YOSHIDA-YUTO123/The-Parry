@@ -25,7 +25,7 @@ class CObjectX;
 class CVelocity;
 class CCollision;
 class CCollisionAABB;
-
+class CColliderAABB;
 //**********************************************
 // 障害物のクラスの定義
 //**********************************************
@@ -39,8 +39,7 @@ public:
 	virtual void Uninit(void) override;
 	virtual void Update(void) override;
 	virtual void Draw(void) override;
-	virtual bool Collision(CCollision* other) = 0;
-
+	virtual bool Collision(CColliderAABB* pCollider) = 0;
 	void Release(void);
 
 	void SetPosition(const D3DXVECTOR3 pos);
@@ -69,10 +68,11 @@ public:
 	void Uninit(void) override;
 	void Update(void) override;
 	void Draw(void) override;
-	bool Collision(CCollision* other) override;
+	bool Collision(CColliderAABB* pCollider) override;
 	D3DXVECTOR3 GetpushPos(void) const { return m_pushPos; }
 private:
-	std::unique_ptr<CCollisionAABB> m_pAABB; // 矩形の判定
+	std::unique_ptr<CColliderAABB> m_pAABB;  // 矩形のコライダー
+	D3DXVECTOR3 m_posOld;					 // 前回の位置
 	D3DXVECTOR3 m_CenterPos;				 // 真ん中の位置
 	D3DXVECTOR3 m_pushPos;					 // 押し出された位置
 };

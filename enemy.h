@@ -82,8 +82,8 @@ private:
 	void SetParent(const int nCnt);
 	void Load(void);
 
+	std::unique_ptr<CColliderAABB> m_pAABB;				// AABBのコライダー
 	std::unique_ptr<CStateMachine> m_pMachine;
-	//std::unique_ptr<CEnemyState> m_pState;				// 敵の状態パターン
 	std::unique_ptr<CCharacter3D> m_pCharactor;			// キャラクタークラス
 	std::unique_ptr<CCollisionSphere> m_pSphere;		// 円の当たり判定クラス
 	std::unique_ptr<CShadow> m_pShadow;					// 影のクラスへのポインタ
@@ -93,6 +93,7 @@ private:
 	CMeshOrbit* m_pOrbit;								// 軌跡
 	D3DXMATRIX m_weponMatrix;							// 武器のワールドマトリックス
 	D3DXVECTOR3 m_posOld;								// 前回の位置
+	D3DXVECTOR3 m_Size;									// 敵の全体の大きさ
 	int m_nNumModel;									// モデルの最大数
 };
 

@@ -14,6 +14,7 @@
 #include "manager.h"
 #include "obstaclemanager.h"
 #include "effect.h"
+#include"Collider.h"
 
 using namespace Const;							// 名前空間Constを使用する
 using namespace std;							// 名前空間stdを使用する
@@ -210,6 +211,7 @@ CSpikeTrap::CSpikeTrap()
 	m_pAABB = nullptr;
 	m_CenterPos = VEC3_NULL;
 	m_pushPos = VEC3_NULL;
+	m_posOld = VEC3_NULL;
 }
 
 //==============================================
@@ -288,7 +290,7 @@ HRESULT CSpikeTrap::Init(void)
 	m_CenterPos.z = pos.z;
 
 	// AABBの生成
-	m_pAABB = CCollisionAABB::Create(m_CenterPos, Size);
+	m_pAABB = CColliderAABB::Create(m_CenterPos,m_posOld, Size);
 
 	return S_OK;
 }
@@ -324,7 +326,8 @@ void CSpikeTrap::Update(void)
 	D3DXVECTOR3 pos = math::GetPositionFromMatrix(GetMatrix());
 	D3DXVECTOR3 Size = GetSize();
 
-	D3DXVECTOR3 posOld = m_CenterPos;
+	// 前回の位置の設定
+	m_posOld = m_CenterPos;
 
 	// 中心座標の設定
 	m_CenterPos.x = pos.x;
@@ -334,8 +337,7 @@ void CSpikeTrap::Update(void)
 	CEffect3D::Create(m_CenterPos, 50.0f, VEC3_NULL, WHITE, 10);
 
 	// 位置の設定処理
-	m_pAABB->SetPos(m_CenterPos);
-	m_pAABB->SetOldPos(posOld);
+	m_pAABB->UpdateData(m_CenterPos, m_posOld);
 }
 
 //==============================================
@@ -350,12 +352,14 @@ void CSpikeTrap::Draw(void)
 //==============================================
 // 当たり判定
 //==============================================
-bool CSpikeTrap::Collision(CCollision* other)
+bool CSpikeTrap::Collision(CColliderAABB *pCollider)
 {
-	if (m_pAABB->Collision(other))
-	{
-		//m_pushPos = m_pAABB->GetPushPos();
+	// 当たり判定(矩形)の取得
+	CCollisionAABB *pCollisionAABB = CCollisionAABB::GetInstance();
 
+	// 矩形の判定
+	if (pCollisionAABB->Collision(pCollider, m_pAABB.get()))
+	{
 		return true;
 	}
 	return false;

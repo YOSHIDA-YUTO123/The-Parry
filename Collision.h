@@ -19,6 +19,12 @@
 #include<memory>
 
 //************************************************
+// 前方宣言
+//************************************************
+class CColliderAABB;
+class CCollider;
+
+//************************************************
 // 当たり判定AABBのクラスの定義
 //************************************************
 class CCollision
@@ -57,13 +63,12 @@ public:
 	CCollisionAABB();
 	~CCollisionAABB();
 
-	static std::unique_ptr<CCollisionAABB> Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 Size);
-	CCollisionAABB CreateCollider(const D3DXVECTOR3 pos, const D3DXVECTOR3 Size);
-	bool Collision(CCollision* other) override;
-	void SetOldPos(const D3DXVECTOR3 posOld) { m_posOld = posOld; }
+	static void Create(void);
+	static CCollisionAABB* GetInstance(void) { return m_pAABB.get(); }
+	bool Collision(CColliderAABB *pMyBox, CColliderAABB *pTargetBox);
+	bool Collision(CCollision* other) { other = nullptr; return 0; }
 private:
-	D3DXVECTOR3 m_posOld;
-	D3DXVECTOR3 m_Size;
+	static std::unique_ptr<CCollisionAABB> m_pAABB; // 自分のインスタンス
 };
 
 //************************************************
@@ -104,4 +109,16 @@ private:
 	float m_fAngleRight;	// 視野右
 };
 
+//************************************************
+// 当たり判定のマネージャークラスの定義
+//************************************************
+class CCollisionManager
+{
+public:
+	CCollisionManager();
+	~CCollisionManager();
+	void CreateAll(void);
+	void Uninit(void);
+private:
+};
 #endif

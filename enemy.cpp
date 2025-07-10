@@ -26,6 +26,7 @@
 #include"statebase.h"
 #include "obstaclemanager.h"
 #include"Obstacle.h"
+#include"Collider.h"
 
 //***************************************************
 // 定数定義
@@ -53,6 +54,7 @@ CEnemy::CEnemy()
 	D3DXMatrixIdentity(&m_weponMatrix);
 	m_pOrbit = nullptr;
 	m_posOld = VEC3_NULL;
+	m_Size = VEC3_NULL;
 }
 
 //===================================================
@@ -112,6 +114,20 @@ HRESULT CEnemy::Init(void)
 	// 当たり判定の生成
 	m_pSphere = CCollisionSphere::Create(pos,150.0f);
 	
+	// 中心を求める
+	D3DXVECTOR3 CenterPos = VEC3_NULL;
+
+	// TODO : 大きさ(ファイル読み込みしたい)
+	m_Size = { 50.0f,400.0f,50.0f };
+
+	// 中心座標を設定
+	CenterPos.x = pos.x;
+	CenterPos.y = pos.y + m_Size.y * 0.5f;
+	CenterPos.z = pos.z;
+
+	// 矩形判定AABBの生成
+	m_pAABB = CColliderAABB::Create(CenterPos, m_posOld, m_Size);
+
 	return S_OK;
 }
 
@@ -148,6 +164,7 @@ void CEnemy::Uninit(void)
 
 	// nullにする
 	m_pOrbit = nullptr;
+	m_pAABB = nullptr;
 
 	if (m_pCharactor != nullptr)
 	{
@@ -434,6 +451,17 @@ void CEnemy::Update(void)
 
 	// 位置の設定処理
     m_pCharactor->SetPosition(pos);
+
+	// 中心を求める
+	D3DXVECTOR3 CenterPos = VEC3_NULL;
+
+	// 中心座標を設定
+	CenterPos.x = pos.x;
+	CenterPos.y = pos.y + m_Size.y * 0.5f;
+	CenterPos.z = pos.z;
+
+	// データの更新処理
+	m_pAABB->UpdateData(CenterPos, D3DXVECTOR3(m_posOld.x, m_posOld.y + m_Size.y * 0.5f, m_posOld.z));
 
 	// 向きの補間
 	m_pCharactor->GetRotation()->SetSmoothAngle(0.1f);
@@ -742,29 +770,8 @@ bool CEnemy::CollisionObstacle(void)
 		// 障害物の取得
 		CObstacle* pObstacle = pObstacleManager->GetObstacle(nCnt);
 
-		// 矩形の判定
-		CCollisionAABB aabb;
-
-		// キャラクターの位置の取得
-		D3DXVECTOR3 pos = m_pCharactor->GetPosition();
-		D3DXVECTOR3 Size = { 50.0f,400.0f,50.0f };
-
-		// 中心を求める
-		D3DXVECTOR3 CenterPos = VEC3_NULL;
-
-		// 中心座標を設定
-		CenterPos.x = pos.x;
-		CenterPos.y = pos.y + Size.y * 0.5f;
-		CenterPos.z = pos.z;
-		
-		// aabbのコライダーの作成
-		aabb = aabb.CreateCollider(CenterPos, Size);
-
-		// 前回の位置の設定
-		aabb.SetOldPos(D3DXVECTOR3(m_posOld.x,m_posOld.y + Size.y * 0.5f,m_posOld.z));
-
 		// 当たっていたら
-		if (pObstacle != nullptr && pObstacle->Collision(&aabb))
+		if (pObstacle != nullptr && pObstacle->Collision(m_pAABB.get()))
 		{
 			// 状態の変更
 			ChangeState(make_shared<CEnemyDamage>());
