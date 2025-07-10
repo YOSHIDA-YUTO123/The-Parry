@@ -16,6 +16,7 @@
 //**********************************************
 #include"main.h"
 #include<vector>
+#include<memory>
 
 class CObstacle;
 
@@ -25,12 +26,17 @@ class CObstacle;
 class CObstacleManager
 {
 public:
-	~CObstacleManager();
-	static void AddObstacle(CObstacle *pObstacle);
-	static CObstacleManager* GetAddress(void);
+	static void Create(void);
+	static CObstacleManager* GetInstance(void);
+	CObstacle* GetObstacle(const int nIdx);
+	void AddObstacle(CObstacle *pObstacle);
+	void Uninit(void);
+	int GetObstacleSize(void);
 private:
 	CObstacleManager();
-	static std::vector<CObstacle*> m_apObstacle; // 障害物へのポインタ
+	~CObstacleManager();
+	static CObstacleManager* m_pManager; // 障害物マネージャーへのポインタ
+	static std::vector<CObstacle*> m_apObstacle;		  // 障害物へのポインタ
 };
 
 

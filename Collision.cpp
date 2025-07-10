@@ -16,6 +16,8 @@ using namespace Const; // 名前空間Constを使用
 using namespace math; // 名前空間を使用
 using namespace std; // 名前空間stdを処理使用
 
+constexpr float HALF_VALUE = 0.5f; // 半分
+
 //================================================
 // コンストラクタ
 //================================================
@@ -119,7 +121,7 @@ bool CCollisionAABB::Collision(CCollision* other)
 	D3DXVECTOR3 pos = GetPosition();
 
 	// 相手の位置と大きさの取得
-	D3DXVECTOR3 otherPos = other->GetPosition();
+	D3DXVECTOR3 TargetPos = other->GetPosition();
 
 	// キャストする
 	CCollisionAABB* pAABB = dynamic_cast<CCollisionAABB*>(other);
@@ -129,30 +131,43 @@ bool CCollisionAABB::Collision(CCollision* other)
 		return false;
 	}
 
-	D3DXVECTOR3 otherSize = pAABB->m_Size;
+	// ターゲットの大きさ
+	D3DXVECTOR3 TargetSize = pAABB->m_Size;
+	D3DXVECTOR3 TargetPosOld = pAABB->m_posOld;
+
+	// 自分の前回の位置
+	D3DXVECTOR3 posOldMin = m_posOld - (m_Size * HALF_VALUE);
+	D3DXVECTOR3 posOldMax = m_posOld + (m_Size * HALF_VALUE);
+
+	// 自分の位置
+	D3DXVECTOR3 posMin = pos - (m_Size * HALF_VALUE);
+	D3DXVECTOR3 posMax = pos + (m_Size * HALF_VALUE);
+
+	// ターゲットの前回の位置(tはターゲットのt)
+	D3DXVECTOR3 tPosOldMin = TargetPosOld - (TargetSize * HALF_VALUE);
+	D3DXVECTOR3 tPosOldMax = TargetPosOld + (TargetSize * HALF_VALUE);
+
+	// ターゲットの位置(tはターゲットのt)
+	D3DXVECTOR3 tPosMin = TargetPos - (TargetSize * HALF_VALUE);
+	D3DXVECTOR3 tPosMax = TargetPos + (TargetSize * HALF_VALUE);
 
 	bool bHit = false;
 
-	const float HALF_VALUE = 0.5f;
-
-	if (m_posOld.y <= otherPos.y + otherSize.y
-		&& m_posOld.y + m_Size.y >= otherPos.y)
+	if (m_posOld.y <= TargetPos.y + TargetSize.y
+		&& m_posOld.y + m_Size.y >= TargetPos.y)
 	{
 		// 左右のめり込み判定
-		if (pos.z - m_Size.z * HALF_VALUE < otherPos.z + otherSize.z * HALF_VALUE
-			&& pos.z + m_Size.z * HALF_VALUE > otherPos.z - otherSize.z * HALF_VALUE)
+		if (posMin.z < tPosMax.z && posMax.z > tPosMin.z)
 		{
 			// xが左から右にめり込んだ	
-			if (m_posOld.x + m_Size.x * HALF_VALUE < otherPos.x - otherSize.x * HALF_VALUE
-				&& pos.x + m_Size.x * HALF_VALUE > otherPos.x - otherSize.x * HALF_VALUE)
+			if (posOldMax.x < tPosOldMin.x && posMax.x > tPosMin.x)
 			{
 				bHit = true;
 
 				//pos.x = otherPos.x - otherSize.x * HALF_VALUE * g_Block[nCntBlock].Scal.x - Size.x * HALF_VALUE - 0.1f;
 			}
 			// xが右から左にめり込んだ	
-			else if (m_posOld.x - m_Size.x * HALF_VALUE > otherPos.x + otherSize.x * HALF_VALUE
-				&& pos.x - m_Size.x * HALF_VALUE < otherPos.x + otherSize.x * HALF_VALUE)
+			else if (posOldMin.x > tPosOldMax.x && posMin.x < tPosMax.x)
 			{
 				bHit = true;
 
@@ -161,20 +176,17 @@ bool CCollisionAABB::Collision(CCollision* other)
 		}
 
 		// 前と後ろの判定
-		if (pos.x - m_Size.x * HALF_VALUE < otherPos.x + otherSize.x * HALF_VALUE
-			&& pos.x + m_Size.x * HALF_VALUE > otherPos.x - otherSize.x * HALF_VALUE)
+		if (posMin.x < tPosMax.x && posMax.x > tPosMin.x)
 		{
 			// zが前方からめり込んだ
-			if (m_posOld.z + m_Size.z * HALF_VALUE < otherPos.z - otherSize.z * HALF_VALUE
-				&& pos.z + m_Size.z * HALF_VALUE > otherPos.z - otherSize.z * HALF_VALUE)
+			if (posOldMax.z < tPosOldMin.z && posMax.z > tPosMin.z)
 			{
 				bHit = true;
 
 				//pos.z = otherPos.z - otherSize.z * HALF_VALUE * g_Block[nCntBlock].Scal.z - Size.z * HALF_VALUE - 0.1f;
 			}
 			// zが後方からめり込んだ
-			else if (m_posOld.z - m_Size.z * HALF_VALUE > otherPos.z + otherSize.z * HALF_VALUE
-				&& pos.z - m_Size.z * HALF_VALUE < otherPos.z + otherSize.z * HALF_VALUE)
+			else if (posOldMin.z > tPosOldMax.z && posMin.z < tPosMax.z)
 			{
 				bHit = true;
 
@@ -183,34 +195,34 @@ bool CCollisionAABB::Collision(CCollision* other)
 		}
 	}
 
-	if (pos.x - m_Size.x * HALF_VALUE <= otherPos.x + otherSize.x * HALF_VALUE
-		&& pos.x + m_Size.x * HALF_VALUE >= otherPos.x - otherSize.x * HALF_VALUE)
-	{
-		if (pos.z - m_Size.z * HALF_VALUE <= otherPos.z + otherSize.z * HALF_VALUE
-			&& pos.z + m_Size.z * HALF_VALUE >= otherPos.z - otherSize.z * HALF_VALUE)
-		{
-			// 上から下
-			if (m_posOld.y >= otherPos.y + otherSize.y
-				&& pos.y < otherPos.y + otherSize.y)
-			{
-				bHit = true;
+	//if (pos.x - m_Size.x * HALF_VALUE <= otherPos.x + otherSize.x * HALF_VALUE
+	//	&& pos.x + m_Size.x * HALF_VALUE >= otherPos.x - otherSize.x * HALF_VALUE)
+	//{
+	//	if (pos.z - m_Size.z * HALF_VALUE <= otherPos.z + otherSize.z * HALF_VALUE
+	//		&& pos.z + m_Size.z * HALF_VALUE >= otherPos.z - otherSize.z * HALF_VALUE)
+	//	{
+	//		// 上から下
+	//		if (m_posOld.y >= otherPos.y + otherSize.y
+	//			&& pos.y < otherPos.y + otherSize.y)
+	//		{
+	//			bHit = true;
 
-				//bLanding = true;
-				//pos.y = otherPos.y + otherSize.y * g_Block[nCntBlock].Scal.y - Size.y;
-				//pMove->y = 0.0f;
-			}
-			// 下から上
-			else if (m_posOld.y + m_Size.y * HALF_VALUE <= otherPos.y - otherSize.y * HALF_VALUE
-				&& pos.y + m_Size.y * HALF_VALUE > otherPos.y - otherSize.y * HALF_VALUE)
-			{
-				bHit = true;
+	//			//bLanding = true;
+	//			//pos.y = otherPos.y + otherSize.y * g_Block[nCntBlock].Scal.y - Size.y;
+	//			//pMove->y = 0.0f;
+	//		}
+	//		// 下から上
+	//		else if (m_posOld.y + m_Size.y * HALF_VALUE <= otherPos.y - otherSize.y * HALF_VALUE
+	//			&& pos.y + m_Size.y * HALF_VALUE > otherPos.y - otherSize.y * HALF_VALUE)
+	//		{
+	//			bHit = true;
 
-				//pos.y = m_posOld.y;
-				//pMove->y = 0.0f;
-			}
+	//			//pos.y = m_posOld.y;
+	//			//pMove->y = 0.0f;
+	//		}
 
-		}
-	}
+	//	}
+	//}
 	
 	return bHit;
 }

@@ -293,6 +293,9 @@ D3DXVECTOR3 CMesh::GetVtxPos(const int nIdx)
 
 	D3DXVECTOR3 out;
 
+	// nullだったら
+	if (m_pVtxBuffMesh == nullptr) return VEC3_NULL;
+
 	// 頂点バッファをロック
 	m_pVtxBuffMesh->Lock(0, 0, (void**)&pVtx, 0);
 
@@ -312,6 +315,10 @@ int CMesh::GetIndex(const int nIdx)
 	WORD* pIdx;
 
 	int out = 0;
+
+	// nullだったら
+	if (m_pIdxBuffMesh == nullptr) return 0;
+
 	//インデックスバッファのロック
 	m_pIdxBuffMesh->Lock(0, 0, (void**)&pIdx, 0);
 
@@ -332,6 +339,9 @@ D3DXCOLOR CMesh::GetColor(const int nIdx)
 
 	D3DXCOLOR out;
 
+	// nullだったら
+	if (m_pVtxBuffMesh == nullptr) return WHITE;
+
 	// 頂点バッファをロック
 	m_pVtxBuffMesh->Lock(0, 0, (void**)&pVtx, 0);
 
@@ -350,6 +360,9 @@ void CMesh::SetVtxPos(const D3DXVECTOR3 pos,const int nIdx)
 {
 	VERTEX_3D* pVtx = NULL;
 
+	// nullだったら
+	if (m_pVtxBuffMesh == nullptr) return;
+
 	// 頂点バッファをロック
 	m_pVtxBuffMesh->Lock(0, 0, (void**)&pVtx, 0);
 
@@ -365,6 +378,9 @@ void CMesh::SetVtxPos(const D3DXVECTOR3 pos,const int nIdx)
 void CMesh::SetNormal(const D3DXVECTOR3 nor, const int nIdx)
 {
 	VERTEX_3D* pVtx = NULL;
+
+	// nullだったら
+	if (m_pVtxBuffMesh == nullptr) return;
 
 	// 頂点バッファをロック
 	m_pVtxBuffMesh->Lock(0, 0, (void**)&pVtx, 0);
@@ -382,10 +398,32 @@ void CMesh::SetVtxColor(const D3DXCOLOR col,const int nIdx)
 {
 	VERTEX_3D* pVtx = NULL;
 
+	// nullだったら
+	if (m_pVtxBuffMesh == nullptr) return;
+
 	// 頂点バッファをロック
 	m_pVtxBuffMesh->Lock(0, 0, (void**)&pVtx, 0);
 
 	pVtx[nIdx].col = col;
+
+	// 頂点バッファをアンロック
+	m_pVtxBuffMesh->Unlock();
+}
+
+//================================================
+// テクスチャバッファの設定
+//================================================
+void CMesh::SetTexture(const D3DXVECTOR2 tex, const int nIdx)
+{
+	VERTEX_3D* pVtx = NULL;
+
+	// nullだったら
+	if (m_pVtxBuffMesh == nullptr) return;
+
+	// 頂点バッファをロック
+	m_pVtxBuffMesh->Lock(0, 0, (void**)&pVtx, 0);
+
+	pVtx[nIdx].tex = tex;
 
 	// 頂点バッファをアンロック
 	m_pVtxBuffMesh->Unlock();
@@ -397,6 +435,9 @@ void CMesh::SetVtxColor(const D3DXCOLOR col,const int nIdx)
 D3DXVECTOR3 CMesh::NormalizeNormal(const int nIdx)
 {
 	VERTEX_3D* pVtx = NULL;
+
+	// nullだったら
+	if (m_pVtxBuffMesh == nullptr) return VEC3_NULL;
 
 	// 頂点バッファをロック
 	m_pVtxBuffMesh->Lock(0, 0, (void**)&pVtx, 0);

@@ -220,7 +220,10 @@
       <Filter>ソース ファイル\system</Filter>
     </ClCompile>
     <ClCompile Include="obstaclemanager.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider.cpp">
+      <Filter>ソース ファイル\system</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -363,7 +366,10 @@
       <Filter>ヘッダー ファイル\model\enemy</Filter>
     </ClInclude>
     <ClInclude Include="obstaclemanager.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>ヘッダー ファイル\system</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

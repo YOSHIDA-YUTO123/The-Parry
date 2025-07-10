@@ -24,6 +24,8 @@
 #include"EnemyState.h"
 #include "Orbit.h"
 #include"statebase.h"
+#include "obstaclemanager.h"
+#include"Obstacle.h"
 
 //***************************************************
 // 定数定義
@@ -50,6 +52,7 @@ CEnemy::CEnemy()
 	m_nNumModel = NULL;
 	D3DXMatrixIdentity(&m_weponMatrix);
 	m_pOrbit = nullptr;
+	m_posOld = VEC3_NULL;
 }
 
 //===================================================
@@ -208,6 +211,9 @@ void CEnemy::Update(void)
 	// 移動量の取得
 	D3DXVECTOR3 move = m_pMove->Get();
 
+	// 前回の位置の更新
+	m_posOld = pos;
+
 	// 位置の更新処理
 	pos += move;
 
@@ -252,6 +258,12 @@ void CEnemy::Update(void)
 		// モーションの更新処理
 		m_pMotion->Update(&m_apModel[0], m_nNumModel);
 	}
+
+	if (CollisionObstacle())
+	{
+		CDebugProc::Print("当たっている\n");
+	}
+
 	// インパクトの取得
 	CMeshFieldImpact* pImpact = pMesh->GetImpact();
 
@@ -667,7 +679,7 @@ void CEnemy::MoveForWard(const float fSpeed)
 //===================================================
 // 軌跡の処理
 //===================================================
-void CEnemy::Orbit(const int nSegH, const D3DXCOLOR col, const int nLife)
+void CEnemy::Orbit(const int nSegH, const D3DXCOLOR col)
 {
 	// 武器の先端の位置
 	D3DXVECTOR3 WeponTop = GetPositionFromMatrix(m_weponMatrix);
@@ -676,13 +688,24 @@ void CEnemy::Orbit(const int nSegH, const D3DXCOLOR col, const int nLife)
 	// 軌跡の生成
 	if (m_pOrbit == nullptr)
 	{
-		m_pOrbit = CMeshOrbit::Create(WeponTop, WeponBottom, nSegH, col, nLife);
+		m_pOrbit = CMeshOrbit::Create(WeponTop, WeponBottom, nSegH, col);
 	}
 	
 	// 軌跡が使われていて寿命が無かったら
-	if (m_pOrbit != nullptr && m_pOrbit->SetPosition(WeponTop, WeponBottom) == false)
+	if (m_pOrbit != nullptr)
 	{
-		// nullにする
+		m_pOrbit->SetPosition(WeponTop, WeponBottom);
+	}
+}
+
+//===================================================
+// 軌跡の消去
+//===================================================
+void CEnemy::DeleteOrbit(void)
+{
+	if (m_pOrbit != nullptr)
+	{
+		m_pOrbit->Uninit();
 		m_pOrbit = nullptr;
 	}
 }
@@ -697,6 +720,60 @@ void CEnemy::ChangeState(std::shared_ptr<CEnemyState> pNewState)
 
 	// 状態の変更
 	m_pMachine->Change(pNewState);
+}
+
+//===================================================
+// 障害物との当たり判定
+//===================================================
+bool CEnemy::CollisionObstacle(void)
+{
+	//	障害物マネージャーのインスタンスの取得
+	CObstacleManager* pObstacleManager = CObstacleManager::GetInstance();
+
+	// マネージャーが無かったら
+	if (pObstacleManager == nullptr) return false;
+
+	// 障害物の総数の取得
+	int nNumObstacle = pObstacleManager->GetObstacleSize();
+
+	// 障害物の総数分調べる
+	for (int nCnt = 0; nCnt < nNumObstacle; nCnt++)
+	{
+		// 障害物の取得
+		CObstacle* pObstacle = pObstacleManager->GetObstacle(nCnt);
+
+		// 矩形の判定
+		CCollisionAABB aabb;
+
+		// キャラクターの位置の取得
+		D3DXVECTOR3 pos = m_pCharactor->GetPosition();
+		D3DXVECTOR3 Size = { 50.0f,400.0f,50.0f };
+
+		// 中心を求める
+		D3DXVECTOR3 CenterPos = VEC3_NULL;
+
+		// 中心座標を設定
+		CenterPos.x = pos.x;
+		CenterPos.y = pos.y + Size.y * 0.5f;
+		CenterPos.z = pos.z;
+		
+		// aabbのコライダーの作成
+		aabb = aabb.CreateCollider(CenterPos, Size);
+
+		// 前回の位置の設定
+		aabb.SetOldPos(D3DXVECTOR3(m_posOld.x,m_posOld.y + Size.y * 0.5f,m_posOld.z));
+
+		// 当たっていたら
+		if (pObstacle != nullptr && pObstacle->Collision(&aabb))
+		{
+			// 状態の変更
+			ChangeState(make_shared<CEnemyDamage>());
+
+			return true;
+		}
+	}
+
+	return false;
 }
 
 //===================================================

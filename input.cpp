@@ -603,7 +603,6 @@ void CInputMouse::Update(void)
 {
 	m_PrevState.lX = m_CurrentState.lX;
 	m_PrevState.lY = m_CurrentState.lY;
-
 	// 更新前に最新マウス情報を保存する
 	m_PrevState = m_CurrentState;
 

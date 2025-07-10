@@ -75,7 +75,7 @@ public:
 	{
 		bool bLoop;						// ループするかどうか
 		int nNumkey;					// キーの総数
-		std::vector<Key_Info> aKeyInfo;		// キー情報
+		std::vector<Key_Info> aKeyInfo;	// キー情報
 	};
 
 	CMotion();

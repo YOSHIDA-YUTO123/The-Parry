@@ -139,6 +139,8 @@ HRESULT CManager::Init(HINSTANCE hInstance,HWND hWnd, BOOL bWindow)
 	// スパイクトラップ
 	CSpikeTrap::Create(D3DXVECTOR3(-1840.0f, 0.0f, 0.0f),D3DXVECTOR3(0.0f,D3DX_PI * 0.5f,0.0f));
 
+	//CSpikeTrap::Create(D3DXVECTOR3(-10.0f, 0.0f, 0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
+
 	// 結果を返す
 	return S_OK;
 }

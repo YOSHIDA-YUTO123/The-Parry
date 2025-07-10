@@ -123,22 +123,25 @@ void CCamera::Update(void)
 
 #endif
 
-	//// メッシュシリンダーの取得
-	//CMeshCylinder* pCylinder = CManager::GetCylinder();
+	// メッシュシリンダーの取得
+	CMeshCylinder* pCylinder = CManager::GetCylinder();
 
-	//// メッシュフィールドの取得
-	//CMeshField* pField = CManager::GetMeshField();
+	// メッシュフィールドの取得
+	CMeshField* pField = CManager::GetMeshField();
 
-	//float fHeight = 0.0f;
+	float fHeight = 0.0f;
 
-	//if (pField->Collision(m_posV, &fHeight))
-	//{
-	//	// 高さを設定
-	//	m_posV.y = fHeight + HEIGHT_OFFSET;
-	//}
+	if (pField != nullptr && pField->Collision(m_posV, &fHeight))
+	{
+		// 高さを設定
+		m_posV.y = fHeight + HEIGHT_OFFSET;
+	}
 
-	//// シリンダーの当たり判定
-	//pCylinder->Collision(&m_posV);
+	// シリンダーの当たり判定
+	if (pCylinder != nullptr && pCylinder->Collision(&m_posV))
+	{
+
+	}
 
 	// 角度の正規化
 	NormalizeRot(&m_rot.x);
@@ -233,24 +236,52 @@ void CCamera::MouseView(void)
 	// パッドの視点操作
 	CCamera::PadView();
 
-	//回転量を更新
-	m_rot.y += fAngle.x * 0.01f;
-	m_rot.x += fAngle.y * 0.01f;
+	// ポーズ中かどうか
+	bool bPause = CManager::GetPause();
 
-	//回転量を制限
-	if (m_rot.x > MAX_VIEW_TOP)
+	if (pMouse->OnMousePress(0) || bPause == false)
 	{
-		m_rot.x -= fAngle.y * 0.01f;
+		//回転量を更新
+		m_rot.y += fAngle.x * 0.01f;
+		m_rot.x += fAngle.y * 0.01f;
+
+		//回転量を制限
+		if (m_rot.x > MAX_VIEW_TOP)
+		{
+			m_rot.x -= fAngle.y * 0.01f;
+		}
+		else if (m_rot.x < MAX_VIEW_BOTTOM)
+		{
+			m_rot.x -= fAngle.y * 0.01f;
+		}
+
+		// カメラの視点の情報
+		m_posV.x = m_posR.x - sinf(m_rot.x) * sinf(m_rot.y) * m_fDistance;
+		m_posV.y = m_posR.y - cosf(m_rot.x) * m_fDistance;
+		m_posV.z = m_posR.z - sinf(m_rot.x) * cosf(m_rot.y) * m_fDistance;
 	}
-	else if (m_rot.x < MAX_VIEW_BOTTOM)
+	else if (pMouse->OnMousePress(1) && bPause == true)
 	{
-		m_rot.x -= fAngle.y * 0.01f;
+		//回転量を更新
+		m_rot.y += fAngle.x * 0.01f;
+		m_rot.x += fAngle.y * 0.01f;
+
+		//回転量を制限
+		if (m_rot.x > MAX_VIEW_TOP)
+		{
+			m_rot.x -= fAngle.y * 0.01f;
+		}
+		else if (m_rot.x < MAX_VIEW_BOTTOM)
+		{
+			m_rot.x -= fAngle.y * 0.01f;
+		}
+
+		// カメラの視点の情報
+		m_posR.x = m_posV.x + sinf(m_rot.x) * sinf(m_rot.y) * m_fDistance;
+		m_posR.y = m_posV.y + cosf(m_rot.x) * m_fDistance;
+		m_posR.z = m_posV.z + sinf(m_rot.x) * cosf(m_rot.y) * m_fDistance;
 	}
 
-	// カメラの視点の情報
-	m_posV.x = m_posR.x - sinf(m_rot.x) * sinf(m_rot.y) * m_fDistance;
-	m_posV.y = m_posR.y - cosf(m_rot.x) * m_fDistance;
-	m_posV.z = m_posR.z - sinf(m_rot.x) * cosf(m_rot.y) * m_fDistance;
 }
 
 //===================================================

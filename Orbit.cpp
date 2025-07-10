@@ -22,7 +22,6 @@ CMeshOrbit::CMeshOrbit()
 	m_Bottom = VEC3_NULL;
 	m_Top = VEC3_NULL;
 	m_col = WHITE;
-	m_nLife = NULL;
 }
 
 //================================================
@@ -35,7 +34,7 @@ CMeshOrbit::~CMeshOrbit()
 //================================================
 // 軌跡の生成
 //================================================
-CMeshOrbit* CMeshOrbit::Create(const D3DXVECTOR3 Top, const D3DXVECTOR3 Bottom, const int nSegH,const D3DXCOLOR col,const int nLife)
+CMeshOrbit* CMeshOrbit::Create(const D3DXVECTOR3 Top, const D3DXVECTOR3 Bottom, const int nSegH,const D3DXCOLOR col)
 {
 	// 軌跡を生成
 	CMeshOrbit* pMesh = new CMeshOrbit;
@@ -80,18 +79,38 @@ CMeshOrbit* CMeshOrbit::Create(const D3DXVECTOR3 Top, const D3DXVECTOR3 Bottom, 
 		// アルファ値の設定
 		float fAlv = col.a * (1.0f - (float)nCnt / nNumVtx);
 
-		// 頂点の設定
-		pMesh->SetVtxBuffer(Bottom, nCnt, D3DXVECTOR2(fPosTexH * nCnt, 1.0f),D3DXVECTOR3(0.0f,1.0f,0.0f),D3DXCOLOR(col.r,col.g,col.b, fAlv));
+		// 頂点の設定(いったん一か所に集める)
+		pMesh->SetVtxPos(Top, nCnt);
+
+		// 法線、色、テクスチャの設定
+		pMesh->SetNormal(D3DXVECTOR3(0.0f, 1.0f, 0.0f),nCnt);
+		pMesh->SetVtxColor(D3DXCOLOR(col.r,col.g,col.b, fAlv),nCnt);
+		pMesh->SetTexture(D3DXVECTOR2(fPosTexH * nCnt, 1.0f), nCnt);
 
 		// インデックスバッファの設定
 		pMesh->SetIndexBuffer((WORD)nCnt,nCnt);
 	}
 
+	// 四個前から始める
+	for (int nCnt = nNumVtx - 4; nCnt >= 0; nCnt -= 2)
+	{
+		// 前の頂点座標を入れる
+		D3DXVECTOR3 OldVtx0 = pMesh->GetVtxPos(nCnt);
+		D3DXVECTOR3 OldVtx1 = pMesh->GetVtxPos(nCnt + 1);
+
+		// 頂点座標の設定
+		pMesh->SetVtxPos(OldVtx0, nCnt + 2);
+		pMesh->SetVtxPos(OldVtx1, nCnt + 3);
+	}
+
+	// 新しい頂点を追加（先頭に入れる）
+	pMesh->SetVtxPos(Bottom, 0);
+	pMesh->SetVtxPos(Top, 1);
+
 	// 設定処理
 	pMesh->m_Bottom = Bottom;
 	pMesh->m_Top = Top;
 	pMesh->m_col = col;
-	pMesh->m_nLife = nLife;
 
 	return pMesh;
 }
@@ -149,13 +168,6 @@ void CMeshOrbit::Update(void)
 	// 新しい頂点を追加（先頭に入れる）
 	SetVtxPos(m_Bottom, 0);
 	SetVtxPos(m_Top, 1);
-
-	m_nLife--;
-
-	if (m_nLife <= 0)
-	{
-		Uninit();
-	}
 }
 
 //================================================
@@ -189,10 +201,8 @@ void CMeshOrbit::Draw(void)
 //================================================
 // 位置の設定処理
 //================================================
-bool CMeshOrbit::SetPosition(const D3DXVECTOR3 Top, const D3DXVECTOR3 Bottom)
+void CMeshOrbit::SetPosition(const D3DXVECTOR3 Top, const D3DXVECTOR3 Bottom)
 {
 	m_Top = Top;
 	m_Bottom = Bottom;
-
-	return true;
 }

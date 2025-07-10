@@ -54,6 +54,7 @@ public:
 	static CPlayer* GetPlayer(void);
 	static void EnablePause(void);
 	static void SetPause(void) { m_bPause = true; }
+	static bool GetPause(void) { return m_bPause; }
 	static CMeshField* GetMeshField(void);
 	static CSlow* GetSlow(void) { return m_pSlow; }
 	static CMeshCylinder* GetCylinder(void) { return m_pCylinder; }

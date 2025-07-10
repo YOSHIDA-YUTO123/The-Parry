@@ -73,9 +73,11 @@ public:
 	void AngleToPlayer(void);												// プレイヤーの方向を見る処理
 	bool CheckDistane(const float fRadius);								// 距離の判定
 	void MoveForWard(const float fSpeed);								// 自分の向いている方向に向かって進む処理
-	void Orbit(const int nSegH, const D3DXCOLOR col, const int nLife);	// 軌跡の設定
+	void Orbit(const int nSegH, const D3DXCOLOR col);					// 軌跡の設定
+	void DeleteOrbit(void);												// 軌跡の消去					
 	CMotion* GetMotion(void) { return m_pMotion.get(); }
 	void ChangeState(std::shared_ptr<CEnemyState> pNewState);
+	bool CollisionObstacle(void);
 private:
 	void SetParent(const int nCnt);
 	void Load(void);
@@ -90,6 +92,7 @@ private:
 	std::vector<CModel*> m_apModel;						// モデルクラスへのポインタ
 	CMeshOrbit* m_pOrbit;								// 軌跡
 	D3DXMATRIX m_weponMatrix;							// 武器のワールドマトリックス
+	D3DXVECTOR3 m_posOld;								// 前回の位置
 	int m_nNumModel;									// モデルの最大数
 };
 

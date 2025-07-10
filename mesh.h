@@ -54,6 +54,7 @@ public:
 	void SetVtxPos(const D3DXVECTOR3 pos, const int nIdx);
 	void SetNormal(const D3DXVECTOR3 nor, const int nIdx);
 	void SetVtxColor(const D3DXCOLOR col, const int nIdx);
+	void SetTexture(const D3DXVECTOR2 tex,const int nIdx);
 private:
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuffMesh; // 頂点バッファへのポインタ
 	LPDIRECT3DINDEXBUFFER9 m_pIdxBuffMesh;  // インデックスバッファへのポインタ

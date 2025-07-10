@@ -36,28 +36,6 @@ CEnemyState::~CEnemyState()
 }
 
 //===================================================
-// スタート
-//===================================================
-void CEnemyState::Init(void)
-{
-}
-
-//===================================================
-// 更新
-//===================================================
-void CEnemyState::Update(void)
-{
-
-}
-
-//===================================================
-// 終了
-//===================================================
-void CEnemyState::Uninit(void)
-{
-}
-
-//===================================================
 // コンストラクタ
 //===================================================
 CEnemyIdle::CEnemyIdle(int nNextCount)
@@ -80,6 +58,8 @@ void CEnemyIdle::Update(void)
 {
 	// モーションクラスの取得
 	CMotion* pMotion = m_pEnemy->GetMotion();
+
+	m_pEnemy->DeleteOrbit();
 
 	// 次の行動に移るまでの時間が0だったら
 	if (m_nNextStateCount <= 0)
@@ -217,7 +197,7 @@ void CEnemyAttackSmash::Update(void)
 	if (pMotion->IsEventFrame(64, 72, MOTION::MOTIONTYPE_SMASH))
 	{
 		// 軌跡の処理
-		m_pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f), 120);
+		m_pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f));
 	}
 	
 	// 攻撃モーションが終わったら
@@ -251,6 +231,9 @@ void CEnemyDamage::Update(void)
 {
 	// モーションクラスの取得
 	CMotion* pMotion = m_pEnemy->GetMotion();
+
+	// ダメージだったら
+	pMotion->SetMotion(MOTION::MOTIONTYPE_DAMAGE, true, 2);
 
 	// モーションを最後まで行ったら
 	if (pMotion->IsFinishEndBlend())
@@ -294,7 +277,7 @@ void CEnemyAttackImpact::Update(void)
 	if (pMotion->IsEventFrame(93, 116, MOTION::MOTIONTYPE_IMPACT))
 	{
 		// 軌跡の処理
-		m_pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f), 120);
+		m_pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f));
 	}
 
 	// 攻撃モーションが終わったら
@@ -413,7 +396,7 @@ void CEnemySpin::Update(void)
 	if (pMotion->IsEventFrame(1, 116, MOTION::MOTIONTYPE_SPIN))
 	{
 		// 軌跡の処理
-		m_pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 0.5f, 0.5f), 120);
+		m_pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 0.5f, 0.5f));
 	}
 
 	m_nTime--;

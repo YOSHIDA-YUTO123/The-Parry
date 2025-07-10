@@ -26,18 +26,17 @@ public:
 	CMeshOrbit();
 	~CMeshOrbit();
 
-	static CMeshOrbit* Create(const D3DXVECTOR3 Top, const D3DXVECTOR3 Bottom, const int nSegH, const D3DXCOLOR col, const int nLife);
+	static CMeshOrbit* Create(const D3DXVECTOR3 Top, const D3DXVECTOR3 Bottom, const int nSegH, const D3DXCOLOR col);
 
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
-	bool SetPosition(const D3DXVECTOR3 Top, const D3DXVECTOR3 Bottom);
+	void SetPosition(const D3DXVECTOR3 Top, const D3DXVECTOR3 Bottom);
 private:
 	D3DXVECTOR3 m_Top;		// è„ÇÃà íu
 	D3DXVECTOR3 m_Bottom;	// â∫ÇÃà íu
 	D3DXCOLOR m_col;		// êF
-	int m_nLife;			// éıñΩ
 };
 
 #endif

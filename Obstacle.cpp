@@ -12,6 +12,8 @@
 #include "objectX.h"
 #include "modelManager.h"
 #include "manager.h"
+#include "obstaclemanager.h"
+#include "effect.h"
 
 using namespace Const;							// 名前空間Constを使用する
 using namespace std;							// 名前空間stdを使用する
@@ -181,12 +183,33 @@ D3DXVECTOR3 CObstacle::GetSize(void) const
 }
 
 //==============================================
+// ワールドマトリックスの取得
+//==============================================
+D3DXMATRIX CObstacle::GetMatrix(void) const
+{
+	// ワールドマトリックス
+	D3DXMATRIX MtxWorld;
+
+	// ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&MtxWorld);
+
+	// ワールドマトリックスの取得
+	if (m_pObjectX != nullptr)
+	{
+		MtxWorld = m_pObjectX->GetMatrix();
+	}
+
+	return MtxWorld;
+}
+
+//==============================================
 // コンストラクタ
 //==============================================
 CSpikeTrap::CSpikeTrap()
 {
 	m_pAABB = nullptr;
 	m_CenterPos = VEC3_NULL;
+	m_pushPos = VEC3_NULL;
 }
 
 //==============================================
@@ -202,7 +225,7 @@ CSpikeTrap::~CSpikeTrap()
 CSpikeTrap* CSpikeTrap::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 {
 	CSpikeTrap* pObstacle = nullptr;
-	
+
 	// 障害物の生成
 	pObstacle = new CSpikeTrap;
 		
@@ -224,6 +247,18 @@ CSpikeTrap* CSpikeTrap::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 	// 向きの設定
 	pObstacle->SetRotaition(rot);
 	
+	// マネージャーの生成
+	CObstacleManager::Create();
+
+	// 障害物マネージャーのインスタンスの取得
+	CObstacleManager* pObstacleManager = CObstacleManager::GetInstance();
+
+	// 障害物マネージャーが取得出来たら
+	if (pObstacleManager != nullptr)
+	{
+		pObstacleManager->AddObstacle(pObstacle);
+	}
+
 	return pObstacle;
 }
 
@@ -263,6 +298,16 @@ HRESULT CSpikeTrap::Init(void)
 //==============================================
 void CSpikeTrap::Uninit(void)
 {
+	// 障害物マネージャーのインスタンスの取得
+	CObstacleManager* pObstacleManager = CObstacleManager::GetInstance();
+
+	// マネージャーの終了処理
+	if (pObstacleManager != nullptr)
+	{
+		pObstacleManager->Uninit();
+		pObstacleManager = nullptr;
+	}
+
 	// 終了処理
 	CObstacle::Uninit();
 }
@@ -274,6 +319,23 @@ void CSpikeTrap::Update(void)
 {
 	// 更新処理
 	CObstacle::Update();
+
+	// ワールドマトリックスの位置の取得
+	D3DXVECTOR3 pos = math::GetPositionFromMatrix(GetMatrix());
+	D3DXVECTOR3 Size = GetSize();
+
+	D3DXVECTOR3 posOld = m_CenterPos;
+
+	// 中心座標の設定
+	m_CenterPos.x = pos.x;
+	m_CenterPos.y = pos.y + (Size.y * 0.5f);
+	m_CenterPos.z = pos.z;
+
+	CEffect3D::Create(m_CenterPos, 50.0f, VEC3_NULL, WHITE, 10);
+
+	// 位置の設定処理
+	m_pAABB->SetPos(m_CenterPos);
+	m_pAABB->SetOldPos(posOld);
 }
 
 //==============================================
@@ -285,14 +347,16 @@ void CSpikeTrap::Draw(void)
 	CObstacle::Draw();
 }
 
-////==============================================
-//// 当たり判定
-////==============================================
-//bool CSpikeTrap::Collision(CCollision* other)
-//{
-//	//if (m_pAABB->Collision(other))
-//	//{
-//	//	return true;
-//	//}
-//	//return false;
-//}
+//==============================================
+// 当たり判定
+//==============================================
+bool CSpikeTrap::Collision(CCollision* other)
+{
+	if (m_pAABB->Collision(other))
+	{
+		//m_pushPos = m_pAABB->GetPushPos();
+
+		return true;
+	}
+	return false;
+}

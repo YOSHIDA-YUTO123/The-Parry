@@ -33,9 +33,9 @@ public:
 
 	CEnemyState();
 	virtual ~CEnemyState();
-	virtual void Init(void);
-	virtual void Update(void);
-	virtual void Uninit(void);
+	virtual void Init(void) {};
+	virtual void Update(void) {};
+	virtual void Uninit(void) {};
 
 	void SetOwner(CEnemy* pEnemy) { m_pEnemy = pEnemy; }
 protected:

@@ -42,9 +42,9 @@ public:
 	void DrawShadow(void);
 
 	HRESULT LoadModel(const char* pXFileName);
-
 	void SetPosition(const D3DXVECTOR3 pos) { m_pos = pos; }
 
+	D3DXMATRIX GetMatrix(void) const { return m_mtxWorld; }
 	D3DXVECTOR3 GetSize(void);
 	D3DXVECTOR3 GetPosition(void) const { return m_pos; }
 	CRotation* GetRotaition(void) const { return m_pRot; }
