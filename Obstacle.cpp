@@ -97,6 +97,11 @@ void CObstacle::Update(void)
 
 	// ‚¢‚¿‚ÌÝ’è
 	m_pObjectX->SetPosition(pos);
+
+	if (CManager::GetInputKeyboard()->GetPress(DIK_G))
+	{
+		m_pObjectX->GetRotaition()->Set(D3DXVECTOR3(0.0f,D3DX_PI * 0.5f,0.0f));
+	}
 }
 
 //==============================================
@@ -352,13 +357,13 @@ void CSpikeTrap::Draw(void)
 //==============================================
 // “–‚½‚è”»’è
 //==============================================
-bool CSpikeTrap::Collision(CColliderAABB *pCollider)
+bool CSpikeTrap::Collision(CColliderAABB *pCollider, D3DXVECTOR3* pushPos)
 {
 	// “–‚½‚è”»’è(‹éŒ`)‚ÌŽæ“¾
 	CCollisionAABB *pCollisionAABB = CCollisionAABB::GetInstance();
 
 	// ‹éŒ`‚Ì”»’è
-	if (pCollisionAABB->Collision(pCollider, m_pAABB.get()))
+	if (pCollisionAABB->Collision(m_pAABB.get(), pCollider, pushPos))
 	{
 		return true;
 	}

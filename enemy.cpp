@@ -118,7 +118,7 @@ HRESULT CEnemy::Init(void)
 	D3DXVECTOR3 CenterPos = VEC3_NULL;
 
 	// TODO : 大きさ(ファイル読み込みしたい)
-	m_Size = { 50.0f,400.0f,50.0f };
+	m_Size = { 100.0f,400.0f,100.0f };
 
 	// 中心座標を設定
 	CenterPos.x = pos.x;
@@ -246,11 +246,20 @@ void CEnemy::Update(void)
 		m_pCharactor->SetPosition(pos);
 	}
 
+	// 障害物との当たり判定
+	if (CollisionObstacle(&pos))
+	{
+	}
+
 	// シリンダーの取得
 	CMeshCylinder* pCylinder = CManager::GetCylinder();
 
 	// シリンダーの当たり判定
-	pCylinder->Collision(&pos);
+	if (pCylinder != nullptr)
+	{
+		pCylinder->Collision(&pos);
+	}
+	
 
 	// 重力の設定
 	m_pMove->Gravity(-MAX_GRABITY);
@@ -274,11 +283,6 @@ void CEnemy::Update(void)
 	{
 		// モーションの更新処理
 		m_pMotion->Update(&m_apModel[0], m_nNumModel);
-	}
-
-	if (CollisionObstacle())
-	{
-		CDebugProc::Print("当たっている\n");
 	}
 
 	// インパクトの取得
@@ -449,26 +453,23 @@ void CEnemy::Update(void)
 		m_pMachine->Update();
 	}
 
-	// 位置の設定処理
-    m_pCharactor->SetPosition(pos);
+	// キャラクターがnullじゃないなら
+	if (m_pCharactor != nullptr)
+	{
+		// 位置の設定処理
+		m_pCharactor->SetPosition(pos);
 
-	// 中心を求める
-	D3DXVECTOR3 CenterPos = VEC3_NULL;
+		// 向きの補間
+		m_pCharactor->GetRotation()->SetSmoothAngle(0.1f);
+	}
 
-	// 中心座標を設定
-	CenterPos.x = pos.x;
-	CenterPos.y = pos.y + m_Size.y * 0.5f;
-	CenterPos.z = pos.z;
+	// カメラがnullじゃないなら
+	if (pCamera != nullptr)
+	{
+		pos.y += ROCKON_HEIGHT;
 
-	// データの更新処理
-	m_pAABB->UpdateData(CenterPos, D3DXVECTOR3(m_posOld.x, m_posOld.y + m_Size.y * 0.5f, m_posOld.z));
-
-	// 向きの補間
-	m_pCharactor->GetRotation()->SetSmoothAngle(0.1f);
-
-	pos.y += ROCKON_HEIGHT;
-
-	pCamera->Rockon(PlayerPos, pos);
+		pCamera->Rockon(PlayerPos, pos);
+	}
 }
 
 //===================================================
@@ -765,7 +766,7 @@ void CEnemy::ChangeState(std::shared_ptr<CEnemyState> pNewState)
 //===================================================
 // 障害物との当たり判定
 //===================================================
-bool CEnemy::CollisionObstacle(void)
+bool CEnemy::CollisionObstacle(D3DXVECTOR3 *pPos)
 {
 	//	障害物マネージャーのインスタンスの取得
 	CObstacleManager* pObstacleManager = CObstacleManager::GetInstance();
@@ -782,12 +783,20 @@ bool CEnemy::CollisionObstacle(void)
 		// 障害物の取得
 		CObstacle* pObstacle = pObstacleManager->GetObstacle(nCnt);
 
-		// 当たっていたら
-		if (pObstacle != nullptr && pObstacle->Collision(m_pAABB.get()))
-		{
-			// 状態の変更
-			ChangeState(make_shared<CEnemyDamage>());
+		// 中心を求める
+		D3DXVECTOR3 CenterPos = VEC3_NULL;
 
+		// 中心座標を設定
+		CenterPos.x = pPos->x;
+		CenterPos.y = pPos->y + m_Size.y * 0.5f;
+		CenterPos.z = pPos->z;
+
+		// データの更新処理
+		m_pAABB->UpdateData(CenterPos, D3DXVECTOR3(m_posOld.x, m_posOld.y + m_Size.y * 0.5f, m_posOld.z));
+
+		// 当たっていたら
+		if (pObstacle != nullptr && pObstacle->Collision(m_pAABB.get(), pPos))
+		{
 			return true;
 		}
 	}

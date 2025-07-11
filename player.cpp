@@ -24,6 +24,8 @@
 #include "Wave.h"
 #include "cylinder.h"
 #include"Collider.h"
+#include "obstaclemanager.h"
+#include"Obstacle.h"
 
 using namespace math; // 名前空間mathを使用
 using namespace std;  // 名前空間をstdを使用する
@@ -194,16 +196,16 @@ void CPlayer::Update(void)
 		m_bDash = false;
 	}
 
+	D3DXVECTOR3 pos = m_pCharacter3D->GetPosition();
+
 	// 移動量の減衰
 	m_pMove->SetInertia3D(0.25f);
 
 	// 前回の位置の取得
-	m_posOld = m_pCharacter3D->GetPosition();
+	m_posOld = pos;
 
 	// 移動量の取得
 	D3DXVECTOR3 move = m_pMove->Get();
-
-	D3DXVECTOR3 pos = m_pCharacter3D->GetPosition();
 
 	// 位置の更新
 	pos += move;
@@ -237,15 +239,17 @@ void CPlayer::Update(void)
 		m_bJump = false;
 	}
 
-	if (pKeyboard->GetTrigger(DIK_0))
-	{
-		CEffect3D::Create(pos, 50.0f, VEC3_NULL, WHITE, 1);
-	}
 	// メッシュシリンダーの取得
 	CMeshCylinder* pCylinder = CManager::GetCylinder();
 
 	// シリンダーの判定
-	pCylinder->Collision(&pos);
+	if (pCylinder != nullptr && pCylinder->Collision(&pos))
+	{
+		// ここに処理があれば書く
+	}
+
+	// 障害物との当たり判定
+	CollisionObstacle(&pos);
 
 	// インパクトの取得
 	CMeshFieldImpact* pImpact = pMesh->GetImpact();
@@ -778,6 +782,46 @@ bool CPlayer::IsParry(const D3DXVECTOR3 pos)
 	{
 		return true;
 	}
+	return false;
+}
+
+//===================================================
+// 障害物との当たり判定
+//===================================================
+bool CPlayer::CollisionObstacle(D3DXVECTOR3 *pPos)
+{
+	//	障害物マネージャーのインスタンスの取得
+	CObstacleManager* pObstacleManager = CObstacleManager::GetInstance();
+
+	// マネージャーが無かったら
+	if (pObstacleManager == nullptr) return false;
+
+	// 障害物の総数の取得
+	int nNumObstacle = pObstacleManager->GetObstacleSize();
+
+	// 障害物の総数分調べる
+	for (int nCnt = 0; nCnt < nNumObstacle; nCnt++)
+	{
+		// 障害物の取得
+		CObstacle* pObstacle = pObstacleManager->GetObstacle(nCnt);
+
+		D3DXVECTOR3 Size = { 50.0f,200.0f,50.0f };
+
+		D3DXVECTOR3 center;
+
+		center.x = pPos->x;
+		center.y = pPos->y + Size.y * 0.5f;
+		center.z = pPos->z;
+
+		CColliderAABB aabb = CColliderAABB::CreateCollider(center,D3DXVECTOR3(m_posOld.x, m_posOld.y + Size.y * 0.5f, m_posOld.z), Size);
+
+		// 当たっていたら
+		if (pObstacle != nullptr && pObstacle->Collision(&aabb, pPos))
+		{
+			return true;
+		}
+	}
+
 	return false;
 }
 

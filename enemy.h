@@ -71,14 +71,14 @@ public:
 	void BlowOff(const D3DXVECTOR3 attacker, const float blowOff, const float jump);
 	bool CollisionWepon(void);
 	void ChasePlayer(float chaseScal, const float speedScal = 1.0f);	// プレイヤーを追いかける処理
-	void AngleToPlayer(void);												// プレイヤーの方向を見る処理
+	void AngleToPlayer(void);											// プレイヤーの方向を見る処理
 	bool CheckDistane(const float fRadius);								// 距離の判定
 	void MoveForWard(const float fSpeed);								// 自分の向いている方向に向かって進む処理
 	void Orbit(const int nSegH, const D3DXCOLOR col);					// 軌跡の設定
 	void DeleteOrbit(void);												// 軌跡の消去					
 	CMotion* GetMotion(void) { return m_pMotion.get(); }
 	void ChangeState(std::shared_ptr<CEnemyState> pNewState);
-	bool CollisionObstacle(void);
+	bool CollisionObstacle(D3DXVECTOR3* pPos);
 private:
 	void SetParent(const int nCnt);
 	void Load(void);
@@ -86,7 +86,7 @@ private:
 	std::unique_ptr<CColliderAABB> m_pAABB;				// AABBのコライダー
 	std::unique_ptr<CStateMachine> m_pMachine;
 	std::unique_ptr<CCharacter3D> m_pCharactor;			// キャラクタークラス
-	std::unique_ptr<CColliderSphere> m_pSphere;		// 円の当たり判定クラス
+	std::unique_ptr<CColliderSphere> m_pSphere;			// 円の当たり判定クラス
 	std::unique_ptr<CShadow> m_pShadow;					// 影のクラスへのポインタ
 	std::unique_ptr<CMotion> m_pMotion;					// 敵のモーションの制御クラスのポインタ
 	std::unique_ptr<CVelocity> m_pMove;					// 移動クラスの生成

@@ -49,6 +49,7 @@ public:
 	CColliderAABB();
 	~CColliderAABB();
 	static std::unique_ptr<CColliderAABB> Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 posOld, const D3DXVECTOR3 Size);
+	static CColliderAABB CreateCollider(const D3DXVECTOR3 pos, const D3DXVECTOR3 posOld, const D3DXVECTOR3 Size);
 	void UpdateData(const D3DXVECTOR3 pos, const D3DXVECTOR3 posOld);
 	Data GetData(void) { return m_Data; }
 private:

@@ -61,6 +61,22 @@ unique_ptr<CColliderAABB> CColliderAABB::Create(const D3DXVECTOR3 pos, const D3D
 }
 
 //================================================
+// コライダーの生成処理
+//================================================
+CColliderAABB CColliderAABB::CreateCollider(const D3DXVECTOR3 pos, const D3DXVECTOR3 posOld, const D3DXVECTOR3 Size)
+{
+	// AABB
+	CColliderAABB aabb;
+
+	// 設定処理
+	aabb.m_pos = pos;
+	aabb.m_Data.posOld = posOld;
+	aabb.m_Data.Size = Size;
+
+	return aabb;
+}
+
+//================================================
 // データの更新処理
 //================================================
 void CColliderAABB::UpdateData(const D3DXVECTOR3 pos, const D3DXVECTOR3 posOld)

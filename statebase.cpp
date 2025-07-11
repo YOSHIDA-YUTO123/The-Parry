@@ -50,6 +50,7 @@ void CStateMachine::Change(shared_ptr<CStateBase> pNewState)
 	{
 		return;
 	}
+
 	// ¡‚Ìó‘Ô‚ğ¶¬
 	if (m_pNowState != nullptr)
 	{

@@ -80,6 +80,7 @@ CCollision* CCollision::Create(const D3DXVECTOR3 pos, const TYPE type)
 //================================================
 CCollisionAABB::CCollisionAABB() : CCollision(TYPE::TYPE_AABB)
 {
+	m_pushPos = VEC3_NULL;
 }
 
 //================================================
@@ -105,7 +106,7 @@ void CCollisionAABB::Create(void)
 //================================================
 // AABB対AABBの当たり判定
 //================================================
-bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox)
+bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox, D3DXVECTOR3* pushPos)
 {
 	// 自分の位置と大きさの取得
 	D3DXVECTOR3 pos = pMyBox->GetPos();
@@ -139,48 +140,64 @@ bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox)
 	D3DXVECTOR3 tPosMin = TargetPos - (TargetSize * HALF_VALUE);
 	D3DXVECTOR3 tPosMax = TargetPos + (TargetSize * HALF_VALUE);
 
-	bool bHit = false;
+	CEffect3D::Create(tPosMin, 5.0f, VEC3_NULL, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), 3);
+	CEffect3D::Create(tPosMax, 5.0f, VEC3_NULL, D3DXCOLOR(1.0f,0.0f,0.0f,1.0f), 3);
 
-	if (posOldMin.y <= tPosOldMax.y && posOldMax.y >= tPosOldMin.y)
+	// Zの範囲内に入っている
+	if (tPosMin.z < posMax.z && tPosMax.z > posMin.z)
 	{
-		// 左右のめり込み判定
-		if (posMin.z < tPosMax.z && posMax.z > tPosMin.z)
+		// 左から右にめり込んだ
+		if (tPosOldMax.x < posMin.x &&
+			tPosMax.x > posMin.x)
 		{
-			// xが左から右にめり込んだ	
-			if (posOldMax.x < tPosOldMin.x && posMax.x > tPosMin.x)
+			if (pushPos != nullptr)
 			{
-				bHit = true;
-
-				//pos.x = otherPos.x - otherSize.x * HALF_VALUE * g_Block[nCntBlock].Scal.x - Size.x * HALF_VALUE - 0.1f;
-			}
-			// xが右から左にめり込んだ	
-			else if (posOldMin.x > tPosOldMax.x && posMin.x < tPosMax.x)
-			{
-				bHit = true;
-
-				//pos.x = otherPos.x + otherSize.x * HALF_VALUE * g_Block[nCntBlock].Scal.x + Size.x * HALF_VALUE + 0.1f;
+				// めり込んだ分戻す
+				pushPos->x += posMin.x - tPosMax.x - 0.5f;
+				return true;
 			}
 		}
-
-		// 前と後ろの判定
-		if (posMin.x < tPosMax.x && posMax.x > tPosMin.x)
+		// 右から左にめり込んだ
+		else if (tPosOldMin.x > posMax.x &&
+			tPosMin.x < posMax.x)
 		{
-			// zが前方からめり込んだ
-			if (posOldMax.z < tPosOldMin.z && posMax.z > tPosMin.z)
+			if (pushPos != nullptr)
 			{
-				bHit = true;
-
-				//pos.z = otherPos.z - otherSize.z * HALF_VALUE * g_Block[nCntBlock].Scal.z - Size.z * HALF_VALUE - 0.1f;
-			}
-			// zが後方からめり込んだ
-			else if (posOldMin.z > tPosOldMax.z && posMin.z < tPosMax.z)
-			{
-				bHit = true;
-
-				//pos.z = otherPos.z + otherSize.z * HALF_VALUE * g_Block[nCntBlock].Scal.z + Size.z * HALF_VALUE + HALF_VALUE;
+				// めり込んだ分戻す
+				pushPos->x += posMax.x - tPosMin.x + 0.5f;
+				return true;
 			}
 		}
 	}
+
+	// xの範囲に入っている
+	if (tPosMin.x < posMax.x && tPosMax.x > posMin.x)
+	{
+		// 後方からめり込んだ(左手座標系)
+		if (tPosOldMax.z < posMin.z &&
+			tPosMax.z > posMin.z)
+		{
+			if (pushPos != nullptr)
+			{
+				// めり込んだ分戻す
+				pushPos->z += posMin.z - tPosMax.z - 0.5f;
+				return true;
+			}
+		}
+		else if (tPosOldMin.z > posMax.z &&
+			tPosMin.z < posMax.z)
+		{
+			if (pushPos != nullptr)
+			{
+				// めり込んだ分戻す
+				pushPos->z += posMax.z - tPosMin.z + 0.5f;
+				return true;
+			}
+		}
+	}
+	//if (posOldMin.y <= tPosOldMax.y && posOldMax.y >= tPosOldMin.y)
+	//{
+	//}
 
 	//if (pos.x - m_Size.x * HALF_VALUE <= otherPos.x + otherSize.x * HALF_VALUE
 	//	&& pos.x + m_Size.x * HALF_VALUE >= otherPos.x - otherSize.x * HALF_VALUE)
@@ -211,7 +228,7 @@ bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox)
 	//	}
 	//}
 	
-	return bHit;
+	return false;
 }
 
 //================================================

@@ -62,6 +62,7 @@ public:
 	void BlowOff(const D3DXVECTOR3 attacker, const float blowOff,const float jump);
 	bool IsParry(const D3DXVECTOR3 pos);
 	void SetAngle(const float angleY);
+	bool CollisionObstacle(D3DXVECTOR3* pPos);
 	CPlayerMotionController* GetMotionController(void) { return m_pMotion.get(); } // モーションコントローラーの取得
 
 private:

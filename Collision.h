@@ -64,10 +64,12 @@ public:
 	~CCollisionAABB();
 	static void Create(void);
 	static CCollisionAABB* GetInstance(void) { return m_pAABB.get(); }
-	bool Collision(CColliderAABB *pMyBox, CColliderAABB *pTargetBox);
+	bool Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox, D3DXVECTOR3* pushPos = nullptr);
+	D3DXVECTOR3 GetPushPos(void) { return m_pushPos; }
 private:
 	CCollisionAABB();
 	static std::unique_ptr<CCollisionAABB> m_pAABB; // 自分のインスタンス
+	D3DXVECTOR3 m_pushPos;
 };
 
 //************************************************

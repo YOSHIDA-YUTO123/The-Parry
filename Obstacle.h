@@ -39,7 +39,7 @@ public:
 	virtual void Uninit(void) override;
 	virtual void Update(void) override;
 	virtual void Draw(void) override;
-	virtual bool Collision(CColliderAABB* pCollider) = 0;
+	virtual bool Collision(CColliderAABB* pCollider,D3DXVECTOR3 *pushPos) = 0;
 	void Release(void);
 
 	void SetPosition(const D3DXVECTOR3 pos);
@@ -68,7 +68,7 @@ public:
 	void Uninit(void) override;
 	void Update(void) override;
 	void Draw(void) override;
-	bool Collision(CColliderAABB* pCollider) override;
+	bool Collision(CColliderAABB* pCollider, D3DXVECTOR3* pushPos) override;
 	D3DXVECTOR3 GetpushPos(void) const { return m_pushPos; }
 private:
 	std::unique_ptr<CColliderAABB> m_pAABB;  // 矩形のコライダー

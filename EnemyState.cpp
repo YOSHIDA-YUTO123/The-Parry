@@ -12,12 +12,12 @@
 #include"enemy.h"
 #include"motion.h"
 
+using namespace std; // 名前空間stdを使用
+using MOTION = CEnemy::MOTIONTYPE;
+
 constexpr int NEXT_STAE_TIME = 180; // 次の行動に移るまでの時間
 constexpr int START_IMPACT = 55;	// インパクト攻撃の開始確率
 constexpr int SPIN_TIME = 100;		// 回転モーションの時間
-
-using namespace std; // 名前空間stdを使用
-using MOTION = CEnemy::MOTIONTYPE;
 
 //===================================================
 // コンストラクタ
