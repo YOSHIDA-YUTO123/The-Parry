@@ -245,10 +245,11 @@ void CMotion::UpdateBlendMotion(CModel** pModel, int nIdx)
 	// ブレンドフレームを計算
 	float fBlendFrame = (float)m_aInfo[m_nTypeBlend].aKeyInfo[m_nKeyBlend].nFrame * pSlow->GetLevel(true);
 
+
 	float fRateMotion = m_nCount / fCurrentFrame; // 相対値
 
 	float fRateMotionBlend = m_nCounterMotionBlend / fBlendFrame;
-	float fRateBlend = m_nCounterBlend / (float)m_nFrameBlend;
+	float fRateBlend = m_nCounterBlend / ((float)m_nFrameBlend * (float)pSlow->GetLevel(true));
 
 	// 現在のモーションの角度の差分
 	float fDiffMotionRX = pNextKey->fRotX - pCurrentKey->fRotX;
@@ -492,10 +493,7 @@ void CMotion::SetMotion(const int motiontype,bool bBlend,const int nBlendFrame)
 	{
 		return;
 	}
-
-	// スローモーションの取得
-	CSlow* pSlow = CManager::GetSlow();
-
+	
 	// ブレンドがあるなら
 	if (bBlend == true)
 	{
@@ -503,11 +501,9 @@ void CMotion::SetMotion(const int motiontype,bool bBlend,const int nBlendFrame)
 
 		if (m_bFirst == false)
 		{
-			// フレームを計算
-			int nFrame = nBlendFrame * (int)pSlow->GetLevel(true);
-
+		
 			m_nCounterBlend = 0;		 // ブレンドカウンターをリセット
-			m_nFrameBlend = nFrame;		 // ブレンドフレームを設定する
+			m_nFrameBlend = nBlendFrame;		 // ブレンドフレームを設定する
 			m_bFirst = true;			 // 最初のブレンド開始フラグをtrueにする
 		}
 

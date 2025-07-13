@@ -193,6 +193,7 @@ void CCamera::MouseWheel(void)
 	// マウスホイールの回転量を取得
 	int nWheel = pMouse->GetMouseWeel();
 
+	// ホイールを回してなかったら
 	if (nWheel == 0)
 	{
 		return;
@@ -223,10 +224,10 @@ void CCamera::MouseView(void)
 	// マウスの取得
 	CInputMouse* pMouse = CManager::GetInputMouse();
 
-	D3DXVECTOR2 Move = pMouse->GetVelocity();
-	D3DXVECTOR2 MoveOld = pMouse->GetOldVelocity();
+	//D3DXVECTOR2 Move = pMouse->GetVelocity();
+	//D3DXVECTOR2 MoveOld = pMouse->GetOldVelocity();
 
-	D3DXVECTOR2 fAngle = Move - MoveOld;
+	//D3DXVECTOR2 fAngle = Move - MoveOld;
 
 #ifdef _DEBUG
 	// マウスホイール
@@ -239,49 +240,68 @@ void CCamera::MouseView(void)
 	// ポーズ中かどうか
 	bool bPause = CManager::GetPause();
 
+	static POINT prevCursorPos = { (long)SCREEN_WIDTH / (long)2.0f,(long)SCREEN_HEIGHT / (long)2.0f };
+
+	POINT cursorPos;
+	GetCursorPos(&cursorPos);
+
+	float X = (float)cursorPos.x - prevCursorPos.x;
+	float Y = (float)cursorPos.y - prevCursorPos.y;
+
+	const float mouseSensitivity = 0.00095f;
+
+	X *= mouseSensitivity;
+	Y *= mouseSensitivity;
+
 	if (pMouse->OnMousePress(0) || bPause == false)
 	{
 		//回転量を更新
-		m_rot.y += fAngle.x * 0.01f;
-		m_rot.x += fAngle.y * 0.01f;
+		m_rot.y += X;
+		m_rot.x += Y;
 
-		//回転量を制限
+		// 回転量を制限
 		if (m_rot.x > MAX_VIEW_TOP)
 		{
-			m_rot.x -= fAngle.y * 0.01f;
+			m_rot.x -= Y;
 		}
 		else if (m_rot.x < MAX_VIEW_BOTTOM)
 		{
-			m_rot.x -= fAngle.y * 0.01f;
+			m_rot.x -= Y;
 		}
+
+		SetCursorPos((long)SCREEN_WIDTH / (long)2.0f, (long)SCREEN_HEIGHT / (long)2.0f);
 
 		// カメラの視点の情報
 		m_posV.x = m_posR.x - sinf(m_rot.x) * sinf(m_rot.y) * m_fDistance;
 		m_posV.y = m_posR.y - cosf(m_rot.x) * m_fDistance;
 		m_posV.z = m_posR.z - sinf(m_rot.x) * cosf(m_rot.y) * m_fDistance;
 	}
-	else if (pMouse->OnMousePress(1) && bPause == true)
-	{
-		//回転量を更新
-		m_rot.y += fAngle.x * 0.01f;
-		m_rot.x += fAngle.y * 0.01f;
+#ifdef _DEBUG
 
-		//回転量を制限
+	if (pMouse->OnMousePress(1) && bPause == true)
+	{
+		// 回転量を更新
+		m_rot.y += X;
+		m_rot.x += Y;
+
+		// 回転量を制限
 		if (m_rot.x > MAX_VIEW_TOP)
 		{
-			m_rot.x -= fAngle.y * 0.01f;
+			m_rot.x -= Y;
 		}
 		else if (m_rot.x < MAX_VIEW_BOTTOM)
 		{
-			m_rot.x -= fAngle.y * 0.01f;
+			m_rot.x -= Y;
 		}
+
+		SetCursorPos((long)SCREEN_WIDTH / (long)1.5f, (long)SCREEN_HEIGHT / (long)1.5f);
 
 		// カメラの視点の情報
 		m_posR.x = m_posV.x + sinf(m_rot.x) * sinf(m_rot.y) * m_fDistance;
 		m_posR.y = m_posV.y + cosf(m_rot.x) * m_fDistance;
 		m_posR.z = m_posV.z + sinf(m_rot.x) * cosf(m_rot.y) * m_fDistance;
 	}
-
+#endif // _DEBUG
 }
 
 //===================================================

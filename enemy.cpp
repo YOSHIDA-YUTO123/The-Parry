@@ -27,6 +27,7 @@
 #include "obstaclemanager.h"
 #include"Obstacle.h"
 #include"Collider.h"
+#include "playerstate.h"
 
 //***************************************************
 // 定数定義
@@ -128,6 +129,11 @@ HRESULT CEnemy::Init(void)
 	// 矩形判定AABBの生成
 	m_pAABB = CColliderAABB::Create(CenterPos, m_posOld, m_Size);
 
+	// 移動制御クラスの生成
+	m_pMovement = make_unique<CEnemyMovement>();
+
+	m_pMovement->Init(m_pMove, m_pCharactor);
+
 	return S_OK;
 }
 
@@ -211,6 +217,10 @@ void CEnemy::Update(void)
 	{
 		ChangeState(make_shared<CEnemyRoar>());
 	}
+	if (pKeyboard->GetTrigger(DIK_T))
+	{
+		ChangeState(make_shared<CEnemyBackStep>());
+	}
 	if (pKeyboard->GetTrigger(DIK_1))
 	{
 		Uninit();
@@ -220,7 +230,7 @@ void CEnemy::Update(void)
 #endif // _DEBUG
 
 	// モーションの制御クラスの取得
-	CPlayerMotionController* pPlayerMotion = pPlayer->GetMotionController();
+	CMotion* pPlayerMotion = pPlayer->GetMotion();
 
 	// 移動量の減衰
 	m_pMove->SetInertia3D(0.25f);
@@ -243,6 +253,12 @@ void CEnemy::Update(void)
 	if (pMesh->Collision(pos, &fHeight))
 	{
 		pos.y = fHeight;
+
+		if (m_pMotion->GetBlendType() == MOTION_JUMP)
+		{
+			// 着地状態にする
+			ChangeState(make_shared<CEnemyLanding>());
+		}
 		m_pCharactor->SetPosition(pos);
 	}
 
@@ -294,19 +310,21 @@ void CEnemy::Update(void)
 		const bool bCollision = pImpact->Collision(pos, 150.0f, pImpact->OBJ_ENEMY);
 
 		// インパクトの当たり判定
-		if (bCollision && m_pMotion->GetBlendType() != MOTIONTYPE_DAMAGE)
+		if (bCollision && m_pMotion->GetBlendType() != MOTION_DAMAGE)
 		{
 			// インパクトの位置の取得
 			D3DXVECTOR3 impactPos = pImpact->GetPosition();
+			
+			//// 吹き飛び処理
+			//BlowOff(impactPos, 150.0f, 10.0f);
 
-			// 吹き飛び処理
-			BlowOff(impactPos, 150.0f, 10.0f);
+			m_pMovement->BlowOff(impactPos, 50.0f, 2.0f);
 
 			// 状態の設定
 			ChangeState(make_shared<CEnemyDamage>());
 
 			// モーションの設定
-			m_pMotion->SetMotion(MOTIONTYPE_DAMAGE, true, 5);
+			m_pMotion->SetMotion(MOTION_DAMAGE, true, 2);
 		}
 	}
 
@@ -318,84 +336,70 @@ void CEnemy::Update(void)
 	D3DXVECTOR3 chestpos = GetPositionFromMatrix(m_apModel[2]->GetMatrixWorld());
 
 	// 敵の攻撃のカウンターの目安の表示
-	if (m_pMotion->IsEventFrame(50, 50, MOTIONTYPE_SMASH))
+	if (m_pMotion->IsEventFrame(50, 50, MOTION_SMASH))
 	{
 		// パーティクルの生成
 		CParticle3D::Create(chestpos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), 240, 100.0f, 50, 120, 15.0f);
 	}
-	else if (m_pMotion->IsEventFrame(50, 50, MOTIONTYPE_IMPACT))
+	else if (m_pMotion->IsEventFrame(50, 50, MOTION_IMPACT))
 	{
 		CMeshWave::Config WaveConfig = { WHITE,50.0f,50.0f,0.0f,30 };
 		CMeshWave::Create(WaveConfig, pos);
 	}
 
-
-	// イベントフレームの判定
-	if (m_pMotion->IsEventFrame(64, 71, MOTIONTYPE_SMASH) && m_pMotion->GetBlendType() != MOTIONTYPE_DAMAGE)
-	{
-		// 当たり判定がnullじゃなかったら
-		if (m_pSphere != nullptr)
-		{
-			// プレイヤーの視界の中にいる
-			const bool bParry = pPlayer->IsParry(pos);
-
-			// 当たったら
-			if (CollisionWepon() && bParry)
-			{
-				// パリィモーションの再生
-				pPlayerMotion->SetMotion(pPlayerMotion->TYPE_PARRY, true, 2);
-			}
-			// 範囲内で視界に入っていない、カウンターしていない
-			else if(CollisionWepon() && bParry == false)
-			{
-				// 吹き飛び処理
-				pPlayer->BlowOff(pos, 10.0f, 10.0f);
-
-				// ダメージモーションの再生
-				pPlayerMotion->SetMotion(pPlayerMotion->TYPE_DAMAGE, true, 5);
-			}
-		}
-	}
-
 	// パリィモーションのパンチになったら
-	if (pPlayerMotion->IsParryEvent(11, 11) && m_pMotion->GetBlendType() == MOTIONTYPE_SMASH)
+	if (pPlayerMotion->IsEventFrame(11, 11,pPlayer->TYPE_PARRY))
 	{
-		// スローモーションの取得
-		CSlow* pSlow = CManager::GetSlow();
-
-		// スローモーション
-		pSlow->Start(540, 12);
-
 		// プレイヤーの右手の位置
 		D3DXVECTOR3 playerHandR = pPlayer->GetModelPos(5);
 
-		// パーティクルの生成
-		CParticle3D::Create(playerHandR, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f), 240, 20.0f, 50, 120, 15.0f);
+		// 円の当たり判定の取得
+		CCollisionSphere* pSphere = CCollisionSphere::GetInstance();
 
-		// ボスまでの角度を取得
-		float fAngle = GetTargetAngle(pos, playerHandR);
+		// 右手の円
+		CColliderSphere HandRSphere = CColliderSphere::CreateCollider(playerHandR,50.0f);
+		CColliderSphere ChestSphere = CColliderSphere::CreateCollider(chestpos, 250.0f);
 
-		// 向きの設定
-		pPlayer->SetAngle(fAngle + D3DX_PI);
+		// 手が当たったら
+		if (pSphere != nullptr && pSphere->Collision(&ChestSphere, &HandRSphere))
+		{
+			// スローモーションの取得
+			CSlow* pSlow = CManager::GetSlow();
 
-		// 吹き飛び処理
-		BlowOff(PlayerPos, 150.0f, 5.0f);
+			// スローモーション
+			pSlow->Start(540, 12);
 
-		// インパクトの設定
-		CMeshCircle::Confing Circleconfig = { 35.0f,10.0f,0.0f,120.0f,120,false };
+			//// アングルの設定
+			//pCamera->SetAngle(chestpos);
 
-		// インパクトを生成
-		CMeshCircle::Create(Circleconfig, D3DXCOLOR(1.0f, 1.0f, 0.4f, 0.8f), playerHandR, 32, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
+			// パーティクルの生成
+			CParticle3D::Create(playerHandR, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f), 240, 20.0f, 50, 120, 15.0f);
 
-		// モーションをダメージにする
-		m_pMotion->SetMotion(MOTIONTYPE_DAMAGE, true, 2);
+			// ボスまでの角度を取得
+			float fAngle = GetTargetAngle(pos, PlayerPos);
 
-		// 状態の設定
-		ChangeState(make_shared<CEnemyDamage>());
+			// 向きの設定
+			pPlayer->SetAngle(fAngle + D3DX_PI);
+
+			// 吹き飛び処理
+			m_pMovement->BlowOff(PlayerPos, 150.0f, 5.0f);
+
+			// インパクトの設定
+			CMeshCircle::Confing Circleconfig = { 35.0f,10.0f,0.0f,120.0f,120,false };
+
+			// インパクトを生成
+			CMeshCircle::Create(Circleconfig, D3DXCOLOR(1.0f, 1.0f, 0.4f, 0.8f), playerHandR, 32, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
+
+			// モーションをダメージにする
+			m_pMotion->SetMotion(MOTION_DAMAGE, true, 2);
+
+			// 状態の設定
+			ChangeState(make_shared<CEnemyDamage>());
+		}
 	}
 
 	// 攻撃モーションのたたきつけになったら
-	if (m_pMotion->IsEventFrame(72,72, MOTIONTYPE_SMASH))
+	if (m_pMotion->IsEventFrame(72,72, MOTION_SMASH))
 	{
 		// フィールドの波の設定
 		CMeshFieldWave::Config config = { WeponPos,250.0f,380.0f,280.0f,12.0f,0.01f,120 };
@@ -435,7 +439,7 @@ void CEnemy::Update(void)
 	}
 
 	// 衝撃波の生成
-	if (m_pMotion->IsEventFrame(102, 102, MOTIONTYPE_IMPACT))
+	if (m_pMotion->IsEventFrame(102, 102, MOTION_IMPACT))
 	{
 		// プレイヤーまでの方向
 		D3DXVECTOR3 dir = PlayerPos - WeponPos;
@@ -504,34 +508,6 @@ void CEnemy::Draw(void)
 			}
 		}
 	}
-}
-
-//===================================================
-// 敵の吹き飛び処理
-//===================================================
-void CEnemy::BlowOff(const D3DXVECTOR3 attacker, const float blowOff, const float jump)
-{
-	// 位置
-	D3DXVECTOR3 pos = m_pCharactor->GetPosition();
-
-	// アタッカーからプレイヤーまでの差分を求める
-	D3DXVECTOR3 diff = pos - attacker;
-
-	// 角度を求める
-	float fAngle = atan2f(diff.x, diff.z);
-
-	// 目的の角度の設定
-	m_pCharactor->GetRotation()->SetDest(D3DXVECTOR3(0.0f, fAngle, 0.0f));
-
-	// 移動量
-	D3DXVECTOR3 move;
-
-	// 移動量の設定
-	move.x = sinf(fAngle) * blowOff;
-	move.y = jump;
-	move.z = cosf(fAngle) * blowOff;
-
-	m_pMove->Set(move);
 }
 
 //===================================================
@@ -699,25 +675,6 @@ bool CEnemy::CheckDistane(const float fRadius)
 }
 
 //===================================================
-// 向いている方向に進む処理
-//===================================================
-void CEnemy::MoveForWard(const float fSpeed)
-{
-	// 向きの取得
-	D3DXVECTOR3 rot = m_pCharactor->GetRotation()->Get();
-
-	// 移動量の取得
-	D3DXVECTOR3 move = m_pMove->Get();
-
-	// 移動量の設定
-	move.x = sinf(rot.y + D3DX_PI) * fSpeed;
-	move.z = cosf(rot.y + D3DX_PI) * fSpeed;
-
-	// 移動量の設定
-	m_pMove->Set(move);
-}
-
-//===================================================
 // 軌跡の処理
 //===================================================
 void CEnemy::Orbit(const int nSegH, const D3DXCOLOR col)
@@ -797,6 +754,21 @@ bool CEnemy::CollisionObstacle(D3DXVECTOR3 *pPos)
 		// 当たっていたら
 		if (pObstacle != nullptr && pObstacle->Collision(m_pAABB.get(), pPos))
 		{
+			// 障害物の位置の取得
+			D3DXVECTOR3 obstaclePos = pObstacle->GetPosition();
+
+			// 障害物までの向きの取得
+			float fAngle = GetTargetAngle(*pPos, obstaclePos);
+
+			// 向きの設定
+			m_pCharactor->GetRotation()->SetDest(D3DXVECTOR3(0.0f, fAngle, 0.0f));
+
+			// ダメージ状態にする
+			ChangeState(make_shared<CEnemyDamage>(true));
+
+			// モーションの設定
+			m_pMotion->SetMotion(MOTION_DAMAGE, true, 2);
+
 			return true;
 		}
 	}
@@ -837,7 +809,7 @@ void CEnemy::Load(void)
 				const char* FILE_NAME = file_name.c_str();
 
 				// モーションのロード処理
-				m_pMotion = CMotion::Load(FILE_NAME, m_apModel, &m_nNumModel, MOTIONTYPE_MAX, m_pMotion->LOAD_TEXT);
+				m_pMotion = CMotion::Load(FILE_NAME, m_apModel, &m_nNumModel, MOTION_MAX, m_pMotion->LOAD_TEXT);
 			}
 		}
 
@@ -894,4 +866,115 @@ void CEnemy::SetParent(const int nCnt)
 
 	// ワールドマトリックスの設定
 	pDevice->SetTransform(D3DTS_WORLD, &m_weponMatrix);
+}
+
+//===================================================
+// コンストラクタ
+//===================================================
+CEnemyMovement::CEnemyMovement()
+{
+}
+
+//===================================================
+// デストラクタ
+//===================================================
+CEnemyMovement::~CEnemyMovement()
+{
+}
+
+//===================================================
+// 初期化処理
+//===================================================
+void CEnemyMovement::Init(std::shared_ptr<CVelocity> enemyMove, std::shared_ptr<CCharacter3D> enemy)
+{
+	// nullなら
+	if (m_pMove == nullptr)
+	{
+		// 敵の移量を参照
+		m_pMove = enemyMove;
+	}
+
+	// nullなら
+	if (m_pEnemy == nullptr)
+	{
+		// 敵の移量を参照
+		m_pEnemy = enemy;
+	}
+}
+
+//===================================================
+// 吹き飛び処理
+//===================================================
+void CEnemyMovement::BlowOff(const D3DXVECTOR3 attacker,const float blowOff, const float jump)
+{
+	// 位置の取得
+	D3DXVECTOR3 pos = m_pEnemy->GetPosition();
+
+	// アタッカーからプレイヤーまでの差分を求める
+	D3DXVECTOR3 diff = pos - attacker;
+
+	// 角度を求める
+	float fAngle = atan2f(diff.x, diff.z);
+
+	// 移動量
+	D3DXVECTOR3 move;
+
+	// 向きの設定
+	m_pEnemy->GetRotation()->SetDest(D3DXVECTOR3(0.0f, fAngle, 0.0f));
+
+	// 移動量の設定
+	move.x = sinf(fAngle) * blowOff;
+	move.y = jump;
+	move.z = cosf(fAngle) * blowOff;
+
+	m_pMove->Set(move);
+}
+
+//===================================================
+// 向いている方向に進む処理
+//===================================================
+void CEnemyMovement::MoveForWard(const float fSpeed)
+{
+	// 向きの取得
+	D3DXVECTOR3 rot = m_pEnemy->GetRotation()->Get();
+
+	// 移動量の取得
+	D3DXVECTOR3 move = m_pMove->Get();
+
+	// 移動量の設定
+	move.x = sinf(rot.y + D3DX_PI) * fSpeed;
+	move.z = cosf(rot.y + D3DX_PI) * fSpeed;
+
+	// 移動量の設定
+	m_pMove->Set(move);
+}
+
+//===================================================
+// 移動方向の設定処理
+//===================================================
+void CEnemyMovement::SetMoveDir(const float dir,const float fSpeed)
+{
+	// 向きの取得
+	D3DXVECTOR3 rot = m_pEnemy->GetRotation()->Get();
+
+	// 移動量の取得
+	D3DXVECTOR3 moveWk = m_pMove->Get();
+
+	// 移動量の設定
+	moveWk.x = sinf(rot.y + dir) * fSpeed;
+	moveWk.z = cosf(rot.y + dir) * fSpeed;
+
+	// 移動量の設定
+	m_pMove->Set(moveWk);
+}
+
+//===================================================
+// ジャンプ
+//===================================================
+void CEnemyMovement::Jump(const float fHeight)
+{
+	if (m_pMove != nullptr)
+	{
+		m_pMove->Jump(fHeight);
+	}
 }

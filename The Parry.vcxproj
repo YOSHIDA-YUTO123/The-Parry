@@ -193,6 +193,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="playerstate.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="score.cpp" />
     <ClCompile Include="shadow.cpp" />
@@ -243,6 +244,7 @@
     <ClInclude Include="particle.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="playerstate.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="score.h" />
     <ClInclude Include="shadow.h" />

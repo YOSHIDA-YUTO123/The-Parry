@@ -34,6 +34,7 @@ class CMeshOrbit;
 class CStateMachine;
 class CObject3D;
 class CColliderSphere;
+class CEnemyMovement;
 
 //***************************************************
 // 敵クラスの定義
@@ -45,18 +46,18 @@ public:
 	// モーションの種類
 	typedef enum
 	{
-		MOTIONTYPE_NEUTRAL = 0,
-		MOTIONTYPE_MOVE,
-		MOTIONTYPE_SMASH,
-		MOTIONTYPE_JUMP,
-		MOTIONTYPE_LANDING,
-		MOTIONTYPE_DAMAGE,
-		MOTIONTYPE_IMPACT,
-		MOTIONTYPE_ROAR,
-		MOTIONTYPE_DASH,
-		MOTIONTYPE_SPIN,
-		MOTIONTYPE_MAX
-	}MOTIONTYPE;
+		MOTION_NEUTRAL = 0,
+		MOTION_MOVE,
+		MOTION_SMASH,
+		MOTION_JUMP,
+		MOTION_LANDING,
+		MOTION_DAMAGE,
+		MOTION_IMPACT,
+		MOTION_ROAR,
+		MOTION_DASH,
+		MOTION_SPIN,
+		MOTION_MAX
+	}MOTION;
 
 	CEnemy();
 	~CEnemy();
@@ -68,29 +69,31 @@ public:
 	void Update(void) override;
 	void Draw(void) override;
 
-	void BlowOff(const D3DXVECTOR3 attacker, const float blowOff, const float jump);
+	D3DXVECTOR3 GetPosition(void) { return m_pCharactor->GetPosition(); }
+
 	bool CollisionWepon(void);
 	void ChasePlayer(float chaseScal, const float speedScal = 1.0f);	// プレイヤーを追いかける処理
 	void AngleToPlayer(void);											// プレイヤーの方向を見る処理
 	bool CheckDistane(const float fRadius);								// 距離の判定
-	void MoveForWard(const float fSpeed);								// 自分の向いている方向に向かって進む処理
 	void Orbit(const int nSegH, const D3DXCOLOR col);					// 軌跡の設定
 	void DeleteOrbit(void);												// 軌跡の消去					
 	CMotion* GetMotion(void) { return m_pMotion.get(); }
 	void ChangeState(std::shared_ptr<CEnemyState> pNewState);
 	bool CollisionObstacle(D3DXVECTOR3* pPos);
+	CEnemyMovement* GetMovement(void) { return m_pMovement.get(); }
 private:
 	void SetParent(const int nCnt);
 	void Load(void);
 
 	std::unique_ptr<CColliderAABB> m_pAABB;				// AABBのコライダー
 	std::unique_ptr<CStateMachine> m_pMachine;
-	std::unique_ptr<CCharacter3D> m_pCharactor;			// キャラクタークラス
+	std::shared_ptr<CCharacter3D> m_pCharactor;			// キャラクタークラス
 	std::unique_ptr<CColliderSphere> m_pSphere;			// 円の当たり判定クラス
 	std::unique_ptr<CShadow> m_pShadow;					// 影のクラスへのポインタ
 	std::unique_ptr<CMotion> m_pMotion;					// 敵のモーションの制御クラスのポインタ
-	std::unique_ptr<CVelocity> m_pMove;					// 移動クラスの生成
+	std::shared_ptr<CVelocity> m_pMove;					// 移動クラスの生成
 	std::vector<CModel*> m_apModel;						// モデルクラスへのポインタ
+	std::unique_ptr<CEnemyMovement> m_pMovement;		// 敵の移動制御クラス
 	CMeshOrbit* m_pOrbit;								// 軌跡
 	D3DXMATRIX m_weponMatrix;							// 武器のワールドマトリックス
 	D3DXVECTOR3 m_posOld;								// 前回の位置
@@ -98,4 +101,21 @@ private:
 	int m_nNumModel;									// モデルの最大数
 };
 
+//***************************************************
+// 敵の移動処理クラスの定義
+//***************************************************
+class CEnemyMovement
+{
+public:
+	CEnemyMovement();
+	~CEnemyMovement();
+	void Init(std::shared_ptr<CVelocity> enemyMove, std::shared_ptr<CCharacter3D> enemy);	
+	void BlowOff(const D3DXVECTOR3 attacker, const float blowOff, const float jump);		// 吹き飛び関数(戻り値はアタッカーまでの角度)
+	void MoveForWard(const float fSpeed);
+	void SetMoveDir(const float dir, const float fSpeed); // 移動方向の設定
+	void Jump(const float fHeight);
+private:
+	std::shared_ptr<CVelocity> m_pMove;		// 敵の移動制御用変数
+	std::shared_ptr<CCharacter3D> m_pEnemy;	// キャラクター
+};
 #endif

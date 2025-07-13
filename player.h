@@ -35,6 +35,8 @@ class CCollisionFOV;
 class CPlayerMotionController;
 class CColliderSphere;
 class CColliderFOV;
+class CStateMachine;
+class CPlayerState;
 
 //***************************************************
 // プレイヤークラスの定義
@@ -43,10 +45,27 @@ class CPlayer : public CObject
 {
 public:
 
+	// モーションの種類
+	typedef enum
+	{
+		TYPE_NEUTRAL = 0,
+		TYPE_MOVE,
+		TYPE_ACTION,
+		TYPE_JUMP,
+		TYPE_LANDING,
+		TYPE_DASH,
+		TYPE_DAMAGE,
+		TYPE_PARRY,
+		TYPE_DOWN_NEUTRAL,
+		TYPE_AVOID,
+		TYPE_MAX
+	}TYPE;
+
 	CPlayer();
 	~CPlayer();
 
 	static CPlayer* Create(const D3DXVECTOR3 pos = Const::VEC3_NULL, const D3DXVECTOR3 rot = Const::VEC3_NULL);
+	void Load(void); // モーションのロード
 
 	HRESULT Init(void) override;
 	void Uninit(void) override;
@@ -63,14 +82,16 @@ public:
 	bool IsParry(const D3DXVECTOR3 pos);
 	void SetAngle(const float angleY);
 	bool CollisionObstacle(D3DXVECTOR3* pPos);
-	CPlayerMotionController* GetMotionController(void) { return m_pMotion.get(); } // モーションコントローラーの取得
+	void ChangeState(std::shared_ptr<CPlayerState> pNewState);
+	void MoveForward(const float fSpeed);
+	CMotion* GetMotion(void) { return m_pMotion.get(); } // モーションの取得
 
 private:
-
+	std::unique_ptr<CMotion> m_pMotion;					// モーションのクラスへのポインタ
+	std::unique_ptr<CStateMachine> m_pMachine;			// 状態の制御クラス
 	std::unique_ptr<CCharacter3D> m_pCharacter3D;		// キャラクタークラス
 	std::unique_ptr<CColliderFOV> m_pFOV;				// 視界の判定
 	std::unique_ptr<CColliderSphere> m_pSphere;		// 円のコライダー
-	std::unique_ptr<CPlayerMotionController> m_pMotion;	// プレイヤーのモーション制御のクラスのポインタ
 	CScoreLerper *m_pScore;							// スコアクラスへのポインタ
 	std::vector<CModel*> m_apModel;					// モデルクラスのポインタ
 
@@ -86,45 +107,4 @@ private:
 	bool m_bDash;									// 走ってるかどうか
 };
 
-//***************************************************
-// プレイヤーのモーションの制御クラスの定義
-//***************************************************
-class CPlayerMotionController
-{
-public:
-
-	// モーションの種類
-	typedef enum
-	{
-		TYPE_NEUTRAL = 0,
-		TYPE_MOVE,
-		TYPE_ACTION,
-		TYPE_JUMP,
-		TYPE_LANDING,
-		TYPE_DASH,
-		TYPE_DAMAGE,
-		TYPE_PARRY,
-		TYPE_MAX
-	}TYPE;
-
-	CPlayerMotionController();
-	~CPlayerMotionController();
-
-	void Load(std::vector<CModel*> &pModel,int *pOutNumModel); // モーションのロード
-	void Uninit(void);
-	void Update(CModel**ppModel,const int nNumModel);
-
-	// ロードできたかどうか
-	bool IsLoad(void) const;
-	void SetMotion(const int type, bool bBlend, const int nFrameBlend);
-
-	void ParryEffect(CModel** ppModel);
-	bool IsParryEvent(const int start, const int end);
-	int GetBlendType(void) const;
-private:
-
-	// モーションの遷移
-	void TransitionMotion(void);
-	std::unique_ptr<CMotion> m_pMotion; // モーションのクラスへのポインタ
-};
 #endif

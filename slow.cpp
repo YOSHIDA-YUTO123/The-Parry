@@ -53,7 +53,6 @@ void CSlow::Start(const int nTime, const float fLevel)
 {
 	m_nCount = nTime;
 	m_nTime = nTime;
-
 	m_fLevel = fLevel;
 }
 

@@ -70,6 +70,31 @@ private:
 };
 
 //***************************************************
+// 敵の状態(BackStep)クラスの定義
+//***************************************************
+class CEnemyBackStep : public CEnemyState
+{
+public:
+	CEnemyBackStep();
+	~CEnemyBackStep();
+	void Init(void) override;
+	void Update(void) override;
+private:
+};
+
+//***************************************************
+// 敵の状態(Landing)クラスの定義
+//***************************************************
+class CEnemyLanding : public CEnemyState
+{
+public:
+	CEnemyLanding();
+	~CEnemyLanding();
+	void Update(void) override;
+private:
+};
+
+//***************************************************
 // 敵の状態(ATTACK)クラスの定義
 //***************************************************
 class CEnemyAttackSmash : public CEnemyState
@@ -99,10 +124,11 @@ private:
 class CEnemyDamage : public CEnemyState
 {
 public:
-	CEnemyDamage();
+	CEnemyDamage(const bool bBackStatp = false);
 	~CEnemyDamage();
 	void Update(void) override;
 private:
+	bool m_bBackStap; // モーション終わりにバックステップするか判定
 };
 
 //***************************************************
@@ -139,7 +165,8 @@ public:
 	~CEnemySpin();
 	void Update(void) override;
 private:
-	int m_nTime; // 回転する時間
+	int m_nTime;	// 回転する時間
+	int m_nMaxTime;	// 最大の時間
 };
 
 #endif

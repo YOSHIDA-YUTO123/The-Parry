@@ -79,6 +79,5 @@ private:
 	static CMeshField* m_pMeshField;			// メッシュフィールドへのポインタ
 	static CSlow* m_pSlow;						// スローモーションクラスへのポインタ
 	static CMeshCylinder* m_pCylinder;			// シリンダーのクラスへのポインタ
-	static std::unique_ptr<CCollisionManager> m_pCollisionManager; // 当たり判定のマネージャー
 };
 #endif

@@ -106,7 +106,7 @@ void CCollisionAABB::Create(void)
 //================================================
 // AABB対AABBの当たり判定
 //================================================
-bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox, D3DXVECTOR3* pushPos)
+bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox, D3DXVECTOR3* pushPos,int* pFace)
 {
 	// 自分の位置と大きさの取得
 	D3DXVECTOR3 pos = pMyBox->GetPos();
@@ -150,6 +150,14 @@ bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox,
 		if (tPosOldMax.x < posMin.x &&
 			tPosMax.x > posMin.x)
 		{
+			// 当たった面を設定
+			if (pFace != nullptr)
+			{
+				// 左にめり込んだ
+				*pFace = FACE_LEFT;
+			}
+
+			// 押し出しを設定
 			if (pushPos != nullptr)
 			{
 				// めり込んだ分戻す
@@ -161,6 +169,14 @@ bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox,
 		else if (tPosOldMin.x > posMax.x &&
 			tPosMin.x < posMax.x)
 		{
+			// 当たった面を設定
+			if (pFace != nullptr)
+			{
+				// 右にめり込んだ
+				*pFace = FACE_RIGHT;
+			}
+
+			// 押し出しを設定
 			if (pushPos != nullptr)
 			{
 				// めり込んだ分戻す
@@ -177,6 +193,14 @@ bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox,
 		if (tPosOldMax.z < posMin.z &&
 			tPosMax.z > posMin.z)
 		{
+			// 当たった面を設定
+			if (pFace != nullptr)
+			{
+				// 後方からめり込んだ
+				*pFace = FACE_BACK;
+			}
+
+			// 押し出しを設定
 			if (pushPos != nullptr)
 			{
 				// めり込んだ分戻す
@@ -187,6 +211,13 @@ bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox,
 		else if (tPosOldMin.z > posMax.z &&
 			tPosMin.z < posMax.z)
 		{
+			// 当たった面を設定
+			if (pFace != nullptr)
+			{
+				// 前方からめり込んだ
+				*pFace = FACE_FRONT;
+			}
+
 			if (pushPos != nullptr)
 			{
 				// めり込んだ分戻す

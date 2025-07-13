@@ -40,8 +40,6 @@ bool CManager::m_bPause = false;						// ポーズ
 CMeshField* CManager::m_pMeshField = nullptr;			// メッシュフィールドのポインタ
 CSlow* CManager::m_pSlow = nullptr;						// スローモーションのポインタ
 CMeshCylinder* CManager::m_pCylinder = nullptr;			// シリンダーのクラスへのポインタ
-unique_ptr<CCollisionManager> CManager::m_pCollisionManager = nullptr; // 当たり判定のマネージャー
-
 
 //===================================================
 // コンストラクタ
@@ -95,10 +93,7 @@ HRESULT CManager::Init(HINSTANCE hInstance,HWND hWnd, BOOL bWindow)
 	if (FAILED(m_pInputMouse->Init(hWnd))) return E_FAIL;
 
 	// 当たり判定のマネージャーの生成
-	m_pCollisionManager = make_unique<CCollisionManager>();
-
-	// すべての当たり判定の生成
-	m_pCollisionManager->CreateAll();
+ 	CCollisionManager::CreateAll();
 
 	// テクスチャの生成
 	m_pTexture = new CTextureManager;
@@ -146,8 +141,11 @@ HRESULT CManager::Init(HINSTANCE hInstance,HWND hWnd, BOOL bWindow)
 
 	CEnemy::Create(D3DXVECTOR3(0.0f,0.0f,1500.0f));
 
+	// 面の設定
+	int face = CCollisionAABB::FACE_LEFT;
+
 	// スパイクトラップ
-	CSpikeTrap::Create(D3DXVECTOR3(1840.0f, 0.0f, 0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
+	CSpikeTrap::Create(D3DXVECTOR3(1840.0f, 0.0f, 0.0f), face);
 
 	// 結果を返す
 	return S_OK;

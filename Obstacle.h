@@ -62,7 +62,7 @@ class CSpikeTrap : public CObstacle
 public:
 	CSpikeTrap();
 	~CSpikeTrap();
-	static CSpikeTrap* Create(const D3DXVECTOR3 pos,const D3DXVECTOR3 rot);
+	static CSpikeTrap* Create(const D3DXVECTOR3 pos,const int nDamageFace);
 
 	HRESULT Init(void) override;
 	void Uninit(void) override;
@@ -75,5 +75,6 @@ private:
 	D3DXVECTOR3 m_posOld;					 // 前回の位置
 	D3DXVECTOR3 m_CenterPos;				 // 真ん中の位置
 	D3DXVECTOR3 m_pushPos;					 // 押し出された位置
+	int m_nDamageFace;						 // ダメージを食らう面
 };
 #endif

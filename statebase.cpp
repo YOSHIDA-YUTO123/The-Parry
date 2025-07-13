@@ -55,6 +55,7 @@ void CStateMachine::Change(shared_ptr<CStateBase> pNewState)
 	if (m_pNowState != nullptr)
 	{
 		m_pNowState->Uninit();
+		m_pNowState.reset();
 		m_pNowState = nullptr;
 	}
 

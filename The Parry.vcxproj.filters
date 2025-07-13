@@ -79,6 +79,9 @@
     <Filter Include="ヘッダー ファイル\model\enemy">
       <UniqueIdentifier>{2c25c5d3-69a8-41b8-ad26-e9de47097018}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\model\player">
+      <UniqueIdentifier>{7921f0e4-1e81-4556-bc1a-e27b95a0db73}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="testword.cpp">
@@ -201,9 +204,6 @@
     <ClCompile Include="word.cpp">
       <Filter>ソース ファイル\system</Filter>
     </ClCompile>
-    <ClCompile Include="player.cpp">
-      <Filter>ソース ファイル\model</Filter>
-    </ClCompile>
     <ClCompile Include="Orbit.cpp">
       <Filter>ソース ファイル\mesh</Filter>
     </ClCompile>
@@ -224,6 +224,12 @@
     </ClCompile>
     <ClCompile Include="Collider.cpp">
       <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>ソース ファイル\model\player</Filter>
+    </ClCompile>
+    <ClCompile Include="playerstate.cpp">
+      <Filter>ソース ファイル\model\player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -370,6 +376,9 @@
     </ClInclude>
     <ClInclude Include="Collider.h">
       <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="playerstate.h">
+      <Filter>ヘッダー ファイル\model</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

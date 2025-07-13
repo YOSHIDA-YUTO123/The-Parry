@@ -217,6 +217,7 @@ CSpikeTrap::CSpikeTrap()
 	m_CenterPos = VEC3_NULL;
 	m_pushPos = VEC3_NULL;
 	m_posOld = VEC3_NULL;
+	m_nDamageFace = NULL;
 }
 
 //==============================================
@@ -229,7 +230,7 @@ CSpikeTrap::~CSpikeTrap()
 //==============================================
 // 生成処理
 //==============================================
-CSpikeTrap* CSpikeTrap::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
+CSpikeTrap* CSpikeTrap::Create(const D3DXVECTOR3 pos, const int nDamageFace)
 {
 	CSpikeTrap* pObstacle = nullptr;
 
@@ -250,10 +251,8 @@ CSpikeTrap* CSpikeTrap::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 	
 	// オブジェクト
 	pObstacle->SetPosition(pos);
-		
-	// 向きの設定
-	pObstacle->SetRotaition(rot);
-	
+	pObstacle->m_nDamageFace = nDamageFace;
+
 	// マネージャーの生成
 	CObstacleManager::Create();
 
@@ -360,12 +359,19 @@ void CSpikeTrap::Draw(void)
 bool CSpikeTrap::Collision(CColliderAABB *pCollider, D3DXVECTOR3* pushPos)
 {
 	// 当たり判定(矩形)の取得
-	CCollisionAABB *pCollisionAABB = CCollisionAABB::GetInstance();
+	auto *pCollisionAABB = CCollisionAABB::GetInstance();
+
+	// ダメージを食らう面
+	int nDamageFace = 0;
 
 	// 矩形の判定
-	if (pCollisionAABB->Collision(m_pAABB.get(), pCollider, pushPos))
+	if (pCollisionAABB->Collision(m_pAABB.get(), pCollider, pushPos,&nDamageFace))
 	{
-		return true;
+		// ダメージを食らう面が同じだったら(またはすべて食らうなら)
+		if (m_nDamageFace == nDamageFace || m_nDamageFace == -1)
+		{
+			return true;
+		}
 	}
 	return false;
 }

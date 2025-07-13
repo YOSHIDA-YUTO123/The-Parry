@@ -26,12 +26,14 @@
 #include"Collider.h"
 #include "obstaclemanager.h"
 #include"Obstacle.h"
+#include"statebase.h"
+#include"playerstate.h"
 
 using namespace math; // 名前空間mathを使用
 using namespace std;  // 名前空間をstdを使用する
 using namespace Const;							// 名前空間Constを使用する
 
-using MOTION = CPlayerMotionController::TYPE; // 列挙型を使用する
+//using MOTION = CPlayerMotionController::TYPE; // 列挙型を使用する
 using STATE = CCharacter3D::STATE;			  // キャラクターの状態
 
 constexpr float JUMP_HEIGHT = 25.0f;		// ジャンプ量
@@ -51,6 +53,7 @@ CPlayer::CPlayer() : CObject(3)
 	m_nNumModel = NULL;
 	m_bDash = false;
 	m_posOld = VEC3_NULL;
+	m_pMachine = nullptr;
 }
 
 //===================================================
@@ -65,11 +68,8 @@ CPlayer::~CPlayer()
 //===================================================
 HRESULT CPlayer::Init(void)
 {
-	// プレイヤーのモーション制御クラスの生成
-	m_pMotion = make_unique<CPlayerMotionController>();
-
 	// プレイヤーのロード処理
-	m_pMotion->Load(m_apModel,&m_nNumModel);
+	Load();
 
 	// キャラクタークラスの生成
 	m_pCharacter3D = make_unique<CCharacter3D>();
@@ -95,6 +95,11 @@ HRESULT CPlayer::Init(void)
 	// 移動クラスの生成
 	m_pMove = new CVelocity;
 
+	// 状態制御の生成
+	m_pMachine = make_unique<CStateMachine>();
+
+	// 初期状態を設定
+	ChangeState(make_shared<CPlayerNormal>());
 	return S_OK;
 }
 
@@ -175,15 +180,18 @@ void CPlayer::Update(void)
 	else if(CPlayer::MoveKeyboard(pKeyboard))
 	{
 		// ダッシュモーションか歩きモーションかを判定
-		int isDashMotion = (m_bDash ? MOTION::TYPE_DASH : MOTION::TYPE_MOVE);
+		int isDashMotion = (m_bDash ? TYPE_DASH : TYPE_MOVE);
 
 		// ジャンプかjumpじゃないかを判定
-		int motiontype = m_bJump ? isDashMotion : MOTION::TYPE_JUMP;
+		int motiontype = m_bJump ? isDashMotion : TYPE_JUMP;
 
 		// モーションの設定
 		m_pMotion->SetMotion(motiontype, true, 5);
 
 		m_pCharacter3D->SetState(STATE::STATE_MOVE, 1);
+
+		// 状態の変更
+		ChangeState(make_shared<CPlayerMove>());
 	}
 	
 	// ダッシュボタンを押したら
@@ -222,10 +230,10 @@ void CPlayer::Update(void)
 		m_bJump = true;
 		
 		// モーションがジャンプだったら
-		if (m_pMotion->GetBlendType() == MOTION::TYPE_JUMP)
+		if (m_pMotion->GetBlendType() == TYPE_JUMP)
 		{
 			// 着地モーションの再生
-			m_pMotion->SetMotion(MOTION::TYPE_LANDING, true, 5);
+			m_pMotion->SetMotion(TYPE_LANDING, true, 5);
 
 			// インパクトの設定
 			CMeshCircle::Confing Circleconfig = { 0.0f,10.0f,10.0f,50.0f,30,true };
@@ -261,6 +269,12 @@ void CPlayer::Update(void)
 
 		if (bCollision && m_pCharacter3D->GetState() == STATE::STATE_ACTION)
 		{
+			// スローモーションの取得
+			CSlow* pSlow = CManager::GetSlow();
+
+			// スローモーション
+			pSlow->Start(540, 12);
+
 			// 最初の位置
 			D3DXVECTOR3 firstPos = pImpact->GetFirstPos();
 
@@ -269,10 +283,14 @@ void CPlayer::Update(void)
 
 			float fAngle = GetTargetAngle(firstPos, pos);
 
+			// 向きの設定
+			m_pCharacter3D->GetRotation()->SetDest(D3DXVECTOR3(0.0f, fAngle + D3DX_PI, 0.0f));
+
+			// 右手の位置
 			D3DXVECTOR3 playerHandR = GetPositionFromMatrix(m_apModel[5]->GetMatrixWorld());
 
 			// モーションをダメージにする
-			m_pMotion->SetMotion(MOTION::TYPE_PARRY, true, 2);
+			m_pMotion->SetMotion(TYPE_PARRY, true, 2);
 
 			// パーティクルの生成
 			CParticle3D::Create(playerHandR, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f), 240, 20.0f, 25, 120, 15.0f);
@@ -287,7 +305,7 @@ void CPlayer::Update(void)
 			pImpact->Reset(dir,pImpact->OBJ_PLAYER, playerHandR,D3DXCOLOR(1.0f,1.0f,0.5f,1.0f));
 		}
 		// インパクトの当たり判定
-		else if (bCollision && m_pMotion->GetBlendType() != MOTION::TYPE_DAMAGE)
+		else if (bCollision && m_pMotion->GetBlendType() != TYPE_DAMAGE)
 		{
 			// インパクトの位置の取得
 			D3DXVECTOR3 impactPos = pImpact->GetPosition();
@@ -296,7 +314,7 @@ void CPlayer::Update(void)
 			BlowOff(impactPos, 50.0f, 10.0f);
 
 			// モーションの設定
-			m_pMotion->SetMotion(MOTION::TYPE_DAMAGE, true, 5);
+			ChangeState(make_shared<CPlayerDamage>());
 		}
 	}
 
@@ -320,7 +338,7 @@ void CPlayer::Update(void)
 	// ジャンプできるなら
 	if ((pKeyboard->GetPress(DIK_SPACE) == true || pJoypad->GetPress(pJoypad->JOYKEY_A) == true) && m_bJump == true)
 	{
-		m_pMotion->SetMotion(MOTION::TYPE_JUMP, true, 2);
+		m_pMotion->SetMotion(TYPE_JUMP, true, 2);
 
 		// 移動量を上方向に設定
 		m_pMove->Jump(JUMP_HEIGHT);
@@ -329,30 +347,29 @@ void CPlayer::Update(void)
 
 #ifdef _DEBUG
 
-	//if (pKeyboard->GetTrigger(DIK_B))
-	//{
-	//	m_pScore->SetDestScore(100000,120);
+	if (pKeyboard->GetTrigger(DIK_B))
+	{
+		m_pScore->SetDestScore(100000,120);
 
-	//	// 瓦礫を生成
-	//	CRubble::Create(pos, D3DXVECTOR3(15.0f, 15.0f, 15.0f), 120);
+		// 瓦礫を生成
+		CRubble::Create(pos, D3DXVECTOR3(15.0f, 15.0f, 15.0f), 120,0);
 
-	//	// スローモーションの取得
-	//	CSlow* pSlow = CManager::GetSlow();
-	//	pSlow->Start(540, 4);
-	//}
+		// スローモーションの取得
+		CSlow* pSlow = CManager::GetSlow();
+		pSlow->Start(540, 4);
+	}
 
-	//if (pKeyboard->GetTrigger(DIK_V))
-	//{
-	//	// 地面に波を発生させる
-	//	pMesh->SetWave(pos, 20.0f, 300.0f, 380.0f, 15.0f, 0.01f, 120);
-	//}
-
+	if (pKeyboard->GetTrigger(DIK_V))
+	{
+		// 回避
+		ChangeState(make_shared<CPlayerAvoid>(20.0f));
+	}
 #endif // _DEBUG
 
 	// カウンター状態
-	if (pKeyboard->GetTrigger(DIK_RETURN) && m_pMotion->GetBlendType() != MOTION::TYPE_DAMAGE)
+	if (pKeyboard->GetTrigger(DIK_RETURN) && m_pMotion->GetBlendType() != TYPE_DAMAGE)
 	{
-		m_pMotion->SetMotion(MOTION::TYPE_ACTION, true,6);
+		m_pMotion->SetMotion(TYPE_ACTION, true,6);
 	
 		m_pCharacter3D->SetState(m_pCharacter3D->STATE_ACTION, PARRY_TIME);
 	}
@@ -399,6 +416,12 @@ void CPlayer::Update(void)
 		m_pMotion->Update(&m_apModel[0], m_nNumModel);
 	}
 
+	// 状態制御がnullじゃなかったら
+	if (m_pMachine != nullptr)
+	{
+		// 状態の更新処理
+		m_pMachine->Update();
+	}
 	// 目的の視点に近づける
 	m_pCharacter3D->GetRotation()->SetSmoothAngle(0.1f);
 
@@ -529,10 +552,16 @@ bool CPlayer::MoveKeyboard(CInputKeyboard* pKeyboard)
 	// 現在の目的の向きの取得
 	D3DXVECTOR3 rotDest = m_pCharacter3D->GetRotation()->GetDest();
 
-	if (m_pMotion->GetBlendType() == MOTION::TYPE_DAMAGE)
+	if (m_pMotion->GetBlendType() == TYPE_DAMAGE)
 	{
 		return false;
 	}
+
+	if (m_pMotion->GetBlendType() == TYPE_AVOID)
+	{
+		return false;
+	}
+
 	if (pKeyboard->GetPress(DIK_A))
 	{
 		//プレイヤーの移動(上)
@@ -624,9 +653,12 @@ bool CPlayer::MoveKeyboard(CInputKeyboard* pKeyboard)
 	{
 		int motiontype = m_pMotion->GetBlendType();
 
-		if (motiontype == MOTION::TYPE_MOVE || motiontype == MOTION::TYPE_DASH && m_pMotion != nullptr)
+		if (motiontype == TYPE_MOVE || motiontype == TYPE_DASH && m_pMotion != nullptr)
 		{
-			m_pMotion->SetMotion(MOTION::TYPE_NEUTRAL, true, 15);
+			m_pMotion->SetMotion(TYPE_NEUTRAL, true, 15);
+
+			// 状態の変更
+			ChangeState(make_shared<CPlayerNormal>());
 		}
 	}
 
@@ -703,10 +735,10 @@ void CPlayer::MoveJoypad(CInputJoypad* pJoypad)
 		m_pCharacter3D->GetRotation()->SetDest(rotDest);
 
 		// ダッシュモーションか歩きモーションかを判定
-		int isDashMotion = (m_bDash ? MOTION::TYPE_DASH : MOTION::TYPE_MOVE);
+		int isDashMotion = (m_bDash ? TYPE_DASH : TYPE_MOVE);
 
 		// ジャンプかjumpじゃないかを判定
-		int motiontype = m_bJump ? isDashMotion : MOTION::TYPE_JUMP;
+		int motiontype = m_bJump ? isDashMotion : TYPE_JUMP;
 
 		m_pMotion->SetMotion(motiontype, true, 5);
 	}
@@ -714,9 +746,9 @@ void CPlayer::MoveJoypad(CInputJoypad* pJoypad)
 	{
 		int motiontype = m_pMotion->GetBlendType();
 
-		if ((motiontype == MOTION::TYPE_MOVE || motiontype == MOTION::TYPE_DASH))
+		if ((motiontype == TYPE_MOVE || motiontype == TYPE_DASH))
 		{
-			m_pMotion->SetMotion(MOTION::TYPE_NEUTRAL, true, 15);
+			m_pMotion->SetMotion(TYPE_NEUTRAL, true, 15);
 		}
 	}
 	
@@ -760,6 +792,43 @@ void CPlayer::BlowOff(const D3DXVECTOR3 attacker, const float blowOff, const flo
 	move.y = jump;
 	move.z = cosf(fAngle) * blowOff;
 
+	m_pMove->Set(move);
+}
+
+//===================================================
+// 状態の変更
+//===================================================
+void CPlayer::ChangeState(std::shared_ptr<CPlayerState> pNewState)
+{
+	if (pNewState != nullptr)
+	{
+		// オーナの設定
+		pNewState->SetOwner(this);
+	}
+
+	if (m_pMachine != nullptr)
+	{
+		// 状態の変更
+		m_pMachine->Change(pNewState);
+	}
+}
+
+//===================================================
+// 向いている方向に進む処理
+//===================================================
+void CPlayer::MoveForward(const float fSpeed)
+{
+	// 移動量の取得
+	D3DXVECTOR3 move = m_pMove->Get();
+
+	// 今の向きの取得
+	float forward = m_pCharacter3D->GetRotation()->Get().y;
+
+	// 移動方向の計算
+	move.x = sinf(forward + D3DX_PI) * fSpeed;
+	move.z = cosf(forward + D3DX_PI) * fSpeed;
+
+	// 移動量の設定
 	m_pMove->Set(move);
 }
 
@@ -818,6 +887,8 @@ bool CPlayer::CollisionObstacle(D3DXVECTOR3 *pPos)
 		// 当たっていたら
 		if (pObstacle != nullptr && pObstacle->Collision(&aabb, pPos))
 		{
+			// ダメージ状態にする
+			ChangeState(make_shared<CPlayerDamage>());
 			return true;
 		}
 	}
@@ -874,24 +945,9 @@ CPlayer* CPlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 }
 
 //===================================================
-// コンストラクタ
+// プレイヤーのロード
 //===================================================
-CPlayerMotionController::CPlayerMotionController()
-{
-}
-
-//===================================================
-// デストラクタ
-//===================================================
-CPlayerMotionController::~CPlayerMotionController()
-{
-
-}
-
-//===================================================
-// プレイヤーのパラメーターのロード処理
-//===================================================
-void CPlayerMotionController::Load(std::vector<CModel*>& pModel, int* pOutNumModel)
+void CPlayer::Load(void)
 {
 	fstream file("data/system.ini"); // ファイルを開く
 	string line; // ファイルの文字列読み取り用
@@ -921,7 +977,7 @@ void CPlayerMotionController::Load(std::vector<CModel*>& pModel, int* pOutNumMod
 				const char* FILE_NAME = file_name.c_str();
 
 				// モーションのロード処理
-				m_pMotion = CMotion::Load(FILE_NAME, pModel, pOutNumModel, TYPE_MAX, CMotion::LOAD_TEXT);
+				m_pMotion = CMotion::Load(FILE_NAME, m_apModel, &m_nNumModel, TYPE_MAX, CMotion::LOAD_TEXT);
 			}
 		}
 
@@ -939,109 +995,4 @@ void CPlayerMotionController::Load(std::vector<CModel*>& pModel, int* pOutNumMod
 		MessageBox(NULL, "system.iniが開けません", "ファイルが存在しません。", MB_OK | MB_ICONWARNING);
 		return;
 	}
-}
-
-//===================================================
-// 終了処理
-//===================================================
-void CPlayerMotionController::Uninit(void)
-{
-	// モーションの終了処理
-	m_pMotion->Uninit();
-}
-
-//===================================================
-// 更新処理
-//===================================================
-void CPlayerMotionController::Update(CModel** ppModel, const int nNumModel)
-{
-	if (m_pMotion != nullptr)
-	{
-		m_pMotion->Update(ppModel, nNumModel);
-	}
-
-	ParryEffect(ppModel);
-
-	// モーションの遷移
-	TransitionMotion();
-}
-
-//===================================================
-// モーションをロードできたかどうか
-//===================================================
-bool CPlayerMotionController::IsLoad(void) const
-{
-	// ロードできたかどうか
-	if (m_pMotion->IsLoad())
-	{
-		return true;
-	}
-	return false;
-}
-//===================================================
-// プレイヤーのモーションのセット
-//===================================================
-void CPlayerMotionController::SetMotion(const int type, bool bBlend, const int nFrameBlend)
-{
-	// モーションの設定
-	m_pMotion->SetMotion(type, bBlend, nFrameBlend);
-}
-
-//===================================================
-// パリィのエフェクト
-//===================================================
-void CPlayerMotionController::ParryEffect(CModel **ppModel)
-{
-	if (m_pMotion->IsEventFrame(1, PARRY_TIME, TYPE::TYPE_ACTION))
-	{
-		// ワールドマトリックスの41_42_43の要素を取得
-		D3DXVECTOR3 handPos = GetPositionFromMatrix(ppModel[8]->GetMatrixWorld());
-
-		CParticle3D::Create(handPos, WHITE, 50, 5.0f, 10, 10, 3.0f);
-	}
-}
-
-//===================================================
-// プレイヤーのモーションの遷移
-//===================================================
-void CPlayerMotionController::TransitionMotion(void)
-{
-	// モーションの種類
-	TYPE motiontype = (TYPE)m_pMotion->GetBlendType();
-
-	// モーションの遷移
-	switch (motiontype)
-	{
-	case TYPE_NEUTRAL:
-		break;
-	case TYPE_MOVE:
-		break;
-	case TYPE_ACTION:
-		break;
-	case TYPE_DAMAGE:
-		break;
-	default:
-		break;
-	}
-}
-
-//===================================================
-// モーションタイプの取得
-//===================================================
-int CPlayerMotionController::GetBlendType(void) const
-{
-	return m_pMotion->GetBlendType();
-}
-//===================================================
-// パリィのイベント判定の取得
-//===================================================
-bool CPlayerMotionController::IsParryEvent(const int start, const int end)
-{
-	// パリィのフレームの判定
-	if (m_pMotion->IsEventFrame(start, end, TYPE_PARRY))
-	{
-		return true;
-	}
-
-	return false;
 }

@@ -93,6 +93,21 @@ template <class T> bool IsInRange(const T value,const T min,const T max)
 	return false;
 };
 
+// ランダム
+template <class T> T Random(const T min, const T max)
+{
+	// 0だったら(0割り対策)
+	if (max == 0)
+	{
+		return min;
+	}
+
+	// ランダムな値を選出
+	T randomWk = rand() % max + min;
+
+	return randomWk;
+}
+
 //***************************************************
 // 計算用namespaceの定義
 //***************************************************

@@ -61,10 +61,22 @@ private:
 class CCollisionAABB : public CCollision
 {
 public:
+
+	// –Ê‚ÌŽí—Þ
+	typedef enum
+	{
+		FACE_ALL = 0,
+		FACE_RIGHT,
+		FACE_LEFT,
+		FACE_FRONT,
+		FACE_BACK,
+		FACE_MAX
+	}FACE;
+
 	~CCollisionAABB();
 	static void Create(void);
 	static CCollisionAABB* GetInstance(void) { return m_pAABB.get(); }
-	bool Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox, D3DXVECTOR3* pushPos = nullptr);
+	bool Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox, D3DXVECTOR3* pushPos = nullptr,int *pFace = nullptr);
 	D3DXVECTOR3 GetPushPos(void) { return m_pushPos; }
 private:
 	CCollisionAABB();
@@ -112,10 +124,10 @@ private:
 class CCollisionManager
 {
 public:
-	CCollisionManager();
 	~CCollisionManager();
-	void CreateAll(void);
+	static void CreateAll(void);
 	void Uninit(void);
 private:
+	CCollisionManager();
 };
 #endif
