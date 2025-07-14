@@ -37,25 +37,6 @@ CExplosion* CExplosion::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, co
 	// 爆発の生成
 	CExplosion* pExplotion = new CExplosion;
 
-	// 優先順位の取得
-	int nPriority = pExplotion->GetPriority();
-
-	// 現在のオブジェクトの最大数
-	const int nNumAll = CObject::GetNumObject(nPriority);
-
-	// オブジェクトが最大数まであったら
-	if (nNumAll >= MAX_OBJECT && pExplotion != nullptr)
-	{
-		// 自分のポインタの解放
-		pExplotion->Release();
-
-		// nullにする
-		pExplotion = nullptr;
-
-		// オブジェクトを消す
-		return nullptr;
-	}
-
 	if (pExplotion == nullptr) return nullptr;
 
 	pExplotion->m_col = col;
@@ -134,25 +115,6 @@ CDustSmoke* CDustSmoke::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 size, co
 {
 	// 煙の生成
 	CDustSmoke* pExplotion = new CDustSmoke;
-
-	// 優先順位の取得
-	int nPriority = pExplotion->GetPriority();
-
-	// 現在のオブジェクトの最大数
-	const int nNumAll = CObject::GetNumObject(nPriority);
-
-	// オブジェクトが最大数まであったら
-	if (nNumAll >= MAX_OBJECT && pExplotion != nullptr)
-	{
-		// 自分のポインタの解放
-		pExplotion->Release();
-
-		// nullにする
-		pExplotion = nullptr;
-
-		// オブジェクトを消す
-		return nullptr;
-	}
 
 	if (pExplotion == nullptr) return nullptr;
 

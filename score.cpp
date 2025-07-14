@@ -170,25 +170,6 @@ CScore* CScore::Create(const TYPE type, const D3DXVECTOR3 pos, const float fWidt
 		break;
 	}
 
-	// 自分の優先順位の取得
-	const int nPriority = pScore->GetPriority();
-
-	// 現在のオブジェクトの最大数
-	const int nNumAll = CObject::GetNumObject(nPriority);
-
-	// オブジェクトが最大数まであったら
-	if (nNumAll >= MAX_OBJECT && pScore != nullptr)
-	{
-		// 自分のポインタの解放
-		pScore->Release();
-
-		// nullにする
-		pScore = nullptr;
-
-		// オブジェクトを消す
-		return nullptr;
-	}
-
 	// NULLだったら飛ばす
 	if (pScore == nullptr) return nullptr;
 

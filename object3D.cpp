@@ -329,24 +329,6 @@ CObject3D* CObject3D::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot, const
 	// 3Dオブジェクトの生成
 	pObject3D = new CObject3D;
 
-	// 優先順位の取得
-	int nPriority = pObject3D->GetPriority();
-
-	// 現在のオブジェクトの最大数
-	const int nNumAll = CObject::GetNumObject(nPriority);
-
-	// オブジェクトが最大数まであったら
-	if (nNumAll >= MAX_OBJECT && pObject3D != nullptr)
-	{
-		// 自分自身の破棄
-		pObject3D->Release();
-
-		// nullにしておく
-		pObject3D = nullptr;
-
-		return nullptr;
-	}
-
 	if (pObject3D == nullptr) return nullptr;
 
 	// テクスチャクラスの取得

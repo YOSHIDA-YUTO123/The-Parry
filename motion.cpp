@@ -48,6 +48,7 @@ CMotion::CMotion()
 	m_nNumKeyBlend = NULL;
 	m_nAllCounter = NULL;
 	m_nAllFrame = NULL;
+	m_bSlowMag = false; // スロー倍率がかかっているかどうか
 }
 
 //===================================================
@@ -245,7 +246,6 @@ void CMotion::UpdateBlendMotion(CModel** pModel, int nIdx)
 	// ブレンドフレームを計算
 	float fBlendFrame = (float)m_aInfo[m_nTypeBlend].aKeyInfo[m_nKeyBlend].nFrame * pSlow->GetLevel(true);
 
-
 	float fRateMotion = m_nCount / fCurrentFrame; // 相対値
 
 	float fRateMotionBlend = m_nCounterMotionBlend / fBlendFrame;
@@ -346,6 +346,25 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 {
 	if (IsLoad() == false) return;
 
+	// スローモーションの取得
+	CSlow* pSlow = CManager::GetSlow();
+
+	if (pSlow->GetState() == false && m_bSlowMag == true)
+	{
+		int nSlowLevel = static_cast<int>(pSlow->GetMaxLevel(true));
+
+		// カウンターをもとに戻す
+		m_nAllCounter /= nSlowLevel;
+		m_nCount /= nSlowLevel;
+		m_nCounterBlend /= nSlowLevel;
+		m_nCounterMotionBlend /= nSlowLevel;
+		m_bSlowMag = false;
+	}
+	else if (pSlow->GetState() == true && m_bSlowMag == false)
+	{
+		m_bSlowMag = true;
+	}
+
 	for (int nCntModel = 0; nCntModel < nNumModel; nCntModel++)
 	{
 		// キーの総数
@@ -354,11 +373,6 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 
 		// ループするかどうか
 		m_bLoopMotion = m_aInfo[m_nType].bLoop;
-
-		//if (motiontype < 0 || motiontype >= TYPE::TYPE_MAX)
-		//{
-		//	return;
-		//}
 		
 		// 次のキーを増やす
 		m_nextKey = (m_nKey + 1) % m_aInfo[m_nType].nNumkey;
@@ -381,8 +395,6 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 	// モーションが終了したら
 	if (IsEndMotion())
 	{
-		// スローモーションの取得
-		CSlow* pSlow = CManager::GetSlow();
 
 		// ブレンドのフレームを計算
 		int nBlendFrame = m_aInfo[m_nType].aKeyInfo[m_nNumKey - 1].nFrame * (int)pSlow->GetLevel(true);
@@ -409,9 +421,6 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 		m_nCounterBlend = 0;
 		m_nKey = m_nKeyBlend;
 	}
-
-	// スローモーションの取得
-	CSlow* pSlow = CManager::GetSlow();
 
 	// フレームを計算
 	int nFrame = m_aInfo[m_nType].aKeyInfo[m_nKey].nFrame * (int)pSlow->GetLevel(true);
@@ -455,6 +464,7 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 	if (m_bFinish == true || m_bFirst == true)
 	{
 		m_nCounterBlend++;
+		m_nCounterMotionBlend++;
 	}
 
 	// 計算用ALLフレーム
@@ -473,7 +483,6 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 	// 最大を超えたら
 	if (m_nAllCounter >= nFrame)
 	{
-		m_nCounterMotionBlend++;
 		m_nAllCounter = 0;
 	}
 

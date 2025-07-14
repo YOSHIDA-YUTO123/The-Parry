@@ -53,25 +53,6 @@ CRubble* CRubble::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 dir, const int
 	// 瓦礫の生成
 	pDust = new CRubble;
 
-	// 優先順位の取得
-	int nPriority = pDust->GetPriority();
-
-	// 現在のオブジェクトの最大数
-	const int nNumAll = CObject::GetNumObject(nPriority);
-
-	// オブジェクトが最大数まであったら
-	if (nNumAll >= MAX_OBJECT && pDust != nullptr)
-	{
-		// 自分のポインタの解放
-		pDust->Release();
-
-		// nullにする
-		pDust = nullptr;
-
-		// オブジェクトを消す
-		return nullptr;
-	}
-
 	if (pDust == nullptr) return nullptr;
 
 	switch (nType)

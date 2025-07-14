@@ -169,4 +169,17 @@ private:
 	int m_nMaxTime;	// Å‘å‚ÌŠÔ
 };
 
+//***************************************************
+// “G‚Ìó‘Ô(HIT)ƒNƒ‰ƒX‚Ì’è‹`
+//***************************************************
+class CEnemyHit : public CEnemyState
+{
+public:
+	CEnemyHit();
+	~CEnemyHit();
+	void Init(void) override;
+	void Update(void) override;
+private:
+};
+
 #endif

@@ -38,25 +38,6 @@ CMeshWave* CMeshWave::Create(Config config, const D3DXVECTOR3 pos, const int nSe
 	// メッシュウェーブを生成
 	CMeshWave* pMesh = new CMeshWave;
 
-	// 優先順位の取得
-	int nPriority = pMesh->GetPriority();
-
-	// 現在のオブジェクトの最大数
-	const int nNumAll = CObject::GetNumObject(nPriority);
-
-	// オブジェクトが最大数まであったら
-	if (nNumAll >= MAX_OBJECT && pMesh != nullptr)
-	{
-		// 自分のポインタの解放
-		pMesh->Release();
-
-		// nullにする
-		pMesh = nullptr;
-
-		// オブジェクトを消す
-		return nullptr;
-	}
-
 	// zの分割数1固定
 	const int nSegV = 1;
 

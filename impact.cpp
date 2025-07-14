@@ -39,25 +39,6 @@ CMeshCircle* CMeshCircle::Create(const Confing confing, const D3DXCOLOR col, con
 	// メッシュインパクトを生成
 	CMeshCircle* pMesh = new CMeshCircle;
 
-	// 優先順位の取得
-	int nPriority = pMesh->GetPriority();
-
-	// 現在のオブジェクトの最大数
-	const int nNumAll = CObject::GetNumObject(nPriority);
-
-	// オブジェクトが最大数まであったら
-	if (nNumAll >= MAX_OBJECT && pMesh != nullptr)
-	{
-		// 自分のポインタの解放
-		pMesh->Release();
-
-		// nullにする
-		pMesh = nullptr;
-
-		// オブジェクトを消す
-		return nullptr;
-	}
-
 	// zの分割数1固定
 	const int nSegV = 1;
 
@@ -228,6 +209,9 @@ void CMeshCircle::Draw(void)
 	// カリングをオンにする
 	pDevice->SetRenderState(D3DRS_CULLMODE, TRUE);
 
+	// ライトを無効にする
+	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+
 	// aブレンディング
 	pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
@@ -243,6 +227,9 @@ void CMeshCircle::Draw(void)
 
 	// カリングをオフにする
 	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+
+	// ライトを無効にする
+	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 }
 
 //================================================

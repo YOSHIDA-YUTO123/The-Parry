@@ -231,6 +231,9 @@
     <ClCompile Include="playerstate.cpp">
       <Filter>ソース ファイル\model\player</Filter>
     </ClCompile>
+    <ClCompile Include="shadowS.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="testword.h">
@@ -379,6 +382,9 @@
     </ClInclude>
     <ClInclude Include="playerstate.h">
       <Filter>ヘッダー ファイル\model</Filter>
+    </ClInclude>
+    <ClInclude Include="shadowS.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

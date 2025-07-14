@@ -49,24 +49,6 @@ CParticle3D* CParticle3D::Create(const D3DXVECTOR3 pos, const D3DXCOLOR col, con
 	// 3Dオブジェクトの生成
 	pParticle = new CParticle3D;
 
-	// 優先順位の取得
-	int nPriority = pParticle->GetPriority();
-
-	// 現在のオブジェクトの最大数
-	const int nNumAll = CObject::GetNumObject(nPriority);
-
-	// オブジェクトが最大数まであったら
-	if (nNumAll >= MAX_OBJECT && pParticle != nullptr)
-	{
-		// 自分自身の破棄
-		pParticle->Uninit();
-
-		// nullにしておく
-		pParticle = nullptr;
-
-		return nullptr;
-	}
-
 	if (pParticle == nullptr) return nullptr;
 
 	// 初期化処理

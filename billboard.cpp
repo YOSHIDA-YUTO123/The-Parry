@@ -305,24 +305,6 @@ CObjectBillboard* CObjectBillboard::Create(const D3DXVECTOR3 pos, const D3DXVECT
 	// 3Dオブジェクトの生成
 	pBillboard = new CObjectBillboard;
 
-	// 優先順位の取得
-	int nPriority = pBillboard->GetPriority();
-
-	// 現在のオブジェクトの最大数
-	const int nNumAll = CObject::GetNumObject(nPriority);
-
-	// オブジェクトが最大数まであったら
-	if (nNumAll >= MAX_OBJECT && pBillboard != nullptr)
-	{
-		// 自分自身の破棄
-		pBillboard->Release();
-
-		// nullにしておく
-		pBillboard = nullptr;
-
-		return nullptr;
-	}
-
 	if (pBillboard == nullptr) return nullptr;
 
 	pBillboard->Init();

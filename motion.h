@@ -100,7 +100,7 @@ private:
 	void FinishFirstBlend(void);
 
 	CMotionLoader* m_pLoader;   // モーションのローダー
-	std::vector<Info> m_aInfo;		// モーション情報へのポインタ
+	std::vector<Info> m_aInfo;	// モーション情報へのポインタ
 	int m_nType;				// モーションの種類
 	int m_nNumKey;				// キーの総数
 	int m_nKey;					// 現在のキーNo.
@@ -108,20 +108,22 @@ private:
 	int m_nextKey;				// 次のキー
 	int m_nAllFrame;			// 全体のフレーム数
 	int m_nAllCounter;			// 全体フレームのカウンター
-	bool m_bLoopMotion;				// ループするかどうか
+	bool m_bLoopMotion;			// ループするかどうか
 
-	bool m_bBlend;						// ブレンドがあるかどうか
-	bool m_bLoopBlend;					// ループするかどうか
-	bool m_bFinish;						// モーションが終わったかどうか
-	bool m_bFirst;						// モーションが始まったフラグ
+	bool m_bBlend;				// ブレンドがあるかどうか
+	bool m_bLoopBlend;			// ループするかどうか
+	bool m_bFinish;				// モーションが終わったかどうか
+	bool m_bFirst;				// モーションが始まったフラグ
 
-	int m_nTypeBlend;					// ブレンドの種類
-	int m_nFrameBlend;					// ブレンドのフレーム数
-	int m_nCounterBlend;				// ブレンドカウンター
-	int m_nNumKeyBlend;					// ブレンドモーションの最大のキー
-	int m_nKeyBlend;					// ブレンドモーションの現在のキー
-	int m_nNextKeyBlend;				// ブレンドモーションの次のキー
-	int m_nCounterMotionBlend;			// ブレンドのカウンター
+	int m_nTypeBlend;			// ブレンドの種類
+	int m_nFrameBlend;			// ブレンドのフレーム数
+	int m_nCounterBlend;		// ブレンドカウンター
+	int m_nNumKeyBlend;			// ブレンドモーションの最大のキー
+	int m_nKeyBlend;			// ブレンドモーションの現在のキー
+	int m_nNextKeyBlend;		// ブレンドモーションの次のキー
+	int m_nCounterMotionBlend;	// ブレンドのカウンター
+
+	bool m_bSlowMag;			// スローの倍率がかかっているかどうか
 };
 
 //***************************************************

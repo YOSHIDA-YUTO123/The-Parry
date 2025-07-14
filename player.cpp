@@ -269,11 +269,11 @@ void CPlayer::Update(void)
 
 		if (bCollision && m_pCharacter3D->GetState() == STATE::STATE_ACTION)
 		{
-			// スローモーションの取得
-			CSlow* pSlow = CManager::GetSlow();
+			//// スローモーションの取得
+			//CSlow* pSlow = CManager::GetSlow();
 
-			// スローモーション
-			pSlow->Start(540, 12);
+			//// スローモーション
+			//pSlow->Start(100, 12);
 
 			// 最初の位置
 			D3DXVECTOR3 firstPos = pImpact->GetFirstPos();
@@ -913,25 +913,6 @@ CPlayer* CPlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 
 	// 3Dオブジェクトの生成
 	pPlayer = new CPlayer;
-
-	// 優先順位の取得
-	int nPriority = pPlayer->GetPriority();
-
-	// 現在のオブジェクトの最大数
-	const int nNumAll = CObject::GetNumObject(nPriority);
-
-	// オブジェクトが最大数まであったら
-	if (nNumAll >= MAX_OBJECT && pPlayer != nullptr)
-	{
-		// 自分のポインタの解放
-		pPlayer->Release();
-
-		// nullにする
-		pPlayer = nullptr;
-
-		// オブジェクトを消す
-		return nullptr;
-	}
 
 	if (pPlayer == nullptr) return nullptr;
 

@@ -147,6 +147,13 @@ HRESULT CManager::Init(HINSTANCE hInstance,HWND hWnd, BOOL bWindow)
 	// スパイクトラップ
 	CSpikeTrap::Create(D3DXVECTOR3(1840.0f, 0.0f, 0.0f), face);
 
+#ifdef _DEBUG
+
+#else
+	// カーソルを非表示にする
+	ShowCursor(false);
+#endif // _DEBUG
+
 	// 結果を返す
 	return S_OK;
 }

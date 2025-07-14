@@ -203,24 +203,6 @@ CObject2D* CObject2D::Create(const float fWidth, const float fHeight, const D3DX
 	// 2Dオブジェクトの生成
 	pObject2D = new CObject2D;
 
-	// 優先順位の取得
-	int nPriority = pObject2D->GetPriority();
-
-	// 現在のオブジェクトの最大数
-	const int nNumAll = CObject::GetNumObject(nPriority);
-
-	// オブジェクトが最大数まであったら
-	if (nNumAll >= MAX_OBJECT && pObject2D != nullptr)
-	{
-		// 自分自身の破棄
-		pObject2D->Release();
-
-		// nullにしておく
-		pObject2D = nullptr;
-
-		return nullptr;
-	}
-
 	if (pObject2D == nullptr) return nullptr;
 
 	pObject2D->Init();

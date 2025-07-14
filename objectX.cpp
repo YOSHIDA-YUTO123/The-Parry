@@ -44,26 +44,6 @@ CObjectX* CObjectX::Create(const D3DXVECTOR3 pos, const char* pModelName)
 	// 3Dオブジェクトの生成
 	pObjectX = new CObjectX;
 
-	// 優先順位の取得
-	int nPriority = pObjectX->GetPriority();
-
-	// 現在のオブジェクトの最大数
-	const int nNumAll = CObject::GetNumObject(nPriority);
-
-	// オブジェクトが最大数まであったら
-	if (nNumAll >= MAX_OBJECT && pObjectX != nullptr)
-	{
-		// 自分のポインタの解放
-		pObjectX->Release();
-
-		// nullにする
-		pObjectX = nullptr;
-
-		// オブジェクトを消す
-		return nullptr;
-	}
-
-
 	if (pObjectX == nullptr) return nullptr;
 
 	pObjectX->Init();
@@ -346,6 +326,96 @@ void CObjectX::DrawShadow(void)
 	}
 	
 	// マテリアルをもとに戻す
+	pDevice->SetMaterial(&matDef);
+}
+
+//===================================================
+// ワールドマトリックスの設定
+//===================================================
+void CObjectX::SetUpMatrix(void)
+{
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+	//計算用のマトリックス
+	D3DXMATRIX mtxRot, mtxTrans;
+
+	//ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&m_mtxWorld);
+
+	// 向き
+	D3DXVECTOR3 rot = m_pRot->Get();
+
+	//向きを反映
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, rot.y, rot.x, rot.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
+
+	//位置を反映
+	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
+	//ワールドマトリックスの設定
+	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+}
+
+//===================================================
+// 描画までの設定処理
+//===================================================
+void CObjectX::SetUpDraw(void)
+{
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+	// テクスチャクラスの取得
+	CTextureManager* pTexture = CManager::GetTexture();
+
+	// モデルクラスの取得
+	CModelManager* pModel = CManager::GetModel();
+
+	D3DMATERIAL9 matDef;//現在のマテリアル保存用
+
+	D3DXMATERIAL* pMat;//マテリアルデータへのポインタ
+
+	//現在のマテリアルを取得
+	pDevice->GetMaterial(&matDef);
+
+	if (m_nModelIdx == -1)
+	{
+		//保存していたマテリアルを元に戻す
+		pDevice->SetMaterial(&matDef);
+
+		return;
+	}
+
+	//マテリアルのデータへのポインタを取得
+	pMat = (D3DXMATERIAL*)pModel->GetBuffMat(m_nModelIdx)->GetBufferPointer();
+
+	// マテリアルの総数の取得
+	DWORD dwNumMat = pModel->GetNumMat(m_nModelIdx);
+
+	// メッシュの取得
+	LPD3DXMESH pMesh = pModel->GetMesh(m_nModelIdx);
+
+	for (int nCntMat = 0; nCntMat < (int)dwNumMat; nCntMat++)
+	{
+		//マテリアルの設定
+		pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+
+		if (m_pTextureIdx[nCntMat] != -1)
+		{
+			//テクスチャの設定
+			pDevice->SetTexture(0, pTexture->GetAdress(m_pTextureIdx[nCntMat]));
+		}
+		else
+		{
+			//テクスチャの設定
+			pDevice->SetTexture(0, NULL);
+		}
+		//モデル(パーツ)の描画
+		pMesh->DrawSubset(nCntMat);
+	}
+
+	//保存していたマテリアルを元に戻す
 	pDevice->SetMaterial(&matDef);
 }
 

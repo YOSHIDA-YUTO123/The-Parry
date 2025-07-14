@@ -62,7 +62,7 @@ public:
 	CVelocity();
 	~CVelocity();
 
-	D3DXVECTOR3 Get(void) const { return m_move; }
+	D3DXVECTOR3 Get(void) const;
 	void Set(const D3DXVECTOR3 move) { m_move = move; }
 	void Add(const D3DXVECTOR3 move) { m_move += move; }
 

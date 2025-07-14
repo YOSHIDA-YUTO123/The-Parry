@@ -28,9 +28,13 @@ public:
 	void Start(const int nTime, const float fLevel);
 	void End(void);
 	float GetLevel(bool bAdd) { return bAdd ? m_fLevel : (1.0f / m_fLevel); }
+	float GetMaxLevel(bool bAdd) { return bAdd ? m_fMaxLevel : (1.0f / m_fMaxLevel); }
+	bool GetState(void) const { return m_bSlow; }
 private:
-	float m_fLevel;	// スローモーションのレベル(どのくらいおそくなるか)
-	int m_nTime;	// スローモーションの時間
-	int m_nCount;	// スローモーションのカウンター
+	float m_fMaxLevel;	// 最大の倍率(保存用)
+	float m_fLevel;		// スローモーションのレベル(どのくらいおそくなるか)
+	int m_nTime;		// スローモーションの時間
+	int m_nCount;		// スローモーションのカウンター
+	bool m_bSlow;		// スロー中かどうか
 };
 #endif

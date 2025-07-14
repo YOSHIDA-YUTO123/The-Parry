@@ -98,25 +98,6 @@ CTestWord* CTestWord::Create(const int nWord, const D3DXVECTOR3 pos, const float
 	// 文字の生成
 	pWord = new CTestWord;
 
-	// 優先順位の取得
-	int nPriority = pWord->GetPriority();
-
-	// 現在のオブジェクトの最大数
-	const int nNumAll = CObject::GetNumObject(nPriority);
-
-	// オブジェクトが最大数まであったら
-	if (nNumAll >= MAX_OBJECT && pWord != nullptr)
-	{
-		// 自分のポインタの解放
-		pWord->Release();
-
-		// nullにする
-		pWord = nullptr;
-
-		// オブジェクトを消す
-		return nullptr;
-	}
-
 	if (pWord == nullptr) return nullptr;
 
 	pWord->m_pos = pos;

@@ -21,22 +21,6 @@ class CObstacle;
 class CObstacleOwner;
 
 //***************************************************
-// 定数の名前空間
-//***************************************************
-namespace Const
-{
-	const D3DXVECTOR3 VEC3_NULL = { 0.0f,0.0f,0.0f };		// VECTOR3の初期化
-	const D3DXVECTOR2 VEC2_NULL = { 0.0f,0.0f };			// VECTOR2の初期化
-	const D3DXCOLOR WHITE = { 1.0f,1.0f,1.0f,1.0f };		// 色の初期カラー
-	constexpr int FRAME = 60;								// 一フレーム
-	constexpr int MAX_WORD = 5024;							// 最大の文字数
-	constexpr float MAX_GRABITY = 1.0f;						// 重力量
-	constexpr int MAX_OBJECT = 256;							// オブジェクトの最大数
-	constexpr int NUM_PRIORITY = 8;							// オブジェクトの優先順位の数
-
-}
-
-//***************************************************
 // オブジェクトクラスの定義
 //***************************************************
 class CObject

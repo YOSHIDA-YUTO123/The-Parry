@@ -23,7 +23,7 @@ namespace
 	constexpr float MAX_VIEW_TOP = 2.90f;	// カメラの制限(上)
 	constexpr float MAX_VIEW_BOTTOM = 0.1f; // カメラの制限(下)
 	constexpr float HEIGHT_OFFSET = 20.0f;	// カメラの高さのオフセット
-	constexpr float ROCKON_HEIGHT = 300.0f;	// ロックオンの時のカメラの高さ
+	constexpr float ROCKON_HEIGHT = 200.0f;	// ロックオンの時のカメラの高さ
 }
 
 //===================================================
@@ -269,6 +269,7 @@ void CCamera::MouseView(void)
 			m_rot.x -= Y;
 		}
 
+		// カーソルの位置の設定
 		SetCursorPos((long)SCREEN_WIDTH / (long)2.0f, (long)SCREEN_HEIGHT / (long)2.0f);
 
 		// カメラの視点の情報
@@ -294,7 +295,7 @@ void CCamera::MouseView(void)
 			m_rot.x -= Y;
 		}
 
-		SetCursorPos((long)SCREEN_WIDTH / (long)1.5f, (long)SCREEN_HEIGHT / (long)1.5f);
+		SetCursorPos((long)SCREEN_WIDTH / (long)2.0f, (long)SCREEN_HEIGHT / (long)2.0f);
 
 		// カメラの視点の情報
 		m_posR.x = m_posV.x + sinf(m_rot.x) * sinf(m_rot.y) * m_fDistance;
@@ -416,12 +417,12 @@ void CCamera::Rockon(D3DXVECTOR3 playerPos, D3DXVECTOR3 enemyPos)
 	m_posVDest = playerPos + dir;
 
 	// 目的の注視点に近づける
-	m_posR.x += ((m_posRDest.x - m_posR.x) * 0.07f);
-	m_posR.y += ((m_posRDest.y - m_posR.y) * 0.07f);
-	m_posR.z += ((m_posRDest.z - m_posR.z) * 0.07f);
+	m_posR.x += ((m_posRDest.x - m_posR.x) * 0.1f);
+	m_posR.y += ((m_posRDest.y - m_posR.y) * 0.1f);
+	m_posR.z += ((m_posRDest.z - m_posR.z) * 0.1f);
 
 	// 目的の視点に近づける
-	m_posV.x += ((m_posVDest.x - m_posV.x) * 0.07f);
-	m_posV.y += ((m_posVDest.y - m_posV.y) * 0.07f);
-	m_posV.z += ((m_posVDest.z - m_posV.z) * 0.07f);
+	m_posV.x += ((m_posVDest.x - m_posV.x) * 0.1f);
+	m_posV.y += ((m_posVDest.y - m_posV.y) * 0.1f);
+	m_posV.z += ((m_posVDest.z - m_posV.z) * 0.1f);
 }

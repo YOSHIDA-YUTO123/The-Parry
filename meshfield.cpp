@@ -56,25 +56,6 @@ CMeshField* CMeshField::Create(const D3DXVECTOR3 pos, const int nSegH, const int
 	// メッシュフィールドを生成
 	CMeshField* pMeshField = new CMeshField;
 
-	// 優先順位の取得
-	int nPriority = pMeshField->GetPriority();
-
-	// 現在のオブジェクトの最大数
-	const int nNumAll = CObject::GetNumObject(nPriority);
-
-	// オブジェクトが最大数まであったら
-	if (nNumAll >= MAX_OBJECT && pMeshField != nullptr)
-	{
-		// 自分のポインタの解放
-		pMeshField->Uninit();
-
-		// nullにする
-		pMeshField = nullptr;
-
-		// オブジェクトを消す
-		return nullptr;
-	}
-
 	if (pMeshField == nullptr) return nullptr;
 	
 	// 頂点数の設定

@@ -77,7 +77,7 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindow)
 	d3dpp.BackBufferCount = 1;										// バックバッファの数
 	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;						// バックバッファの切り替え(映像信号に同期)
 	d3dpp.EnableAutoDepthStencil = TRUE;
-	d3dpp.AutoDepthStencilFormat = D3DFMT_D16;						// デプスバッファとして16bitを使う
+	d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;					// デプスバッファとして24bit,ステンシルバッファ8bit2
 	d3dpp.Windowed = bWindow;										// ウインドウモード
 	d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;		// リフレッシュレート
 	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;		// インターバル
@@ -328,7 +328,7 @@ void CRenderer::Draw(const int fps)
 	// 画面クリア(バックバッファ&Zバッファのクリア)
 	m_pD3DDevice->Clear(0,
 		NULL,
-		(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
+		(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL),
 		D3DCOLOR_RGBA(0, 0, 0, 255), 1.0f, 0);
 
 	CCamera* pCamera = CManager::GetCamera();
@@ -440,9 +440,6 @@ void CRenderer::Draw(const int fps)
 		CDebugProc::Print("FPS = %d\n", fps);
 
 		CDebugProc::Print("デバッグ 非表示      : [ F2 ]\n");
-
-		// 文字の表示
-		CDebugProc::Print("オブジェクトの総数 : 最大数 : [ %d ]\n",MAX_OBJECT);
 
 		for (int nCntPriority = 0; nCntPriority < NUM_PRIORITY; nCntPriority++)
 		{

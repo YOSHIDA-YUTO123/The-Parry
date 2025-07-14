@@ -153,24 +153,6 @@ CEffect3D* CEffect3D::Create(const D3DXVECTOR3 pos, const float fRadius, const D
 	// 3Dエフェクトの生成
 	pEffect = new CEffect3D;
 
-	// 優先順位の取得
-	int nPriority = pEffect->GetPriority();
-
-	// 現在のオブジェクトの最大数
-	const int nNumAll = CObject::GetNumObject(nPriority);
-
-	// オブジェクトが最大数まであったら
-	if (nNumAll >= MAX_OBJECT && pEffect != nullptr)
-	{
-		// 自分自身の破棄
-		pEffect->Uninit();
-
-		// nullにしておく
-		pEffect = nullptr;
-
-		return nullptr;
-	}
-
 	if (pEffect == nullptr) return nullptr;
 
 	pEffect->Init();

@@ -200,6 +200,7 @@ void CPlayerAvoid::Update(void)
 	if (pMotion->FinishMotion())
 	{
 		m_pPlayer->ChangeState(make_shared<CPlayerNormal>());
+
 		pMotion->SetMotion(m_pPlayer->TYPE_NEUTRAL, true, 5);
 
 		return;

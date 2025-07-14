@@ -315,11 +315,6 @@ void CEnemy::Update(void)
 			// インパクトの位置の取得
 			D3DXVECTOR3 impactPos = pImpact->GetPosition();
 			
-			//// 吹き飛び処理
-			//BlowOff(impactPos, 150.0f, 10.0f);
-
-			m_pMovement->BlowOff(impactPos, 50.0f, 2.0f);
-
 			// 状態の設定
 			ChangeState(make_shared<CEnemyDamage>());
 
@@ -348,7 +343,7 @@ void CEnemy::Update(void)
 	}
 
 	// パリィモーションのパンチになったら
-	if (pPlayerMotion->IsEventFrame(11, 11,pPlayer->TYPE_PARRY))
+	if (pPlayerMotion->IsEventFrame(11, 11,pPlayer->TYPE_PARRY) && m_pMotion->GetBlendType() != MOTION_DAMAGE)
 	{
 		// プレイヤーの右手の位置
 		D3DXVECTOR3 playerHandR = pPlayer->GetModelPos(5);
@@ -367,10 +362,7 @@ void CEnemy::Update(void)
 			CSlow* pSlow = CManager::GetSlow();
 
 			// スローモーション
-			pSlow->Start(540, 12);
-
-			//// アングルの設定
-			//pCamera->SetAngle(chestpos);
+			pSlow->Start(60, 12);
 
 			// パーティクルの生成
 			CParticle3D::Create(playerHandR, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f), 240, 20.0f, 50, 120, 15.0f);
@@ -382,7 +374,7 @@ void CEnemy::Update(void)
 			pPlayer->SetAngle(fAngle + D3DX_PI);
 
 			// 吹き飛び処理
-			m_pMovement->BlowOff(PlayerPos, 150.0f, 5.0f);
+			m_pMovement->BlowOff(PlayerPos, 250.0f, 5.0f);
 
 			// インパクトの設定
 			CMeshCircle::Confing Circleconfig = { 35.0f,10.0f,0.0f,120.0f,120,false };
@@ -470,9 +462,7 @@ void CEnemy::Update(void)
 	// カメラがnullじゃないなら
 	if (pCamera != nullptr)
 	{
-		pos.y += ROCKON_HEIGHT;
-
-		pCamera->Rockon(PlayerPos, pos);
+		pCamera->Rockon(PlayerPos, chestpos);
 	}
 }
 

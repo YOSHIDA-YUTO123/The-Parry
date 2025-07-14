@@ -22,7 +22,7 @@ using MOTION = CEnemy::MOTION;
 
 constexpr int NEXT_STAE_TIME = 180; // 次の行動に移るまでの時間
 constexpr int START_IMPACT = 55;	// インパクト攻撃の開始確率
-constexpr int SPIN_TIME = 100;		// 回転モーションの時間
+constexpr int SPIN_TIME = 60;		// 回転モーションの時間
 constexpr int ABSSPIN_TIME = 30;	// 絶対回転する時間
 
 //===================================================
@@ -221,7 +221,17 @@ void CEnemyAttackSmash::Update(void)
 		{
 			// パリィモーションの再生
 			pPlayerMotion->SetMotion(pPlayer->TYPE_PARRY, true, 2);
+
+			// ヒット状態にする
+			m_pEnemy->ChangeState(make_shared<CEnemyHit>());
 		}
+		//// 回避だったら
+		//else if (m_pEnemy->CollisionWepon() && pPlayerMotion->GetBlendType() == pPlayer->TYPE_AVOID)
+		//{
+		//	CSlow *pSlow = CManager::GetSlow();
+
+		//	pSlow->Start(60,4);
+		//}
 		// 範囲内で視界に入っていない、カウンターしていない
 		else if (m_pEnemy->CollisionWepon() && bParry == false)
 		{
@@ -281,6 +291,16 @@ void CEnemyDamage::Update(void)
 	// ダメージだったら
 	pMotion->SetMotion(MOTION::MOTION_DAMAGE, true, 2);
 
+	if (pMotion->IsEventFrame(1, 10, MOTION::MOTION_DAMAGE))
+	{
+		// プレイヤーの取得
+		CPlayer* pPlayer = CManager::GetPlayer();
+
+		D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
+
+		// 吹き飛び処理
+		m_pEnemy->GetMovement()->BlowOff(PlayerPos, 50.0f, 5.0f);
+	}
 	// モーションを最後まで行ったら
 	if (pMotion->IsFinishEndBlend())
 	{
@@ -473,6 +493,16 @@ void CEnemySpin::Update(void)
 			// パリィモーションの再生
 			pPlayerMotion->SetMotion(pPlayer->TYPE_PARRY, true, 2);
 		}
+		else if (m_pEnemy->CollisionWepon() && pPlayerMotion->GetBlendType() == pPlayer->TYPE_AVOID)
+		{
+			// スローモーションの取得
+			CSlow* pSlow = CManager::GetSlow();
+
+			// スローモーション
+			pSlow->Start(60, 12);
+
+			m_nTime = 120;
+		}
 		// 武器との当たり判定
 		else if (m_pEnemy->CollisionWepon() == true && pPlayerMotion->GetBlendType() != pPlayer->TYPE_PARRY)
 		{
@@ -533,7 +563,7 @@ CEnemyBackStep::~CEnemyBackStep()
 //===================================================
 void CEnemyBackStep::Init(void)
 {
-	m_pEnemy->GetMovement()->Jump(26.0f);
+	m_pEnemy->GetMovement()->Jump(24.0f);
 
 	// モーションクラスの取得
 	CMotion* pMotion = m_pEnemy->GetMotion();
@@ -548,7 +578,7 @@ void CEnemyBackStep::Init(void)
 void CEnemyBackStep::Update(void)
 {
 
-	m_pEnemy->GetMovement()->SetMoveDir(0.0f,30.0f);
+	m_pEnemy->GetMovement()->SetMoveDir(0.0f,20.0f);
 }
 
 //===================================================
@@ -579,5 +609,45 @@ void CEnemyLanding::Update(void)
 	if (pMotion->IsFinishEndBlend())
 	{
 		m_pEnemy->ChangeState(make_shared<CEnemyIdle>(10));
+	}
+}
+
+//===================================================
+// コンストラクタ(ヒット)
+//===================================================
+CEnemyHit::CEnemyHit()
+{
+}
+
+//===================================================
+// デストラクタ(ヒット)
+//===================================================
+CEnemyHit::~CEnemyHit()
+{
+}
+
+//===================================================
+// 初期化(ヒット)
+//===================================================
+void CEnemyHit::Init(void)
+{
+	// モーションクラスの取得
+	CMotion* pMotion = m_pEnemy->GetMotion();
+
+	// モーションの設定
+	pMotion->SetMotion(m_pEnemy->MOTION_HIT, true, 10);
+}
+
+//===================================================
+// 更新処理(ヒット)
+//===================================================
+void CEnemyHit::Update(void)
+{
+	// モーションクラスの取得
+	CMotion* pMotion = m_pEnemy->GetMotion();
+
+	if (pMotion->FinishMotion())
+	{
+		m_pEnemy->ChangeState(make_shared<CEnemyBackStep>());
 	}
 }
