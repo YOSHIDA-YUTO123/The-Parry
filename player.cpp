@@ -28,6 +28,7 @@
 #include"Obstacle.h"
 #include"statebase.h"
 #include"playerstate.h"
+#include"shadowS.h"
 
 using namespace math; // 名前空間mathを使用
 using namespace std;  // 名前空間をstdを使用する
@@ -45,7 +46,7 @@ constexpr int PARRY_TIME = 25;				// パリィの有効時間
 //===================================================
 // コンストラクタ
 //===================================================
-CPlayer::CPlayer() : CObject(3)
+CPlayer::CPlayer(int nPriority) : CObject(nPriority)
 {
 	m_pMove = nullptr;
 	m_bJump = true;
@@ -54,6 +55,7 @@ CPlayer::CPlayer() : CObject(3)
 	m_bDash = false;
 	m_posOld = VEC3_NULL;
 	m_pMachine = nullptr;
+	m_pShadowS = nullptr;
 }
 
 //===================================================
@@ -89,8 +91,8 @@ HRESULT CPlayer::Init(void)
 	// スコアの生成
 	m_pScore = (CScoreLerper*)CScore::Create(CScore::TYPE_LERPER,D3DXVECTOR3(1150.0f, 50.0f, 0.0f), 180.0f, 30.0f);
 
-	// 影の生成
-	m_pShadow = CShadow::Create(VEC3_NULL, 50.0f, 50.0f, WHITE);
+	//// 影の生成
+	//m_pShadow = CShadow::Create(VEC3_NULL, 50.0f, 50.0f, WHITE);
 
 	// 移動クラスの生成
 	m_pMove = new CVelocity;
@@ -100,6 +102,10 @@ HRESULT CPlayer::Init(void)
 
 	// 初期状態を設定
 	ChangeState(make_shared<CPlayerNormal>());
+
+	// 影の生成
+	m_pShadowS = CShadowS::Create(pos);
+
 	return S_OK;
 }
 
@@ -135,11 +141,21 @@ void CPlayer::Uninit(void)
 		m_pMove = nullptr;
 	}
 
+	// 影の破棄
+	if (m_pShadowS != nullptr)
+	{
+		m_pShadowS->Uninit();
+		m_pShadowS = nullptr;
+	}
+
 	// モーションの終了処理
 	m_pMotion->Uninit();
 
-	// 影クラスの破棄
-	m_pShadow->Uninit();
+	if (m_pShadow != nullptr)
+	{
+		// 影クラスの破棄
+		m_pShadow->Uninit();
+	}
 
 	// キャラクターの破棄
 	m_pCharacter3D->Uninit();
@@ -320,6 +336,11 @@ void CPlayer::Update(void)
 
 	// 重力を加算
 	m_pMove->Gravity(-MAX_GRABITY);
+
+	if (m_pShadowS != nullptr)
+	{
+		m_pShadowS->UpdatePos(pos);
+	}
 
 	// 影の更新処理
 	if (m_pShadow != nullptr)

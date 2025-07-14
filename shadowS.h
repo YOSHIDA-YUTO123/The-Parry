@@ -23,7 +23,7 @@
 class CShadowS : public CObjectX
 {
 public:
-	CShadowS();
+	CShadowS(int nPriority = 3);
 	~CShadowS();
 	static CShadowS* Create(const D3DXVECTOR3 pos);
 
@@ -31,6 +31,7 @@ public:
 	void Uninit(void) override;
 	void Update(void) override;
 	void Draw(void) override;
+	void UpdatePos(const D3DXVECTOR3 pos) { SetPosition(pos); }
 private:
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuffer; // 頂点バッファへのポインタ
 };

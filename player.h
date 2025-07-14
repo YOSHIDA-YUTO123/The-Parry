@@ -37,6 +37,7 @@ class CColliderSphere;
 class CColliderFOV;
 class CStateMachine;
 class CPlayerState;
+class CShadowS;
 
 //***************************************************
 // プレイヤークラスの定義
@@ -61,7 +62,7 @@ public:
 		TYPE_MAX
 	}TYPE;
 
-	CPlayer();
+	CPlayer(int nPriority = 4);
 	~CPlayer();
 
 	static CPlayer* Create(const D3DXVECTOR3 pos = Const::VEC3_NULL, const D3DXVECTOR3 rot = Const::VEC3_NULL);
@@ -87,6 +88,7 @@ public:
 	CMotion* GetMotion(void) { return m_pMotion.get(); } // モーションの取得
 
 private:
+	CShadowS* m_pShadowS; // 影(ステンシル)
 	std::unique_ptr<CMotion> m_pMotion;					// モーションのクラスへのポインタ
 	std::unique_ptr<CStateMachine> m_pMachine;			// 状態の制御クラス
 	std::unique_ptr<CCharacter3D> m_pCharacter3D;		// キャラクタークラス
