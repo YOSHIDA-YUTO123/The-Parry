@@ -11,6 +11,7 @@
 #include "object2D.h"
 #include"renderer.h"
 #include "manager.h"
+#include"textureManager.h"
 
 using namespace Const;							// –¼‘O‹óŠÔConst‚ğg—p‚·‚é
 

@@ -14,6 +14,10 @@
 #include"renderer.h"
 #include "player.h"
 #include"math.h"
+#include"meshfield.h"
+#include"cylinder.h"
+#include"input.h"
+#include "game.h"
 
 using namespace Const; // 名前空間Constを使用
 
@@ -124,10 +128,10 @@ void CCamera::Update(void)
 #endif
 
 	// メッシュシリンダーの取得
-	CMeshCylinder* pCylinder = CManager::GetCylinder();
+	CMeshCylinder* pCylinder = CGame::GetCylinder();
 
 	// メッシュフィールドの取得
-	CMeshField* pField = CManager::GetMeshField();
+	CMeshField* pField = CGame::GetField();
 
 	float fHeight = 0.0f;
 
@@ -350,7 +354,7 @@ void CCamera::SetTracking(const D3DXVECTOR3 posRDest, const float fSpeed, const 
 	if (m_state != STATE_TRACKING) return;
 
 	// プレイヤーの取得
-	CPlayer* pPlayer = CManager::GetPlayer();
+	CPlayer* pPlayer = CGame::GetPlayer();
 
 	D3DXVECTOR3 pos = pPlayer->GetPos();
 

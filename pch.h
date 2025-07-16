@@ -78,15 +78,4 @@ typedef struct
 	D3DXVECTOR2 tex;			// テクスチャ座標
 }VERTEX_3D;
 
-typedef enum
-{
-	MODE_TITLE = 0,					// タイトル画面
-	MODE_TUTORIAL,					// チュートリアル画面
-	MODE_GAME,						// ゲーム画面
-	MODE_RESULT,					// リザルト画面
-	MODE_RANKING,					// ランキング画面
-	MODE_MAX
-}MODE;
-
-
 #endif

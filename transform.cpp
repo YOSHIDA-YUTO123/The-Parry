@@ -12,6 +12,7 @@
 #include"math.h"
 #include"object.h"
 #include"manager.h"
+#include"slow.h"
 
 using namespace Const;							// –¼‘O‹óŠÔConst‚ðŽg—p‚·‚é
 

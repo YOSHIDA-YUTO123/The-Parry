@@ -12,6 +12,7 @@
 #include "meshfield.h"
 #include "manager.h"
 #include"math.h"
+#include "game.h"
 
 using namespace Const; // 名前空間Constを使用
 
@@ -128,7 +129,7 @@ void CRubble::Uninit(void)
 //===================================================
 void CRubble::Update(void)
 {
-	CMeshField* pMesh = CManager::GetMeshField();
+	CMeshField* pMesh = CGame::GetField();
 
 	//// 更新処理
 	//m_pObjectX->Update();
@@ -182,8 +183,6 @@ void CRubble::Update(void)
 	// 影の更新処理
 	if (m_pShadow != nullptr)
 	{
-		pMesh = CManager::GetMeshField();
-
 		D3DXVECTOR3 FieldNor = pMesh->GetNor(); 				// 地面の法線ベクトルの取得
 		D3DXVECTOR3 PlayerRay = D3DXVECTOR3(0.0f, 1.0f, 0.0f);  // 上方向ベクトルの作成
 

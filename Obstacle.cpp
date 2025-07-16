@@ -15,6 +15,10 @@
 #include "obstaclemanager.h"
 #include "effect.h"
 #include"Collider.h"
+#include"meshfield.h"
+#include"math.h"
+#include "game.h"
+
 
 using namespace Const;							// 名前空間Constを使用する
 using namespace std;							// 名前空間stdを使用する
@@ -64,6 +68,16 @@ void CObstacle::Uninit(void)
 	// クリア
 	m_pObjectX = nullptr;
 
+	// 障害物マネージャーのインスタンスの取得
+	CObstacleManager* pObstacleManager = CObstacleManager::GetInstance();
+
+	// マネージャーの終了処理
+	if (pObstacleManager != nullptr)
+	{
+		pObstacleManager->Uninit();
+		pObstacleManager = nullptr;
+	}
+
 	// 自分の破棄
 	CObject::Release();
 }
@@ -74,7 +88,7 @@ void CObstacle::Uninit(void)
 void CObstacle::Update(void)
 {
 	// フィールドの取得
-	CMeshField* pField = CManager::GetMeshField();
+	CMeshField* pField = CGame::GetField();
 
 	// 位置の取得
 	D3DXVECTOR3 pos = m_pObjectX->GetPosition();
@@ -86,7 +100,7 @@ void CObstacle::Update(void)
 	float fHeight = 0.0f;
 
 	// 地面と当たったら
-	if (pField->Collision(pos, &fHeight))
+	if (pField != nullptr && pField->Collision(pos, &fHeight))
 	{
 		// 地面の高さに合わせる
 		pos.y = fHeight;
@@ -97,11 +111,6 @@ void CObstacle::Update(void)
 
 	// いちの設定
 	m_pObjectX->SetPosition(pos);
-
-	if (CManager::GetInputKeyboard()->GetPress(DIK_G))
-	{
-		m_pObjectX->GetRotaition()->Set(D3DXVECTOR3(0.0f,D3DX_PI * 0.5f,0.0f));
-	}
 }
 
 //==============================================
@@ -304,16 +313,6 @@ HRESULT CSpikeTrap::Init(void)
 //==============================================
 void CSpikeTrap::Uninit(void)
 {
-	// 障害物マネージャーのインスタンスの取得
-	CObstacleManager* pObstacleManager = CObstacleManager::GetInstance();
-
-	// マネージャーの終了処理
-	if (pObstacleManager != nullptr)
-	{
-		pObstacleManager->Uninit();
-		pObstacleManager = nullptr;
-	}
-
 	// 終了処理
 	CObstacle::Uninit();
 }

@@ -11,6 +11,7 @@
 #include "mesh.h"
 #include "manager.h"
 #include "renderer.h"
+#include"textureManager.h"
 
 using namespace Const;							// –¼‘O‹óŠÔConst‚ğg—p‚·‚é
 

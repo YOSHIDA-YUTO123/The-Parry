@@ -14,6 +14,7 @@
 #include "manager.h"
 #include"renderer.h"
 #include<stdio.h>
+#include"textureManager.h"
 
 using namespace Const;							// –¼‘O‹óŠÔConst‚ğg—p‚·‚é
 

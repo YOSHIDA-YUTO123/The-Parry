@@ -12,6 +12,8 @@
 #include"object.h"
 #include "object2D.h"
 #include "manager.h"
+#include"input.h"
+#include"camera.h"
 
 //***************************************************
 // Ã“Iƒƒ“ƒo•Ï”‚ÌéŒ¾
@@ -152,7 +154,7 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindow)
 	m_pD3DDevice->CreateDepthStencilSurface(
 		SCREEN_WIDTH,
 		SCREEN_HEIGHT,
-		D3DFMT_D16,
+		D3DFMT_D24S8,
 		D3DMULTISAMPLE_NONE,
 		0,
 		TRUE,

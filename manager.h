@@ -15,19 +15,21 @@
 // インクルードファイル
 //***************************************************
 #include "main.h"
-#include "input.h"
-#include "sound.h"
-#include "textureManager.h"
-#include"camera.h"
-#include"light.h"
-#include"modelManager.h"
-#include"player.h"
-#include"meshfield.h"
-#include"slow.h"
-#include "cylinder.h"
 #include<memory>
+#include"scene.h"
 
 class CCollisionManager;
+class CRenderer;
+class CScene;
+class CInputKeyboard;
+class CInputJoypad;
+class CInputMouse;
+class CSound;
+class CTextureManager;
+class CCamera;
+class CLight;
+class CModelManager;
+class CSlow;
 
 //***************************************************
 // マネージャークラスの定義
@@ -54,13 +56,12 @@ public:
 	static CCamera* GetCamera(void);
 	static CLight* GetLight(void);
 	static CModelManager* GetModel(void);
-	static CPlayer* GetPlayer(void);
 	static void EnablePause(void);
 	static void SetPause(void) { m_bPause = true; }
 	static bool GetPause(void) { return m_bPause; }
-	static CMeshField* GetMeshField(void);
 	static CSlow* GetSlow(void) { return m_pSlow; }
-	static CMeshCylinder* GetCylinder(void) { return m_pCylinder; }
+	static void SetMode(CScene *pNewScene);
+	static CScene::MODE GetMode(void) { return m_pScene->GetMode(); }
 private:
 	static CRenderer* m_pRenderer;				// レンダラーのポインタ
 	static CInputKeyboard* m_pInputKeyboard;	// キーボードのポインタ
@@ -74,10 +75,8 @@ private:
 	static CCamera* m_pCamera;					// カメラのポインタ
 	static CLight* m_pLight;					// ライトへのポインタ
 	static CModelManager* m_pModel;				// モデルクラスへのポインタ
-	static CPlayer* m_pPlayer;					// プレイヤークラスへのポインタ
 	static bool m_bPause;						// ポーズ
-	static CMeshField* m_pMeshField;			// メッシュフィールドへのポインタ
 	static CSlow* m_pSlow;						// スローモーションクラスへのポインタ
-	static CMeshCylinder* m_pCylinder;			// シリンダーのクラスへのポインタ
+	static CScene* m_pScene;					// シーンのクラスへのポインタ
 };
 #endif

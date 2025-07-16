@@ -85,7 +85,7 @@ public:
 private:
 	void SetParent(const int nCnt);
 	void Load(void);
-
+	
 	std::unique_ptr<CColliderAABB> m_pAABB;				// AABBのコライダー
 	std::unique_ptr<CStateMachine> m_pMachine;
 	std::shared_ptr<CCharacter3D> m_pCharactor;			// キャラクタークラス

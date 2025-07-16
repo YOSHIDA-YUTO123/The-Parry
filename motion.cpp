@@ -14,6 +14,7 @@
 #include"math.h"
 #include "debugproc.h"
 #include "manager.h"
+#include"slow.h"
 
 using namespace std; // 名前空間stdを使用
 using namespace Const;							// 名前空間Constを使用する

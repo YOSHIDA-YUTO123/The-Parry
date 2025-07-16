@@ -12,6 +12,7 @@
 #include "object2D.h"
 #include"manager.h"
 #include"renderer.h"
+#include"textureManager.h"
 
 //************************************************
 // Ã“Iƒƒ“ƒo•Ï”éŒ¾

@@ -28,6 +28,12 @@
 #include"Obstacle.h"
 #include"Collider.h"
 #include "playerstate.h"
+#include"input.h"
+#include"meshfield.h"
+#include"cylinder.h"
+#include"slow.h"
+#include"camera.h"
+#include "game.h"
 
 //***************************************************
 // 定数定義
@@ -187,7 +193,7 @@ void CEnemy::Uninit(void)
 void CEnemy::Update(void)
 {
 	// プレイヤーの取得
-	CPlayer* pPlayer = CManager::GetPlayer();
+	CPlayer* pPlayer = CGame::GetPlayer();
 
 	// カメラの取得処理
 	CCamera* pCamera = CManager::GetCamera();
@@ -245,7 +251,7 @@ void CEnemy::Update(void)
 	pos += move;
 
 	// メッシュフィールドの取得
-	CMeshField* pMesh = CManager::GetMeshField();
+	CMeshField* pMesh = CGame::GetField();
 
 	float fHeight = 0.0f;
 
@@ -268,7 +274,7 @@ void CEnemy::Update(void)
 	}
 
 	// シリンダーの取得
-	CMeshCylinder* pCylinder = CManager::GetCylinder();
+	CMeshCylinder* pCylinder = CGame::GetCylinder();
 
 	// シリンダーの当たり判定
 	if (pCylinder != nullptr)
@@ -282,8 +288,6 @@ void CEnemy::Update(void)
 
 	if (m_pShadow != nullptr)
 	{
-		pMesh = CManager::GetMeshField();
-
 		D3DXVECTOR3 FieldNor = pMesh->GetNor(); 		   // 地面の法線ベクトルの取得
 		D3DXVECTOR3 VecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);  // 上方向ベクトルの作成
 
@@ -506,7 +510,7 @@ void CEnemy::Draw(void)
 bool CEnemy::CollisionWepon(void)
 {
 	// プレイヤーの取得
-	CPlayer* pPlayer = CManager::GetPlayer();
+	CPlayer* pPlayer = CGame::GetPlayer();
 
 	// 武器の先の座標
 	D3DXVECTOR3 WeponTop = GetPositionFromMatrix(m_weponMatrix);
@@ -563,7 +567,7 @@ bool CEnemy::CollisionWepon(void)
 void CEnemy::ChasePlayer(float chaseScal, const float speedScal)
 {
 	// プレイヤーの取得
-	CPlayer* pPlayer = CManager::GetPlayer();
+	CPlayer* pPlayer = CGame::GetPlayer();
 
 	// プレイヤーの位置の取得
 	D3DXVECTOR3 playerPos = pPlayer->GetPos();
@@ -624,7 +628,7 @@ void CEnemy::ChasePlayer(float chaseScal, const float speedScal)
 void CEnemy::AngleToPlayer(void)
 {
 	// プレイヤーの取得
-	CPlayer* pPlayer = CManager::GetPlayer();
+	CPlayer* pPlayer = CGame::GetPlayer();
 
 	// プレイヤーの位置
 	D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
@@ -645,7 +649,7 @@ void CEnemy::AngleToPlayer(void)
 bool CEnemy::CheckDistane(const float fRadius)
 {
 	// プレイヤーの取得
-	CPlayer* pPlayer = CManager::GetPlayer();
+	CPlayer* pPlayer = CGame::GetPlayer();
 
 	// プレイヤーの位置の取得
 	D3DXVECTOR3 playerpos = pPlayer->GetPos();

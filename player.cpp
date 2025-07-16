@@ -29,6 +29,10 @@
 #include"statebase.h"
 #include"playerstate.h"
 #include"shadowS.h"
+#include"meshfield.h"
+#include"camera.h"
+#include"slow.h"
+#include "game.h"
 
 using namespace math; // 名前空間mathを使用
 using namespace std;  // 名前空間をstdを使用する
@@ -175,7 +179,7 @@ void CPlayer::Update(void)
 	CInputJoypad* pJoypad = CManager::GetInputJoypad();
 
 	// メッシュフィールドの取得
-	CMeshField* pMesh = CManager::GetMeshField();
+	CMeshField* pMesh = CGame::GetField();
 
 	// カメラの取得処理
 	CCamera* pCamera = CManager::GetCamera();
@@ -237,7 +241,7 @@ void CPlayer::Update(void)
 	float fHeight = 0.0f;
 
 	// メッシュフィールドの当たり判定
-	if (pMesh->Collision(pos,&fHeight))
+	if (pMesh != nullptr && pMesh->Collision(pos, &fHeight))
 	{
 		// 高さの設定
 		pos.y = fHeight;
@@ -264,7 +268,7 @@ void CPlayer::Update(void)
 	}
 
 	// メッシュシリンダーの取得
-	CMeshCylinder* pCylinder = CManager::GetCylinder();
+	CMeshCylinder* pCylinder = CGame::GetCylinder();
 
 	// シリンダーの判定
 	if (pCylinder != nullptr && pCylinder->Collision(&pos))
@@ -276,7 +280,12 @@ void CPlayer::Update(void)
 	CollisionObstacle(&pos);
 
 	// インパクトの取得
-	CMeshFieldImpact* pImpact = pMesh->GetImpact();
+	CMeshFieldImpact* pImpact = nullptr;
+	
+	if (pMesh != nullptr)
+	{
+		pImpact = pMesh->GetImpact();
+	}
 
 	if (pImpact != nullptr)
 	{

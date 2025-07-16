@@ -16,6 +16,8 @@
 #include "manager.h"
 #include "playerstate.h"
 
+#include"slow.h"
+#include "game.h"
 using namespace std;  // 名前空間stdを使用
 using namespace math; // 名前空間sを使用
 using MOTION = CEnemy::MOTION;
@@ -196,7 +198,7 @@ void CEnemyAttackSmash::Update(void)
 	pMotion->SetMotion(MOTION::MOTION_SMASH, true, 20);
 
 	// プレイヤーの取得
-	CPlayer* pPlayer = CManager::GetPlayer();
+	CPlayer* pPlayer = CGame::GetPlayer();
 
 	// プレイヤーが使われていないなら
 	if (pPlayer == nullptr)
@@ -294,7 +296,7 @@ void CEnemyDamage::Update(void)
 	if (pMotion->IsEventFrame(1, 10, MOTION::MOTION_DAMAGE))
 	{
 		// プレイヤーの取得
-		CPlayer* pPlayer = CManager::GetPlayer();
+		CPlayer* pPlayer = CGame::GetPlayer();
 
 		D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
 
@@ -462,7 +464,7 @@ void CEnemySpin::Update(void)
 {
 	// モーションクラスの取得
 	CMotion* pMotion = m_pEnemy->GetMotion();
-	CPlayer* pPlayer = CManager::GetPlayer();
+	CPlayer* pPlayer = CGame::GetPlayer();
 	CMotion* pPlayerMotion = pPlayer->GetMotion();
 
 	// 向いている方向に移動する

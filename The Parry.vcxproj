@@ -165,6 +165,8 @@
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="EnemyState.cpp" />
     <ClCompile Include="explosion.cpp" />
+    <ClCompile Include="fade.cpp" />
+    <ClCompile Include="game.cpp" />
     <ClCompile Include="impact.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="light.cpp" />
@@ -195,6 +197,8 @@
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerstate.cpp" />
     <ClCompile Include="renderer.cpp" />
+    <ClCompile Include="result.cpp" />
+    <ClCompile Include="scene.cpp" />
     <ClCompile Include="score.cpp" />
     <ClCompile Include="shadow.cpp" />
     <ClCompile Include="shadowS.cpp" />
@@ -203,6 +207,7 @@
     <ClCompile Include="statebase.cpp" />
     <ClCompile Include="testword.cpp" />
     <ClCompile Include="textureManager.cpp" />
+    <ClCompile Include="title.cpp" />
     <ClCompile Include="transform.cpp" />
     <ClCompile Include="Wave.cpp" />
     <ClCompile Include="word.cpp" />
@@ -222,6 +227,8 @@
     <ClInclude Include="enemy.h" />
     <ClInclude Include="EnemyState.h" />
     <ClInclude Include="explosion.h" />
+    <ClInclude Include="fade.h" />
+    <ClInclude Include="game.h" />
     <ClInclude Include="impact.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="light.h" />
@@ -247,6 +254,8 @@
     <ClInclude Include="player.h" />
     <ClInclude Include="playerstate.h" />
     <ClInclude Include="renderer.h" />
+    <ClInclude Include="result.h" />
+    <ClInclude Include="scene.h" />
     <ClInclude Include="score.h" />
     <ClInclude Include="shadow.h" />
     <ClInclude Include="shadowS.h" />
@@ -255,6 +264,7 @@
     <ClInclude Include="statebase.h" />
     <ClInclude Include="testword.h" />
     <ClInclude Include="textureManager.h" />
+    <ClInclude Include="title.h" />
     <ClInclude Include="transform.h" />
     <ClInclude Include="Wave.h" />
     <ClInclude Include="word.h" />

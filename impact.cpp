@@ -11,6 +11,9 @@
 #include "impact.h"
 #include "manager.h"
 #include "renderer.h"
+#include"slow.h"
+#include"meshfield.h"
+#include "game.h"
 
 using namespace Const;							// 名前空間Constを使用する
 
@@ -120,7 +123,7 @@ void CMeshCircle::Update(void)
 	m_Config.fOutRadius += m_Config.fSpeed * fSlowLevel;
 
 	// メッシュフィールドの取得
-	CMeshField* pMesh = CManager::GetMeshField();
+	CMeshField* pMesh = CGame::GetField();
 
 	// 頂点のy座標
 	float fHeight = 0.0f;

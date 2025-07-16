@@ -12,6 +12,7 @@
 #include "manager.h"
 #include"renderer.h"
 #include"math.h"
+#include"textureManager.h"
 
 using namespace math; // 名前空間mathを使用
 using namespace std;  // 名前空間stdを使用
