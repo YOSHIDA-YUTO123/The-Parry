@@ -48,6 +48,9 @@ public:
 	void Update(void);
 	void Draw(void);
 
+	D3DXVECTOR3 GetPosition(void) const { return m_pos; }
+	void SetPosition(const D3DXVECTOR3 pos) { m_pos = pos; }
+	
 	void SetSize(const float fWidth, const float fHeight);
 	void SetSize(const float leftWidth,const float rightWdth,const float topHeight,const float buttom);
 	void SetOffsetVtx(const D3DXCOLOR col = Const::WHITE, const int nPosX = 1, const int nPosY = 1);
@@ -57,9 +60,9 @@ public:
 	void SetTextureID(const char* pTextureName = NULL);
 private:
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuffer;	// 頂点へのポインタ
-	CPosition *m_pPos;	// 位置
+	D3DXVECTOR3 m_pos;	// 位置
 	CRotation *m_pRot;	// 向き
-	CSize2D *m_pSize;	// 大きさ
+	D3DXVECTOR2 m_Size;	// 大きさ
 	float m_fAngle;							// 角度
 	float m_Length;							// 長さ
 	int m_nTextureIdx;						// テクスチャのインデックス

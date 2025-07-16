@@ -27,6 +27,7 @@
 #include"scene.h"
 #include"object.h"
 #include"title.h"
+#include "fade.h"
 
 using namespace Const;			// 名前空間Constを使用する
 using namespace std;			// 名前空間stdを使用する
@@ -373,7 +374,6 @@ void CManager::Update(void)
 	{
 		m_pRenderer->offWireFrame();
 	}
-
 }
 //===================================================
 // 描画処理
@@ -534,6 +534,8 @@ void CManager::SetMode(CScene* pNewScene)
 	{
 		// 新しいシーンを設定
 		m_pScene = pNewScene;
+
+		m_pCamera->Init();
 
 		// シーンの初期化処理
 		m_pScene->Init();

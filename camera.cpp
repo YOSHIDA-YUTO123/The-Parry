@@ -135,16 +135,23 @@ void CCamera::Update(void)
 
 	float fHeight = 0.0f;
 
-	if (pField != nullptr && pField->Collision(m_posV, &fHeight))
+	if (pField != nullptr)
 	{
-		// 高さを設定
-		m_posV.y = fHeight + HEIGHT_OFFSET;
+		// フィールドの当たり判定
+		if (pField->Collision(m_posV, &fHeight))
+		{
+			// 高さを設定
+			m_posV.y = fHeight + HEIGHT_OFFSET;
+		}
 	}
 
 	// シリンダーの当たり判定
-	if (pCylinder != nullptr && pCylinder->Collision(&m_posV))
+	if (pCylinder != nullptr)
 	{
+		if (pCylinder->Collision(&m_posV))
+		{
 
+		}
 	}
 
 	// 角度の正規化

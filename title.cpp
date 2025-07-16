@@ -13,6 +13,7 @@
 #include"manager.h"
 #include"input.h"
 #include"game.h"
+#include"fade.h"
 
 using namespace Const; // –¼‘O‹óŠÔConst‚ğg—p
 

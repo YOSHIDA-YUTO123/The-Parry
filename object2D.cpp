@@ -20,13 +20,16 @@ using namespace Const;							// 名前空間Constを使用する
 //===================================================
 CObject2D::CObject2D(int nPriority) : CObject(nPriority)
 {
-	m_pPos = nullptr;
+	m_pos = VEC3_NULL;
+	m_Size = VEC2_NULL;
+
 	m_pRot = nullptr;
-	m_pSize = nullptr;
 
 	m_pVtxBuffer = NULL;
 	m_fAngle = 0.0f;
 	m_Length = 0.0f;
+
+	m_nTextureIdx = -1;
 }
 //===================================================
 // デストラクタ
@@ -43,9 +46,7 @@ HRESULT CObject2D::Init(void)
 	m_fAngle = 0.0f;
 	m_Length = 0.0f;
 
-	m_pPos = new CPosition;
 	m_pRot = new CRotation;
-	m_pSize = new CSize2D;
 
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
@@ -75,25 +76,11 @@ void CObject2D::Uninit(void)
 		m_pVtxBuffer = NULL;
 	}
 
-	// 位置の破棄
-	if (m_pPos != nullptr)
-	{
-		delete m_pPos;
-		m_pPos = nullptr;
-	}
-
 	// 向きの破棄
 	if (m_pRot != nullptr)
 	{
 		delete m_pRot;
 		m_pRot = nullptr;
-	}
-
-	// 大きさの破棄
-	if (m_pSize != nullptr)
-	{
-		delete m_pSize;
-		m_pSize = nullptr;
 	}
 
 	// 自分自身の破棄
@@ -148,10 +135,10 @@ void CObject2D::SetOffsetVtx(const D3DXCOLOR col, const int nPosX, const int nPo
 	// 頂点バッファのロック
 	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 
-	D3DXVECTOR3 pos = m_pPos->Get();
+	D3DXVECTOR3 pos = m_pos;
 	D3DXVECTOR3 rot = m_pRot->Get();
 
-	D3DXVECTOR2 Size = m_pSize->Get();
+	D3DXVECTOR2 Size = m_Size;
 
 	m_Length = sqrtf((Size.x * Size.x) + (Size.y * Size.y));
 	m_fAngle = atan2f(Size.x, Size.y);
@@ -207,8 +194,8 @@ CObject2D* CObject2D::Create(const float fWidth, const float fHeight, const D3DX
 	if (pObject2D == nullptr) return nullptr;
 
 	pObject2D->Init();
-	pObject2D->m_pPos->Set(pos);
-	pObject2D->m_pSize->Set(fWidth,fHeight);
+	pObject2D->m_pos = pos;
+	pObject2D->m_Size = { fWidth,fHeight };
 	pObject2D->SetSize(fWidth, fHeight);
 	pObject2D->SetOffsetVtx();
 	pObject2D->SetTextureID();
@@ -226,11 +213,11 @@ void CObject2D::SetSize(const float fWidth, const float fHeight)
 	// 頂点バッファのロック
 	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 
-	D3DXVECTOR3 pos = m_pPos->Get();
+	D3DXVECTOR3 pos = m_pos;
 	D3DXVECTOR3 rot = m_pRot->Get();
 
 	// 大きさの設定処理
-	m_pSize->Set(fWidth, fHeight);
+	m_Size = { fWidth, fHeight };
 
 	m_Length = sqrtf((fWidth * fWidth) + (fHeight * fHeight));
 	m_fAngle = atan2f(fWidth, fHeight);
@@ -268,10 +255,10 @@ void CObject2D::SetSize(const float leftWidth, const float rightWdth, const floa
 	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 
 	// 位置
-	D3DXVECTOR3 pos = m_pPos->Get();
+	D3DXVECTOR3 pos = m_pos;
 
 	// 大きさの設定処理
-	m_pSize->Set(rightWdth, topHeight);
+	m_Size = { rightWdth, topHeight };
 
 	// 頂点座標の設定
 	pVtx[0].pos = D3DXVECTOR3(pos.x - leftWidth, pos.y - topHeight, 0.0f);
@@ -293,7 +280,7 @@ void CObject2D::UpdateVertex(void)
 	// 頂点バッファのロック
 	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 
-	D3DXVECTOR3 pos = m_pPos->Get();
+	D3DXVECTOR3 pos = m_pos;
 	D3DXVECTOR3 rot = m_pRot->Get();
 
 	// 頂点座標の設定

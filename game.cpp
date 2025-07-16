@@ -19,6 +19,7 @@
 #include "manager.h"
 #include"input.h"
 #include"result.h"
+#include"fade.h"
 
 using namespace Const; // –¼‘O‹óŠÔConst‚ðŽg—p
 
@@ -82,7 +83,9 @@ HRESULT CGame::Init(void)
 //===================================================
 void CGame::Uninit(void)
 {
-
+	m_pMeshField = nullptr;
+	m_pCylinder = nullptr;
+	m_pPlayer = nullptr;
 }
 
 //===================================================
