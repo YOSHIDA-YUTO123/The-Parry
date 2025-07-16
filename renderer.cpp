@@ -14,6 +14,7 @@
 #include "manager.h"
 #include"input.h"
 #include"camera.h"
+#include"fade.h"
 
 //***************************************************
 // 静的メンバ変数の宣言
@@ -319,6 +320,7 @@ void CRenderer::Update(void)
 	{
 		m_bEffect = m_bEffect ? false : true;
 	}
+
 	// すべてのオブジェクトの更新処理
 	CObject::UpdateAll();
 }
@@ -360,7 +362,7 @@ void CRenderer::Draw(const int fps)
 	// 描画開始
 	if (SUCCEEDED(m_pD3DDevice->BeginScene()))
 	{//描画開始が成功した場合
-
+		
 		if (m_bEffect == true)
 		{
 			// レンダリングターゲットの変更
@@ -375,6 +377,15 @@ void CRenderer::Draw(const int fps)
 
 		// すべてのオブジェクトの描画処理
 		CObject::DrawAll();
+
+		// フェードの取得
+		CFade* pFade = CManager::GetFade();
+
+		if (pFade != nullptr)
+		{
+			// フェードの更新処理
+			pFade->Draw();
+		}
 
 		if (m_bEffect == true)
 		{

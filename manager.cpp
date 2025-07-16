@@ -49,6 +49,7 @@ CModelManager* CManager::m_pModel = nullptr;			// モデルのクラスへのポインタ
 bool CManager::m_bPause = false;						// ポーズ
 CSlow* CManager::m_pSlow = nullptr;						// スローモーションのポインタ
 CScene* CManager::m_pScene = nullptr;					// シーンクラスへのポインタ
+CFade* CManager::m_pFade = nullptr;						// フェードクラスへのポインタ
 
 //===================================================
 // コンストラクタ
@@ -132,7 +133,9 @@ HRESULT CManager::Init(HINSTANCE hInstance,HWND hWnd, BOOL bWindow)
 	// スローモーションの生成処理
 	m_pSlow = new CSlow;
 
-	// モードの設定
+	// フェードの生成
+	m_pFade = CFade::Create();
+
 	SetMode(new CTitle);
 
 	//// フィールドの設定
@@ -286,6 +289,14 @@ void CManager::Uninit(void)
 		delete m_pScene;
 		m_pScene = nullptr;
 	}
+
+	// フェードの破棄
+	if (m_pFade != nullptr)
+	{
+		m_pFade->Uninit();
+		delete m_pFade;
+		m_pFade = nullptr;
+	}
 }
 //===================================================
 // 更新処理
@@ -310,6 +321,12 @@ void CManager::Update(void)
 		{
 			// シーンの更新処理
 			m_pScene->Update();
+		}
+
+		if (m_pFade != nullptr)
+		{
+			// フェードの更新処理
+			m_pFade->Update();
 		}
 
 		if (m_pRenderer != nullptr)

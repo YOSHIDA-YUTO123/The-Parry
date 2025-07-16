@@ -122,10 +122,13 @@ void CObject::UpdateAll(void)
 		while (pObject != nullptr)
 		{
 			// 次のオブジェクトのポインタを代入
-			CObject* pObjectNext = pObject->m_pNext; 
+			CObject* pObjectNext = pObject->m_pNext;
 
-			// 更新処理
-			pObject->Update();
+			if (pObject->m_bDeath == false)
+			{
+				// 更新処理
+				pObject->Update();
+			}
 
 			// 次のオブジェクトを代入
 			pObject = pObjectNext;
@@ -177,6 +180,34 @@ void CObject::DrawAll(void)
 			pObject->Draw();
 
 			pObject = pObjectNext; // 次のオブジェクトを代入
+		}
+	}
+}
+
+//===================================================
+// 死亡フラグがたっているすべてのオブジェクトの破棄
+//===================================================
+void CObject::DestroyAll(void)
+{
+	for (int nCntPriority = 0; nCntPriority < NUM_PRIORITY; nCntPriority++)
+	{
+		// 先頭オブジェクトを代入
+		CObject* pObject = m_pTop[nCntPriority];
+
+		// nullじゃないなら
+		while (pObject != nullptr)
+		{
+			// 次のオブジェクトのポインタを代入
+			CObject* pObjectNext = pObject->m_pNext;
+
+			// 死亡フラグがたっていたら
+			if (pObject->m_bDeath == true)
+			{
+				// オブジェクトの破棄
+				pObject->Destroy(pObject);
+			}
+			// 次のオブジェクトを代入
+			pObject = pObjectNext;
 		}
 	}
 }

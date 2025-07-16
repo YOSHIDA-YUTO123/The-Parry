@@ -22,13 +22,9 @@ class CScene;
 //***************************************************
 // フェードクラスの定義
 //***************************************************
-class CFade : public CObject2D
+class CFade
 {
 public:
-
-//**************************
-// フェードの状態列挙型
-//**************************
 	typedef enum
 	{
 		FADE_NONE = 0,			// フェードなしの状態
@@ -47,9 +43,10 @@ public:
 	void Draw(void);
 private:
 	CFade();
-	FADE m_Fade;		// フェード
-	D3DXCOLOR m_col;	// フェードの色
-	CScene* m_pScene;
+	FADE m_Fade;							// フェード
+	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuffer;   // 頂点バッファへのポインタ
+	D3DXCOLOR m_col;						// フェードの色
+	CScene* m_pScene;						// シーンのポインタ
 };
 
 #endif

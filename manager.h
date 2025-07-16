@@ -30,6 +30,7 @@ class CCamera;
 class CLight;
 class CModelManager;
 class CSlow;
+class CFade;
 
 //***************************************************
 // マネージャークラスの定義
@@ -62,6 +63,7 @@ public:
 	static CSlow* GetSlow(void) { return m_pSlow; }
 	static void SetMode(CScene *pNewScene);
 	static CScene::MODE GetMode(void) { return m_pScene->GetMode(); }
+	static CFade* GetFade(void) { return m_pFade; }
 private:
 	static CRenderer* m_pRenderer;				// レンダラーのポインタ
 	static CInputKeyboard* m_pInputKeyboard;	// キーボードのポインタ
@@ -78,5 +80,6 @@ private:
 	static bool m_bPause;						// ポーズ
 	static CSlow* m_pSlow;						// スローモーションクラスへのポインタ
 	static CScene* m_pScene;					// シーンのクラスへのポインタ
+	static CFade* m_pFade;				
 };
 #endif

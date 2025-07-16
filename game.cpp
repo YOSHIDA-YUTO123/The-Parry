@@ -98,8 +98,10 @@ void CGame::Update(void)
 
 	if (pKeyboard->GetTrigger(DIK_F9))
 	{
+		CFade* pFade = CManager::GetFade();
+
 		// V‚µ‚¢ƒ‚[ƒh‚ÌÝ’è
-		CManager::SetMode(new CResult);
+		pFade->SetFade(new CResult);
 	}
 }
 

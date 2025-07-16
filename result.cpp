@@ -59,8 +59,10 @@ void CResult::Update(void)
 
 	if (pKeyboard->GetTrigger(DIK_F9))
 	{
+		CFade* pFade = CManager::GetFade();
+
 		// V‚µ‚¢ƒ‚[ƒh‚ÌÝ’è
-		CManager::SetMode(new CTitle);
+		pFade->SetFade(new CTitle);
 	}
 }
 
