@@ -30,8 +30,9 @@ constexpr int ABSSPIN_TIME = 30;	// 絶対回転する時間
 //===================================================
 // コンストラクタ
 //===================================================
-CEnemyState::CEnemyState()
+CEnemyState::CEnemyState(ID Id)
 {
+	m_ID = Id;
 	m_pEnemy = nullptr;
 }
 
@@ -46,7 +47,7 @@ CEnemyState::~CEnemyState()
 //===================================================
 // コンストラクタ
 //===================================================
-CEnemyIdle::CEnemyIdle(int nNextCount)
+CEnemyIdle::CEnemyIdle(int nNextCount) : CEnemyState(ID_IDLE)
 {
 	// 次の行動に移行する時間の設定
 	m_nNextStateCount = nNextCount;
@@ -99,7 +100,7 @@ void CEnemyIdle::Update(void)
 //===================================================
 // コンストラクタ(移動)
 //===================================================
-CEnemyMove::CEnemyMove()
+CEnemyMove::CEnemyMove() : CEnemyState(ID_MOVE)
 {
 	m_nNextStateCount = NULL;
 }
@@ -175,7 +176,7 @@ void CEnemyMove::Update(void)
 //===================================================
 // コンストラクタ
 //===================================================
-CEnemyAttackSmash::CEnemyAttackSmash()
+CEnemyAttackSmash::CEnemyAttackSmash() : CEnemyState(ID_SMASH)
 {
 }
 
@@ -241,7 +242,7 @@ void CEnemyAttackSmash::Update(void)
 			pPlayer->BlowOff(pos, 10.0f, 10.0f);
 
 			// プレイヤー状態の変更
-			pPlayer->ChangeState(make_shared<CPlayerDamage>());
+			pPlayer->ChangeState(make_shared<CPlayerDamage>(2));
 		}
 	}
 
@@ -270,7 +271,7 @@ void CEnemyAttackSmash::Update(void)
 //===================================================
 // コンストラクタ(ダメージ)
 //===================================================
-CEnemyDamage::CEnemyDamage(const bool bBackStatp)
+CEnemyDamage::CEnemyDamage(const bool bBackStatp) : CEnemyState(ID_DAMAGE)
 {
 	m_bBackStap = bBackStatp;
 }
@@ -321,7 +322,7 @@ void CEnemyDamage::Update(void)
 //===================================================
 // コンストラクタ(衝撃波攻撃)
 //===================================================
-CEnemyAttackImpact::CEnemyAttackImpact()
+CEnemyAttackImpact::CEnemyAttackImpact() : CEnemyState(ID_IMPACT)
 {
 
 }
@@ -369,7 +370,7 @@ void CEnemyAttackImpact::Update(void)
 //===================================================
 // コンストラクタ(咆哮)
 //===================================================
-CEnemyRoar::CEnemyRoar()
+CEnemyRoar::CEnemyRoar() : CEnemyState(ID_ROAR)
 {
 
 }
@@ -406,7 +407,7 @@ void CEnemyRoar::Update(void)
 //===================================================
 // コンストラクタ(ダッシュ)
 //===================================================
-CEnemyDash::CEnemyDash()
+CEnemyDash::CEnemyDash() : CEnemyState(ID_DASH)
 {
 }
 
@@ -444,7 +445,7 @@ void CEnemyDash::Update(void)
 //===================================================
 // コンストラクタ(回転攻撃)
 //===================================================
-CEnemySpin::CEnemySpin(const int nTime) 
+CEnemySpin::CEnemySpin(const int nTime) : CEnemyState(ID_SPIN)
 {
 	m_nTime = nTime;
 	m_nMaxTime = nTime;
@@ -512,7 +513,7 @@ void CEnemySpin::Update(void)
 			pPlayer->BlowOff(pos, 50.0f, 10.0f);
 
 			// プレイヤー状態の変更
-			pPlayer->ChangeState(make_shared<CPlayerDamage>());
+			pPlayer->ChangeState(make_shared<CPlayerDamage>(1));
 		}
 	}
 
@@ -549,7 +550,7 @@ void CEnemySpin::Update(void)
 //===================================================
 // コンストラクタ(バックステップ)
 //===================================================
-CEnemyBackStep::CEnemyBackStep()
+CEnemyBackStep::CEnemyBackStep() : CEnemyState(ID_BACKSTEP)
 {
 }
 
@@ -586,7 +587,7 @@ void CEnemyBackStep::Update(void)
 //===================================================
 // コンストラクタ(着地)
 //===================================================
-CEnemyLanding::CEnemyLanding()
+CEnemyLanding::CEnemyLanding() : CEnemyState(ID_LANDING)
 {
 }
 
@@ -617,7 +618,7 @@ void CEnemyLanding::Update(void)
 //===================================================
 // コンストラクタ(ヒット)
 //===================================================
-CEnemyHit::CEnemyHit()
+CEnemyHit::CEnemyHit() : CEnemyState(ID_HIT)
 {
 }
 

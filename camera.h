@@ -43,7 +43,7 @@ public:
 	void MouseView(void);
 	void PadView(void);
 	void SetState(const STATE state) { m_state = state; }
-	void SetTracking(const D3DXVECTOR3 posRDest, const float fSpeed, const float fcoef);
+	void SetTracking(const D3DXVECTOR3 posVDest, const D3DXVECTOR3 posRDest, const float fSpeed, const float fcoef);
 	void Rockon(D3DXVECTOR3 playerPos, D3DXVECTOR3 enemyPos);
 
 	D3DXVECTOR3 GetRotaition(void) const { return m_rot; }

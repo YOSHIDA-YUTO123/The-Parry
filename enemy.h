@@ -24,7 +24,6 @@
 // 前方宣言
 //***************************************************
 class CCharacter3D;
-class CShadow;
 class CMotion;
 class CEnemyMotionController;
 class CModel;
@@ -90,7 +89,6 @@ private:
 	std::unique_ptr<CStateMachine> m_pMachine;
 	std::shared_ptr<CCharacter3D> m_pCharactor;			// キャラクタークラス
 	std::unique_ptr<CColliderSphere> m_pSphere;			// 円の当たり判定クラス
-	std::unique_ptr<CShadow> m_pShadow;					// 影のクラスへのポインタ
 	std::unique_ptr<CMotion> m_pMotion;					// 敵のモーションの制御クラスのポインタ
 	std::shared_ptr<CVelocity> m_pMove;					// 移動クラスの生成
 	std::vector<CModel*> m_apModel;						// モデルクラスへのポインタ

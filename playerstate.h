@@ -28,16 +28,31 @@ class CPlayer;
 class CPlayerState : public CStateBase
 {
 public:
-	CPlayerState();
+
+	// IDの種類
+	enum ID
+	{
+		ID_BASE = 0,
+		ID_NORMAL,
+		ID_MOVE,
+		ID_DAMAGE,
+		ID_DOWNNEUTRAL,
+		ID_AVOID,
+		ID_MAX
+	};
+
+	CPlayerState(ID Id);
 	virtual ~CPlayerState();
 	virtual void Init(void) override {};
 	virtual void Update(void) override {};
 	virtual void Uninit(void) override {};
+	virtual int GetID(void) const { return m_ID; }
 
 	void SetOwner(CPlayer* pPlayer) { m_pPlayer = pPlayer; }
 protected:
 	CPlayer* m_pPlayer;	// プレイヤーのクラスへのポインタ
 private:
+	ID m_ID; // ID
 };
 
 //***************************************************
@@ -70,11 +85,12 @@ private:
 class CPlayerDamage : public CPlayerState
 {
 public:
-	CPlayerDamage();
+	CPlayerDamage(int nDamage);
 	~CPlayerDamage();
 	void Init(void) override;
 	void Update(void) override;
 private:
+	int m_nDamage;
 };
 
 //***************************************************

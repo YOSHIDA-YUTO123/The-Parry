@@ -16,6 +16,7 @@
 #include"fade.h"
 
 using namespace Const; // 名前空間Constを使用
+using namespace std; // 名前空間stdを使用
 
 //===================================================
 // コンストラクタ
@@ -63,7 +64,7 @@ void CTitle::Update(void)
 		CFade* pFade = CManager::GetFade();
 
 		// 新しいモードの設定
-		pFade->SetFade(new CGame);
+		pFade->SetFade(make_unique<CGame>());
 	}
 }
 

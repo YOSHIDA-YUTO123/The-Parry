@@ -31,6 +31,13 @@ class CGame : public CScene
 {
 public:
 
+	enum STATE
+	{
+		STATE_NORMAL = 0,
+		STATE_END,
+		STATE_MAX
+	};
+
 	CGame();
 	~CGame();
 
@@ -39,10 +46,13 @@ public:
 	void Update(void);
 	void Draw(void);
 
+	static void SetState(const STATE state) { m_state = state; }
 	static CMeshField* GetField(void) { return m_pMeshField; }
 	static CPlayer* GetPlayer(void) { return m_pPlayer; }
 	static CMeshCylinder* GetCylinder(void){ return m_pCylinder; }
 private:
+	static STATE m_state;						// ゲームの状態
+	int m_nCounterState;				// 状態のカウンター
 	static CMeshField* m_pMeshField;	// メッシュフィールドへのポインタ
 	static CPlayer* m_pPlayer;			// プレイヤークラスへのポインタ
 	static CMeshCylinder* m_pCylinder;	// メッシュシリンダーへのポインタ

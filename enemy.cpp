@@ -110,13 +110,10 @@ HRESULT CEnemy::Init(void)
 	m_pCharactor = make_unique<CCharacter3D>();
 
 	// キャラクターの設定処理
-	m_pCharactor->SetCharacter(10, 5.0f);
+	m_pCharactor->SetCharacter(10, 5.0f,D3DXVECTOR3(2.0f, 1.0f, 2.0f));
 
 	// 位置の取得処理
 	D3DXVECTOR3 pos = m_pCharactor->GetPosition();
-
-	// 影の取得生成
-	m_pShadow = CShadow::Create(pos, 100.0f, 100.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, SHADOW_ALEVEL));
 
 	// 当たり判定の生成
 	m_pSphere = CColliderSphere::Create(pos,150.0f);
@@ -168,12 +165,6 @@ void CEnemy::Uninit(void)
 		m_pMotion->Uninit();
 	}
 
-	if (m_pShadow != nullptr)
-	{
-		// 影クラスの破棄
-		m_pShadow->Uninit();
-	}
-
 	// nullにする
 	m_pOrbit = nullptr;
 	m_pAABB = nullptr;
@@ -198,6 +189,7 @@ void CEnemy::Update(void)
 	// カメラの取得処理
 	CCamera* pCamera = CManager::GetCamera();
 
+	// 位置の取得
 	D3DXVECTOR3 pos = m_pCharactor->GetPosition();
 
 	D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
@@ -210,6 +202,7 @@ void CEnemy::Update(void)
 	CDebugProc::Print("ボスの攻撃(スマッシュ) [ F3 ]\n");
 	CDebugProc::Print("ボスの攻撃(衝撃波) [ F4 ]\n");
 	CDebugProc::Print("ボスの攻撃(方向→ダッシュ→回転) [ F5 ]\n");
+	CDebugProc::Print("ボスの消去 [ 1 ]\n");
 
 	if (pKeyboard->GetPress(DIK_F3))
 	{
@@ -229,6 +222,8 @@ void CEnemy::Update(void)
 	}
 	if (pKeyboard->GetTrigger(DIK_1))
 	{
+		// 影の消去
+		m_pCharactor->DeleteShadow();
 		Uninit();
 		return;
 	}
@@ -286,17 +281,17 @@ void CEnemy::Update(void)
 	// 重力の設定
 	m_pMove->Gravity(-MAX_GRABITY);
 
-	if (m_pShadow != nullptr)
-	{
-		D3DXVECTOR3 FieldNor = pMesh->GetNor(); 		   // 地面の法線ベクトルの取得
-		D3DXVECTOR3 VecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);  // 上方向ベクトルの作成
+	//if (m_pShadow != nullptr)
+	//{
+	//	D3DXVECTOR3 FieldNor = pMesh->GetNor(); 		   // 地面の法線ベクトルの取得
+	//	D3DXVECTOR3 VecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);  // 上方向ベクトルの作成
 
-		// 地面の角度に合わせた角度を設定
-		m_pShadow->SetFieldAngle(FieldNor, VecU);
+	//	// 地面の角度に合わせた角度を設定
+	//	m_pShadow->SetFieldAngle(FieldNor, VecU);
 
-		// 影の設定処理
-		m_pShadow->Update(D3DXVECTOR3(pos.x, pos.y - fHeight, pos.z), D3DXVECTOR3(pos.x, fHeight + 5.0f, pos.z), SHADOW_SIZE, SHADOW_SIZE, SHADOW_MAX_HEIGHT, SHADOW_ALEVEL);
-	}
+	//	// 影の設定処理
+	//	m_pShadow->Update(D3DXVECTOR3(pos.x, pos.y - fHeight, pos.z), D3DXVECTOR3(pos.x, fHeight + 5.0f, pos.z), SHADOW_SIZE, SHADOW_SIZE, SHADOW_MAX_HEIGHT, SHADOW_ALEVEL);
+	//}
 
 	// モーションがnullじゃないなら
 	if (m_pMotion != nullptr)
@@ -459,6 +454,8 @@ void CEnemy::Update(void)
 		// 位置の設定処理
 		m_pCharactor->SetPosition(pos);
 
+		m_pCharactor->Update();
+
 		// 向きの補間
 		m_pCharactor->GetRotation()->SetSmoothAngle(0.1f);
 	}
@@ -475,11 +472,11 @@ void CEnemy::Update(void)
 //===================================================
 void CEnemy::Draw(void)
 {
-	// 影の描画処理
-	if (m_pShadow != nullptr)
-	{
-		m_pShadow->Draw();
-	}
+	//// 影の描画処理
+	//if (m_pShadow != nullptr)
+	//{
+	//	m_pShadow->Draw();
+	//}
 
 	// キャラクターの描画
 	if (m_pCharactor != nullptr)

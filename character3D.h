@@ -18,6 +18,11 @@
 #include"transform.h"
 
 //***************************************************
+// 前方宣言
+//***************************************************
+class CShadowS;
+
+//***************************************************
 // キャラクター3Dクラスの定義
 //***************************************************
 class CCharacter3D
@@ -31,6 +36,7 @@ public:
 		STATE_MOVE,
 		STATE_ACTION,
 		STATE_DAMAGE,
+		STATE_DEATH,
 		STATE_MAX
 	}STATE;
 
@@ -42,8 +48,6 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	bool Hit(int nDamage);
-
 	// ゲッター
 	D3DXVECTOR3 GetPosition(void) const { return m_pos; }
 	CRotation* GetRotation(void) const { return m_pRot; }
@@ -52,16 +56,21 @@ public:
 
 	// セッター
 	void SetPosition(const D3DXVECTOR3 pos) { m_pos = pos; }
-	void SetCharacter(const int nLife, const float fSpeed);
+	void SetCharacter(const int nLife, const float fSpeed,const D3DXVECTOR3 ShadowScal);
 	void SetState(const STATE state,const int nTime);
+	void DeleteShadow(void);	// 影の消去
+	bool Hit(int nDamage);		// ヒット時の処理
+	bool GetAlive(void);		// 生きているか
 private:
-	D3DXVECTOR3 m_pos;		// 位置
-	CRotation *m_pRot;		// 向きクラスへのポインタ
-	STATE m_state;			// 状態
-	D3DXMATRIX m_mtxWorld;	// ワールドマトリックス
-	float m_fSpeed;			// 足の速さ
-	int m_nCounterState;	// 状態のカウンター
-	int m_nLife;			// 寿命
+	CShadowS* m_pShadowS;		// 影(ステンシル)
+	D3DXVECTOR3 m_pos;			// 位置
+	D3DXVECTOR3 m_ShadowScal;	// 影の大きさ
+	CRotation *m_pRot;			// 向きクラスへのポインタ
+	STATE m_state;				// 状態
+	D3DXMATRIX m_mtxWorld;		// ワールドマトリックス
+	float m_fSpeed;				// 足の速さ
+	int m_nCounterState;		// 状態のカウンター
+	int m_nLife;				// 寿命
 };
 
 #endif

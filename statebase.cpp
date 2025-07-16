@@ -45,10 +45,13 @@ CStateMachine::~CStateMachine()
 //================================================
 void CStateMachine::Change(shared_ptr<CStateBase> pNewState)
 {
-	// ó‘Ô‚ª“¯‚¶‚È‚ç
-	if (m_pNowState == pNewState)
+	if (m_pNowState != nullptr)
 	{
-		return;
+		// ó‘Ô‚ª“¯‚¶‚È‚ç
+		if (m_pNowState->GetID() == pNewState->GetID())
+		{
+			return;
+		}
 	}
 
 	// ¡‚Ìó‘Ô‚ğ¶¬

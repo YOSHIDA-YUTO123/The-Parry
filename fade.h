@@ -16,6 +16,7 @@
 //***************************************************
 #include"main.h"
 #include"object2D.h"
+#include<memory>
 
 class CScene;
 
@@ -36,7 +37,7 @@ public:
 	~CFade();
 
 	static CFade* Create(void);
-	void SetFade(CScene* pNewScene);
+	void SetFade(std::unique_ptr<CScene> pNewScene);
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
@@ -46,7 +47,7 @@ private:
 	FADE m_Fade;							// フェード
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuffer;   // 頂点バッファへのポインタ
 	D3DXCOLOR m_col;						// フェードの色
-	CScene* m_pScene;						// シーンのポインタ
+	std::unique_ptr<CScene> m_pScene;						// シーンのポインタ
 };
 
 #endif

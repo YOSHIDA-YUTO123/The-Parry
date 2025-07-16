@@ -25,7 +25,7 @@ class CShadowS : public CObjectX
 public:
 	CShadowS(int nPriority = 3);
 	~CShadowS();
-	static CShadowS* Create(const D3DXVECTOR3 pos);
+	static CShadowS* Create(const D3DXVECTOR3 pos,D3DXVECTOR3 *pScal);
 
 	HRESULT Init(void) override;
 	void Uninit(void) override;
@@ -34,6 +34,8 @@ public:
 	void UpdatePos(const D3DXVECTOR3 pos) { SetPosition(pos); }
 private:
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuffer; // 頂点バッファへのポインタ
+	D3DXVECTOR3 *m_pScal;				  // 大きさ
+	bool m_bShowShadow;					  // *************影のモデルを見せるかどうか(Release時に消去)**************
 };
 
 #endif

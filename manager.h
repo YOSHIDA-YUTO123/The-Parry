@@ -61,7 +61,7 @@ public:
 	static void SetPause(void) { m_bPause = true; }
 	static bool GetPause(void) { return m_bPause; }
 	static CSlow* GetSlow(void) { return m_pSlow; }
-	static void SetMode(CScene *pNewScene);
+	static void SetMode(std::unique_ptr<CScene> pNewScene);
 	static CScene::MODE GetMode(void) { return m_pScene->GetMode(); }
 	static CFade* GetFade(void) { return m_pFade; }
 private:
@@ -79,7 +79,7 @@ private:
 	static CModelManager* m_pModel;				// モデルクラスへのポインタ
 	static bool m_bPause;						// ポーズ
 	static CSlow* m_pSlow;						// スローモーションクラスへのポインタ
-	static CScene* m_pScene;					// シーンのクラスへのポインタ
+	static std::unique_ptr<CScene> m_pScene;	// シーンのクラスへのポインタ
 	static CFade* m_pFade;				
 };
 #endif

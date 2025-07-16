@@ -13,6 +13,7 @@
 #include"manager.h"
 #include"renderer.h"
 #include"math.h"
+#include"shadowS.h"
 
 using namespace Const; // 名前空間Constを使用
 
@@ -27,6 +28,7 @@ CCharacter3D::CCharacter3D()
 	m_nLife = NULL;
 	m_state = STATE::STATE_NORMAL;
 	m_fSpeed = NULL;
+	m_ShadowScal = D3DXVECTOR3(2.0f,1.0f,2.0f);
 }
 
 //===================================================
@@ -44,6 +46,9 @@ HRESULT CCharacter3D::Init(void)
 	// 位置、向きの生成
 	m_pRot = new CRotation;
 
+	// 影の生成
+	m_pShadowS = CShadowS::Create(m_pos, &m_ShadowScal);
+
 	return S_OK;
 }
 
@@ -57,6 +62,12 @@ void CCharacter3D::Uninit(void)
 	{
 		delete m_pRot;
 		m_pRot = nullptr;
+	}
+
+	// 影の破棄
+	if (m_pShadowS != nullptr)
+	{
+		m_pShadowS = nullptr;
 	}
 }
 
@@ -101,6 +112,11 @@ void CCharacter3D::Update(void)
 	default:
 		break;
 	}
+
+	if (m_pShadowS != nullptr)
+	{
+		m_pShadowS->SetPosition(m_pos);
+	}
 }
 
 //===================================================
@@ -135,10 +151,11 @@ void CCharacter3D::Draw(void)
 //===================================================
 // キャラクターの設定処理
 //===================================================
-void CCharacter3D::SetCharacter(const int nLife, const float fSpeed)
+void CCharacter3D::SetCharacter(const int nLife, const float fSpeed, const D3DXVECTOR3 ShadowScal)
 {
 	m_nLife = nLife;
 	m_fSpeed = fSpeed;
+	m_ShadowScal = ShadowScal;
 }
 
 //===================================================
@@ -151,13 +168,26 @@ bool CCharacter3D::Hit(int nDamage)
 
 	if (m_nLife <= 0)
 	{
-		// 終了処理
-		Uninit();
+		m_state = STATE_DEATH;
 
-		return true;
+		return false;
 	}
 
-	return false;
+	return true;
+}
+
+//===================================================
+// 生きているかどうか
+//===================================================
+bool CCharacter3D::GetAlive(void)
+{
+	// 死んでいるなら
+	if (m_nLife <= 0)
+	{
+		return false;
+	}
+
+	return true;
 }
 
 //===================================================
@@ -167,4 +197,17 @@ void CCharacter3D::SetState(const STATE state, const int nTime)
 {
 	m_state = state;
 	m_nCounterState = nTime;
+}
+
+//===================================================
+// 影の消去
+//===================================================
+void CCharacter3D::DeleteShadow(void)
+{
+	// 影の破棄
+	if (m_pShadowS != nullptr)
+	{
+		m_pShadowS->Uninit();
+		m_pShadowS = nullptr;
+	}
 }

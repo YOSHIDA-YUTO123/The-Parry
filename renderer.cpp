@@ -449,9 +449,12 @@ void CRenderer::Draw(const int fps)
 			m_pRenderMT[0] = m_pRenderMT[1];
 			m_pRenderMT[1] = pRenderWK;	
 		}
+
 		CDebugProc::Print("FPS = %d\n", fps);
 
 		CDebugProc::Print("デバッグ 非表示      : [ F2 ]\n");
+
+		CDebugProc::Print("影の表示 : [ F3 ]\n");
 
 		for (int nCntPriority = 0; nCntPriority < NUM_PRIORITY; nCntPriority++)
 		{

@@ -22,6 +22,7 @@
 #include"fade.h"
 
 using namespace Const; // 名前空間Constを使用
+using namespace std; // 名前空間stdを使用
 
 //***************************************************
 // 静的メンバ変数宣言
@@ -29,12 +30,14 @@ using namespace Const; // 名前空間Constを使用
 CMeshField* CGame::m_pMeshField = nullptr;		// メッシュフィールドへのポインタ
 CPlayer* CGame::m_pPlayer = nullptr;			// プレイヤーへのポインタ
 CMeshCylinder* CGame::m_pCylinder = nullptr;	// メッシュシリンダーへのポインタ
+CGame::STATE CGame::m_state = STATE_NORMAL;     // ゲームの状態
 
 //===================================================
 // コンストラクタ
 //===================================================
 CGame::CGame() : CScene(MODE_GAME)
 {
+	m_nCounterState = NULL;
 }
 
 //===================================================
@@ -93,15 +96,34 @@ void CGame::Uninit(void)
 //===================================================
 void CGame::Update(void)
 {
+	// フェードの取得
+	CFade* pFade = CManager::GetFade();
+
+	switch (m_state)
+	{
+	case STATE_NORMAL:
+		break;
+	case STATE_END:
+		m_nCounterState++;
+
+		if (m_nCounterState >= 60 && pFade != nullptr)
+		{
+			// 新しいモードの設定
+			pFade->SetFade(make_unique<CResult>());
+
+			m_state = STATE_NORMAL;
+		}
+		break;
+	default:
+		break;
+	}
+
 	// キーボードの取得
 	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
 
 	if (pKeyboard->GetTrigger(DIK_F9))
 	{
-		CFade* pFade = CManager::GetFade();
-
-		// 新しいモードの設定
-		pFade->SetFade(new CResult);
+		SetState(STATE_END);
 	}
 }
 

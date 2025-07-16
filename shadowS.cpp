@@ -11,12 +11,17 @@
 #include "shadowS.h"
 #include"manager.h"
 #include"renderer.h"
+#include"input.h"
+
+using namespace Const; // 名前空間Constを使用
 
 //===================================================
 // コンストラクタ
 //===================================================
 CShadowS::CShadowS(int nPriority) : CObjectX(nPriority)
 {
+	m_pScal = nullptr;
+	m_bShowShadow = false;
 }
 
 //===================================================
@@ -29,7 +34,7 @@ CShadowS::~CShadowS()
 //===================================================
 // 生成処理
 //===================================================
-CShadowS* CShadowS::Create(const D3DXVECTOR3 pos)
+CShadowS* CShadowS::Create(const D3DXVECTOR3 pos, D3DXVECTOR3* pScal)
 {
 	// 影の生成
 	CShadowS* pShadowS = new CShadowS;
@@ -41,7 +46,9 @@ CShadowS* CShadowS::Create(const D3DXVECTOR3 pos)
 
 		return nullptr;
 	}
+
 	pShadowS->SetPosition(pos);
+	pShadowS->m_pScal = pScal;
 
 	return pShadowS;
 }
@@ -51,6 +58,8 @@ CShadowS* CShadowS::Create(const D3DXVECTOR3 pos)
 //===================================================
 HRESULT CShadowS::Init(void)
 {
+	m_pScal = nullptr;
+
 	// 初期化処理
 	if (FAILED(CObjectX::Init()))
 	{
@@ -143,10 +152,33 @@ void CShadowS::Draw(void)
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
 	// ワールドマトリックスの設定
-	SetUpMatrix();
+	SetUpMatrix(*m_pScal);
+
+#ifdef _DEBUG
+
+	// キーボードの取得
+	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
+
+	// 影の表示
+	if (pKeyboard != nullptr && pKeyboard->GetTrigger(DIK_F3))
+	{
+		m_bShowShadow = m_bShowShadow ? false : true;
+	}
+
+	if (m_bShowShadow == true)
+	{
+		// 影の描画処理
+		SetUpDraw();
+	}
+#endif // DEBUG
 
 	// ステンシルテストを有効にする
 	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
+
+	// 画面クリア(ステンシルバッファのクリア)
+	pDevice->Clear(0,
+		NULL,D3DCLEAR_STENCIL,
+		D3DCOLOR_RGBA(0, 0, 0, 255), 1.0f, 0);
 
 	// Zバッファへの書き込みを無効にする
 	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);

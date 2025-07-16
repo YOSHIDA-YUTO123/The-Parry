@@ -334,19 +334,23 @@ void CObjectX::DrawShadow(void)
 //===================================================
 // ワールドマトリックスの設定
 //===================================================
-void CObjectX::SetUpMatrix(void)
+void CObjectX::SetUpMatrix(const D3DXVECTOR3 Scal)
 {
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
 	//計算用のマトリックス
-	D3DXMATRIX mtxRot, mtxTrans;
+	D3DXMATRIX mtxRot, mtxTrans,mtxScal;
 
 	//ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
 
 	// 向き
 	D3DXVECTOR3 rot = m_pRot->Get();
+
+	// 大きさを反映
+	D3DXMatrixScaling(&mtxScal, Scal.x, Scal.y, Scal.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxScal);
 
 	//向きを反映
 	D3DXMatrixRotationYawPitchRoll(&mtxRot, rot.y, rot.x, rot.z);

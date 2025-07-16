@@ -18,8 +18,9 @@ using namespace std;		  // 名前空間stdの使用
 //===================================================
 // コンストラクタ
 //===================================================
-CPlayerState::CPlayerState()
+CPlayerState::CPlayerState(ID Id)
 {
+	m_ID = Id;
 	m_pPlayer = nullptr;
 }
 
@@ -33,7 +34,7 @@ CPlayerState::~CPlayerState()
 //===================================================
 // コンストラクタ(Normla)
 //===================================================
-CPlayerNormal::CPlayerNormal()
+CPlayerNormal::CPlayerNormal() : CPlayerState(ID_NORMAL)
 {
 }
 
@@ -54,7 +55,7 @@ void CPlayerNormal::Update(void)
 //===================================================
 // コンストラクタ(Move)
 //===================================================
-CPlayerMove::CPlayerMove()
+CPlayerMove::CPlayerMove() : CPlayerState(ID_MOVE)
 {
 }
 
@@ -76,8 +77,9 @@ void CPlayerMove::Update(void)
 //===================================================
 // コンストラクタ(Damage)
 //===================================================
-CPlayerDamage::CPlayerDamage()
+CPlayerDamage::CPlayerDamage(int nDamage) : CPlayerState(ID_DAMAGE)
 {
+	m_nDamage = nDamage;
 }
 
 //===================================================
@@ -94,6 +96,9 @@ void CPlayerDamage::Init(void)
 {
 	// モーションの取得
 	CMotion* pMotion = m_pPlayer->GetMotion();
+
+	// ダメージの設定
+	m_pPlayer->Hit(m_nDamage);
 
 	if (pMotion != nullptr)
 	{
@@ -123,7 +128,7 @@ void CPlayerDamage::Update(void)
 //===================================================
 // コンストラクタ(DownNeutral)
 //===================================================
-CPlayerDownNeutral::CPlayerDownNeutral()
+CPlayerDownNeutral::CPlayerDownNeutral() : CPlayerState(ID_DOWNNEUTRAL)
 {
 }
 
@@ -160,7 +165,7 @@ void CPlayerDownNeutral::Update(void)
 //===================================================
 // コンストラクタ(回避)
 //===================================================
-CPlayerAvoid::CPlayerAvoid(const float fSpeed)
+CPlayerAvoid::CPlayerAvoid(const float fSpeed) : CPlayerState(ID_AVOID)
 {
 	m_fSpeed = fSpeed;
 }

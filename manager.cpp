@@ -48,7 +48,7 @@ CLight* CManager::m_pLight = nullptr;					// カメラへのポインタ
 CModelManager* CManager::m_pModel = nullptr;			// モデルのクラスへのポインタ
 bool CManager::m_bPause = false;						// ポーズ
 CSlow* CManager::m_pSlow = nullptr;						// スローモーションのポインタ
-CScene* CManager::m_pScene = nullptr;					// シーンクラスへのポインタ
+unique_ptr<CScene> CManager::m_pScene = nullptr;		// シーンクラスへのポインタ
 CFade* CManager::m_pFade = nullptr;						// フェードクラスへのポインタ
 
 //===================================================
@@ -136,7 +136,7 @@ HRESULT CManager::Init(HINSTANCE hInstance,HWND hWnd, BOOL bWindow)
 	// フェードの生成
 	m_pFade = CFade::Create();
 
-	SetMode(new CTitle);
+	SetMode(make_unique<CTitle>());
 
 	//// フィールドの設定
 	//m_pMeshField = CMeshField::Create(VEC3_NULL ,48,48, D3DXVECTOR2(5500.0f,5500.0f));
@@ -286,7 +286,6 @@ void CManager::Uninit(void)
 	if (m_pScene != nullptr)
 	{
 		m_pScene->Uninit();
-		delete m_pScene;
 		m_pScene = nullptr;
 	}
 
@@ -527,10 +526,10 @@ void CManager::EnablePause(void)
 //===================================================
 // シーンの設定処理
 //===================================================
-void CManager::SetMode(CScene* pNewScene)
+void CManager::SetMode(unique_ptr<CScene> pNewScene)
 {
 	// シーンが同じだったら設定しない
-	if (m_pScene == pNewScene)
+	if (m_pScene.get() == pNewScene.get())
 	{
 		return;
 	}
@@ -539,7 +538,7 @@ void CManager::SetMode(CScene* pNewScene)
 	if (m_pScene != nullptr)
 	{
 		m_pScene->Uninit();
-		delete m_pScene;
+		m_pScene.reset();
 		m_pScene = nullptr;
 
 		// すべてのオブジェクトの破棄
@@ -550,7 +549,7 @@ void CManager::SetMode(CScene* pNewScene)
 	if (m_pScene == nullptr)
 	{
 		// 新しいシーンを設定
-		m_pScene = pNewScene;
+		m_pScene = std::move(pNewScene);
 
 		m_pCamera->Init();
 

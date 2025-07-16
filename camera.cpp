@@ -358,25 +358,17 @@ void CCamera::PadView(void)
 //===================================================
 // カメラの追従処理
 //===================================================
-void CCamera::SetTracking(const D3DXVECTOR3 posRDest, const float fSpeed, const float fcoef)
+void CCamera::SetTracking(const D3DXVECTOR3 posVDest,const D3DXVECTOR3 posRDest, const float fSpeed, const float fcoef)
 {
 	if (m_state != STATE_TRACKING) return;
-
-	// プレイヤーの取得
-	CPlayer* pPlayer = CGame::GetPlayer();
-
-	D3DXVECTOR3 pos = pPlayer->GetPos();
-
-	// プレイヤーの取得
-	D3DXVECTOR3 playerPos(pos.x, pos.y + 200.0f, pos.z);
 
 	m_posRDest.x = posRDest.x * fSpeed;
 	m_posRDest.y = posRDest.y * fSpeed;
 	m_posRDest.z = posRDest.z * fSpeed;
 
-	m_posVDest.x = playerPos.x - sinf(m_rot.y) * m_fDistance;
-	m_posVDest.y = playerPos.y - cosf(m_rot.y) * m_fDistance;
-	m_posVDest.z = playerPos.z - cosf(m_rot.y) * m_fDistance;
+	m_posVDest.x = posVDest.x - sinf(m_rot.y) * m_fDistance;
+	m_posVDest.y = posVDest.y - cosf(m_rot.y) * m_fDistance;
+	m_posVDest.z = posVDest.z - cosf(m_rot.y) * m_fDistance;
 
 	m_posR.x += ((m_posRDest.x - m_posR.x) * fcoef);
 	m_posR.y += ((m_posRDest.y - m_posR.y) * fcoef);

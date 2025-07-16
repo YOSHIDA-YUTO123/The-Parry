@@ -40,7 +40,7 @@ public:
 	void Draw(void) override;
 	void Draw(const float Diffuse); // “§–¾“x‚ğ•ÏX‚Å‚«‚é•`‰æˆ—
 	void DrawShadow(void);
-	void SetUpMatrix(void);
+	void SetUpMatrix(const D3DXVECTOR3 Scal = D3DXVECTOR3(1.0f,1.0f,1.0f));
 	void SetUpDraw(void);
 
 	HRESULT LoadModel(const char* pXFileName);

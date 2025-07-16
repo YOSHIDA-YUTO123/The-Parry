@@ -13,6 +13,7 @@
 #include"renderer.h"
 
 using namespace Const; // 名前空間Constを使用
+using namespace std; // 名前空間stdを使用
 
 //===================================================
 // コンストラクタ
@@ -54,12 +55,20 @@ CFade* CFade::Create(void)
 //===================================================
 // フェード
 //===================================================
-void CFade::SetFade(CScene* pNewScene)
+void CFade::SetFade(unique_ptr<CScene> pNewScene)
 {
-	m_pScene = nullptr;
+	if (m_Fade != FADE_NONE) return;
+
+	if (m_pScene != nullptr)
+	{
+		m_pScene->Uninit();
+		m_pScene.reset();
+		m_pScene = nullptr;
+	}
+
 	m_col = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);
 	m_Fade = FADE_OUT;
-	m_pScene = pNewScene;
+	m_pScene = move(pNewScene);
 }
 
 //===================================================
@@ -177,7 +186,7 @@ void CFade::Update(void)
 				m_Fade = FADE_IN;
 
 				// モード設定
-				CManager::SetMode(m_pScene);
+				CManager::SetMode(move(m_pScene));
 				return;
 			}
 

@@ -30,17 +30,35 @@ class CMotion;
 class CEnemyState : public CStateBase
 {
 public:
+	// IDの種類
+	enum ID
+	{
+		ID_BASE = 0,
+		ID_IDLE,
+		ID_MOVE,
+		ID_BACKSTEP,
+		ID_LANDING,
+		ID_SMASH,
+		ID_IMPACT,
+		ID_DAMAGE,
+		ID_ROAR,
+		ID_DASH,
+		ID_SPIN,
+		ID_HIT,
+		ID_MAX
+	};
 
-	CEnemyState();
+	CEnemyState(ID Id);
 	virtual ~CEnemyState();
 	virtual void Init(void) {};
 	virtual void Update(void) {};
 	virtual void Uninit(void) {};
-
+	virtual int GetID(void) const { return m_ID; }
 	void SetOwner(CEnemy* pEnemy) { m_pEnemy = pEnemy; }
 protected:
 	CEnemy* m_pEnemy; // 敵クラスへのポインタ
 private:
+	ID m_ID; // IDの取得
 };
 
 //***************************************************
