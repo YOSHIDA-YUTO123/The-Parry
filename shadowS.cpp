@@ -157,9 +157,9 @@ void CShadowS::Draw(void)
 	// ステンシルバッファの比較パラメータの設定
 	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_ALWAYS);
 
-	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP); // ステンシルテスト合格、zテスト合格
-	//pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP); // ステンシルテスト合格、zテスト不合格
-	//pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP); // ステンシルテスト不合格
+	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_DECR); // ステンシルテスト合格、zテスト合格
+	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_INCRSAT); // ステンシルテスト合格、zテスト不合格
+	pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_ZERO); // ステンシルテスト不合格
 
 	// 表面をカリング
 	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);
@@ -174,8 +174,8 @@ void CShadowS::Draw(void)
 	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_EQUAL);
 
 	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_INCRSAT); // ステンシルテスト合格、zテスト合格
-	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);	  // ステンシルテスト合格、zテスト不合格
-	pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP); // ステンシルテスト不合格
+	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_DECR);	  // ステンシルテスト合格、zテスト不合格
+	pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_ZERO); // ステンシルテスト不合格
 
 	// 裏面をカリング
 	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
@@ -192,8 +192,8 @@ void CShadowS::Draw(void)
 	// ステンシルバッファの比較パラメータの設定
 	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_EQUAL);
 
-	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_INCRSAT); // ステンシルテスト合格、zテスト合格
-	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_INCRSAT); // ステンシルテスト合格、zテスト不合格
+	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP); // ステンシルテスト合格、zテスト合格
+	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP); // ステンシルテスト合格、zテスト不合格
 	pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);  // ステンシルテスト不合格
 
 	//頂点バッファをデータストリームに設定

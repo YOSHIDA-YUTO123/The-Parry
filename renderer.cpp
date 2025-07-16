@@ -371,7 +371,7 @@ void CRenderer::Draw(const int fps)
 			// 画面クリア(バックバッファ&Zバッファのクリア)
 			m_pD3DDevice->Clear(0,
 				NULL,
-				(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
+				(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL),
 				D3DCOLOR_RGBA(0, 0, 0, 255), 1.0f, 0);
 		}
 
@@ -411,12 +411,11 @@ void CRenderer::Draw(const int fps)
 			// Zバッファをもとに戻す
 			m_pD3DDevice->SetDepthStencilSurface(pZBuffer);
 
-			//// 画面クリア(バックバッファ&Zバッファのクリア)
+			// 画面クリア(バックバッファ&Zバッファのクリア)
 			m_pD3DDevice->Clear(0,
 				NULL,
-				(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
+				(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL),
 				D3DCOLOR_RGBA(0, 0, 0, 255), 1.0f, 0);
-
 
 			// ビューポートをもとに戻す
 			m_pD3DDevice->SetViewport(&viepowtDef);
