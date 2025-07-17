@@ -45,7 +45,7 @@ constexpr float JUMP_HEIGHT = 25.0f;		// ジャンプ量
 constexpr float SHADOW_SIZE = 50.0f;		// 影の大きさ
 constexpr float SHADOW_MAX_HEIGHT = 500.0f; // 影が見える最大の高さ
 constexpr float SHADOW_A_LEVEL = 0.9f;		// 影のアルファ値のオフセット
-constexpr int PARRY_TIME = 25;				// パリィの有効時間
+constexpr int PARRY_TIME = 10;				// パリィの有効時間
 
 //===================================================
 // コンストラクタ
@@ -178,16 +178,6 @@ void CPlayer::Update(void)
 
 	float fAngleDest = 0.0f;
 
-	//if ()
-//{
-//	return false;
-//}
-
-//if ()
-//{
-//	return false;
-//}
-
 	// 移動できるか判定
 	const bool bNotMove = m_pMotion->GetBlendType() == TYPE_DAMAGE || m_pMotion->GetBlendType() == TYPE_AVOID;
 
@@ -302,86 +292,59 @@ void CPlayer::Update(void)
 	// 障害物との当たり判定
 	CollisionObstacle(&pos);
 
-	// インパクトの取得
-	CMeshFieldImpact* pImpact = nullptr;
+	// 最初の位置
+	D3DXVECTOR3 firstPos = VEC3_NULL;
+
+	// 衝撃波の位置
+	D3DXVECTOR3 ImpactPos = VEC3_NULL;
+
+	// インパクトのインデックス
+	int ImpactIdx = -1;
+
+	// インパクトとの判定
+	const bool bCollision = pMesh->CollisionImpact(pos, 150.0f, CMeshFieldImpact::OBJ_PLAYER,&ImpactIdx, &firstPos,&ImpactPos);
+
+	if (bCollision && m_pCharacter3D->GetState() == STATE::STATE_ACTION)
+	{
+		// 方向の設定
+		D3DXVECTOR3 dir = firstPos - pos;
+
+		float fAngle = GetTargetAngle(firstPos, pos);
+
+		// 向きの設定
+		m_pCharacter3D->GetRotation()->SetDest(D3DXVECTOR3(0.0f, fAngle + D3DX_PI, 0.0f));
+
+		// 右手の位置
+		D3DXVECTOR3 playerHandR = GetPositionFromMatrix(m_apModel[5]->GetMatrixWorld());
+
+		// モーションをダメージにする
+		m_pMotion->SetMotion(TYPE_PARRY, true, 2);
+
+		// パーティクルの生成
+		CParticle3D::Create(playerHandR, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f), 240, 20.0f, 25, 2, 15.0f);
+
+		// インパクトの設定
+		CMeshCircle::Confing Circleconfig = { 50.0f,10.0f,0.0f,50.0f,30,false };
+
+		// インパクトを生成
+		CMeshCircle::Create(Circleconfig,D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), playerHandR,32, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
+
+		// 再設定
+		pMesh->ResetImpact(dir, CMeshFieldImpact::OBJ_PLAYER, playerHandR,D3DXCOLOR(1.0f,1.0f,0.5f,1.0f), ImpactIdx);
+	}
+	// インパクトの当たり判定
+	else if (bCollision && m_pMotion->GetBlendType() != TYPE_DAMAGE)
+	{
+		// 吹き飛び処理
+		BlowOff(ImpactPos, 50.0f, 10.0f);
+
+		// モーションの設定
+		ChangeState(make_shared<CPlayerDamage>(5));
+	}
 	
-	if (pMesh != nullptr)
-	{
-		pImpact = pMesh->GetImpact();
-	}
-
-	if (pImpact != nullptr)
-	{
-		// インパクトとの判定
-		const bool bCollision = pImpact->Collision(pos, 150.0f, pImpact->OBJ_PLAYER);
-
-		if (bCollision && m_pCharacter3D->GetState() == STATE::STATE_ACTION)
-		{
-			//// スローモーションの取得
-			//CSlow* pSlow = CManager::GetSlow();
-
-			//// スローモーション
-			//pSlow->Start(100, 12);
-
-			// 最初の位置
-			D3DXVECTOR3 firstPos = pImpact->GetFirstPos();
-
-			// 方向の設定
-			D3DXVECTOR3 dir = firstPos - pos;
-
-			float fAngle = GetTargetAngle(firstPos, pos);
-
-			// 向きの設定
-			m_pCharacter3D->GetRotation()->SetDest(D3DXVECTOR3(0.0f, fAngle + D3DX_PI, 0.0f));
-
-			// 右手の位置
-			D3DXVECTOR3 playerHandR = GetPositionFromMatrix(m_apModel[5]->GetMatrixWorld());
-
-			// モーションをダメージにする
-			m_pMotion->SetMotion(TYPE_PARRY, true, 2);
-
-			// パーティクルの生成
-			CParticle3D::Create(playerHandR, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f), 240, 20.0f, 25, 120, 15.0f);
-
-			// インパクトの設定
-			CMeshCircle::Confing Circleconfig = { 50.0f,10.0f,0.0f,50.0f,30,false };
-
-			// インパクトを生成
-			CMeshCircle::Create(Circleconfig,D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), playerHandR,32, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
-
-			// 再設定
-			pImpact->Reset(dir,pImpact->OBJ_PLAYER, playerHandR,D3DXCOLOR(1.0f,1.0f,0.5f,1.0f));
-		}
-		// インパクトの当たり判定
-		else if (bCollision && m_pMotion->GetBlendType() != TYPE_DAMAGE)
-		{
-			// インパクトの位置の取得
-			D3DXVECTOR3 impactPos = pImpact->GetPosition();
-
-			// 吹き飛び処理
-			BlowOff(impactPos, 50.0f, 10.0f);
-
-			// モーションの設定
-			ChangeState(make_shared<CPlayerDamage>(5));
-		}
-	}
 
 	// 重力を加算
 	m_pMove->Gravity(-MAX_GRABITY);
-
-	//// 影の更新処理
-	//if (m_pShadow != nullptr)
-	//{
-	//	D3DXVECTOR3 FieldNor = pMesh->GetNor(); 	// 地面の法線ベクトルの取得
-
-	//	D3DXVECTOR3 PlayerRay = D3DXVECTOR3(0.0f, 1.0f, 0.0f);  // 上方向ベクトルの作成
-
-	//	// 影の設定処理
-	//	m_pShadow->Update(D3DXVECTOR3(pos.x,pos.y - fHeight,pos.z),D3DXVECTOR3(pos.x, fHeight + 2.0f, pos.z), SHADOW_SIZE, SHADOW_SIZE, SHADOW_MAX_HEIGHT,SHADOW_A_LEVEL);
-
-	//	// 地面の角度に合わせた角度を設定
-	//	m_pShadow->SetFieldAngle(FieldNor, PlayerRay);
-	//}
 
 	// ジャンプできるなら
 	if ((pKeyboard->GetPress(DIK_SPACE) == true || pJoypad->GetPress(pJoypad->JOYKEY_A) == true) && m_bJump == true)
@@ -419,6 +382,10 @@ void CPlayer::Update(void)
 	{
 		m_pMotion->SetMotion(TYPE_ACTION, true,6);
 	
+		// パリィの時間
+		m_nParryTime = PARRY_TIME;
+		m_nParryCounter = 0;
+
 		m_pCharacter3D->SetState(m_pCharacter3D->STATE_ACTION, PARRY_TIME);
 	}
 
@@ -576,16 +543,51 @@ void CPlayer::Draw(void)
 }
 
 //===================================================
-// カウンター
+// パリィの更新
 //===================================================
 void CPlayer::UpdateParry(void)
 {
-	if (m_nParryCounter >= 0)
+	// パリィのカウンター
+	if (m_nParryCounter >= m_nParryTime)
 	{
-		m_nParryCounter--;
+		m_nParryCounter = 0;
+	}
+	else
+	{
+		m_nParryCounter++;
 	}
 }
 
+//===================================================
+// パリィが成功したかどうか
+//===================================================
+int CPlayer::SuccessParry(const int nParfectTime)
+{
+	// 状態がアクションじゃなかったら抜ける
+	if (m_pCharacter3D->GetState() != STATE::STATE_ACTION) return PARRY_MISS;
+
+	// パーフェクトタイムまでの差分を求める
+	int nDiff = abs(nParfectTime - m_nParryCounter);
+
+	// パーフェクトだったら
+	if (nDiff >= 0 && nDiff <= 5)
+	{
+		// 完璧
+		return PARRY_PARFECT;
+	}
+	else if (nDiff > 5 && nDiff <= 10)
+	{
+		// 普通
+		return PARRY_NORMAL;
+	}
+	else if (nDiff > 10 && nDiff <= m_nParryTime)
+	{
+		// 弱い
+		return PARRY_WEAK;
+	}
+	
+	return PARRY_MISS;
+}
 
 //===================================================
 // 吹き飛び処理
@@ -679,7 +681,9 @@ bool CPlayer::IsParry(const D3DXVECTOR3 pos)
 	CCollisionFOV* pCollision = CCollisionFOV::GetInstance();
 
 	// 視界内かつ状態が攻撃の時
-	if (m_pCharacter3D->GetState() == CCharacter3D::STATE_ACTION && pCollision->Collision(pos, m_pFOV.get()))
+	if (m_pCharacter3D->GetState() == CCharacter3D::STATE_ACTION &&
+		pCollision->Collision(pos, m_pFOV.get()) &&
+		m_pMotion->GetBlendType() != TYPE_PARRY)
 	{
 		return true;
 	}

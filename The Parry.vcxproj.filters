@@ -117,9 +117,6 @@
     <ClCompile Include="Wave.cpp">
       <Filter>ソース ファイル\mesh</Filter>
     </ClCompile>
-    <ClCompile Include="renderer.cpp">
-      <Filter>ソース ファイル\base</Filter>
-    </ClCompile>
     <ClCompile Include="input.cpp">
       <Filter>ソース ファイル\base</Filter>
     </ClCompile>
@@ -254,6 +251,9 @@
     </ClCompile>
     <ClCompile Include="game.cpp">
       <Filter>ソース ファイル\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer.cpp">
+      <Filter>ソース ファイル\base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -20,6 +20,7 @@
 #include"input.h"
 #include"result.h"
 #include"fade.h"
+#include "debugproc.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -76,7 +77,13 @@ HRESULT CGame::Init(void)
 	int face = CCollisionAABB::FACE_LEFT;
 
 	// スパイクトラップ
-	CSpikeTrap::Create(D3DXVECTOR3(1840.0f, 0.0f, 0.0f), face);
+	CSpikeTrap::Create(D3DXVECTOR3(1840.0f, 0.0f, 0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f) ,face);
+
+	// 面の設定
+	face = CCollisionAABB::FACE_RIGHT;
+
+	// スパイクトラップ
+	CSpikeTrap::Create(D3DXVECTOR3(-1840.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f,D3DX_PI, 0.0f), face);
 
 	return S_OK;
 }
@@ -132,5 +139,17 @@ void CGame::Update(void)
 //===================================================
 void CGame::Draw(void)
 {
+	CDebugProc::Print("デバッグ 非表示      : [ F2 ]\n");
 
+	CDebugProc::Print("影の表示 : [ 2 ]\n");
+
+	for (int nCntPriority = 0; nCntPriority < NUM_PRIORITY; nCntPriority++)
+	{
+		int nNumAll = CObject::GetNumObject(nCntPriority);
+
+		// 文字の表示
+		CDebugProc::Print("[ Priority = %d : Numobj = %d]\n", nCntPriority, nNumAll);
+	}
+
+	CDebugProc::Print("ワイヤーフレーム : [ F6 ]\n");
 }

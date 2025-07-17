@@ -49,7 +49,7 @@ CShadowS* CShadowS::Create(const D3DXVECTOR3 pos, D3DXVECTOR3* pScal)
 
 	pShadowS->SetPosition(pos);
 	pShadowS->m_pScal = pScal;
-
+	pShadowS->GetRotaition()->Set(D3DXVECTOR3(0.0f, 0.0f, D3DX_PI * 0.25f));
 	return pShadowS;
 }
 
@@ -160,7 +160,7 @@ void CShadowS::Draw(void)
 	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
 
 	// ‰e‚Ì•\Ž¦
-	if (pKeyboard != nullptr && pKeyboard->GetTrigger(DIK_F3))
+	if (pKeyboard != nullptr && pKeyboard->GetTrigger(DIK_2))
 	{
 		m_bShowShadow = m_bShowShadow ? false : true;
 	}

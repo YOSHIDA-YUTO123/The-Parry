@@ -38,7 +38,6 @@ CMeshField::CMeshField(int nPriority) : CMesh(nPriority)
 	m_fWidth = NULL;
 	m_fHeight = NULL;
 	m_Nor = VEC3_NULL;
-	m_pImpact = nullptr;
 }
 
 //================================================
@@ -114,24 +113,29 @@ HRESULT CMeshField::Init(void)
 void CMeshField::Uninit(void)
 {
 	// 波の破棄
-	for (int nCnt = 0; nCnt < (int)m_pWave.size(); nCnt++)
+	for (int nCnt = 0; nCnt < (int)m_apWave.size(); nCnt++)
 	{
-		if (m_pWave[nCnt] != nullptr)
+		if (m_apWave[nCnt] != nullptr)
 		{
-			delete m_pWave[nCnt];
-			m_pWave[nCnt] = nullptr;
+			delete m_apWave[nCnt];
+			m_apWave[nCnt] = nullptr;
 		}
 	}
 	// 要素のクリア
-	m_pWave.clear();
+	m_apWave.clear();
 
 	// インパクトの破棄
-	if (m_pImpact != nullptr)
+	for (int nCnt = 0; nCnt < (int)m_apImpact.size(); nCnt++)
 	{
-		m_pImpact->Uninit();
-		delete m_pImpact;
-		m_pImpact = nullptr;
+		if (m_apImpact[nCnt] != nullptr)
+		{
+			delete m_apImpact[nCnt];
+			m_apImpact[nCnt] = nullptr;
+		}
 	}
+
+	// 要素のクリア
+	m_apImpact.clear();
 
 	// 終了処理
 	CMesh::Uninit();
@@ -155,54 +159,66 @@ void CMeshField::Update(void)
 	int nNumVtx = (nSegH + 1) * (nSegV + 1);
 #if 1
 
-	// 要素分調べる
-	for (int nCnt = 0; nCnt < (int)m_pWave.size(); nCnt++)
-	{
-		// 波の更新処理
-		if (m_pWave[nCnt] != nullptr)
-		{
-			// 波の更新処理
-			bool bResult = m_pWave[nCnt]->Update(this, nNumVtx);
+	// インパクト総数の取得
+	int nImpactSize = static_cast<int>(m_apImpact.size());
 
-			// ウェーブが消えたら
-			if (m_pWave[nCnt] != nullptr && bResult == false)
-			{
-				// ウェーブの破棄
-				delete m_pWave[nCnt];
-				m_pWave[nCnt] = nullptr;
-			}
+	// ウェーブの総数
+	int nWaveSize = static_cast<int>(m_apWave.size());
+
+	// 要素分調べる
+	for (int nCnt = 0; nCnt < nWaveSize; nCnt++)
+	{
+		// nullなら処理を飛ばす
+		if (m_apWave[nCnt] == nullptr) continue;
+
+		// 波の更新処理
+		bool bResult = m_apWave[nCnt]->Update(this, nNumVtx);
+
+		// ウェーブが消えたら
+		if (bResult == false)
+		{
+			// ウェーブの破棄
+			delete m_apWave[nCnt];
+			m_apWave[nCnt] = nullptr;
 		}
 	}
 
-	// nullじゃないなら
-	if (m_pImpact != nullptr)
+	// 要素分調べる
+	for (int nCnt = 0; nCnt < nImpactSize; nCnt++)
 	{
+		// nullなら処理を飛ばす
+		if (m_apImpact[nCnt] == nullptr) continue;
+
 		// インパクトの更新処理
-		bool bResult = m_pImpact->Update(this, nNumVtx);
+		bool bResult = m_apImpact[nCnt]->Update(this, nNumVtx);
 
 		// インパクトの破棄
-		if (bResult == false && m_pImpact != nullptr)
+		if (bResult == false)
 		{
-			m_pImpact->Uninit();
-			delete m_pImpact;
-			m_pImpact = nullptr;
+			m_apImpact[nCnt]->Uninit();
+			delete m_apImpact[nCnt];
+			m_apImpact[nCnt] = nullptr;
 		}
 	}
 
 	// 要素分調べる
-	for (int nCnt = 0; nCnt < (int)m_pWave.size(); nCnt++)
+	for (int nCnt = 0; nCnt < nWaveSize; nCnt++)
 	{
 		// 波が使われているなら
-		if (m_pWave[nCnt] != nullptr)
+		if (m_apWave[nCnt] != nullptr)
 		{
 			return;
 		}
 	}
 
-	// インパクトが使われているなら
-	if (m_pImpact != nullptr)
+	// 要素分調べる
+	for (int nCnt = 0; nCnt < nImpactSize; nCnt++)
 	{
-		return;
+		// インパクトが使われているなら
+		if (m_apImpact[nCnt] != nullptr)
+		{
+			return;
+		}
 	}
 
 	// 頂点の高さを0に戻す
@@ -450,6 +466,55 @@ bool CMeshField::Collision(const D3DXVECTOR3 pos,float *pOutHeight)
 }
 
 //================================================
+// インパクトとの当たり判定
+//================================================
+bool CMeshField::CollisionImpact(const D3DXVECTOR3 pos, const float fRadius, const CMeshFieldImpact::OBJ myObj,int *pIdx, D3DXVECTOR3* pFirstPos, D3DXVECTOR3* pImpactPos)
+{
+	// 総数の取得
+	int Size = static_cast<int>(m_apImpact.size());
+
+	// 総数分調べる
+	for (int nCnt = 0; nCnt < Size; nCnt++)
+	{
+		// nullなら処理を飛ばす
+		if (m_apImpact[nCnt] == nullptr) continue;
+
+		// 当たっている
+		if (m_apImpact[nCnt]->Collision(pos, fRadius, myObj, pFirstPos, pImpactPos))
+		{
+			if (pIdx != nullptr)
+			{
+				// インデックス番号を渡す
+				*pIdx = nCnt;
+			}
+
+			return true;
+		}
+	}
+	return false;
+}
+
+//================================================
+// インパクトの再設定
+//================================================
+void CMeshField::ResetImpact(D3DXVECTOR3 dir, const CMeshFieldImpact::OBJ obj, const D3DXVECTOR3 FirstPos, const D3DXCOLOR Circlecol,const int nIdx)
+{
+	// 総数の取得
+	int Size = static_cast<int>(m_apImpact.size());
+
+	// インデックスが範囲外だったら処理をしない
+	if (nIdx < 0 || nIdx >= Size)
+	{
+		return;
+	}
+	if (m_apImpact[nIdx] != nullptr)
+	{
+		// 再設定
+		m_apImpact[nIdx]->Reset(dir, obj, FirstPos, Circlecol);
+	}
+}
+
+//================================================
 // 法線の再設定処理
 //================================================
 void CMeshField::UpdateNor(void)
@@ -687,7 +752,7 @@ void CMeshField::SetWave(CMeshFieldWave::Config config)
 	CMeshFieldWave *pWave = CMeshFieldWave::Create(config);
 
 	// 要素の追加
-	m_pWave.push_back(pWave);
+	m_apWave.push_back(pWave);
 }
 
 //================================================
@@ -695,12 +760,11 @@ void CMeshField::SetWave(CMeshFieldWave::Config config)
 //================================================
 void CMeshField::SetImpact(CMeshFieldImpact::Config config)
 {
+	auto pImpact = CMeshFieldImpact::Create(config);
+
 	// インパクトの生成
-	if (m_pImpact == nullptr)
-	{
-		// インパクトの生成
-		m_pImpact = CMeshFieldImpact::Create(config);
-	}
+	m_apImpact.push_back(pImpact);
+	
 }
 
 //================================================
@@ -1040,7 +1104,7 @@ bool CMeshFieldImpact::Update(CMeshField* pMeshField, const int nNumVtx)
 //================================================
 // 当たり判定
 //================================================
-bool CMeshFieldImpact::Collision(const D3DXVECTOR3 pos, const float fRadius,const OBJ myObj)
+bool CMeshFieldImpact::Collision(const D3DXVECTOR3 pos, const float fRadius,const OBJ myObj, D3DXVECTOR3* pFirstPos, D3DXVECTOR3* pImpactPos)
 {
 	// 位置を保存
 	D3DXVECTOR3 NewPos = pos;
@@ -1059,6 +1123,17 @@ bool CMeshFieldImpact::Collision(const D3DXVECTOR3 pos, const float fRadius,cons
 		// 当たり判定
 		if (pCollision->Collision(&sphere, m_pSphere.get()) && myObj != m_Config.ObjType)
 		{
+			if (pFirstPos != nullptr)
+			{
+				// 発射地点を設定
+				*pFirstPos = m_Config.FirstPos;
+			}
+
+			if (pImpactPos != nullptr)
+			{
+				// 衝撃波の位置を設定
+				*pImpactPos = m_Config.pos;
+			}
 			return true;
 		}
 	}

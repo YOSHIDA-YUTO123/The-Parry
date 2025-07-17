@@ -3048,7 +3048,7 @@ MOTIONSET
 	NUM_KEY = 6			# ÉLÅ[ÇÃëçêî
 
 	KEYSET				# --- << KEY : 0 / 6 >> --- 
-		FRAME = 7
+		FRAME = 5
 		KEY # ----- [ 0 ] -----
 			POS = 0.00 0.00 0.00
 			ROT = -0.68 0.00 0.00
@@ -3126,7 +3126,7 @@ MOTIONSET
 	END_KEYSET
 
 	KEYSET				# --- << KEY : 1 / 6 >> --- 
-		FRAME = 7
+		FRAME = 5
 		KEY # ----- [ 0 ] -----
 			POS = 0.00 -43.00 0.00
 			ROT = -1.78 0.00 0.00
@@ -3204,7 +3204,7 @@ MOTIONSET
 	END_KEYSET
 
 	KEYSET				# --- << KEY : 2 / 6 >> --- 
-		FRAME = 7
+		FRAME = 5
 		KEY # ----- [ 0 ] -----
 			POS = 0.00 -51.00 0.00
 			ROT = -2.64 0.00 0.00
@@ -3282,7 +3282,7 @@ MOTIONSET
 	END_KEYSET
 
 	KEYSET				# --- << KEY : 3 / 6 >> --- 
-		FRAME = 7
+		FRAME = 5
 		KEY # ----- [ 0 ] -----
 			POS = 0.00 -102.00 0.00
 			ROT = 2.44 0.00 0.00
@@ -3360,7 +3360,7 @@ MOTIONSET
 	END_KEYSET
 
 	KEYSET				# --- << KEY : 4 / 6 >> --- 
-		FRAME = 10
+		FRAME = 5
 		KEY # ----- [ 0 ] -----
 			POS = 0.00 -93.00 0.00
 			ROT = 0.89 0.00 0.00
@@ -3438,7 +3438,7 @@ MOTIONSET
 	END_KEYSET
 
 	KEYSET				# --- << KEY : 5 / 6 >> --- 
-		FRAME = 10
+		FRAME = 5
 		KEY # ----- [ 0 ] -----
 			POS = 0.00 -34.00 0.00
 			ROT = -0.11 0.00 0.00

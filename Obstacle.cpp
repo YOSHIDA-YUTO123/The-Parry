@@ -239,7 +239,7 @@ CSpikeTrap::~CSpikeTrap()
 //==============================================
 // 生成処理
 //==============================================
-CSpikeTrap* CSpikeTrap::Create(const D3DXVECTOR3 pos, const int nDamageFace)
+CSpikeTrap* CSpikeTrap::Create(const D3DXVECTOR3 pos,const D3DXVECTOR3 rot, const int nDamageFace)
 {
 	CSpikeTrap* pObstacle = nullptr;
 
@@ -260,6 +260,7 @@ CSpikeTrap* CSpikeTrap::Create(const D3DXVECTOR3 pos, const int nDamageFace)
 	
 	// オブジェクト
 	pObstacle->SetPosition(pos);
+	pObstacle->SetRotaition(rot);
 	pObstacle->m_nDamageFace = nDamageFace;
 
 	// マネージャーの生成

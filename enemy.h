@@ -50,12 +50,13 @@ public:
 		MOTION_SMASH,
 		MOTION_JUMP,
 		MOTION_LANDING,
-		MOTION_DAMAGE,
+		MOTION_DAMAGEL,
 		MOTION_IMPACT,
 		MOTION_ROAR,
 		MOTION_DASH,
 		MOTION_SPIN,
 		MOTION_HIT,
+		MOTION_DAMAGES,
 		MOTION_MAX
 	}MOTION;
 
@@ -71,15 +72,18 @@ public:
 
 	D3DXVECTOR3 GetPosition(void) { return m_pCharactor->GetPosition(); }
 
+	void SelectDamageMotion(int success);	// どのダメージモーションが出るか判定する関数
+	bool IsDamageMotion(void);				// ダメージモーションかどうか
 	bool CollisionWepon(void);
 	void ChasePlayer(float chaseScal, const float speedScal = 1.0f);	// プレイヤーを追いかける処理
 	void AngleToPlayer(void);											// プレイヤーの方向を見る処理
 	bool CheckDistane(const float fRadius);								// 距離の判定
 	void Orbit(const int nSegH, const D3DXCOLOR col);					// 軌跡の設定
-	void DeleteOrbit(void);												// 軌跡の消去					
-	CMotion* GetMotion(void) { return m_pMotion.get(); }
+	void DeleteOrbit(void);												// 軌跡の消去
 	void ChangeState(std::shared_ptr<CEnemyState> pNewState);
 	bool CollisionObstacle(D3DXVECTOR3* pPos);
+	void SetSuccess(const int success) { m_nParrySuccess = success; }   // 成功度の設定
+	CMotion* GetMotion(void) { return m_pMotion.get(); }
 	CEnemyMovement* GetMovement(void) { return m_pMovement.get(); }
 private:
 	void SetParent(const int nCnt);
@@ -97,6 +101,7 @@ private:
 	D3DXMATRIX m_weponMatrix;							// 武器のワールドマトリックス
 	D3DXVECTOR3 m_posOld;								// 前回の位置
 	D3DXVECTOR3 m_Size;									// 敵の全体の大きさ
+	int m_nParrySuccess;								// パリィの成功度(保存用)
 	int m_nNumModel;									// モデルの最大数
 };
 

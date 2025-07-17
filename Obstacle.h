@@ -62,7 +62,7 @@ class CSpikeTrap : public CObstacle
 public:
 	CSpikeTrap();
 	~CSpikeTrap();
-	static CSpikeTrap* Create(const D3DXVECTOR3 pos,const int nDamageFace);
+	static CSpikeTrap* Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot,const int nDamageFace);
 
 	HRESULT Init(void) override;
 	void Uninit(void) override;

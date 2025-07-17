@@ -528,10 +528,13 @@ void CManager::EnablePause(void)
 //===================================================
 void CManager::SetMode(unique_ptr<CScene> pNewScene)
 {
-	// シーンが同じだったら設定しない
-	if (m_pScene.get() == pNewScene.get())
+	if (m_pScene != nullptr)
 	{
-		return;
+		// シーンが同じだったら設定しない
+		if (m_pScene->GetMode() == pNewScene->GetMode())
+		{
+			return;
+		}
 	}
 
 	// 今のシーンの破棄

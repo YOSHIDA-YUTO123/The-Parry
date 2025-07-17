@@ -13,6 +13,7 @@
 #include "math.h"
 #include"meshfield.h"
 #include "manager.h"
+#include"slow.h"
 
 using namespace Const;							// 名前空間Constを使用する
 
@@ -149,7 +150,7 @@ void CParticle3D::Update(void)
 			CEffect3D* pEffect = nullptr;
 
 			// エフェクトの生成
-			pEffect = CEffect3D::Create(pos, fRadius, moveWk, m_col, nLife);
+			pEffect = CEffect3D::Create(pos, fRadius, moveWk, m_col, nLife * CManager::GetSlow()->GetLevel(true));
 
 			m_apEffect.push_back(pEffect);
 		}
@@ -158,8 +159,11 @@ void CParticle3D::Update(void)
 	m_nTime--;
 	m_nLife--;
 
-	// 終了処理
-	Uninit();	
+	if (m_nTime <= 0 || m_nLife <= 0)
+	{
+		m_apEffect.clear();
+		Uninit();
+	}
 }
 
 //===================================================

@@ -126,6 +126,8 @@ void CMeshDome::Draw(void)
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
+	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+
 	pDevice->SetRenderState(D3DRS_CULLMODE, TRUE);
 
 	int nSegH = GetSegH();
@@ -153,6 +155,8 @@ void CMeshDome::Draw(void)
 	pDevice->DrawIndexedPrimitive(D3DPT_TRIANGLESTRIP, 0, 0, nNumDomeVtx, m_nOffsetIdx, nNumDomePolygon);
 
 	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+
+	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 }
 
 //================================================

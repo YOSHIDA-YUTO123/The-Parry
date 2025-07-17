@@ -40,11 +40,12 @@ public:
 		ID_LANDING,
 		ID_SMASH,
 		ID_IMPACT,
-		ID_DAMAGE,
+		ID_DAMAGEL,
 		ID_ROAR,
 		ID_DASH,
 		ID_SPIN,
 		ID_HIT,
+		ID_DAMAGES,
 		ID_MAX
 	};
 
@@ -137,13 +138,14 @@ private:
 };
 
 //***************************************************
-// 敵の状態(DAMAGE)クラスの定義
+// 敵の状態(DAMAGELarge)クラスの定義
 //***************************************************
-class CEnemyDamage : public CEnemyState
+class CEnemyDamageL : public CEnemyState
 {
 public:
-	CEnemyDamage(const bool bBackStatp = false);
-	~CEnemyDamage();
+	CEnemyDamageL(const bool bBackStatp = false);
+	~CEnemyDamageL();
+	void Init(void) override;
 	void Update(void) override;
 private:
 	bool m_bBackStap; // モーション終わりにバックステップするか判定
@@ -195,6 +197,19 @@ class CEnemyHit : public CEnemyState
 public:
 	CEnemyHit();
 	~CEnemyHit();
+	void Init(void) override;
+	void Update(void) override;
+private:
+};
+
+//***************************************************
+// 敵の状態(DAMAGESmall)クラスの定義
+//***************************************************
+class CEnemyDamageS : public CEnemyState
+{
+public:
+	CEnemyDamageS();
+	~CEnemyDamageS();
 	void Init(void) override;
 	void Update(void) override;
 private:

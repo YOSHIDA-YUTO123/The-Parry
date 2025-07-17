@@ -55,6 +55,7 @@ using namespace std;							// 名前空間stdを使用
 //===================================================
 CEnemy::CEnemy()
 {
+	m_nParrySuccess = NULL;
 	m_pMove = nullptr;
 	m_pMachine = nullptr;
 	m_nNumModel = NULL;
@@ -110,7 +111,7 @@ HRESULT CEnemy::Init(void)
 	m_pCharactor = make_unique<CCharacter3D>();
 
 	// キャラクターの設定処理
-	m_pCharactor->SetCharacter(10, 5.0f,D3DXVECTOR3(2.0f, 1.0f, 2.0f));
+	m_pCharactor->SetCharacter(10, 12.0f,D3DXVECTOR3(5.0f, 1.0f, 5.0f));
 
 	// 位置の取得処理
 	D3DXVECTOR3 pos = m_pCharactor->GetPosition();
@@ -277,21 +278,8 @@ void CEnemy::Update(void)
 		pCylinder->Collision(&pos);
 	}
 	
-
 	// 重力の設定
 	m_pMove->Gravity(-MAX_GRABITY);
-
-	//if (m_pShadow != nullptr)
-	//{
-	//	D3DXVECTOR3 FieldNor = pMesh->GetNor(); 		   // 地面の法線ベクトルの取得
-	//	D3DXVECTOR3 VecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);  // 上方向ベクトルの作成
-
-	//	// 地面の角度に合わせた角度を設定
-	//	m_pShadow->SetFieldAngle(FieldNor, VecU);
-
-	//	// 影の設定処理
-	//	m_pShadow->Update(D3DXVECTOR3(pos.x, pos.y - fHeight, pos.z), D3DXVECTOR3(pos.x, fHeight + 5.0f, pos.z), SHADOW_SIZE, SHADOW_SIZE, SHADOW_MAX_HEIGHT, SHADOW_ALEVEL);
-	//}
 
 	// モーションがnullじゃないなら
 	if (m_pMotion != nullptr)
@@ -300,27 +288,19 @@ void CEnemy::Update(void)
 		m_pMotion->Update(&m_apModel[0], m_nNumModel);
 	}
 
-	// インパクトの取得
-	CMeshFieldImpact* pImpact = pMesh->GetImpact();
+	// インパクトとの判定
+	const bool bCollision = pMesh->CollisionImpact(pos, 150.0f,CMeshFieldImpact::OBJ_ENEMY);
 
-	if (pImpact != nullptr)
-	{
-		// インパクトとの判定
-		const bool bCollision = pImpact->Collision(pos, 150.0f, pImpact->OBJ_ENEMY);
+	// インパクトの当たり判定
+	if (bCollision && IsDamageMotion() == false)
+	{			
+		// 状態の設定
+		ChangeState(make_shared<CEnemyDamageL>());
 
-		// インパクトの当たり判定
-		if (bCollision && m_pMotion->GetBlendType() != MOTION_DAMAGE)
-		{
-			// インパクトの位置の取得
-			D3DXVECTOR3 impactPos = pImpact->GetPosition();
-			
-			// 状態の設定
-			ChangeState(make_shared<CEnemyDamage>());
-
-			// モーションの設定
-			m_pMotion->SetMotion(MOTION_DAMAGE, true, 2);
-		}
+		// モーションの設定
+		m_pMotion->SetMotion(MOTION_DAMAGEL, true, 2);
 	}
+	
 
 	// 武器の先端の位置
 	D3DXVECTOR3 WeponPos = GetPositionFromMatrix(m_weponMatrix);
@@ -333,7 +313,7 @@ void CEnemy::Update(void)
 	if (m_pMotion->IsEventFrame(50, 50, MOTION_SMASH))
 	{
 		// パーティクルの生成
-		CParticle3D::Create(chestpos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), 240, 100.0f, 50, 120, 15.0f);
+		CParticle3D::Create(chestpos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), 240, 100.0f, 50, 1, 15.0f);
 	}
 	else if (m_pMotion->IsEventFrame(50, 50, MOTION_IMPACT))
 	{
@@ -342,7 +322,7 @@ void CEnemy::Update(void)
 	}
 
 	// パリィモーションのパンチになったら
-	if (pPlayerMotion->IsEventFrame(11, 11,pPlayer->TYPE_PARRY) && m_pMotion->GetBlendType() != MOTION_DAMAGE)
+	if (pPlayerMotion->IsEventFrame(11, 11,pPlayer->TYPE_PARRY) && IsDamageMotion() == false)
 	{
 		// プレイヤーの右手の位置
 		D3DXVECTOR3 playerHandR = pPlayer->GetModelPos(5);
@@ -357,23 +337,14 @@ void CEnemy::Update(void)
 		// 手が当たったら
 		if (pSphere != nullptr && pSphere->Collision(&ChestSphere, &HandRSphere))
 		{
-			// スローモーションの取得
-			CSlow* pSlow = CManager::GetSlow();
-
-			// スローモーション
-			pSlow->Start(60, 12);
-
-			// パーティクルの生成
-			CParticle3D::Create(playerHandR, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f), 240, 20.0f, 50, 120, 15.0f);
-
 			// ボスまでの角度を取得
 			float fAngle = GetTargetAngle(pos, PlayerPos);
 
 			// 向きの設定
 			pPlayer->SetAngle(fAngle + D3DX_PI);
 
-			// 吹き飛び処理
-			m_pMovement->BlowOff(PlayerPos, 250.0f, 5.0f);
+			// パーティクルの生成
+			CParticle3D::Create(playerHandR, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f), 240, 10.0f, 50, 5, 15.0f);
 
 			// インパクトの設定
 			CMeshCircle::Confing Circleconfig = { 35.0f,10.0f,0.0f,120.0f,120,false };
@@ -381,11 +352,8 @@ void CEnemy::Update(void)
 			// インパクトを生成
 			CMeshCircle::Create(Circleconfig, D3DXCOLOR(1.0f, 1.0f, 0.4f, 0.8f), playerHandR, 32, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
 
-			// モーションをダメージにする
-			m_pMotion->SetMotion(MOTION_DAMAGE, true, 2);
-
-			// 状態の設定
-			ChangeState(make_shared<CEnemyDamage>());
+			// どの攻撃モーションがでるか判定
+			SelectDamageMotion(m_nParrySuccess);
 		}
 	}
 
@@ -499,6 +467,52 @@ void CEnemy::Draw(void)
 			}
 		}
 	}
+}
+
+//===================================================
+// どのダメージモーションが出るか判定
+//===================================================
+void CEnemy::SelectDamageMotion(int success)
+{
+	int a = 0;
+	// 成功度の遷移
+	switch (success)
+	{
+	case CPlayer::PARRY_MISS:
+		break;
+	case CPlayer::PARRY_WEAK:
+		// 状態の設定
+		ChangeState(make_shared<CEnemyDamageS>());
+		break;
+	case CPlayer::PARRY_NORMAL:
+		// 状態の設定
+		ChangeState(make_shared<CEnemyDamageS>());
+		break;
+	case CPlayer::PARRY_PARFECT:
+		// 状態の設定
+		ChangeState(make_shared<CEnemyDamageL>());
+		break;
+	default:
+		break;
+	}
+}
+
+//===================================================
+// ダメージモーションかどうか
+//===================================================
+bool CEnemy::IsDamageMotion(void)
+{
+	// モーションの種類の取得
+	int motionType = m_pMotion->GetBlendType();
+
+	// ダメージモーションだったら
+	if (motionType == MOTION_DAMAGEL ||
+		motionType == MOTION_DAMAGES)
+	{
+		return true;
+	}
+
+	return false;
 }
 
 //===================================================
@@ -755,10 +769,10 @@ bool CEnemy::CollisionObstacle(D3DXVECTOR3 *pPos)
 			m_pCharactor->GetRotation()->SetDest(D3DXVECTOR3(0.0f, fAngle, 0.0f));
 
 			// ダメージ状態にする
-			ChangeState(make_shared<CEnemyDamage>(true));
+			ChangeState(make_shared<CEnemyDamageL>(true));
 
 			// モーションの設定
-			m_pMotion->SetMotion(MOTION_DAMAGE, true, 2);
+			m_pMotion->SetMotion(MOTION_DAMAGEL, true, 2);
 
 			return true;
 		}

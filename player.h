@@ -48,7 +48,7 @@ class CPlayer : public CObject
 public:
 
 	// モーションの種類
-	typedef enum
+	enum TYPE
 	{
 		TYPE_NEUTRAL = 0,
 		TYPE_MOVE,
@@ -61,7 +61,17 @@ public:
 		TYPE_DOWN_NEUTRAL,
 		TYPE_AVOID,
 		TYPE_MAX
-	}TYPE;
+	};
+
+	// パリィの成功度
+	enum PARRY
+	{
+		PARRY_MISS = 0,
+		PARRY_WEAK,
+		PARRY_NORMAL,
+		PARRY_PARFECT,
+		PARRY_MAX
+	};
 
 	CPlayer(int nPriority = 4);
 	~CPlayer();
@@ -75,6 +85,8 @@ public:
 	void Draw(void) override;
 
 	void UpdateParry(void);
+	int SuccessParry(const int nParfectTime);
+
 	CColliderSphere* GetSphereCollider(void) { return m_pSphere.get(); }
 	D3DXVECTOR3 GetPos(void) const { return m_pCharacter3D->GetPosition(); }
 	D3DXVECTOR3 GetModelPos(const int nIdx) { return math::GetPositionFromMatrix(m_apModel[nIdx]->GetMatrixWorld()); }

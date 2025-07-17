@@ -15,13 +15,19 @@
 #include"player.h"
 #include "manager.h"
 #include "playerstate.h"
-
 #include"slow.h"
 #include "game.h"
+
+//***************************************************
+// 名前空間
+//***************************************************
 using namespace std;  // 名前空間stdを使用
 using namespace math; // 名前空間sを使用
 using MOTION = CEnemy::MOTION;
 
+//***************************************************
+// 定数宣言
+//***************************************************
 constexpr int NEXT_STAE_TIME = 180; // 次の行動に移るまでの時間
 constexpr int START_IMPACT = 55;	// インパクト攻撃の開始確率
 constexpr int SPIN_TIME = 60;		// 回転モーションの時間
@@ -214,7 +220,7 @@ void CEnemyAttackSmash::Update(void)
 	D3DXVECTOR3 pos = m_pEnemy->GetPosition();
 
 	// イベントフレームの判定
-	if (pMotion->IsEventFrame(64, 71, MOTION::MOTION_SMASH) && pMotion->GetBlendType() != MOTION::MOTION_DAMAGE)
+	if (pMotion->IsEventFrame(64, 71, MOTION::MOTION_SMASH) && m_pEnemy->IsDamageMotion() == false)
 	{
 		// プレイヤーの視界の中にいる
 		const bool bParry = pPlayer->IsParry(pos);
@@ -224,6 +230,12 @@ void CEnemyAttackSmash::Update(void)
 		{
 			// パリィモーションの再生
 			pPlayerMotion->SetMotion(pPlayer->TYPE_PARRY, true, 2);
+
+			// 成功度
+			int nSuccess = pPlayer->SuccessParry(2);
+
+			// 成功度の設定
+			m_pEnemy->SetSuccess(nSuccess);
 
 			// ヒット状態にする
 			m_pEnemy->ChangeState(make_shared<CEnemyHit>());
@@ -245,8 +257,8 @@ void CEnemyAttackSmash::Update(void)
 			pPlayer->ChangeState(make_shared<CPlayerDamage>(2));
 		}
 	}
-
-	if (pMotion->IsEventFrame(1, 64, MOTION::MOTION_SMASH))
+	
+	if (pMotion->IsEventFrame(1, 54, MOTION::MOTION_SMASH))
 	{
 		// プレイヤーの方向を見る処理
 		m_pEnemy->AngleToPlayer();
@@ -257,7 +269,7 @@ void CEnemyAttackSmash::Update(void)
 		// 軌跡の処理
 		m_pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f));
 	}
-	
+
 	// 攻撃モーションが終わったら
 	if (pMotion->IsFinishEndBlend())
 	{
@@ -269,32 +281,68 @@ void CEnemyAttackSmash::Update(void)
 }
 
 //===================================================
-// コンストラクタ(ダメージ)
+// コンストラクタ(大ダメージ)
 //===================================================
-CEnemyDamage::CEnemyDamage(const bool bBackStatp) : CEnemyState(ID_DAMAGE)
+CEnemyDamageL::CEnemyDamageL(const bool bBackStatp) : CEnemyState(ID_DAMAGEL)
 {
 	m_bBackStap = bBackStatp;
 }
 
 //===================================================
-// デストラクタ(ダメージ)
+// デストラクタ(大ダメージ)
 //===================================================
-CEnemyDamage::~CEnemyDamage()
+CEnemyDamageL::~CEnemyDamageL()
 {
 }
 
 //===================================================
-// 更新処理(ダメージ)
+// 初期化処理(大ダメージ)
 //===================================================
-void CEnemyDamage::Update(void)
+void CEnemyDamageL::Init(void)
+{
+	// スローモーションの取得
+	CSlow* pSlow = CManager::GetSlow();
+
+	if (pSlow != nullptr)
+	{
+		// スローモーション
+		pSlow->Start(60, 12);
+	}
+
+	// モーションクラスの取得
+	CMotion* pMotion = m_pEnemy->GetMotion();
+
+	if (pMotion != nullptr)
+	{
+		// 大ダメージモーションの設定
+		pMotion->SetMotion(MOTION::MOTION_DAMAGEL, true, 2);
+	}
+
+	// 移動制御処理の取得
+	CEnemyMovement *pMovement = m_pEnemy->GetMovement();
+
+	// プレイヤーの取得
+	CPlayer* pPlayer = CGame::GetPlayer();
+
+	if (pMovement != nullptr && pPlayer != nullptr)
+	{
+		// 位置の取得
+		D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
+
+		// 吹き飛び処理
+		pMovement->BlowOff(PlayerPos, 250.0f, 5.0f);
+	}
+}
+
+//===================================================
+// 更新処理(ダメージ大)
+//===================================================
+void CEnemyDamageL::Update(void)
 {
 	// モーションクラスの取得
 	CMotion* pMotion = m_pEnemy->GetMotion();
 
-	// ダメージだったら
-	pMotion->SetMotion(MOTION::MOTION_DAMAGE, true, 2);
-
-	if (pMotion->IsEventFrame(1, 10, MOTION::MOTION_DAMAGE))
+	if (pMotion->IsEventFrame(1, 10, MOTION::MOTION_DAMAGEL))
 	{
 		// プレイヤーの取得
 		CPlayer* pPlayer = CGame::GetPlayer();
@@ -430,7 +478,7 @@ void CEnemyDash::Update(void)
 	pMotion->SetMotion(MOTION::MOTION_DASH, true, 10);
 
 	// プレイヤーを追いかける
-	m_pEnemy->ChasePlayer(0.1f,5.0f);
+	m_pEnemy->ChasePlayer(0.1f,3.0f);
 
 	// 一定の距離に入ったら
 	if (m_pEnemy->CheckDistane(250.0f))
@@ -609,7 +657,7 @@ void CEnemyLanding::Update(void)
 	// モーションの設定
 	pMotion->SetMotion(MOTION::MOTION_LANDING, true, 10);
 
-	if (pMotion->IsFinishEndBlend())
+	if (pMotion != nullptr && pMotion->IsFinishEndBlend())
 	{
 		m_pEnemy->ChangeState(make_shared<CEnemyIdle>(10));
 	}
@@ -637,8 +685,11 @@ void CEnemyHit::Init(void)
 	// モーションクラスの取得
 	CMotion* pMotion = m_pEnemy->GetMotion();
 
-	// モーションの設定
-	pMotion->SetMotion(m_pEnemy->MOTION_HIT, true, 10);
+	if (pMotion != nullptr)
+	{
+		// モーションの設定
+		pMotion->SetMotion(m_pEnemy->MOTION_HIT, true, 10);
+	}
 }
 
 //===================================================
@@ -649,8 +700,69 @@ void CEnemyHit::Update(void)
 	// モーションクラスの取得
 	CMotion* pMotion = m_pEnemy->GetMotion();
 
-	if (pMotion->FinishMotion())
+	if (pMotion != nullptr && pMotion->FinishMotion())
 	{
 		m_pEnemy->ChangeState(make_shared<CEnemyBackStep>());
+	}
+}
+
+//===================================================
+// コンストラクタ(ダメージ小)
+//===================================================
+CEnemyDamageS::CEnemyDamageS() : CEnemyState(ID_DAMAGES)
+{
+
+}
+
+//===================================================
+// デストラクタ(ダメージ小)
+//===================================================
+CEnemyDamageS::~CEnemyDamageS()
+{
+}
+
+//===================================================
+// 初期化処理(ダメージ小)
+//===================================================
+void CEnemyDamageS::Init(void)
+{
+	// モーションクラスの取得
+	CMotion* pMotion = m_pEnemy->GetMotion();
+
+	// 移動制御処理の取得
+	CEnemyMovement* pMovement = m_pEnemy->GetMovement();
+
+	// プレイヤーの取得
+	CPlayer* pPlayer = CGame::GetPlayer();
+
+	if (pMovement != nullptr && pPlayer != nullptr)
+	{
+		// 位置の取得
+		D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
+
+		// 吹き飛び処理
+		pMovement->BlowOff(PlayerPos, 100.0f, 5.0f);
+	}
+
+	if (pMotion != nullptr)
+	{
+		// ダメージモーションにする
+		pMotion->SetMotion(MOTION::MOTION_DAMAGES, true, 2);
+	}
+}
+
+//===================================================
+// 更新処理(ダメージ小)
+//===================================================
+void CEnemyDamageS::Update(void)
+{
+	// モーションクラスの取得
+	CMotion* pMotion = m_pEnemy->GetMotion();
+
+	// モーションが終わったら
+	if (pMotion != nullptr && pMotion->FinishMotion())
+	{
+		// 通常状態に戻す
+		m_pEnemy->ChangeState(make_shared<CEnemyIdle>(5));
 	}
 }

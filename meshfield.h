@@ -18,7 +18,7 @@
 #include<vector>
 #include"transform.h"
 #include"Collision.h"
-#include<memory>
+#include <memory> 
 
 //************************************************
 // 前方宣言
@@ -100,7 +100,7 @@ public:
 	static CMeshFieldImpact* Create(Config config);
 	void Uninit(void);
 	bool Update(CMeshField* pMeshField, const int nNumVtx);
-	bool Collision(const D3DXVECTOR3 pos,const float fRadius, const OBJ myObj);
+	bool Collision(const D3DXVECTOR3 pos,const float fRadius, const OBJ myObj,D3DXVECTOR3 *pFirstPos = nullptr,D3DXVECTOR3 *pImpactPos = nullptr);
 	D3DXVECTOR3 GetPosition(void) const { return m_Config.pos; }
 	D3DXVECTOR3 GetFirstPos(void) const { return m_Config.FirstPos; }
 	void Reset(D3DXVECTOR3 dir, const OBJ obj, const D3DXVECTOR3 FirstPos,const D3DXCOLOR Circlecol);
@@ -132,12 +132,19 @@ public:
 	void Update(void);
 	void Draw(void);
 	void SetMeshField(const int nSegH, const int nSegV, const  D3DXVECTOR3 pos, const D3DXVECTOR2 Size);
-	bool Collision(const D3DXVECTOR3 pos, float* pOutHeight);
+
+	bool Collision(const D3DXVECTOR3 pos, float* pOutHeight); // 地面との当たり判定
+
+	// インパクトとの当たり判定
+	bool CollisionImpact(const D3DXVECTOR3 pos, const float fRadius, const CMeshFieldImpact::OBJ myObj,int* pIdx = nullptr, D3DXVECTOR3* pFirstPos = nullptr, D3DXVECTOR3* pImpactPos = nullptr);
+
+	// インパクトの再設定処理
+	void ResetImpact(D3DXVECTOR3 dir, const CMeshFieldImpact::OBJ obj, const D3DXVECTOR3 FirstPos, const D3DXCOLOR Circlecol, const int nIdx);
+
 	void UpdateNor(void); // 法線の再設定
 
 	// ゲッター
 	D3DXVECTOR3 GetNor(void) const { return m_Nor; }
-	CMeshFieldImpact* GetImpact(void) { return m_pImpact; }
 
 	// セッター
 	void SetWave(CMeshFieldWave::Config config);
@@ -145,10 +152,10 @@ public:
 private:
 	void Load(void);
 
-	std::vector<CMeshFieldWave*> m_pWave;	// フィールドの波クラスへのポインタ
-	CMeshFieldImpact* m_pImpact;			// フィールドのインパクトクラスへのポインタ
-	D3DXVECTOR3 m_Nor;						// 法線
-	float m_fWidth, m_fHeight;				// 横幅,高さ
+	std::vector<CMeshFieldWave*> m_apWave;	 // フィールドの波クラスへのポインタ
+	std::vector<CMeshFieldImpact*> m_apImpact; // フィールドのインパクトクラスへのポインタ
+	D3DXVECTOR3 m_Nor;						 // 法線
+	float m_fWidth, m_fHeight;				 // 横幅,高さ
 };
 
 #endif

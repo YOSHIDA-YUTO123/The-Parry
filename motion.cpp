@@ -120,7 +120,7 @@ bool CMotion::IsLoad(void)
 //===================================================
 bool CMotion::FinishMotion(void)
 {
-	if (m_aInfo[m_nType].nNumkey - 1 <= m_nKey)
+	if (m_aInfo[m_nType].nNumkey - 1 <= m_nKey && m_bFirst == false)
 	{
 		return true;
 	}
@@ -352,6 +352,7 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 
 	if (pSlow->GetState() == false && m_bSlowMag == true)
 	{
+		// スローレベル
 		int nSlowLevel = static_cast<int>(pSlow->GetMaxLevel(true));
 
 		// カウンターをもとに戻す
@@ -363,6 +364,15 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 	}
 	else if (pSlow->GetState() == true && m_bSlowMag == false)
 	{
+		// スローレベル
+		int nSlowLevel = static_cast<int>(pSlow->GetMaxLevel(true));
+
+		// カウンターにスローレベルを掛ける
+		m_nAllCounter *= nSlowLevel;
+		m_nCount *= nSlowLevel;
+		m_nCounterBlend *= nSlowLevel;
+		m_nCounterMotionBlend *= nSlowLevel;
+
 		m_bSlowMag = true;
 	}
 

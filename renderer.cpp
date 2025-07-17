@@ -436,42 +436,28 @@ void CRenderer::Draw(const int fps)
 			// プレイヤーの描画
 			m_pD3DDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2); // プリミティブの種類	
 
-			LPDIRECT3DTEXTURE9 pTextureWK;
-			LPDIRECT3DSURFACE9 pRenderWK;
+			LPDIRECT3DTEXTURE9 pTextureWK = {};
+			LPDIRECT3DSURFACE9 pRenderWK = {};
 
 			// テクスチャ0と1を入れ替える
 			pTextureWK = m_pTextureMT[0];
-				m_pTextureMT[0] = m_pTextureMT[1];
-				m_pTextureMT[1] = pTextureWK;
+			m_pTextureMT[0] = m_pTextureMT[1];
+			m_pTextureMT[1] = pTextureWK;
 
 			// レンダリング0と1を入れ替える
 			pRenderWK = m_pRenderMT[0];
 			m_pRenderMT[0] = m_pRenderMT[1];
-			m_pRenderMT[1] = pRenderWK;	
+			m_pRenderMT[1] = pRenderWK;
 		}
-
-		CDebugProc::Print("FPS = %d\n", fps);
-
-		CDebugProc::Print("デバッグ 非表示      : [ F2 ]\n");
-
-		CDebugProc::Print("影の表示 : [ F3 ]\n");
-
-		for (int nCntPriority = 0; nCntPriority < NUM_PRIORITY; nCntPriority++)
-		{
-			int nNumAll = CObject::GetNumObject(nCntPriority);
-
-			// 文字の表示
-			CDebugProc::Print("[ Priority = %d : Numobj = %d]\n",nCntPriority,nNumAll);
-		}
-
-		CDebugProc::Print("ワイヤーフレーム : [ F6 ]");
 
 #ifdef _DEBUG
+		CDebugProc::Print("FPS = %d\n", fps);
 
 		CDebugProc::Draw();
 #endif // _DEBUG
 
 		CDebugProc::Reset();
+
 		// 描画終了
 		m_pD3DDevice->EndScene();
 	}
