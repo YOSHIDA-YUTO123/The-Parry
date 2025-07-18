@@ -136,10 +136,10 @@ public:
 	bool Collision(const D3DXVECTOR3 pos, float* pOutHeight); // 地面との当たり判定
 
 	// インパクトとの当たり判定
-	bool CollisionImpact(const D3DXVECTOR3 pos, const float fRadius, const CMeshFieldImpact::OBJ myObj,int* pIdx = nullptr, D3DXVECTOR3* pFirstPos = nullptr, D3DXVECTOR3* pImpactPos = nullptr);
+	bool CollisionImpact(const D3DXVECTOR3 pos, const float fRadius, const CMeshFieldImpact::OBJ myObj, D3DXVECTOR3* pFirstPos = nullptr, D3DXVECTOR3* pImpactPos = nullptr);
 
 	// インパクトの再設定処理
-	void ResetImpact(D3DXVECTOR3 dir, const CMeshFieldImpact::OBJ obj, const D3DXVECTOR3 FirstPos, const D3DXCOLOR Circlecol, const int nIdx);
+	void ResetImpact(D3DXVECTOR3 dir, const CMeshFieldImpact::OBJ obj, const D3DXVECTOR3 FirstPos, const D3DXCOLOR Circlecol);
 
 	void UpdateNor(void); // 法線の再設定
 
@@ -153,7 +153,7 @@ private:
 	void Load(void);
 
 	std::vector<CMeshFieldWave*> m_apWave;	 // フィールドの波クラスへのポインタ
-	std::vector<CMeshFieldImpact*> m_apImpact; // フィールドのインパクトクラスへのポインタ
+	CMeshFieldImpact* m_apImpact;			 // フィールドのインパクトクラスへのポインタ
 	D3DXVECTOR3 m_Nor;						 // 法線
 	float m_fWidth, m_fHeight;				 // 横幅,高さ
 };

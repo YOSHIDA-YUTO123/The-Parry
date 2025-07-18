@@ -11,6 +11,7 @@
 #include "playerstate.h"
 #include"player.h"
 #include"motion.h"
+#include "debugproc.h"
 
 using MOTION = CPlayer::TYPE; // プレイヤーの列挙型の使用
 using namespace std;		  // 名前空間stdの使用
@@ -96,9 +97,6 @@ void CPlayerDamage::Init(void)
 {
 	// モーションの取得
 	CMotion* pMotion = m_pPlayer->GetMotion();
-
-	// ダメージの設定
-	m_pPlayer->Hit(m_nDamage);
 
 	if (pMotion != nullptr)
 	{
@@ -200,8 +198,17 @@ void CPlayerAvoid::Update(void)
 	// モーションの取得
 	CMotion* pMotion = m_pPlayer->GetMotion();
 
-	m_pPlayer->MoveForward(m_fSpeed);
+	// 移動制御の取得
+	auto pMoveMent = m_pPlayer->GetMovement();
 
+	// 移動クラスの取得
+	if (pMoveMent != nullptr)
+	{
+		// 向いている方向に進む処理
+		pMoveMent->MoveForward(m_fSpeed);
+	}
+
+	// モーションが終わったら
 	if (pMotion->FinishMotion())
 	{
 		m_pPlayer->ChangeState(make_shared<CPlayerNormal>());

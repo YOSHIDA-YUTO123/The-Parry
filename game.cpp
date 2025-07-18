@@ -29,7 +29,7 @@ using namespace std; // 名前空間stdを使用
 // 静的メンバ変数宣言
 //***************************************************
 CMeshField* CGame::m_pMeshField = nullptr;		// メッシュフィールドへのポインタ
-CPlayer* CGame::m_pPlayer = nullptr;			// プレイヤーへのポインタ
+CPlayerGame* CGame::m_pPlayer = nullptr;			// プレイヤーへのポインタ
 CMeshCylinder* CGame::m_pCylinder = nullptr;	// メッシュシリンダーへのポインタ
 CGame::STATE CGame::m_state = STATE_NORMAL;     // ゲームの状態
 
@@ -67,7 +67,7 @@ HRESULT CGame::Init(void)
 	m_pCylinder = CMeshCylinder::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 32, 1, 1900.0f, 1900.0f);
 
 	// プレイヤーの生成
-	m_pPlayer = CPlayer::Create(D3DXVECTOR3(1.0f, 0.0f, -1500.0f));
+	m_pPlayer = CPlayerGame::Create(D3DXVECTOR3(1.0f, 0.0f, -1500.0f));
 
 	CObjectX::Create(VEC3_NULL, "data/MODEL/field/arena.x");
 

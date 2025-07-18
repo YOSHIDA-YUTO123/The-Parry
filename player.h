@@ -32,7 +32,6 @@ class CShadow;
 class CScoreLerper;
 class CCharacter3D;
 class CCollisionFOV;
-class CPlayerMotionController;
 class CColliderSphere;
 class CColliderFOV;
 class CStateMachine;
@@ -63,6 +62,43 @@ public:
 		TYPE_MAX
 	};
 
+	CPlayer(int nPriority = 4);
+	~CPlayer();
+
+	static CPlayer* Create(const D3DXVECTOR3 pos = Const::VEC3_NULL, const D3DXVECTOR3 rot = Const::VEC3_NULL);
+	void Load(void); // モーションのロード
+
+	virtual HRESULT Init(void) override;
+	virtual void Uninit(void) override;
+	virtual void Update(void) override;
+	virtual void Draw(void) override;
+
+	virtual CPlayerMovement* GetMovement(void) { return nullptr; } // 移動制御クラスの取得(派生したプレイヤーが持っている移動制御の取得)
+
+	// ゲッター
+	D3DXVECTOR3 GetPos(void) const { return m_pCharacter3D->GetPosition(); }
+	D3DXVECTOR3 GetModelPos(const int nIdx) { return math::GetPositionFromMatrix(m_apModel[nIdx]->GetMatrixWorld()); }
+	CMotion* GetMotion(void) { return m_pMotion.get(); } // モーションの取得
+
+	void ChangeState(std::shared_ptr<CPlayerState> pNewState);
+
+protected:
+	CCharacter3D* GetCharacter(void) { return m_pCharacter3D.get(); }
+private:
+	std::unique_ptr<CStateMachine> m_pMachine;		// 状態の制御クラス
+	std::unique_ptr<CMotion> m_pMotion;				// モーションのクラスへのポインタ
+	std::unique_ptr<CCharacter3D> m_pCharacter3D;	// キャラクタークラス
+	std::vector<CModel*> m_apModel;					// モデルクラスのポインタ
+	int m_nNumModel;								// モデルの最大数
+};
+
+//***************************************************
+// プレイヤークラスの定義(ゲーム中)
+//***************************************************
+class CPlayerGame : public CPlayer
+{
+public:
+
 	// パリィの成功度
 	enum PARRY
 	{
@@ -73,47 +109,37 @@ public:
 		PARRY_MAX
 	};
 
-	CPlayer(int nPriority = 4);
-	~CPlayer();
-
-	static CPlayer* Create(const D3DXVECTOR3 pos = Const::VEC3_NULL, const D3DXVECTOR3 rot = Const::VEC3_NULL);
-	void Load(void); // モーションのロード
+	CPlayerGame();
+	~CPlayerGame();
 
 	HRESULT Init(void) override;
 	void Uninit(void) override;
 	void Update(void) override;
 	void Draw(void) override;
 
+	static CPlayerGame* Create(const D3DXVECTOR3 pos = Const::VEC3_NULL, const D3DXVECTOR3 rot = Const::VEC3_NULL);
+
+	// ゲッター
+	CColliderSphere* GetSphereCollider(void) { return m_pSphere.get(); }
+	CPlayerMovement* GetMovement(void) { return m_pMovement.get(); }
 	void UpdateParry(void);
 	int SuccessParry(const int nParfectTime);
 
-	CColliderSphere* GetSphereCollider(void) { return m_pSphere.get(); }
-	D3DXVECTOR3 GetPos(void) const { return m_pCharacter3D->GetPosition(); }
-	D3DXVECTOR3 GetModelPos(const int nIdx) { return math::GetPositionFromMatrix(m_apModel[nIdx]->GetMatrixWorld()); }
-	void BlowOff(const D3DXVECTOR3 attacker, const float blowOff,const float jump);
+	void BlowOff(const D3DXVECTOR3 attacker, const float blowOff, const float jump);
 	bool IsParry(const D3DXVECTOR3 pos);
 	void SetAngle(const float angleY);
 	bool CollisionObstacle(D3DXVECTOR3* pPos);
-	void ChangeState(std::shared_ptr<CPlayerState> pNewState);
-	void MoveForward(const float fSpeed);
-	CMotion* GetMotion(void) { return m_pMotion.get(); } // モーションの取得
 	void Hit(int nDamage);	// ヒット時の処理
 
 private:
 	std::unique_ptr<CPlayerMovement> m_pMovement;	// 移動処理
-	std::unique_ptr<CMotion> m_pMotion;				// モーションのクラスへのポインタ
-	std::unique_ptr<CStateMachine> m_pMachine;		// 状態の制御クラス
-	std::unique_ptr<CCharacter3D> m_pCharacter3D;	// キャラクタークラス
 	std::unique_ptr<CColliderFOV> m_pFOV;			// 視界の判定
 	std::unique_ptr<CColliderSphere> m_pSphere;		// 円のコライダー
-	CScoreLerper *m_pScore;							// スコアクラスへのポインタ
-	std::vector<CModel*> m_apModel;					// モデルクラスのポインタ
 	std::unique_ptr<CVelocity> m_pMove;				// 移動量
 	D3DXVECTOR3 m_posOld;							// 前回の位置
 	int m_nParryTime;								// パリィの有効時間
 	int m_nParryCounter;							// パリィ―のカウンター
 
-	int m_nNumModel;								// モデルの最大数
 	bool m_bJump;									// ジャンプできるかどうか
 	bool m_bDash;									// 走ってるかどうか
 };
@@ -128,10 +154,14 @@ public:
 	~CPlayerMovement();
 
 	// プレイヤーのmoveを受け取る
-	void Init(CVelocity *pMove);
-	bool MoveKeyboard(CInputKeyboard* pKeyboard, const float fSpeed,float *pRotDest);
-	bool MoveJoypad(CInputJoypad* pJoypad,const float fSpeed, float* pRotDest);
+	void Init(CVelocity* pMove, CRotation* pRot);
+	bool MoveKeyboard(CInputKeyboard* pKeyboard, const float fSpeed, float* pRotDest);
+	bool MoveJoypad(CInputJoypad* pJoypad, const float fSpeed, float* pRotDest);
+	void MoveForward(const float fSpeed);
+
 private:
-	CVelocity* m_pMove; // 移動量
+	CRotation* m_pRot;	// 向き
+	CVelocity* m_pMove;		// 移動量
 };
+
 #endif

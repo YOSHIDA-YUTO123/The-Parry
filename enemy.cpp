@@ -185,7 +185,7 @@ void CEnemy::Uninit(void)
 void CEnemy::Update(void)
 {
 	// プレイヤーの取得
-	CPlayer* pPlayer = CGame::GetPlayer();
+	CPlayerGame* pPlayer = CGame::GetPlayer();
 
 	// カメラの取得処理
 	CCamera* pCamera = CManager::GetCamera();
@@ -470,6 +470,39 @@ void CEnemy::Draw(void)
 }
 
 //===================================================
+// 位置の取得処理
+//===================================================
+D3DXVECTOR3 CEnemy::GetPosition(void)
+{
+	// 位置
+	D3DXVECTOR3 Outpos = VEC3_NULL;
+
+	if (m_pCharactor != nullptr)
+	{
+		// 位置の取得
+		Outpos = m_pCharactor->GetPosition();
+	}
+
+	return Outpos;
+}
+
+//===================================================
+// モーションの取得
+//===================================================
+CMotion* CEnemy::GetMotion(void)
+{
+	return m_pMotion.get();
+}
+
+//===================================================
+// 移動制御クラスの取得
+//===================================================
+CEnemyMovement* CEnemy::GetMovement(void)
+{
+	return m_pMovement.get();
+}
+
+//===================================================
 // どのダメージモーションが出るか判定
 //===================================================
 void CEnemy::SelectDamageMotion(int success)
@@ -478,17 +511,17 @@ void CEnemy::SelectDamageMotion(int success)
 	// 成功度の遷移
 	switch (success)
 	{
-	case CPlayer::PARRY_MISS:
+	case CPlayerGame::PARRY_MISS:
 		break;
-	case CPlayer::PARRY_WEAK:
+	case CPlayerGame::PARRY_WEAK:
 		// 状態の設定
 		ChangeState(make_shared<CEnemyDamageS>());
 		break;
-	case CPlayer::PARRY_NORMAL:
+	case CPlayerGame::PARRY_NORMAL:
 		// 状態の設定
 		ChangeState(make_shared<CEnemyDamageS>());
 		break;
-	case CPlayer::PARRY_PARFECT:
+	case CPlayerGame::PARRY_PARFECT:
 		// 状態の設定
 		ChangeState(make_shared<CEnemyDamageL>());
 		break;
@@ -521,7 +554,7 @@ bool CEnemy::IsDamageMotion(void)
 bool CEnemy::CollisionWepon(void)
 {
 	// プレイヤーの取得
-	CPlayer* pPlayer = CGame::GetPlayer();
+	CPlayerGame* pPlayer = CGame::GetPlayer();
 
 	// 武器の先の座標
 	D3DXVECTOR3 WeponTop = GetPositionFromMatrix(m_weponMatrix);

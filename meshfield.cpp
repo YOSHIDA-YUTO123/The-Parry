@@ -38,6 +38,7 @@ CMeshField::CMeshField(int nPriority) : CMesh(nPriority)
 	m_fWidth = NULL;
 	m_fHeight = NULL;
 	m_Nor = VEC3_NULL;
+	m_apImpact = nullptr;
 }
 
 //================================================
@@ -124,19 +125,13 @@ void CMeshField::Uninit(void)
 	// 要素のクリア
 	m_apWave.clear();
 
-	// インパクトの破棄
-	for (int nCnt = 0; nCnt < (int)m_apImpact.size(); nCnt++)
+
+	if (m_apImpact != nullptr)
 	{
-		if (m_apImpact[nCnt] != nullptr)
-		{
-			delete m_apImpact[nCnt];
-			m_apImpact[nCnt] = nullptr;
-		}
+		m_apImpact->Uninit();
+		delete m_apImpact;
+		m_apImpact = nullptr;
 	}
-
-	// 要素のクリア
-	m_apImpact.clear();
-
 	// 終了処理
 	CMesh::Uninit();
 }
@@ -146,9 +141,6 @@ void CMeshField::Uninit(void)
 //================================================
 void CMeshField::Update(void)
 {
-	//CPlayer* pPlayer = CManager::GetPlayer();
-	//CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
-
 	// 法線の再設定
 	UpdateNor();
 
@@ -158,9 +150,6 @@ void CMeshField::Update(void)
 	// 頂点数の設定
 	int nNumVtx = (nSegH + 1) * (nSegV + 1);
 #if 1
-
-	// インパクト総数の取得
-	int nImpactSize = static_cast<int>(m_apImpact.size());
 
 	// ウェーブの総数
 	int nWaveSize = static_cast<int>(m_apWave.size());
@@ -183,21 +172,18 @@ void CMeshField::Update(void)
 		}
 	}
 
-	// 要素分調べる
-	for (int nCnt = 0; nCnt < nImpactSize; nCnt++)
+	// nullなら処理を飛ばす
+	if (m_apImpact != nullptr)
 	{
-		// nullなら処理を飛ばす
-		if (m_apImpact[nCnt] == nullptr) continue;
-
 		// インパクトの更新処理
-		bool bResult = m_apImpact[nCnt]->Update(this, nNumVtx);
+		bool bResult = m_apImpact->Update(this, nNumVtx);
 
 		// インパクトの破棄
 		if (bResult == false)
 		{
-			m_apImpact[nCnt]->Uninit();
-			delete m_apImpact[nCnt];
-			m_apImpact[nCnt] = nullptr;
+			m_apImpact->Uninit();
+			delete m_apImpact;
+			m_apImpact = nullptr;
 		}
 	}
 
@@ -211,15 +197,12 @@ void CMeshField::Update(void)
 		}
 	}
 
-	// 要素分調べる
-	for (int nCnt = 0; nCnt < nImpactSize; nCnt++)
+	// インパクトが使われているなら
+	if (m_apImpact != nullptr)
 	{
-		// インパクトが使われているなら
-		if (m_apImpact[nCnt] != nullptr)
-		{
-			return;
-		}
+		return;
 	}
+	
 
 	// 頂点の高さを0に戻す
 	for (int nCnt = 0; nCnt < nNumVtx; nCnt++)
@@ -468,49 +451,30 @@ bool CMeshField::Collision(const D3DXVECTOR3 pos,float *pOutHeight)
 //================================================
 // インパクトとの当たり判定
 //================================================
-bool CMeshField::CollisionImpact(const D3DXVECTOR3 pos, const float fRadius, const CMeshFieldImpact::OBJ myObj,int *pIdx, D3DXVECTOR3* pFirstPos, D3DXVECTOR3* pImpactPos)
+bool CMeshField::CollisionImpact(const D3DXVECTOR3 pos, const float fRadius, const CMeshFieldImpact::OBJ myObj, D3DXVECTOR3* pFirstPos, D3DXVECTOR3* pImpactPos)
 {
-	// 総数の取得
-	int Size = static_cast<int>(m_apImpact.size());
-
-	// 総数分調べる
-	for (int nCnt = 0; nCnt < Size; nCnt++)
+	// nullなら処理を飛ばす
+	if (m_apImpact != nullptr)
 	{
-		// nullなら処理を飛ばす
-		if (m_apImpact[nCnt] == nullptr) continue;
-
 		// 当たっている
-		if (m_apImpact[nCnt]->Collision(pos, fRadius, myObj, pFirstPos, pImpactPos))
+		if (m_apImpact->Collision(pos, fRadius, myObj, pFirstPos, pImpactPos))
 		{
-			if (pIdx != nullptr)
-			{
-				// インデックス番号を渡す
-				*pIdx = nCnt;
-			}
-
 			return true;
 		}
 	}
+
 	return false;
 }
 
 //================================================
 // インパクトの再設定
 //================================================
-void CMeshField::ResetImpact(D3DXVECTOR3 dir, const CMeshFieldImpact::OBJ obj, const D3DXVECTOR3 FirstPos, const D3DXCOLOR Circlecol,const int nIdx)
+void CMeshField::ResetImpact(D3DXVECTOR3 dir, const CMeshFieldImpact::OBJ obj, const D3DXVECTOR3 FirstPos, const D3DXCOLOR Circlecol)
 {
-	// 総数の取得
-	int Size = static_cast<int>(m_apImpact.size());
-
-	// インデックスが範囲外だったら処理をしない
-	if (nIdx < 0 || nIdx >= Size)
-	{
-		return;
-	}
-	if (m_apImpact[nIdx] != nullptr)
+	if (m_apImpact != nullptr)
 	{
 		// 再設定
-		m_apImpact[nIdx]->Reset(dir, obj, FirstPos, Circlecol);
+		m_apImpact->Reset(dir, obj, FirstPos, Circlecol);
 	}
 }
 
@@ -760,11 +724,11 @@ void CMeshField::SetWave(CMeshFieldWave::Config config)
 //================================================
 void CMeshField::SetImpact(CMeshFieldImpact::Config config)
 {
-	auto pImpact = CMeshFieldImpact::Create(config);
-
-	// インパクトの生成
-	m_apImpact.push_back(pImpact);
-	
+	if (m_apImpact == nullptr)
+	{
+		// インパクトの生成
+		m_apImpact = CMeshFieldImpact::Create(config);
+	}
 }
 
 //================================================

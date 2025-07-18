@@ -52,14 +52,10 @@ constexpr int PARRY_TIME = 10;				// パリィの有効時間
 //===================================================
 CPlayer::CPlayer(int nPriority) : CObject(nPriority)
 {
-	m_pMove = nullptr;
-	m_bJump = true;
-	m_pScore = nullptr;
-	m_nNumModel = NULL;
-	m_bDash = false;
-	m_posOld = VEC3_NULL;
-	m_pMachine = nullptr;
-	m_pMovement = nullptr;
+	m_pMotion = nullptr;				// モーションのクラスへのポインタ
+	m_pCharacter3D = nullptr;			// キャラクタークラス
+	m_pMachine = nullptr;				// ステートマシーン
+	m_nNumModel = NULL;					// モデルの最大数
 }
 
 //===================================================
@@ -80,29 +76,14 @@ HRESULT CPlayer::Init(void)
 	// キャラクタークラスの生成
 	m_pCharacter3D = make_unique<CCharacter3D>();
 
+	// キャラクターの初期化処理
+	m_pCharacter3D->Init();
+
 	// キャラクターの設定処理
 	m_pCharacter3D->SetCharacter(10, 6.0f,D3DXVECTOR3(2.0f,1.0f,2.0f));
 
-	// キャラクターの位置の取得
-	D3DXVECTOR3 pos = m_pCharacter3D->GetPosition();
-
-	// 視界判定の生成
-	m_pFOV = CColliderFOV::Create(pos, 0.0f, D3DX_PI * 0.5f, -D3DX_PI * 0.5f,1000.0f);
-
-	// 円の当たり判定の生成
-	m_pSphere = CColliderSphere::Create(pos, 50.0f);
-
-	// スコアの生成
-	m_pScore = (CScoreLerper*)CScore::Create(CScore::TYPE_LERPER,D3DXVECTOR3(1150.0f, 50.0f, 0.0f), 180.0f, 30.0f);
-
-	// 移動クラスの生成
-	m_pMove = make_unique<CVelocity>();
-
 	// 状態制御の生成
 	m_pMachine = make_unique<CStateMachine>();
-
-	m_pMovement = make_unique<CPlayerMovement>();
-	m_pMovement->Init(m_pMove.get());
 
 	// 初期状態を設定
 	ChangeState(make_shared<CPlayerNormal>());
@@ -129,23 +110,23 @@ void CPlayer::Uninit(void)
 		}
 	}
 
-	// スコアの解放
-	if (m_pScore != nullptr)
+	//// 移動クラスの破棄
+	//if (m_pMove != nullptr)
+	//{
+	//	m_pMove = nullptr;
+	//}
+
+	if (m_pMotion != nullptr)
 	{
-		m_pScore = nullptr;
+		// モーションの終了処理
+		m_pMotion->Uninit();
 	}
 
-	// 移動クラスの破棄
-	if (m_pMove != nullptr)
+	if (m_pCharacter3D != nullptr)
 	{
-		m_pMove = nullptr;
+		// キャラクターの破棄
+		m_pCharacter3D->Uninit();
 	}
-
-	// モーションの終了処理
-	m_pMotion->Uninit();
-
-	// キャラクターの破棄
-	m_pCharacter3D->Uninit();
 
 	CObject::Release();
 }
@@ -161,9 +142,6 @@ void CPlayer::Update(void)
 	// コントローラーの取得
 	CInputJoypad* pJoypad = CManager::GetInputJoypad();
 
-	// メッシュフィールドの取得
-	CMeshField* pMesh = CGame::GetField();
-
 	// カメラの取得処理
 	CCamera* pCamera = CManager::GetCamera();
 
@@ -172,222 +150,9 @@ void CPlayer::Update(void)
 	{
 		return;
 	}
-
-	// 速さ
-	float fSpeed = m_bDash ? m_pCharacter3D->GetSpeed() : 1.5f;
-
-	float fAngleDest = 0.0f;
-
-	// 移動できるか判定
-	const bool bNotMove = m_pMotion->GetBlendType() == TYPE_DAMAGE || m_pMotion->GetBlendType() == TYPE_AVOID;
-
-	// 移動できるなら
-	if (bNotMove == false)
-	{
-		// 移動を入力していたら
-		const bool bKeyboardMove = m_pMovement->MoveKeyboard(pKeyboard, fSpeed, &fAngleDest);
-		const bool bJoypadMove = m_pMovement->MoveJoypad(pJoypad, fSpeed, &fAngleDest);
-
-		// 移動ごとの処理ができるか判定
-		const bool bPlayerMove = bKeyboardMove || bJoypadMove;
-
-		// 移動ごとの処理ができるなら
-		if (bPlayerMove)
-		{
-			m_pCharacter3D->GetRotation()->SetDest(D3DXVECTOR3(0.0f, fAngleDest, 0.0f));
-
-			// ダッシュモーションか歩きモーションかを判定
-			int isDashMotion = (m_bDash ? TYPE_DASH : TYPE_MOVE);
-
-			// ジャンプかjumpじゃないかを判定
-			int motiontype = m_bJump ? isDashMotion : TYPE_JUMP;
-
-			// モーションの設定
-			m_pMotion->SetMotion(motiontype, true, 5);
-
-			m_pCharacter3D->SetState(STATE::STATE_MOVE, 1);
-
-			// 状態の変更
-			ChangeState(make_shared<CPlayerMove>());
-
-		}
-		else
-		{
-			// モーションの種類の取得
-			int motiontype = m_pMotion->GetBlendType();
-
-			// 移動状態だったら
-			if (motiontype == TYPE_MOVE || motiontype == TYPE_DASH && m_pMotion != nullptr)
-			{
-				m_pMotion->SetMotion(TYPE_NEUTRAL, true, 15);
-
-				// 状態の変更
-				ChangeState(make_shared<CPlayerNormal>());
-			}
-		}
-	}
-
-	// ダッシュボタンを押したら
-	if ((pKeyboard->GetPress(DIK_LSHIFT) || pJoypad->GetPress(pJoypad->JOYKEY_RIGHT_SHOULDER)))
-	{
-		m_bDash = true;
-	}
-	else
-	{
-		m_bDash = false;
-	}
-
+	
+	// 位置の取得
 	D3DXVECTOR3 pos = m_pCharacter3D->GetPosition();
-
-	// 移動量の減衰
-	m_pMove->SetInertia3D(0.25f);
-
-	// 前回の位置の取得
-	m_posOld = pos;
-
-	// 移動量の取得
-	D3DXVECTOR3 move = m_pMove->Get();
-
-	// 位置の更新
-	pos += move;
-
-	float fHeight = 0.0f;
-
-	// メッシュフィールドの当たり判定
-	if (pMesh != nullptr && pMesh->Collision(pos, &fHeight))
-	{
-		// 高さの設定
-		pos.y = fHeight;
-
-		// ジャンプできる
-		m_bJump = true;
-		
-		// モーションがジャンプだったら
-		if (m_pMotion->GetBlendType() == TYPE_JUMP)
-		{
-			// 着地モーションの再生
-			m_pMotion->SetMotion(TYPE_LANDING, true, 5);
-
-			// インパクトの設定
-			CMeshCircle::Confing Circleconfig = { 0.0f,10.0f,10.0f,50.0f,30,true };
-
-			// サークルを生成
-			CMeshCircle::Create(Circleconfig, D3DCOLOR_RGBA(220, 220, 220, 200),pos,32);
-		}
-	}
-	else
-	{
-		m_bJump = false;
-	}
-
-	// メッシュシリンダーの取得
-	CMeshCylinder* pCylinder = CGame::GetCylinder();
-
-	// シリンダーの判定
-	if (pCylinder != nullptr && pCylinder->Collision(&pos))
-	{
-		// ここに処理があれば書く
-	}
-
-	// 障害物との当たり判定
-	CollisionObstacle(&pos);
-
-	// 最初の位置
-	D3DXVECTOR3 firstPos = VEC3_NULL;
-
-	// 衝撃波の位置
-	D3DXVECTOR3 ImpactPos = VEC3_NULL;
-
-	// インパクトのインデックス
-	int ImpactIdx = -1;
-
-	// インパクトとの判定
-	const bool bCollision = pMesh->CollisionImpact(pos, 150.0f, CMeshFieldImpact::OBJ_PLAYER,&ImpactIdx, &firstPos,&ImpactPos);
-
-	if (bCollision && m_pCharacter3D->GetState() == STATE::STATE_ACTION)
-	{
-		// 方向の設定
-		D3DXVECTOR3 dir = firstPos - pos;
-
-		float fAngle = GetTargetAngle(firstPos, pos);
-
-		// 向きの設定
-		m_pCharacter3D->GetRotation()->SetDest(D3DXVECTOR3(0.0f, fAngle + D3DX_PI, 0.0f));
-
-		// 右手の位置
-		D3DXVECTOR3 playerHandR = GetPositionFromMatrix(m_apModel[5]->GetMatrixWorld());
-
-		// モーションをダメージにする
-		m_pMotion->SetMotion(TYPE_PARRY, true, 2);
-
-		// パーティクルの生成
-		CParticle3D::Create(playerHandR, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f), 240, 20.0f, 25, 2, 15.0f);
-
-		// インパクトの設定
-		CMeshCircle::Confing Circleconfig = { 50.0f,10.0f,0.0f,50.0f,30,false };
-
-		// インパクトを生成
-		CMeshCircle::Create(Circleconfig,D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), playerHandR,32, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
-
-		// 再設定
-		pMesh->ResetImpact(dir, CMeshFieldImpact::OBJ_PLAYER, playerHandR,D3DXCOLOR(1.0f,1.0f,0.5f,1.0f), ImpactIdx);
-	}
-	// インパクトの当たり判定
-	else if (bCollision && m_pMotion->GetBlendType() != TYPE_DAMAGE)
-	{
-		// 吹き飛び処理
-		BlowOff(ImpactPos, 50.0f, 10.0f);
-
-		// モーションの設定
-		ChangeState(make_shared<CPlayerDamage>(5));
-	}
-	
-
-	// 重力を加算
-	m_pMove->Gravity(-MAX_GRABITY);
-
-	// ジャンプできるなら
-	if ((pKeyboard->GetPress(DIK_SPACE) == true || pJoypad->GetPress(pJoypad->JOYKEY_A) == true) && m_bJump == true)
-	{
-		m_pMotion->SetMotion(TYPE_JUMP, true, 2);
-
-		// 移動量を上方向に設定
-		m_pMove->Jump(JUMP_HEIGHT);
-		m_bJump = false;
-	}
-
-#ifdef _DEBUG
-
-	if (pKeyboard->GetTrigger(DIK_B))
-	{
-		m_pScore->SetDestScore(100000,120);
-
-		// 瓦礫を生成
-		CRubble::Create(pos, D3DXVECTOR3(15.0f, 15.0f, 15.0f), 120,0);
-
-		// スローモーションの取得
-		CSlow* pSlow = CManager::GetSlow();
-		pSlow->Start(540, 4);
-	}
-
-	if (pKeyboard->GetTrigger(DIK_V))
-	{
-		// 回避
-		ChangeState(make_shared<CPlayerAvoid>(20.0f));
-	}
-#endif // _DEBUG
-
-	// カウンター状態
-	if (pKeyboard->GetTrigger(DIK_RETURN) && m_pMotion->GetBlendType() != TYPE_DAMAGE)
-	{
-		m_pMotion->SetMotion(TYPE_ACTION, true,6);
-	
-		// パリィの時間
-		m_nParryTime = PARRY_TIME;
-		m_nParryCounter = 0;
-
-		m_pCharacter3D->SetState(m_pCharacter3D->STATE_ACTION, PARRY_TIME);
-	}
 
 	// ロックオン
 	if (pKeyboard->GetTrigger(DIK_R) || pJoypad->GetTrigger(pJoypad->JOYKEY_RIGHT_THUMB))
@@ -403,27 +168,8 @@ void CPlayer::Update(void)
 		pCamera->SetState(state);
 	}
 
-	// 当たり判定の設定処理
-	if (m_pSphere != nullptr)
-	{
-		// 位置の設定処理
-		m_pSphere->SetPosition(pos);
-	}
-
-	// 視界判定
-	if (m_pFOV != nullptr)
-	{
-		// 位置の設定
-		m_pFOV->SetPosition(pos);
-	}
-
-	UpdateParry();
-
 	// キャラクターの更新処理
 	m_pCharacter3D->Update();
-
-	// 位置の設定
-	m_pCharacter3D->SetPosition(pos);
 
 	if (m_pMotion != nullptr)
 	{
@@ -543,81 +289,6 @@ void CPlayer::Draw(void)
 }
 
 //===================================================
-// パリィの更新
-//===================================================
-void CPlayer::UpdateParry(void)
-{
-	// パリィのカウンター
-	if (m_nParryCounter >= m_nParryTime)
-	{
-		m_nParryCounter = 0;
-	}
-	else
-	{
-		m_nParryCounter++;
-	}
-}
-
-//===================================================
-// パリィが成功したかどうか
-//===================================================
-int CPlayer::SuccessParry(const int nParfectTime)
-{
-	// 状態がアクションじゃなかったら抜ける
-	if (m_pCharacter3D->GetState() != STATE::STATE_ACTION) return PARRY_MISS;
-
-	// パーフェクトタイムまでの差分を求める
-	int nDiff = abs(nParfectTime - m_nParryCounter);
-
-	// パーフェクトだったら
-	if (nDiff >= 0 && nDiff <= 5)
-	{
-		// 完璧
-		return PARRY_PARFECT;
-	}
-	else if (nDiff > 5 && nDiff <= 10)
-	{
-		// 普通
-		return PARRY_NORMAL;
-	}
-	else if (nDiff > 10 && nDiff <= m_nParryTime)
-	{
-		// 弱い
-		return PARRY_WEAK;
-	}
-	
-	return PARRY_MISS;
-}
-
-//===================================================
-// 吹き飛び処理
-//===================================================
-void CPlayer::BlowOff(const D3DXVECTOR3 attacker, const float blowOff, const float jump)
-{
-	// 位置
-	D3DXVECTOR3 pos = m_pCharacter3D->GetPosition();
-
-	// アタッカーからプレイヤーまでの差分を求める
-	D3DXVECTOR3 diff = pos - attacker;
-
-	// 角度を求める
-	float fAngle = atan2f(diff.x, diff.z);
-
-	// 目的の角度の設定
-	m_pCharacter3D->GetRotation()->SetDest(D3DXVECTOR3(0.0f, fAngle, 0.0f));
-
-	// 移動量
-	D3DXVECTOR3 move;
-
-	// 移動量の設定
-	move.x = sinf(fAngle) * blowOff;
-	move.y = jump;
-	move.z = cosf(fAngle) * blowOff;
-
-	m_pMove->Set(move);
-}
-
-//===================================================
 // 状態の変更
 //===================================================
 void CPlayer::ChangeState(std::shared_ptr<CPlayerState> pNewState)
@@ -636,112 +307,6 @@ void CPlayer::ChangeState(std::shared_ptr<CPlayerState> pNewState)
 }
 
 //===================================================
-// 向いている方向に進む処理
-//===================================================
-void CPlayer::MoveForward(const float fSpeed)
-{
-	// 移動量の取得
-	D3DXVECTOR3 move = m_pMove->Get();
-
-	// 今の向きの取得
-	float forward = m_pCharacter3D->GetRotation()->Get().y;
-
-	// 移動方向の計算
-	move.x = sinf(forward + D3DX_PI) * fSpeed;
-	move.z = cosf(forward + D3DX_PI) * fSpeed;
-
-	// 移動量の設定
-	m_pMove->Set(move);
-}
-
-//===================================================
-// ヒット時の処理
-//===================================================
-void CPlayer::Hit(int nDamage)
-{
-	// 死んでいたら
-	if (m_pCharacter3D->Hit(nDamage) == false)
-	{
-		CGame::SetState(CGame::STATE_END);
-	}
-}
-
-//===================================================
-// プレイヤーの視界の(パリィ時)判定
-//===================================================
-bool CPlayer::IsParry(const D3DXVECTOR3 pos)
-{
-	// 向きの取得
-	D3DXVECTOR3 rot = m_pCharacter3D->GetRotation()->Get();
-
-	// 視界の更新処理
-	m_pFOV->UpdateData(rot.y);
-
-	// 視界判定の取得
-	CCollisionFOV* pCollision = CCollisionFOV::GetInstance();
-
-	// 視界内かつ状態が攻撃の時
-	if (m_pCharacter3D->GetState() == CCharacter3D::STATE_ACTION &&
-		pCollision->Collision(pos, m_pFOV.get()) &&
-		m_pMotion->GetBlendType() != TYPE_PARRY)
-	{
-		return true;
-	}
-	return false;
-}
-
-//===================================================
-// 障害物との当たり判定
-//===================================================
-bool CPlayer::CollisionObstacle(D3DXVECTOR3 *pPos)
-{
-	//	障害物マネージャーのインスタンスの取得
-	CObstacleManager* pObstacleManager = CObstacleManager::GetInstance();
-
-	// マネージャーが無かったら
-	if (pObstacleManager == nullptr) return false;
-
-	// 障害物の総数の取得
-	int nNumObstacle = pObstacleManager->GetObstacleSize();
-
-	// 障害物の総数分調べる
-	for (int nCnt = 0; nCnt < nNumObstacle; nCnt++)
-	{
-		// 障害物の取得
-		CObstacle* pObstacle = pObstacleManager->GetObstacle(nCnt);
-
-		D3DXVECTOR3 Size = { 50.0f,200.0f,50.0f };
-
-		D3DXVECTOR3 center;
-
-		center.x = pPos->x;
-		center.y = pPos->y + Size.y * 0.5f;
-		center.z = pPos->z;
-
-		CColliderAABB aabb = CColliderAABB::CreateCollider(center,D3DXVECTOR3(m_posOld.x, m_posOld.y + Size.y * 0.5f, m_posOld.z), Size);
-
-		// 当たっていたら
-		if (pObstacle != nullptr && pObstacle->Collision(&aabb, pPos))
-		{
-			// ダメージ状態にする
-			ChangeState(make_shared<CPlayerDamage>(3));
-
-			return true;
-		}
-	}
-
-	return false;
-}
-
-//===================================================
-// 向きの設定
-//===================================================
-void CPlayer::SetAngle(const float angleY)
-{
-	m_pCharacter3D->GetRotation()->SetDest(D3DXVECTOR3(0.0f, angleY, 0.0f));
-}
-
-//===================================================
 // 生成処理
 //===================================================
 CPlayer* CPlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
@@ -755,6 +320,7 @@ CPlayer* CPlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 
 	pPlayer->Init();
 	pPlayer->m_pCharacter3D->Init();
+
 	// 初期化処理
 	pPlayer->m_pCharacter3D->SetPosition(pos);
 	pPlayer->m_pCharacter3D->GetRotation()->Set(rot);
@@ -832,9 +398,10 @@ CPlayerMovement::~CPlayerMovement()
 //===================================================
 // 初期化処理
 //===================================================
-void CPlayerMovement::Init(CVelocity* pMove)
+void CPlayerMovement::Init(CVelocity* pMove,CRotation* pRot)
 {
 	m_pMove = pMove;
+	m_pRot = pRot;
 }
 
 //===================================================
@@ -1007,4 +574,564 @@ bool CPlayerMovement::MoveJoypad(CInputJoypad* pJoypad, const float fSpeed, floa
 	}
 
 	return bMove;
+}
+
+//===================================================
+// 向いている方向に移動する処理
+//===================================================
+void CPlayerMovement::MoveForward(const float fSpeed)
+{
+	// 移動量の取得
+	D3DXVECTOR3 move = m_pMove->Get();
+
+	// 今の向きの取得
+	float forward = m_pRot->Get().y;
+
+	// 移動方向の計算
+	move.x = sinf(forward + D3DX_PI) * fSpeed;
+	move.z = cosf(forward + D3DX_PI) * fSpeed;
+
+	// 移動量の設定
+	m_pMove->Set(move);
+}
+
+//===================================================
+// コンストラクタ(ゲーム中の処理)
+//===================================================
+CPlayerGame::CPlayerGame()
+{
+	m_pMovement = nullptr;	
+	m_pFOV = nullptr;			
+	m_pSphere = nullptr;		
+	m_pMove = nullptr;		
+	m_posOld = VEC3_NULL;		
+	m_nParryTime = NULL;	
+	m_nParryCounter = NULL;
+	m_bJump = false;		
+	m_bDash = false;		
+}
+
+//===================================================
+// デストラクタ(ゲーム中の処理)
+//===================================================
+CPlayerGame::~CPlayerGame()
+{
+}
+
+//===================================================
+// 初期化処理(ゲーム中の処理)
+//===================================================
+HRESULT CPlayerGame::Init(void)
+{
+	// プレイヤーの初期化
+	CPlayer::Init();
+
+	// キャラクターの取得
+	auto pCharacter = CPlayer::GetCharacter();
+
+	// 位置の取得
+	D3DXVECTOR3 pos = pCharacter->GetPosition();
+
+	// 視界判定の生成
+	m_pFOV = CColliderFOV::Create(pos, 0.0f, D3DX_PI * 0.5f, -D3DX_PI * 0.5f,1000.0f);
+
+	// 円の当たり判定の生成
+	m_pSphere = CColliderSphere::Create(pos, 50.0f);
+
+	// 移動クラスの生成
+	m_pMove = make_unique<CVelocity>();
+
+	m_pMovement = make_unique<CPlayerMovement>();
+
+	m_pMovement->Init(m_pMove.get(),pCharacter->GetRotation());
+
+	return S_OK;
+}
+
+//===================================================
+// 終了処理(ゲーム中の処理)
+//===================================================
+void CPlayerGame::Uninit(void)
+{
+	m_pFOV = nullptr;
+	m_pSphere = nullptr;
+	m_pMove = nullptr;
+	m_pMovement = nullptr;
+
+	// プレイヤーの破棄
+	CPlayer::Uninit();
+}
+
+//===================================================
+// 更新処理(ゲーム中の処理)
+//===================================================
+void CPlayerGame::Update(void)
+{
+	// プレイヤーの更新処理
+	CPlayer::Update();
+
+	// キャラクターの取得
+	auto pCharacter = CPlayer::GetCharacter();
+
+	// モーションの取得
+	auto pMotion = CPlayer::GetMotion();
+
+	// キャラクターがなかったら処理しない
+	if (pCharacter == nullptr) return;
+
+	// モーションがなかったら処理しない
+	if (pMotion == nullptr) return;
+
+	// キーボードの取得
+	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
+
+	// コントローラーの取得
+	CInputJoypad* pJoypad = CManager::GetInputJoypad();
+
+	// メッシュフィールドの取得
+	CMeshField* pMesh = CGame::GetField();
+
+	// 速さ
+	float fSpeed = m_bDash ? pCharacter->GetSpeed() : 1.5f;
+
+	float fAngleDest = 0.0f;
+
+	// 移動できるか判定
+	const bool bNotMove = pMotion->GetBlendType() == TYPE_DAMAGE || pMotion->GetBlendType() == TYPE_AVOID;
+
+	// 移動できるなら
+	if (bNotMove == false)
+	{
+		// 移動を入力していたら
+		const bool bKeyboardMove = m_pMovement->MoveKeyboard(pKeyboard, fSpeed, &fAngleDest);
+		const bool bJoypadMove = m_pMovement->MoveJoypad(pJoypad, fSpeed, &fAngleDest);
+
+		// 移動ごとの処理ができるか判定
+		const bool bPlayerMove = bKeyboardMove || bJoypadMove;
+
+		// 移動ごとの処理ができるなら
+		if (bPlayerMove)
+		{
+			pCharacter->GetRotation()->SetDest(D3DXVECTOR3(0.0f, fAngleDest, 0.0f));
+
+			// ダッシュモーションか歩きモーションかを判定
+			int isDashMotion = (m_bDash ? TYPE_DASH : TYPE_MOVE);
+
+			// ジャンプかjumpじゃないかを判定
+			int motiontype = m_bJump ? isDashMotion : TYPE_JUMP;
+
+			// モーションの設定
+			pMotion->SetMotion(motiontype, true, 5);
+
+			pCharacter->SetState(STATE::STATE_MOVE, 1);
+
+			// 状態の変更
+			ChangeState(make_shared<CPlayerMove>());
+
+		}
+		else
+		{
+			// モーションの種類の取得
+			int motiontype = pMotion->GetBlendType();
+
+			// 移動状態だったら
+			if (motiontype == TYPE_MOVE || motiontype == TYPE_DASH && pMotion != nullptr)
+			{
+				pMotion->SetMotion(TYPE_NEUTRAL, true, 15);
+
+				// 状態の変更
+				ChangeState(make_shared<CPlayerNormal>());
+			}
+		}
+	}
+
+	// ダッシュボタンを押したら
+	if ((pKeyboard->GetPress(DIK_LSHIFT) || pJoypad->GetPress(pJoypad->JOYKEY_RIGHT_SHOULDER)))
+	{
+		m_bDash = true;
+	}
+	else
+	{
+		m_bDash = false;
+	}
+
+	D3DXVECTOR3 pos = pCharacter->GetPosition();
+
+	// 移動量の減衰
+	m_pMove->SetInertia3D(0.25f);
+
+	// 前回の位置の取得
+	m_posOld = pos;
+
+	// 移動量の取得
+	D3DXVECTOR3 move = m_pMove->Get();
+
+	// 位置の更新
+	pos += move;
+
+	float fHeight = 0.0f;
+
+	// メッシュフィールドの当たり判定
+	if (pMesh != nullptr && pMesh->Collision(pos, &fHeight))
+	{
+		// 高さの設定
+		pos.y = fHeight;
+
+		// ジャンプできる
+		m_bJump = true;
+
+		// モーションがジャンプだったら
+		if (pMotion->GetBlendType() == TYPE_JUMP)
+		{
+			// 着地モーションの再生
+			pMotion->SetMotion(TYPE_LANDING, true, 5);
+
+			// インパクトの設定
+			CMeshCircle::Confing Circleconfig = { 0.0f,10.0f,10.0f,50.0f,30,true };
+
+			// サークルを生成
+			CMeshCircle::Create(Circleconfig, D3DCOLOR_RGBA(220, 220, 220, 200), pos, 32);
+		}
+	}
+	else
+	{
+		m_bJump = false;
+	}
+
+	// メッシュシリンダーの取得
+	CMeshCylinder* pCylinder = CGame::GetCylinder();
+
+	// シリンダーの判定
+	if (pCylinder != nullptr && pCylinder->Collision(&pos))
+	{
+		// ここに処理があれば書く
+	}
+
+	// 障害物との当たり判定
+	CollisionObstacle(&pos);
+
+	// 最初の位置
+	D3DXVECTOR3 firstPos = VEC3_NULL;
+
+	// 衝撃波の位置
+	D3DXVECTOR3 ImpactPos = VEC3_NULL;
+
+	// インパクトとの判定
+	const bool bCollision = pMesh->CollisionImpact(pos, 150.0f, CMeshFieldImpact::OBJ_PLAYER, &firstPos, &ImpactPos);
+
+	if (bCollision && pCharacter->GetState() == STATE::STATE_ACTION)
+	{
+		// 方向の設定
+		D3DXVECTOR3 dir = firstPos - pos;
+
+		float fAngle = GetTargetAngle(firstPos, pos);
+
+		// 向きの設定
+		pCharacter->GetRotation()->SetDest(D3DXVECTOR3(0.0f, fAngle + D3DX_PI, 0.0f));
+
+		// 右手の位置
+		D3DXVECTOR3 playerHandR = GetModelPos(5);
+
+		// モーションをダメージにする
+		pMotion->SetMotion(TYPE_PARRY, true, 2);
+
+		// パーティクルの生成
+		CParticle3D::Create(playerHandR, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f), 240, 20.0f, 25, 2, 15.0f);
+
+		// インパクトの設定
+		CMeshCircle::Confing Circleconfig = { 50.0f,10.0f,0.0f,50.0f,30,false };
+
+		// インパクトを生成
+		CMeshCircle::Create(Circleconfig, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), playerHandR, 32, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
+
+		// 再設定
+		pMesh->ResetImpact(dir, CMeshFieldImpact::OBJ_PLAYER, playerHandR, D3DXCOLOR(1.0f, 1.0f, 0.5f, 1.0f));
+	}
+	// インパクトの当たり判定
+	else if (bCollision && pMotion->GetBlendType() != TYPE_DAMAGE)
+	{
+		// 吹き飛び処理
+		BlowOff(ImpactPos, 50.0f, 10.0f);
+
+		// モーションの設定
+		ChangeState(make_shared<CPlayerDamage>(5));
+	}
+
+	// 重力を加算
+	m_pMove->Gravity(-MAX_GRABITY);
+
+	// ジャンプできるなら
+	if ((pKeyboard->GetPress(DIK_SPACE) == true || pJoypad->GetPress(pJoypad->JOYKEY_A) == true) && m_bJump == true)
+	{
+		pMotion->SetMotion(TYPE_JUMP, true, 2);
+
+		// 移動量を上方向に設定
+		m_pMove->Jump(JUMP_HEIGHT);
+		m_bJump = false;
+	}
+
+#ifdef _DEBUG
+
+	if (pKeyboard->GetTrigger(DIK_V))
+	{
+		// 回避
+		ChangeState(make_shared<CPlayerAvoid>(20.0f));
+	}
+#endif // _DEBUG
+
+	// カウンター状態
+	if (pKeyboard->GetTrigger(DIK_RETURN) && pMotion->GetBlendType() != TYPE_DAMAGE)
+	{
+		pMotion->SetMotion(TYPE_ACTION, true, 6);
+
+		// パリィの時間
+		m_nParryTime = PARRY_TIME;
+		m_nParryCounter = 0;
+
+		pCharacter->SetState(pCharacter->STATE_ACTION, PARRY_TIME);
+	}
+
+	// 当たり判定の設定処理
+	if (m_pSphere != nullptr)
+	{
+		// 位置の設定処理
+		m_pSphere->SetPosition(pos);
+	}
+
+	// 視界判定
+	if (m_pFOV != nullptr)
+	{
+		// 位置の設定
+		m_pFOV->SetPosition(pos);
+	}
+
+	UpdateParry();
+
+	// 位置の設定
+	pCharacter->SetPosition(pos);
+}
+
+//===================================================
+// 描画処理(ゲーム中の処理)
+//===================================================
+void CPlayerGame::Draw(void)
+{
+	// プレイヤーの描画処理
+	CPlayer::Draw();
+}
+
+//===================================================
+// プレイヤーの取得
+//===================================================
+CPlayerGame* CPlayerGame::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
+{
+	// プレイヤーの生成
+	auto pPlayer = new CPlayerGame;
+
+	// プレイヤーの初期化
+	pPlayer->Init();
+	
+	// キャラクターの取得
+	auto pCharacter = pPlayer->GetCharacter();
+
+	pCharacter->SetPosition(pos);
+	pCharacter->GetRotation()->Set(rot);
+
+	return pPlayer;
+}
+
+//===================================================
+// パリィの更新処理
+//===================================================
+void CPlayerGame::UpdateParry(void)
+{
+	// パリィのカウンター
+	if (m_nParryCounter >= m_nParryTime)
+	{
+		m_nParryCounter = 0;
+	}
+	else
+	{
+		m_nParryCounter++;
+	}
+}
+
+//===================================================
+// パリィの成功度の取得
+//===================================================
+int CPlayerGame::SuccessParry(const int nParfectTime)
+{
+	// キャラクターの取得
+	auto pCharacter = CPlayer::GetCharacter();
+
+	// キャラクターが無かったら処理しない
+	if (pCharacter == nullptr) return 0;
+
+	// 状態がアクションじゃなかったら抜ける
+	if (pCharacter->GetState() != STATE::STATE_ACTION) return PARRY_MISS;
+
+	// パーフェクトタイムまでの差分を求める
+	int nDiff = abs(nParfectTime - m_nParryCounter);
+
+	// パーフェクトだったら
+	if (nDiff >= 0 && nDiff <= 5)
+	{
+		// 完璧
+		return PARRY_PARFECT;
+	}
+	else if (nDiff > 5 && nDiff <= 10)
+	{
+		// 普通
+		return PARRY_NORMAL;
+	}
+	else if (nDiff > 10 && nDiff <= m_nParryTime)
+	{
+		// 弱い
+		return PARRY_WEAK;
+	}
+
+	return PARRY_MISS;
+}
+
+//===================================================
+// 吹き飛び処理
+//===================================================
+void CPlayerGame::BlowOff(const D3DXVECTOR3 attacker, const float blowOff, const float jump)
+{
+	// キャラクターの取得
+	auto pCharacter = CPlayer::GetCharacter();
+
+	// キャラクターが無かったら処理しない
+	if (pCharacter == nullptr) return;
+
+	// 位置
+	D3DXVECTOR3 pos = pCharacter->GetPosition();
+
+	// アタッカーからプレイヤーまでの差分を求める
+	D3DXVECTOR3 diff = pos - attacker;
+
+	// 角度を求める
+	float fAngle = atan2f(diff.x, diff.z);
+
+	// 目的の角度の設定
+	pCharacter->GetRotation()->SetDest(D3DXVECTOR3(0.0f, fAngle, 0.0f));
+
+	// 移動量
+	D3DXVECTOR3 move;
+
+	// 移動量の設定
+	move.x = sinf(fAngle) * blowOff;
+	move.y = jump;
+	move.z = cosf(fAngle) * blowOff;
+
+	m_pMove->Set(move);
+}
+
+//===================================================
+// パリィできるか判定
+//===================================================
+bool CPlayerGame::IsParry(const D3DXVECTOR3 pos)
+{
+	// キャラクターの取得
+	auto pCharacter = CPlayer::GetCharacter();
+
+	// モーションの取得
+	auto pMotion = CPlayer::GetMotion();
+
+	// キャラクターが無かったら処理しない
+	if (pCharacter == nullptr) return false;
+
+	// モーションが無かったら処理しない
+	if (pMotion == nullptr) return false;
+
+	// 向きの取得
+	D3DXVECTOR3 rot = pCharacter->GetRotation()->Get();
+
+	// 視界の更新処理
+	m_pFOV->UpdateData(rot.y);
+
+	// 視界判定の取得
+	CCollisionFOV* pCollision = CCollisionFOV::GetInstance();
+
+	// 視界内かつ状態が攻撃の時
+	if (pCharacter->GetState() == CCharacter3D::STATE_ACTION &&
+		pCollision->Collision(pos, m_pFOV.get()) &&
+		pMotion->GetBlendType() != TYPE_PARRY)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+//===================================================
+// 角度の設定処理
+//===================================================
+void CPlayerGame::SetAngle(const float angleY)
+{
+	// キャラクターの取得
+	auto pCharacter = CPlayer::GetCharacter();
+
+	// キャラクターが無かったら処理しない
+	if (pCharacter == nullptr) return;
+
+	// 角度の設定
+	pCharacter->GetRotation()->SetDest(D3DXVECTOR3(0.0f, angleY, 0.0f));
+}
+
+//===================================================
+// 障害物との当たり判定
+//===================================================
+bool CPlayerGame::CollisionObstacle(D3DXVECTOR3* pPos)
+{
+	//	障害物マネージャーのインスタンスの取得
+	CObstacleManager* pObstacleManager = CObstacleManager::GetInstance();
+
+	// マネージャーが無かったら
+	if (pObstacleManager == nullptr) return false;
+
+	// 障害物の総数の取得
+	int nNumObstacle = pObstacleManager->GetObstacleSize();
+
+	// 障害物の総数分調べる
+	for (int nCnt = 0; nCnt < nNumObstacle; nCnt++)
+	{
+		// 障害物の取得
+		CObstacle* pObstacle = pObstacleManager->GetObstacle(nCnt);
+
+		D3DXVECTOR3 Size = { 50.0f,200.0f,50.0f };
+
+		D3DXVECTOR3 center;
+
+		center.x = pPos->x;
+		center.y = pPos->y + Size.y * 0.5f;
+		center.z = pPos->z;
+
+		CColliderAABB aabb = CColliderAABB::CreateCollider(center, D3DXVECTOR3(m_posOld.x, m_posOld.y + Size.y * 0.5f, m_posOld.z), Size);
+
+		// 当たっていたら
+		if (pObstacle != nullptr && pObstacle->Collision(&aabb, pPos))
+		{
+			// ダメージ状態にする
+			ChangeState(make_shared<CPlayerDamage>(3));
+
+			return true;
+		}
+	}
+	return false;
+}
+
+//===================================================
+// ヒット時の処理
+//===================================================
+void CPlayerGame::Hit(int nDamage)
+{
+	// キャラクターの取得
+	auto pCharacter = CPlayer::GetCharacter();
+
+	// キャラクターが無かったら処理しない
+	if (pCharacter == nullptr) return;
+
+	// ヒット時の処理
+	pCharacter->Hit(nDamage);
 }

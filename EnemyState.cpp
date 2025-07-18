@@ -205,7 +205,7 @@ void CEnemyAttackSmash::Update(void)
 	pMotion->SetMotion(MOTION::MOTION_SMASH, true, 20);
 
 	// プレイヤーの取得
-	CPlayer* pPlayer = CGame::GetPlayer();
+	CPlayerGame* pPlayer = CGame::GetPlayer();
 
 	// プレイヤーが使われていないなら
 	if (pPlayer == nullptr)
@@ -252,6 +252,9 @@ void CEnemyAttackSmash::Update(void)
 		{
 			// 吹き飛び処理
 			pPlayer->BlowOff(pos, 10.0f, 10.0f);
+
+			// プレイヤーのモーションの設定
+			pPlayerMotion->SetMotion(pPlayer->TYPE_DAMAGE, true, 2);
 
 			// プレイヤー状態の変更
 			pPlayer->ChangeState(make_shared<CPlayerDamage>(2));
@@ -513,7 +516,7 @@ void CEnemySpin::Update(void)
 {
 	// モーションクラスの取得
 	CMotion* pMotion = m_pEnemy->GetMotion();
-	CPlayer* pPlayer = CGame::GetPlayer();
+	CPlayerGame* pPlayer = CGame::GetPlayer();
 	CMotion* pPlayerMotion = pPlayer->GetMotion();
 
 	// 向いている方向に移動する

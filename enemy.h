@@ -15,9 +15,8 @@
 // インクルードファイル
 //***************************************************
 #include"main.h"
-#include "Collision.h"
+#include"object.h"
 #include<memory>
-#include"character3D.h"
 #include<vector>
 
 //***************************************************
@@ -34,6 +33,8 @@ class CStateMachine;
 class CObject3D;
 class CColliderSphere;
 class CEnemyMovement;
+class CColliderAABB;
+class CVelocity;
 
 //***************************************************
 // 敵クラスの定義
@@ -70,7 +71,9 @@ public:
 	void Update(void) override;
 	void Draw(void) override;
 
-	D3DXVECTOR3 GetPosition(void) { return m_pCharactor->GetPosition(); }
+	D3DXVECTOR3 GetPosition(void);
+	CMotion* GetMotion(void);
+	CEnemyMovement* GetMovement(void);
 
 	void SelectDamageMotion(int success);	// どのダメージモーションが出るか判定する関数
 	bool IsDamageMotion(void);				// ダメージモーションかどうか
@@ -83,8 +86,7 @@ public:
 	void ChangeState(std::shared_ptr<CEnemyState> pNewState);
 	bool CollisionObstacle(D3DXVECTOR3* pPos);
 	void SetSuccess(const int success) { m_nParrySuccess = success; }   // 成功度の設定
-	CMotion* GetMotion(void) { return m_pMotion.get(); }
-	CEnemyMovement* GetMovement(void) { return m_pMovement.get(); }
+
 private:
 	void SetParent(const int nCnt);
 	void Load(void);

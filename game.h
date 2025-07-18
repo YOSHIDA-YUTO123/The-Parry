@@ -21,7 +21,7 @@
 // 前方宣言
 //***************************************************
 class CMeshField;
-class CPlayer;
+class CPlayerGame;
 class CMeshCylinder;
 
 //***************************************************
@@ -48,13 +48,13 @@ public:
 
 	static void SetState(const STATE state) { m_state = state; }
 	static CMeshField* GetField(void) { return m_pMeshField; }
-	static CPlayer* GetPlayer(void) { return m_pPlayer; }
+	static CPlayerGame* GetPlayer(void) { return m_pPlayer; }
 	static CMeshCylinder* GetCylinder(void){ return m_pCylinder; }
 private:
 	static STATE m_state;						// ゲームの状態
 	int m_nCounterState;				// 状態のカウンター
 	static CMeshField* m_pMeshField;	// メッシュフィールドへのポインタ
-	static CPlayer* m_pPlayer;			// プレイヤークラスへのポインタ
+	static CPlayerGame* m_pPlayer;			// プレイヤークラスへのポインタ
 	static CMeshCylinder* m_pCylinder;	// メッシュシリンダーへのポインタ
 };
 
