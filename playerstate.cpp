@@ -26,6 +26,7 @@ CPlayerState::CPlayerState(ID Id)
 {
 	m_ID = Id;
 	m_pPlayer = nullptr;
+	m_pCharacter = nullptr;
 }
 
 //===================================================
@@ -33,6 +34,15 @@ CPlayerState::CPlayerState(ID Id)
 //===================================================
 CPlayerState::~CPlayerState()
 {
+}
+
+//===================================================
+// オーナーの設定
+//===================================================
+void CPlayerState::SetOwner(CPlayer* pPlayer,CCharacter3D *pCaracter)
+{
+	m_pPlayer = pPlayer;
+	m_pCharacter = pCaracter;
 }
 
 //===================================================
@@ -100,6 +110,8 @@ void CPlayerDamage::Init(void)
 {
 	// モーションの取得
 	CMotion* pMotion = m_pPlayer->GetMotion();
+
+	m_pCharacter->Hit(m_nDamage);
 
 	if (pMotion != nullptr)
 	{

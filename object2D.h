@@ -16,14 +16,9 @@
 //***************************************************
 #include"main.h"
 #include"object.h"
-#include"transform.h"
 
 //***************************************************
-// マクロ定義
-//***************************************************
-
-//***************************************************
-// レンダラークラスの定義
+// オブジェクト2Dクラスの定義
 //***************************************************
 class CObject2D : public CObject
 {
@@ -49,20 +44,25 @@ public:
 	void Draw(void);
 
 	D3DXVECTOR3 GetPosition(void) const { return m_pos; }
+	D3DXVECTOR2 GetSize(void) const { return m_Size; }
+
 	void SetPosition(const D3DXVECTOR3 pos) { m_pos = pos; }
 	
+	void SetVtx(const D3DXCOLOR col);
 	void SetSize(const float fWidth, const float fHeight);
 	void SetSize(const float leftWidth,const float rightWdth,const float topHeight,const float buttom);
-	void SetOffsetVtx(const D3DXCOLOR col = Const::WHITE, const int nPosX = 1, const int nPosY = 1);
+
 	void UpdateVertex(void);
-	void SetUvPos(const D3DXVECTOR2 OffPosTex,const D3DXVECTOR2 PosTex);
+	
 	void SetColor(const D3DXCOLOR col);
 	void SetTextureID(const char* pTextureName = NULL);
+
 private:
+
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuffer;	// 頂点へのポインタ
-	D3DXVECTOR3 m_pos;	// 位置
-	CRotation *m_pRot;	// 向き
-	D3DXVECTOR2 m_Size;	// 大きさ
+	D3DXVECTOR3 m_pos;						// 位置
+	D3DXVECTOR3 m_rot;						// 向き
+	D3DXVECTOR2 m_Size;						// 大きさ
 	float m_fAngle;							// 角度
 	float m_Length;							// 長さ
 	int m_nTextureIdx;						// テクスチャのインデックス

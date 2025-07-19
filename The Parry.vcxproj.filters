@@ -255,6 +255,12 @@
     <ClCompile Include="enemy.cpp">
       <Filter>ソース ファイル\model</Filter>
     </ClCompile>
+    <ClCompile Include="Observer.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="Gage.cpp">
+      <Filter>ソース ファイル\object2D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="testword.h">
@@ -424,6 +430,12 @@
     </ClInclude>
     <ClInclude Include="enemy.h">
       <Filter>ヘッダー ファイル\model</Filter>
+    </ClInclude>
+    <ClInclude Include="Observer.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="Gage.h">
+      <Filter>ヘッダー ファイル\object2D</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

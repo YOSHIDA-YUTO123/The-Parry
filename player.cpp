@@ -33,6 +33,8 @@
 #include"camera.h"
 #include"slow.h"
 #include "game.h"
+#include"Observer.h"
+#include"Gage.h"
 
 using namespace math; // 名前空間mathを使用
 using namespace std;  // 名前空間をstdを使用する
@@ -80,7 +82,7 @@ HRESULT CPlayer::Init(void)
 	m_pCharacter3D->Init();
 
 	// キャラクターの設定処理
-	m_pCharacter3D->SetCharacter(10, 6.0f,D3DXVECTOR3(3.0f,1.0f,3.5f));
+	m_pCharacter3D->SetCharacter(MAX_LIFE, 6.0f,D3DXVECTOR3(3.0f,1.0f,3.5f));
 
 	// 状態制御の生成
 	m_pMachine = make_unique<CStateMachine>();
@@ -175,8 +177,14 @@ void CPlayer::Update(void)
 		pCamera->SetState(state);
 	}
 
-	// キャラクターの更新処理
-	m_pCharacter3D->Update();
+	if (m_pCharacter3D != nullptr)
+	{
+		// キャラクターの更新処理
+		m_pCharacter3D->Update();
+
+		// 目的の視点に近づける
+		m_pCharacter3D->GetRotation()->SetSmoothAngle(0.1f);
+	}
 
 	if (m_pMotion != nullptr)
 	{
@@ -190,8 +198,6 @@ void CPlayer::Update(void)
 		// 状態の更新処理
 		m_pMachine->Update();
 	}
-	// 目的の視点に近づける
-	m_pCharacter3D->GetRotation()->SetSmoothAngle(0.1f);
 
 	D3DXVECTOR3 posRDest;
 
@@ -303,7 +309,7 @@ void CPlayer::ChangeState(std::shared_ptr<CPlayerState> pNewState)
 	if (pNewState != nullptr)
 	{
 		// オーナの設定
-		pNewState->SetOwner(this);
+		pNewState->SetOwner(this,m_pCharacter3D.get());
 	}
 
 	if (m_pMachine != nullptr)
@@ -378,6 +384,7 @@ void CPlayer::Load(void)
 			delete pLoadManager;
 			pLoadManager = nullptr;
 		}
+
 		// ファイルを閉じる
 		file.close();
 	}
@@ -615,7 +622,8 @@ CPlayerGame::CPlayerGame()
 	m_nParryTime = NULL;	
 	m_nParryCounter = NULL;
 	m_bJump = false;		
-	m_bDash = false;		
+	m_bDash = false;
+	m_pObserver = nullptr;
 }
 
 //===================================================
@@ -664,6 +672,12 @@ void CPlayerGame::Uninit(void)
 	m_pSphere = nullptr;
 	m_pMove = nullptr;
 	m_pMovement = nullptr;
+
+	if (m_pObserver != nullptr)
+	{
+		delete m_pObserver;
+		m_pObserver = nullptr;
+	}
 
 	// プレイヤーの破棄
 	CPlayer::Uninit();
@@ -940,10 +954,18 @@ void CPlayerGame::Update(void)
 		m_pFOV->SetPosition(pos);
 	}
 
+	// 通知処理
+	Notify();
+
 	UpdateParry();
 
 	// 位置の設定
 	pCharacter->SetPosition(pos);
+
+	if (pCharacter->GetAlive() == false)
+	{
+		CGame::SetState(CGame::STATE_END);
+	}
 }
 
 //===================================================
@@ -1157,9 +1179,9 @@ bool CPlayerGame::CollisionObstacle(D3DXVECTOR3* pPos)
 }
 
 //===================================================
-// ヒット時の処理
+// 通知処理
 //===================================================
-void CPlayerGame::Hit(int nDamage)
+void CPlayerGame::Notify(void)
 {
 	// キャラクターの取得
 	auto pCharacter = CPlayer::GetCharacter();
@@ -1167,6 +1189,12 @@ void CPlayerGame::Hit(int nDamage)
 	// キャラクターが無かったら処理しない
 	if (pCharacter == nullptr) return;
 
-	// ヒット時の処理
-	pCharacter->Hit(nDamage);
+	if (m_pObserver != nullptr)
+	{
+		// HPの取得
+		int nLife = pCharacter->GetLife();
+
+		// HPの変化を通知する
+		m_pObserver->OnNotify(nLife);
+	}
 }

@@ -21,6 +21,8 @@
 #include"result.h"
 #include"fade.h"
 #include "debugproc.h"
+#include "Gage.h"
+#include "Observer.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -69,6 +71,19 @@ HRESULT CGame::Init(void)
 	// プレイヤーの生成
 	m_pPlayer = CPlayerGame::Create(D3DXVECTOR3(1.0f, 0.0f, -1500.0f));
 
+	// HPゲージの生成
+	auto pGage = CHpGage::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR2(240.0f, 50.0f), WHITE, CPlayerGame::MAX_LIFE);
+
+	// Hpゲージのオブザーバーの設定
+	CHpObserver *observer = new CHpObserver(pGage);
+
+	// オブザーバーの設定
+	m_pPlayer->SetObserver(observer);
+
+	// オブザーバーの設定
+	pGage->SetObserver(observer);
+
+	// アリーナの生成
 	CObjectX::Create(VEC3_NULL, "data/MODEL/field/arena.x");
 
 	CEnemy::Create(D3DXVECTOR3(0.0f, 0.0f, 1500.0f));

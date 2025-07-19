@@ -245,7 +245,6 @@ void CEnemyAttackSmash::Update(void)
 		// 当たったら
 		if (m_pEnemy->CollisionWepon() && bParry)
 		{
-
 			pPlayer->ChangeState(make_shared<CPlayerRoundKick>());
 
 			// パリィモーションの再生

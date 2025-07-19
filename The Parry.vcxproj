@@ -168,6 +168,8 @@
     <ClCompile Include="explosion.cpp" />
     <ClCompile Include="fade.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="Gage.cpp" />
+    <ClCompile Include="Observer.cpp" />
     <ClCompile Include="impact.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="light.cpp" />
@@ -231,6 +233,8 @@
     <ClInclude Include="explosion.h" />
     <ClInclude Include="fade.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="Gage.h" />
+    <ClInclude Include="Observer.h" />
     <ClInclude Include="impact.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="light.h" />

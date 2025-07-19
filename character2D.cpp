@@ -200,11 +200,11 @@ void CAnimCharacter2D::Update(void)
 
 		m_nPatternAnim++;
 
-		float UV = m_fPosTexU * m_nPatternAnim;
-		float HV = m_nOffTexPosH * m_fPosTexH;
+		//float UV = m_fPosTexU * m_nPatternAnim;
+		//float HV = m_nOffTexPosH * m_fPosTexH;
 
-		// テクスチャ座標の更新
-		CObject2D::SetUvPos(D3DXVECTOR2(UV, HV), D3DXVECTOR2(m_fPosTexU, m_fPosTexH));
+		//// テクスチャ座標の更新
+		//CObject2D::SetUvPos(D3DXVECTOR2(UV, HV), D3DXVECTOR2(m_fPosTexU, m_fPosTexH));
 
 		// 最大まで行ったら
 		if (m_nPatternAnim >= (m_nPosX * m_nPosY))

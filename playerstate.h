@@ -21,6 +21,7 @@
 // 前方宣言
 //***************************************************
 class CPlayer;
+class CCharacter3D;
 
 //***************************************************
 // プレイヤーの状態クラスの定義
@@ -49,9 +50,10 @@ public:
 	virtual void Uninit(void) override {};
 	virtual int GetID(void) const { return m_ID; }
 
-	void SetOwner(CPlayer* pPlayer) { m_pPlayer = pPlayer; }
+	void SetOwner(CPlayer* pPlayer, CCharacter3D* pCaracter);
 protected:
-	CPlayer* m_pPlayer;	// プレイヤーのクラスへのポインタ
+	CPlayer* m_pPlayer;			// プレイヤーのクラスへのポインタ
+	CCharacter3D* m_pCharacter;	// キャラクタークラスへのポインタ
 private:
 	ID m_ID; // ID
 };

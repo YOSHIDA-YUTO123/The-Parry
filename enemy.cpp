@@ -536,8 +536,40 @@ void CEnemy::SelectDamageMotion(int success)
 	}
 		break;
 	case CPlayerGame::PARRY_NORMAL:
+	{
 		// 状態の設定
 		ChangeState(make_shared<CEnemyDamageS>());
+
+		// 位置の取得
+		D3DXVECTOR3 pos = GetPosition();
+
+		// プレイヤーの位置の取得
+		D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
+
+		// プレイヤーの右手の位置
+		D3DXVECTOR3 playerFootR = pPlayer->GetModelPos(11);
+
+		// パーティクルの生成
+		auto pParticle = CParticle3DNormal::Create(playerFootR, 10.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
+
+		// パーティクルの設定処理
+		pParticle->SetParticle(15.0f, 240, 50, 5);
+
+		// ボスまでの角度を取得
+		float fAngle = GetTargetAngle(pos, PlayerPos);
+
+		// 向きの設定
+		pPlayer->SetAngle(fAngle + D3DX_PI);
+
+		// インパクトを生成
+		auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.6f, 0.8f), playerFootR, 0.0f, 50.0f);
+
+		// サークルの設定処理
+		pCircle->SetCircle(35.0f, 15.0f, 120, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
+
+		// 状態の設定
+		ChangeState(make_shared<CEnemyDamageS>());
+	}
 		break;
 	case CPlayerGame::PARRY_PARFECT:
 	{

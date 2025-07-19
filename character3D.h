@@ -63,7 +63,7 @@ public:
 	bool GetAlive(void);		// 生きているか
 	bool HitStop(void);			// ヒットストップしてるかどうか
 	void SetHitStop(const int nTime) { m_nHitStopTime = nTime; } // ヒットストップの設定
-
+	int GetLife(void) const { return m_nLife; }
 private:
 	CShadowS* m_pShadowS;		// 影(ステンシル)
 	D3DXVECTOR3 m_pos;			// 位置

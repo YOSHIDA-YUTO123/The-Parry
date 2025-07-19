@@ -28,8 +28,6 @@
 class CInputKeyboard;
 class CInputJoypad;
 class CMotion;
-class CShadow;
-class CScoreLerper;
 class CCharacter3D;
 class CCollisionFOV;
 class CColliderSphere;
@@ -38,6 +36,7 @@ class CStateMachine;
 class CPlayerState;
 class CShadowS;
 class CPlayerMovement;
+class CObserver;
 
 //***************************************************
 // プレイヤークラスの定義
@@ -45,6 +44,8 @@ class CPlayerMovement;
 class CPlayer : public CObject
 {
 public:
+
+	static constexpr int MAX_LIFE = 10;	// HP
 
 	// モーションの種類
 	enum TYPE
@@ -85,6 +86,7 @@ public:
 
 	void ChangeState(std::shared_ptr<CPlayerState> pNewState);
 	void SetHitStop(const int nTime) { m_pCharacter3D->SetHitStop(nTime); }
+
 protected:
 	CCharacter3D* GetCharacter(void) { return m_pCharacter3D.get(); }
 private:
@@ -125,19 +127,22 @@ public:
 	// ゲッター
 	CColliderSphere* GetSphereCollider(void) { return m_pSphere.get(); }
 	CPlayerMovement* GetMovement(void) { return m_pMovement.get(); }
-	void UpdateParry(void);
 	int SuccessParry(const int nParfectTime);
 
 	void BlowOff(const D3DXVECTOR3 attacker, const float blowOff, const float jump);
 	bool IsParry(const D3DXVECTOR3 pos);
 	void SetAngle(const float angleY);
 	bool CollisionObstacle(D3DXVECTOR3* pPos);
-	void Hit(int nDamage);	// ヒット時の処理
+	void SetObserver(CObserver* pObserver) { m_pObserver = pObserver; }
 private:
+	void Notify(void);
+	void UpdateParry(void);
+
 	std::unique_ptr<CPlayerMovement> m_pMovement;	// 移動処理
 	std::unique_ptr<CColliderFOV> m_pFOV;			// 視界の判定
 	std::unique_ptr<CColliderSphere> m_pSphere;		// 円のコライダー
 	std::unique_ptr<CVelocity> m_pMove;				// 移動量
+	CObserver* m_pObserver;							// オブザーバークラスへのポインタ
 	D3DXVECTOR3 m_posOld;							// 前回の位置
 	int m_nParryTime;								// パリィの有効時間
 	int m_nParryCounter;							// パリィ―のカウンター
