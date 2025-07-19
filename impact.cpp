@@ -22,9 +22,14 @@ using namespace Const;							// 名前空間Constを使用する
 //================================================
 CMeshCircle::CMeshCircle()
 {
-	ZeroMemory(&m_Config, sizeof(m_Config));
 	m_Incol = m_Outcol = WHITE;
 	m_fDecAlv = NULL;
+	m_bFiledCollision = true;
+	m_fHeight = NULL;
+	m_fInRadius = NULL;
+	m_fOutRadius = NULL;
+	m_fSpeed = NULL;
+	m_nLife = NULL;
 }
 
 //================================================
@@ -37,7 +42,7 @@ CMeshCircle::~CMeshCircle()
 //================================================
 // 生成処理
 //================================================
-CMeshCircle* CMeshCircle::Create(const Confing confing, const D3DXCOLOR col, const D3DXVECTOR3 pos, const int nSegH,const D3DXVECTOR3 rot)
+CMeshCircle* CMeshCircle::Create(const D3DXCOLOR col, const D3DXVECTOR3 pos,const float fInRadius,const float fOutRadius, const int nSegH)
 {
 	// メッシュインパクトを生成
 	CMeshCircle* pMesh = new CMeshCircle;
@@ -65,15 +70,34 @@ CMeshCircle* CMeshCircle::Create(const Confing confing, const D3DXCOLOR col, con
 
 	// 設定処理
 	pMesh->SetPosition(pos);
-	pMesh->SetRotation(rot);
-	pMesh->m_Config = confing;
 	pMesh->m_Outcol = col;
 	pMesh->m_Incol = D3DXCOLOR(col.r, col.g, col.b, col.a * 0.5f);
-	pMesh->m_fDecAlv = col.a / confing.nLife;
-
-	pMesh->SetCircle(nSegH, confing.fInRadius, confing.fOutRadius);
+	pMesh->m_fInRadius = fInRadius;
+	pMesh->m_fOutRadius = fOutRadius;
 
 	return pMesh;
+}
+
+//================================================
+// サークルの設定処理
+//================================================
+void CMeshCircle::SetCircle(const float fHeight, const float fSpeed, const int nLife, const bool bField, const D3DXVECTOR3 rot)
+{
+	// 寿命に応じた透明度の減少値の計算
+	m_fDecAlv = m_Outcol.a / nLife;
+
+	// 要素の設定処理
+	m_fHeight = fHeight;
+	m_fSpeed = fSpeed;
+	m_nLife = nLife;
+	m_bFiledCollision = bField;
+	SetRotation(rot);
+
+	// 横の分割数の取得
+	int nSegH = GetSegH();
+
+	// サークルの設定
+	SetVtx(nSegH, m_fInRadius, m_fOutRadius);
 }
 
 //================================================
@@ -119,8 +143,8 @@ void CMeshCircle::Update(void)
 	float fSlowLevel = pSlow->GetLevel(false);
 
 	// 半径を拡大する
-	m_Config.fInRadius += m_Config.fSpeed * fSlowLevel;
-	m_Config.fOutRadius += m_Config.fSpeed * fSlowLevel;
+	m_fInRadius += m_fSpeed * fSlowLevel;
+	m_fOutRadius += m_fSpeed * fSlowLevel;
 
 	// メッシュフィールドの取得
 	CMeshField* pMesh = CGame::GetField();
@@ -139,14 +163,14 @@ void CMeshCircle::Update(void)
 		D3DXVECTOR3 vtxpos = GetVtxPos(nCntVtx);
 
 		// 変形に頂点を撃つ
-		posWk.x = sinf(fAngle) * m_Config.fInRadius;
+		posWk.x = sinf(fAngle) * m_fInRadius;
 		posWk.y = vtxpos.y;
-		posWk.z = cosf(fAngle) * m_Config.fInRadius;
+		posWk.z = cosf(fAngle) * m_fInRadius;
 
 		D3DXVECTOR3 pos = GetPosition();
 
 		// 地面との当たり判定
-		if (pMesh->Collision(posWk + pos, &fHeight) && m_Config.bFiledCollision)
+		if (pMesh->Collision(posWk + pos, &fHeight) && m_bFiledCollision)
 		{
 			posWk.y = fHeight;
 		}
@@ -167,14 +191,14 @@ void CMeshCircle::Update(void)
 
 		D3DXVECTOR3 vtxpos = GetVtxPos(nCntVtx);
 
-		posWk.x = sinf(fAngle) * m_Config.fOutRadius;
+		posWk.x = sinf(fAngle) * m_fOutRadius;
 		posWk.y = vtxpos.y;
-		posWk.z = cosf(fAngle) * m_Config.fOutRadius;
+		posWk.z = cosf(fAngle) * m_fOutRadius;
 
 		D3DXVECTOR3 pos = GetPosition();
 
 		// 地面との当たり判定
-		if (pMesh->Collision(posWk + pos, &fHeight) && m_Config.bFiledCollision)
+		if (pMesh->Collision(posWk + pos, &fHeight) && m_bFiledCollision)
 		{
 			posWk.y = fHeight;
 		}
@@ -189,10 +213,10 @@ void CMeshCircle::Update(void)
 	m_Outcol.a -= m_fDecAlv;
 
 	// 寿命を減らす
-	m_Config.nLife--;
+	m_nLife--;
 
 	// 寿命が尽きたら
-	if (m_Config.nLife <= 0)
+	if (m_nLife <= 0)
 	{
 		// 終了処理
 		Uninit();
@@ -238,7 +262,7 @@ void CMeshCircle::Draw(void)
 //================================================
 // インパクトの設定処理
 //================================================
-void CMeshCircle::SetCircle(const int nSegH,const float InRadius, const float OutRadius)
+void CMeshCircle::SetVtx(const int nSegH,const float InRadius, const float OutRadius)
 {
 	int nCntVtx = 0; // 頂点数のカウンター
 
@@ -254,7 +278,7 @@ void CMeshCircle::SetCircle(const int nSegH,const float InRadius, const float Ou
 
 		// 円形に点を撃つ
 		posWk.x = sinf(fAngle) * InRadius;
-		posWk.y = m_Config.fHeight;
+		posWk.y = m_fHeight;
 		posWk.z = cosf(fAngle) * InRadius;
 
 		// 頂点座標の設定

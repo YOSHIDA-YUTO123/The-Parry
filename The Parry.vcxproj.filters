@@ -73,20 +73,17 @@
     <Filter Include="ソース ファイル\system">
       <UniqueIdentifier>{0d9e7af1-69a8-4ae7-b59f-3a1777b217c0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\model\enemy">
-      <UniqueIdentifier>{fd292d7d-09b3-445b-8f3d-97f8dde83115}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\model\enemy">
-      <UniqueIdentifier>{2c25c5d3-69a8-41b8-ad26-e9de47097018}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\model\player">
-      <UniqueIdentifier>{7921f0e4-1e81-4556-bc1a-e27b95a0db73}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\scene">
       <UniqueIdentifier>{d5dc3570-5d77-4ddb-acf3-043f556d91cb}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\scene">
       <UniqueIdentifier>{c0030e31-6c52-4321-b312-e0fb018e60b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\statemachine">
+      <UniqueIdentifier>{e0a73606-a0fd-4865-a5ba-ba3ee329d8e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\statemachine">
+      <UniqueIdentifier>{407cfe16-c6c9-4eb7-a71d-8058ac2c150b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -207,17 +204,8 @@
     <ClCompile Include="Orbit.cpp">
       <Filter>ソース ファイル\mesh</Filter>
     </ClCompile>
-    <ClCompile Include="enemy.cpp">
-      <Filter>ソース ファイル\model\enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyState.cpp">
-      <Filter>ソース ファイル\model\enemy</Filter>
-    </ClCompile>
     <ClCompile Include="Obstacle.cpp">
       <Filter>ソース ファイル\objectX</Filter>
-    </ClCompile>
-    <ClCompile Include="statebase.cpp">
-      <Filter>ソース ファイル\system</Filter>
     </ClCompile>
     <ClCompile Include="obstaclemanager.cpp">
       <Filter>ソース ファイル\manager</Filter>
@@ -225,14 +213,8 @@
     <ClCompile Include="Collider.cpp">
       <Filter>ソース ファイル\system</Filter>
     </ClCompile>
-    <ClCompile Include="player.cpp">
-      <Filter>ソース ファイル\model\player</Filter>
-    </ClCompile>
     <ClCompile Include="character3D.cpp">
       <Filter>ソース ファイル\model</Filter>
-    </ClCompile>
-    <ClCompile Include="playerstate.cpp">
-      <Filter>ソース ファイル\model\player</Filter>
     </ClCompile>
     <ClCompile Include="shadowS.cpp">
       <Filter>ソース ファイル\objectX</Filter>
@@ -254,6 +236,24 @@
     </ClCompile>
     <ClCompile Include="renderer.cpp">
       <Filter>ソース ファイル\base</Filter>
+    </ClCompile>
+    <ClCompile Include="billboardAnim.cpp">
+      <Filter>ソース ファイル\objectBillboard</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyState.cpp">
+      <Filter>ソース ファイル\statemachine</Filter>
+    </ClCompile>
+    <ClCompile Include="playerstate.cpp">
+      <Filter>ソース ファイル\statemachine</Filter>
+    </ClCompile>
+    <ClCompile Include="statebase.cpp">
+      <Filter>ソース ファイル\statemachine</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>ソース ファイル\model</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy.cpp">
+      <Filter>ソース ファイル\model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -386,23 +386,11 @@
     <ClInclude Include="Obstacle.h">
       <Filter>ヘッダー ファイル\objectX</Filter>
     </ClInclude>
-    <ClInclude Include="statebase.h">
-      <Filter>ヘッダー ファイル\system</Filter>
-    </ClInclude>
-    <ClInclude Include="enemy.h">
-      <Filter>ヘッダー ファイル\model\enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyState.h">
-      <Filter>ヘッダー ファイル\model\enemy</Filter>
-    </ClInclude>
     <ClInclude Include="obstaclemanager.h">
       <Filter>ヘッダー ファイル\manager</Filter>
     </ClInclude>
     <ClInclude Include="Collider.h">
       <Filter>ヘッダー ファイル\system</Filter>
-    </ClInclude>
-    <ClInclude Include="playerstate.h">
-      <Filter>ヘッダー ファイル\model</Filter>
     </ClInclude>
     <ClInclude Include="shadowS.h">
       <Filter>ヘッダー ファイル\objectX</Filter>
@@ -421,6 +409,21 @@
     </ClInclude>
     <ClInclude Include="game.h">
       <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="billboardAnim.h">
+      <Filter>ヘッダー ファイル\objectBillboard</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyState.h">
+      <Filter>ヘッダー ファイル\statemachine</Filter>
+    </ClInclude>
+    <ClInclude Include="playerstate.h">
+      <Filter>ヘッダー ファイル\statemachine</Filter>
+    </ClInclude>
+    <ClInclude Include="statebase.h">
+      <Filter>ヘッダー ファイル\statemachine</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy.h">
+      <Filter>ヘッダー ファイル\model</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

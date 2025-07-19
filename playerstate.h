@@ -38,6 +38,7 @@ public:
 		ID_DAMAGE,
 		ID_DOWNNEUTRAL,
 		ID_AVOID,
+		ID_ROUNDKICK,
 		ID_MAX
 	};
 
@@ -118,6 +119,19 @@ public:
 	void Update(void) override;
 private:
 	float m_fSpeed; // 速さ
+};
+
+//***************************************************
+// プレイヤーの状態(RoundKick)の定義
+//***************************************************
+class CPlayerRoundKick : public CPlayerState
+{
+public:
+	CPlayerRoundKick();
+	~CPlayerRoundKick();
+	void Init(void) override;
+	void Update(void) override;
+private:
 };
 
 #endif

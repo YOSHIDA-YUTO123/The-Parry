@@ -61,6 +61,9 @@ public:
 	void DeleteShadow(void);	// 影の消去
 	bool Hit(int nDamage);		// ヒット時の処理
 	bool GetAlive(void);		// 生きているか
+	bool HitStop(void);			// ヒットストップしてるかどうか
+	void SetHitStop(const int nTime) { m_nHitStopTime = nTime; } // ヒットストップの設定
+
 private:
 	CShadowS* m_pShadowS;		// 影(ステンシル)
 	D3DXVECTOR3 m_pos;			// 位置
@@ -71,6 +74,7 @@ private:
 	float m_fSpeed;				// 足の速さ
 	int m_nCounterState;		// 状態のカウンター
 	int m_nLife;				// 寿命
+	int m_nHitStopTime;			// ヒットストップの時間
 };
 
 #endif

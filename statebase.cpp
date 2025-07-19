@@ -50,6 +50,8 @@ void CStateMachine::Change(shared_ptr<CStateBase> pNewState)
 		// ó‘Ô‚ª“¯‚¶‚È‚ç
 		if (m_pNowState->GetID() == pNewState->GetID())
 		{
+			// ”jŠü
+			pNewState.reset();
 			return;
 		}
 	}

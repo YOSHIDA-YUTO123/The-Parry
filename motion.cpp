@@ -97,7 +97,7 @@ bool CMotion::IsEventFrame(const int nStartFrame, const int nEndFrame,const int 
 
 	if (m_nAllCounter >= Start &&
 		m_nAllCounter <= End &&
-		m_nType == nType &&
+		m_nTypeBlend == nType &&
 		m_bFinish == false)
 	{
 		return true;

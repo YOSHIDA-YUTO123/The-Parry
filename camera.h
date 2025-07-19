@@ -29,7 +29,7 @@ public:
 		STATE_NONE = 0,
 		STATE_TRACKING,
 		STATE_ROCKON,
-		STATE_LOOK,
+		STATE_ZOOMIN,
 		STATE_MAX
 	}STATE;
 
@@ -45,6 +45,8 @@ public:
 	void SetState(const STATE state) { m_state = state; }
 	void SetTracking(const D3DXVECTOR3 posVDest, const D3DXVECTOR3 posRDest, const float fSpeed, const float fcoef);
 	void Rockon(D3DXVECTOR3 playerPos, D3DXVECTOR3 enemyPos);
+	void ZoomIn(const float fAngleY);
+	void SetZoomIn(const int nTime) { m_nZoomTime = nTime; }
 
 	D3DXVECTOR3 GetRotaition(void) const { return m_rot; }
 	D3DXVECTOR3 GetPosV(void) const { return m_posV; }
@@ -54,6 +56,9 @@ public:
 	STATE GetState(void) const { return m_state; }
 
 private:
+	void UpdatePositionV(void); // 視点の更新処理
+	void UpdatePositionR(void); // 注視点の更新処理
+
 	STATE m_state;				// カメラの状態
 	D3DXMATRIX m_mtxView;		// ビューマトリックス
 	D3DXMATRIX m_mtxProjection;	// プロジェクションマトリックス
@@ -64,6 +69,9 @@ private:
 	D3DXVECTOR3 m_posRDest;		// 目的の注視点
 	D3DXVECTOR3 m_posVDest;		// 目的の視点
 	float m_fDistance;			// 距離
+	float m_fDistanceBase;		// 保存用の距離
+	float m_fDistanceZoom;		// ズームする距離
+	int m_nZoomTime;			// ズームの時間
 };
 
 #endif

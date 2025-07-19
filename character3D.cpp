@@ -29,6 +29,7 @@ CCharacter3D::CCharacter3D()
 	m_state = STATE::STATE_NORMAL;
 	m_fSpeed = NULL;
 	m_ShadowScal = D3DXVECTOR3(2.0f,1.0f,2.0f);
+	m_nHitStopTime = NULL;
 }
 
 //===================================================
@@ -187,6 +188,23 @@ bool CCharacter3D::GetAlive(void)
 		return false;
 	}
 
+	return true;
+}
+
+//===================================================
+// ヒットストップの設定処理
+//===================================================
+bool CCharacter3D::HitStop(void)
+{
+	// カウンターを減らす
+	m_nHitStopTime--;
+
+	// 0以下だったら
+	if (m_nHitStopTime <= 0)
+	{
+		// ヒットストップしていない
+		return false;
+	}
 	return true;
 }
 

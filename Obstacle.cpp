@@ -338,8 +338,6 @@ void CSpikeTrap::Update(void)
 	m_CenterPos.y = pos.y + (Size.y * 0.5f);
 	m_CenterPos.z = pos.z;
 
-	CEffect3D::Create(m_CenterPos, 50.0f, VEC3_NULL, WHITE, 10);
-
 	// ˆÊ’u‚ÌÝ’èˆ—
 	m_pAABB->UpdateData(m_CenterPos, m_posOld);
 }

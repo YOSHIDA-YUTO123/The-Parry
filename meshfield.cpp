@@ -995,11 +995,6 @@ bool CMeshFieldImpact::Update(CMeshField* pMeshField, const int nNumVtx)
 		m_pSphere->SetPosition(m_Config.pos);
 	}
 
-#ifdef _DEBUG
-
-	CEffect3D::Create(m_Config.pos, m_Config.fRadius, VEC3_NULL, m_Config.Circlecol, 10);
-#endif // _DEBUG
-
 	// インパクトを出すタイミングを求める
 	int SetImpact = m_Config.nTime / NUM_SIRCLE;
 
@@ -1007,13 +1002,13 @@ bool CMeshFieldImpact::Update(CMeshField* pMeshField, const int nNumVtx)
 	if (SetImpact != 0 && (m_Info.nCounter % SetImpact == 0 || m_Info.nCounter == 0))
 	{
 		// 角度を求める
-		float rotY = atan2f(m_pMove->Get().x, m_pMove->Get().z);
-
-		// インパクトの設定
-		CMeshCircle::Confing Circleconfig = { 50.0f,10.0f,0.0f,50.0f,60,false };
+		float rotY = atan2f(m_pMove->Get().x, m_pMove->Get().z);		
 
 		// サークルの生成
-		CMeshCircle::Create(Circleconfig,m_Config.Circlecol,m_Config.pos,32, D3DXVECTOR3(D3DX_PI * 0.5f, rotY, 0.0f));
+		auto pCircle = CMeshCircle::Create(m_Config.Circlecol,m_Config.pos, 10.0f, 50.0f,32);
+
+		// サークルの設定
+		pCircle->SetCircle(50.0f, 10.0f, 60, false, D3DXVECTOR3(D3DX_PI * 0.5f, rotY, 0.0f));
 	}
 
 	// 波のカウンターを進める

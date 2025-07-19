@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClCompile Include="billboard.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="billboardAnim.cpp" />
     <ClCompile Include="character2D.cpp" />
     <ClCompile Include="character3D.cpp" />
     <ClCompile Include="Collider.cpp" />
@@ -215,6 +216,7 @@
   <ItemGroup>
     <ClInclude Include="billboard.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="billboardAnim.h" />
     <ClInclude Include="character2D.h" />
     <ClInclude Include="character3D.h" />
     <ClInclude Include="Collider.h" />

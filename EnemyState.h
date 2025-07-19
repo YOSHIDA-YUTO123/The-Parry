@@ -33,19 +33,20 @@ public:
 	// IDの種類
 	enum ID
 	{
-		ID_BASE = 0,
-		ID_IDLE,
-		ID_MOVE,
-		ID_BACKSTEP,
-		ID_LANDING,
-		ID_SMASH,
-		ID_IMPACT,
-		ID_DAMAGEL,
-		ID_ROAR,
-		ID_DASH,
-		ID_SPIN,
-		ID_HIT,
-		ID_DAMAGES,
+		ID_BASE = 0, // 無し
+		ID_IDLE,	 // なにもしない状態
+		ID_MOVE,	 // 移動
+		ID_BACKSTEP, // バックステップ
+		ID_LANDING,  // 着地
+		ID_SMASH,    // 振り下ろし攻撃
+		ID_IMPACT,	 // 衝撃波攻撃
+		ID_DAMAGEL,	 // 大ダメージ
+		ID_ROAR,	 // 叫び
+		ID_DASH,	 // 走り
+		ID_SPIN,	 // 回転攻撃
+		ID_HIT,		 // カウンターがヒットした時
+		ID_DAMAGES,	 // 小ダメージ
+		ID_GUARD,	 // ガード
 		ID_MAX
 	};
 
@@ -121,6 +122,7 @@ class CEnemyAttackSmash : public CEnemyState
 public:
 	CEnemyAttackSmash();
 	~CEnemyAttackSmash();
+	void Init(void) override;
 	void Update(void) override;
 private:
 };
@@ -133,6 +135,7 @@ class CEnemyAttackImpact : public CEnemyState
 public:
 	CEnemyAttackImpact();
 	~CEnemyAttackImpact();
+	void Init(void) override;
 	void Update(void) override;
 private:
 };
@@ -183,6 +186,7 @@ class CEnemySpin : public CEnemyState
 public:
 	CEnemySpin(const int nTime);
 	~CEnemySpin();
+	void Init(void) override;
 	void Update(void) override;
 private:
 	int m_nTime;	// 回転する時間
@@ -210,6 +214,19 @@ class CEnemyDamageS : public CEnemyState
 public:
 	CEnemyDamageS();
 	~CEnemyDamageS();
+	void Init(void) override;
+	void Update(void) override;
+private:
+};
+
+//***************************************************
+// 敵の状態(Guard)クラスの定義
+//***************************************************
+class CEnemyGuard : public CEnemyState
+{
+public:
+	CEnemyGuard();
+	~CEnemyGuard();
 	void Init(void) override;
 	void Update(void) override;
 private:

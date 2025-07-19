@@ -15,7 +15,7 @@
 // インクルードファイル
 //***************************************************
 #include"main.h"
-
+#include <random>
 // 範囲内に収める
 template <class T> T Clamp(const T value, const T min, const T max)
 {
@@ -96,16 +96,11 @@ template <class T> bool IsInRange(const T value,const T min,const T max)
 // ランダム
 template <class T> T Random(const T min, const T max)
 {
-	// 0だったら(0割り対策)
-	if (max == 0)
-	{
-		return min;
-	}
-
-	// ランダムな値を選出
-	T randomWk = rand() % max + min;
-
-	return randomWk;
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution<T> dist(min, max);
+	
+	return dist(gen);
 }
 
 //***************************************************

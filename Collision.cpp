@@ -140,9 +140,6 @@ bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox,
 	D3DXVECTOR3 tPosMin = TargetPos - (TargetSize * HALF_VALUE);
 	D3DXVECTOR3 tPosMax = TargetPos + (TargetSize * HALF_VALUE);
 
-	CEffect3D::Create(tPosMin, 5.0f, VEC3_NULL, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), 3);
-	CEffect3D::Create(tPosMax, 5.0f, VEC3_NULL, D3DXCOLOR(1.0f,0.0f,0.0f,1.0f), 3);
-
 	// Zの範囲内に入っている
 	if (tPosMin.z < posMax.z && tPosMax.z > posMin.z)
 	{
@@ -405,12 +402,6 @@ bool CCollisionFOV::Collision(const D3DXVECTOR3 otherpos, CColliderFOV* pFOV)
 	D3DXVECTOR3 VecRight = GetVector(RightPos, objectPos);
 
 	D3DXVECTOR3 Cross0,Cross1; // 判定用外積ベクトル
-
-#ifdef _DEBUG
-
-	CEffect3D::Create(RightPos, 50.0f, VEC3_NULL, WHITE, 10);
-	CEffect3D::Create(LeftPos, 50.0f, VEC3_NULL, WHITE, 10);
-#endif // _DEBUG
 
 	// 外積を出す
 	D3DXVec3Cross(&Cross0, &VecLeft, &vecFront);

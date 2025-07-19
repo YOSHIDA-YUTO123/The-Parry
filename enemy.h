@@ -35,6 +35,7 @@ class CColliderSphere;
 class CEnemyMovement;
 class CColliderAABB;
 class CVelocity;
+class CPlayerGame;
 
 //***************************************************
 // 敵クラスの定義
@@ -46,18 +47,19 @@ public:
 	// モーションの種類
 	typedef enum
 	{
-		MOTION_NEUTRAL = 0,
-		MOTION_MOVE,
-		MOTION_SMASH,
-		MOTION_JUMP,
-		MOTION_LANDING,
-		MOTION_DAMAGEL,
-		MOTION_IMPACT,
-		MOTION_ROAR,
-		MOTION_DASH,
-		MOTION_SPIN,
-		MOTION_HIT,
-		MOTION_DAMAGES,
+		MOTION_NEUTRAL = 0, // ニュートラル
+		MOTION_MOVE,		// 移動
+		MOTION_SMASH,		// 振り下ろし攻撃
+		MOTION_JUMP,		// ジャンプ
+		MOTION_LANDING,		// 着地
+		MOTION_DAMAGEL,		// 大ダメージ
+		MOTION_IMPACT,		// 衝撃波攻撃
+		MOTION_ROAR,		// 叫び
+		MOTION_DASH,		// 走り
+		MOTION_SPIN,		// 回転攻撃
+		MOTION_HIT,			// カウンターが当たった時
+		MOTION_DAMAGES,		// 小ダメージ
+		MOTION_GUARD,		// ガード
 		MOTION_MAX
 	}MOTION;
 
@@ -86,8 +88,9 @@ public:
 	void ChangeState(std::shared_ptr<CEnemyState> pNewState);
 	bool CollisionObstacle(D3DXVECTOR3* pPos);
 	void SetSuccess(const int success) { m_nParrySuccess = success; }   // 成功度の設定
-
+	void SetHitStop(const int nTime);
 private:
+	void CollisionPlayer(CMotion* pPlayerMotion, CPlayerGame* pPlayer);
 	void SetParent(const int nCnt);
 	void Load(void);
 	

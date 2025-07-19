@@ -80,7 +80,7 @@ HRESULT CPlayer::Init(void)
 	m_pCharacter3D->Init();
 
 	// キャラクターの設定処理
-	m_pCharacter3D->SetCharacter(10, 6.0f,D3DXVECTOR3(2.0f,1.0f,2.0f));
+	m_pCharacter3D->SetCharacter(10, 6.0f,D3DXVECTOR3(3.0f,1.0f,3.5f));
 
 	// 状態制御の生成
 	m_pMachine = make_unique<CStateMachine>();
@@ -151,6 +151,13 @@ void CPlayer::Update(void)
 		return;
 	}
 	
+	// ヒットストップ状態だったら
+	if (m_pCharacter3D->HitStop())
+	{
+		// 更新を止める
+		return;
+	}
+
 	// 位置の取得
 	D3DXVECTOR3 pos = m_pCharacter3D->GetPosition();
 
@@ -190,14 +197,14 @@ void CPlayer::Update(void)
 
 	D3DXVECTOR3 rot = m_pCharacter3D->GetRotation()->Get();
 
-	D3DXVECTOR3 modelpos = math::GetPositionFromMatrix(m_apModel[2]->GetMatrixWorld());
+	D3DXVECTOR3 modelpos = math::GetPositionFromMatrix(m_apModel[1]->GetMatrixWorld());
 
 	posRDest.x = modelpos.x + sinf(rot.y) * 1.0f;
 	posRDest.y = (modelpos.y + 0.0f) + sinf(rot.y) * 1.0f;
 	posRDest.z = modelpos.z + cosf(rot.y) * 1.0f;
 
 	// 視点の設定
-	D3DXVECTOR3 posVDest(pos.x, pos.y + 200.0f, pos.z);
+	D3DXVECTOR3 posVDest(modelpos);
 
 	// カメラの追従処理
 	pCamera->SetTracking(posVDest,posRDest,1.0f,0.1f);
@@ -688,8 +695,21 @@ void CPlayerGame::Update(void)
 	// コントローラーの取得
 	CInputJoypad* pJoypad = CManager::GetInputJoypad();
 
+	// マウスの取得
+	CInputMouse* pMouse = CManager::GetInputMouse();
+
 	// メッシュフィールドの取得
 	CMeshField* pMesh = CGame::GetField();
+
+	// カメラの取得
+	CCamera* pCamera = CManager::GetCamera();
+
+#ifdef _DEBUG
+
+	// デバッグ表示
+	CDebugProc::Print("カメラの回転 X = %.2f Y = %.2f\n", pCamera->GetRotaition().x, pCamera->GetRotaition().y);
+
+#endif // _DEBUG
 
 	// 速さ
 	float fSpeed = m_bDash ? pCharacter->GetSpeed() : 1.5f;
@@ -745,6 +765,18 @@ void CPlayerGame::Update(void)
 		}
 	}
 
+	if (pMotion->IsEventFrame(0,15,TYPE_ROUNDKICK))
+	{
+		D3DXVECTOR3 rot = pCharacter->GetRotation()->GetDest();
+
+		pCamera->ZoomIn(rot.y + D3DX_PI);
+	}
+	else if(pCamera->GetState() == CCamera::STATE_ZOOMIN)
+	{
+		pCamera->SetState(CCamera::STATE_TRACKING);
+	}
+
+
 	// ダッシュボタンを押したら
 	if ((pKeyboard->GetPress(DIK_LSHIFT) || pJoypad->GetPress(pJoypad->JOYKEY_RIGHT_SHOULDER)))
 	{
@@ -786,11 +818,11 @@ void CPlayerGame::Update(void)
 			// 着地モーションの再生
 			pMotion->SetMotion(TYPE_LANDING, true, 5);
 
-			// インパクトの設定
-			CMeshCircle::Confing Circleconfig = { 0.0f,10.0f,10.0f,50.0f,30,true };
-
 			// サークルを生成
-			CMeshCircle::Create(Circleconfig, D3DCOLOR_RGBA(220, 220, 220, 200), pos, 32);
+			auto pCircle = CMeshCircle::Create(D3DCOLOR_RGBA(220, 220, 220, 200), pos, 0.0f, 50.0f, 32);
+
+			// サークルの設定
+			pCircle->SetCircle(0.0f,10.0f,30,true);
 		}
 	}
 	else
@@ -836,13 +868,16 @@ void CPlayerGame::Update(void)
 		pMotion->SetMotion(TYPE_PARRY, true, 2);
 
 		// パーティクルの生成
-		CParticle3D::Create(playerHandR, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f), 240, 20.0f, 25, 2, 15.0f);
+		auto pParticle = CParticle3DNormal::Create(playerHandR, 20.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
 
-		// インパクトの設定
-		CMeshCircle::Confing Circleconfig = { 50.0f,10.0f,0.0f,50.0f,30,false };
+		// パーティクルの設定処理
+		pParticle->SetParticle(15.0f, 240, 25, 2);
 
 		// インパクトを生成
-		CMeshCircle::Create(Circleconfig, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), playerHandR, 32, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
+		auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), playerHandR, 0.0f,50.0f , 32);
+
+		// サークルの設定処理
+		pCircle->SetCircle(50.0f, 10.0f, 30, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
 
 		// 再設定
 		pMesh->ResetImpact(dir, CMeshFieldImpact::OBJ_PLAYER, playerHandR, D3DXCOLOR(1.0f, 1.0f, 0.5f, 1.0f));
@@ -880,7 +915,7 @@ void CPlayerGame::Update(void)
 #endif // _DEBUG
 
 	// カウンター状態
-	if (pKeyboard->GetTrigger(DIK_RETURN) && pMotion->GetBlendType() != TYPE_DAMAGE)
+	if (pMouse->OnMouseTriggerDown(0) && pMotion->GetBlendType() != TYPE_DAMAGE)
 	{
 		pMotion->SetMotion(TYPE_ACTION, true, 6);
 

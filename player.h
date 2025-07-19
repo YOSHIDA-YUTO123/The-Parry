@@ -59,6 +59,7 @@ public:
 		TYPE_PARRY,
 		TYPE_DOWN_NEUTRAL,
 		TYPE_AVOID,
+		TYPE_ROUNDKICK,
 		TYPE_MAX
 	};
 
@@ -78,10 +79,12 @@ public:
 	// ゲッター
 	D3DXVECTOR3 GetPos(void) const { return m_pCharacter3D->GetPosition(); }
 	D3DXVECTOR3 GetModelPos(const int nIdx) { return math::GetPositionFromMatrix(m_apModel[nIdx]->GetMatrixWorld()); }
+	D3DXVECTOR3 GetRotaition(void) const { return m_pCharacter3D->GetRotation()->GetDest(); }
+
 	CMotion* GetMotion(void) { return m_pMotion.get(); } // モーションの取得
 
 	void ChangeState(std::shared_ptr<CPlayerState> pNewState);
-
+	void SetHitStop(const int nTime) { m_pCharacter3D->SetHitStop(nTime); }
 protected:
 	CCharacter3D* GetCharacter(void) { return m_pCharacter3D.get(); }
 private:
@@ -130,7 +133,6 @@ public:
 	void SetAngle(const float angleY);
 	bool CollisionObstacle(D3DXVECTOR3* pPos);
 	void Hit(int nDamage);	// ヒット時の処理
-
 private:
 	std::unique_ptr<CPlayerMovement> m_pMovement;	// 移動処理
 	std::unique_ptr<CColliderFOV> m_pFOV;			// 視界の判定
@@ -158,7 +160,7 @@ public:
 	bool MoveKeyboard(CInputKeyboard* pKeyboard, const float fSpeed, float* pRotDest);
 	bool MoveJoypad(CInputJoypad* pJoypad, const float fSpeed, float* pRotDest);
 	void MoveForward(const float fSpeed);
-
+	void Set(const D3DXVECTOR3 move) { m_pMove->Set(move); }
 private:
 	CRotation* m_pRot;	// 向き
 	CVelocity* m_pMove;		// 移動量

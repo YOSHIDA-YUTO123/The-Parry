@@ -23,28 +23,29 @@ class CMeshCircle : public CMesh
 {
 public:
 
-	// サークルの構成(高さ、速さ、半径内側、半径外側、寿命、地面判定)
-	struct Confing
-	{
-		float fHeight;			 // 高さ
-		float fSpeed;			 // 速さ
-		float fInRadius;		 // 内側の半径
-		float fOutRadius;		 // 外側の半径
-		int nLife;				 // 寿命
-		bool bFiledCollision;	 // 地面の高さに合わせるかどうか
-	};
+	//// サークルの構成(高さ、速さ、半径内側、半径外側、寿命、地面判定)
+	//struct Confing
+	//{
+	//};
 
 	CMeshCircle();
 	~CMeshCircle();
 
-	static CMeshCircle* Create(const Confing confing,const D3DXCOLOR col, const D3DXVECTOR3 pos,const int nSegH = 32, const D3DXVECTOR3 rot = Const::VEC3_NULL);
+	static CMeshCircle* Create(const D3DXCOLOR col, const D3DXVECTOR3 pos, const float fInRadius, const float fOutRadius, const int nSegH = 32);
+	void SetCircle(const float fHeight, const float fSpeed, const int nLife, const bool bField, const D3DXVECTOR3 rot = Const::VEC3_NULL);
+
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
 private:
-	void SetCircle(const int nSegH, const float InRadius, const float OutRadius);  // 頂点の設定
-	Confing m_Config;	// 構成
+	void SetVtx(const int nSegH, const float InRadius, const float OutRadius);  // 頂点の設定
+	float m_fHeight;			 // 高さ
+	float m_fSpeed;			 // 速さ
+	float m_fInRadius;		 // 内側の半径
+	float m_fOutRadius;		 // 外側の半径
+	int m_nLife;				 // 寿命
+	bool m_bFiledCollision;	 // 地面の高さに合わせるかどうか
 	D3DXCOLOR m_Incol, m_Outcol; // 色
 	float m_fDecAlv;	// α値の減少スピード
 };
