@@ -200,7 +200,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\source\\repos\\The Parry\\data\\TEXTURE\\field.png";
+    "data/TEXTURE/field/field.png";
    }
   }
  }

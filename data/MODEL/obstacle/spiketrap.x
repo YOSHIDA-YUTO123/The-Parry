@@ -927,7 +927,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\The-Parry\\data\\TEXTURE\\arenaTexture0000.jpg";
+    "data/TEXTURE/arena/arenaTexture0000.jpg";
    }
   }
  }

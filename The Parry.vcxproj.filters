@@ -261,6 +261,9 @@
     <ClCompile Include="Gage.cpp">
       <Filter>ソース ファイル\object2D</Filter>
     </ClCompile>
+    <ClCompile Include="GageFrame.cpp">
+      <Filter>ソース ファイル\object2D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="testword.h">
@@ -435,6 +438,9 @@
       <Filter>ヘッダー ファイル\system</Filter>
     </ClInclude>
     <ClInclude Include="Gage.h">
+      <Filter>ヘッダー ファイル\object2D</Filter>
+    </ClInclude>
+    <ClInclude Include="GageFrame.h">
       <Filter>ヘッダー ファイル\object2D</Filter>
     </ClInclude>
   </ItemGroup>

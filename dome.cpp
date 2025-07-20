@@ -90,7 +90,7 @@ HRESULT CMeshDome::Init(void)
 	}
 
 	// テクスチャのIDの設定
-	CMesh::SetTextureID("data/TEXTURE/sky.jpg");
+	CMesh::SetTextureID("data/TEXTURE/sky/sky.jpg");
 
 	return E_FAIL;
 }

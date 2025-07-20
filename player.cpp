@@ -672,7 +672,8 @@ void CPlayerGame::Uninit(void)
 	m_pSphere = nullptr;
 	m_pMove = nullptr;
 	m_pMovement = nullptr;
-
+	
+	// オブザーバーの破棄
 	if (m_pObserver != nullptr)
 	{
 		delete m_pObserver;
@@ -919,19 +920,21 @@ void CPlayerGame::Update(void)
 		m_bJump = false;
 	}
 
-#ifdef _DEBUG
-
-	if (pKeyboard->GetTrigger(DIK_V))
+	// 回避
+	if (pMouse->OnMouseTriggerDown(1))
 	{
 		// 回避
 		ChangeState(make_shared<CPlayerAvoid>(20.0f));
 	}
+
+#ifdef _DEBUG
+
 #endif // _DEBUG
 
 	// カウンター状態
 	if (pMouse->OnMouseTriggerDown(0) && pMotion->GetBlendType() != TYPE_DAMAGE)
 	{
-		pMotion->SetMotion(TYPE_ACTION, true, 6);
+		pMotion->SetMotion(TYPE_ACTION, true, 4);
 
 		// パリィの時間
 		m_nParryTime = PARRY_TIME;
@@ -954,7 +957,7 @@ void CPlayerGame::Update(void)
 		m_pFOV->SetPosition(pos);
 	}
 
-	// 通知処理
+	// オブザーバーへの通知処理
 	Notify();
 
 	UpdateParry();

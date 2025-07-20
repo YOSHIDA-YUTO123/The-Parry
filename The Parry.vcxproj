@@ -167,6 +167,7 @@
     <ClCompile Include="EnemyState.cpp" />
     <ClCompile Include="explosion.cpp" />
     <ClCompile Include="fade.cpp" />
+    <ClCompile Include="GageFrame.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="Gage.cpp" />
     <ClCompile Include="Observer.cpp" />
@@ -232,6 +233,7 @@
     <ClInclude Include="EnemyState.h" />
     <ClInclude Include="explosion.h" />
     <ClInclude Include="fade.h" />
+    <ClInclude Include="GageFrame.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="Gage.h" />
     <ClInclude Include="Observer.h" />

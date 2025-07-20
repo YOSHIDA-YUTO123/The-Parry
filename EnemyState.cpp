@@ -310,7 +310,7 @@ void CEnemyAttackSmash::Update(void)
 	if (pMotion->IsFinishEndBlend())
 	{
 		// IDLE‚É‚·‚é
-		m_pEnemy->ChangeState(make_shared<CEnemyIdle>(50));
+		m_pEnemy->ChangeState(make_shared<CEnemyIdle>(10));
 
 		return;
 	}

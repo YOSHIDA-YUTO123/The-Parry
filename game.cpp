@@ -23,6 +23,7 @@
 #include "debugproc.h"
 #include "Gage.h"
 #include "Observer.h"
+#include"GageFrame.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -71,8 +72,11 @@ HRESULT CGame::Init(void)
 	// プレイヤーの生成
 	m_pPlayer = CPlayerGame::Create(D3DXVECTOR3(1.0f, 0.0f, -1500.0f));
 
+	// ゲージのフレームの生成
+	CGageFrame::Create(D3DXVECTOR3(220.0f, 36.0f, 0.0f), D3DXVECTOR2(200.0f, 25.0f),CGageFrame::TYPE_HP_PLAYER);
+
 	// HPゲージの生成
-	auto pGage = CHpGage::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR2(240.0f, 50.0f), WHITE, CPlayerGame::MAX_LIFE);
+	auto pGage = CHpGage::Create(D3DXVECTOR3(103.0f, 36.0f, 0.0f), D3DXVECTOR2(310.0f, 17.0f), D3DXCOLOR(0.0f,1.0f,0.0f,1.0f), CPlayerGame::MAX_LIFE,true);
 
 	// Hpゲージのオブザーバーの設定
 	CHpObserver *observer = new CHpObserver(pGage);
@@ -86,7 +90,23 @@ HRESULT CGame::Init(void)
 	// アリーナの生成
 	CObjectX::Create(VEC3_NULL, "data/MODEL/field/arena.x");
 
-	CEnemy::Create(D3DXVECTOR3(0.0f, 0.0f, 1500.0f));
+	// 敵の生成
+	auto pEnemy = CEnemy::Create(D3DXVECTOR3(0.0f, 0.0f, 1500.0f));
+
+	// ゲージのフレームの生成
+	CGageFrame::Create(D3DXVECTOR3(1000.0f, 36.0f, 0.0f), D3DXVECTOR2(200.0f, 25.0f), CGageFrame::TYPE_HP_ENEMY);
+
+	// HPゲージの生成
+	pGage = CHpGage::Create(D3DXVECTOR3(1115.0f, 36.0f, 0.0f), D3DXVECTOR2(308.0f, 17.0f), D3DXCOLOR(1.0f, 0.2f, 0.0f, 1.0f), CEnemy::MAX_LIFE, false);
+
+	// Hpゲージのオブザーバーの設定
+	observer = new CHpObserver(pGage);
+
+	// オブザーバーの設定
+	pEnemy->SetObserver(observer);
+
+	// オブザーバーの設定
+	pGage->SetObserver(observer);
 
 	// 面の設定
 	int face = CCollisionAABB::FACE_LEFT;

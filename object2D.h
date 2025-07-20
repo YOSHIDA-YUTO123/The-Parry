@@ -33,7 +33,7 @@ public:
 		TYPE_MAX
 	}TYPE;
 
-	CObject2D(int nPriority = 3);
+	CObject2D(int nPriority = 7);
 	~CObject2D();
 
 	static CObject2D* Create(const float fWidth, const float fHeight, const D3DXVECTOR3 pos);
@@ -49,6 +49,7 @@ public:
 	void SetPosition(const D3DXVECTOR3 pos) { m_pos = pos; }
 	
 	void SetVtx(const D3DXCOLOR col);
+	void SetSize(const D3DXVECTOR2 Size) { m_Size = Size; }
 	void SetSize(const float fWidth, const float fHeight);
 	void SetSize(const float leftWidth,const float rightWdth,const float topHeight,const float buttom);
 

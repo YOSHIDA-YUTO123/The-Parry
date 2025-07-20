@@ -21,6 +21,7 @@
 // 前方宣言
 //************************************************
 class CObserver;
+class CGageFrame;
 
 //************************************************
 // ゲージクラスの定義
@@ -28,7 +29,7 @@ class CObserver;
 class CGage : public CObject2D
 {
 public:
-	CGage();
+	CGage(int nPriority = 7);
 	~CGage();
 
 	virtual HRESULT Init(void) override;
@@ -51,14 +52,15 @@ public:
 	CHpGage();
 	~CHpGage();
 
-	static CHpGage* Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size, const D3DXCOLOR col,const int nLife);
+	static CHpGage* Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size, const D3DXCOLOR col,const int nLife,const bool bDecRightToLeft);
 	HRESULT Init(void) override;
 	void Uninit(void) override;
 	void Update(void) override;
 	void Draw(void) override;
 	void SetHp(const int nLife) { m_nLife = nLife; }
 private:
-	int m_nMaxLife;
-	int m_nLife;
+	int m_nMaxLife;			 // 最大のHP
+	int m_nLife;			 // HP
+	bool m_bDecRightToLeft;  // 右から左に減るか判定
 };
 #endif

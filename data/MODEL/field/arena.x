@@ -8581,7 +8581,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data/TEXTURE/wall.jpg";
+    "data/TEXTURE/arena/wall.jpg";
    }
   }
   Material {
@@ -8596,7 +8596,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data/TEXTURE/arenaWall000.png";
+    "data/TEXTURE/arena/arenaWall000.png";
    }
   }
   Material {
@@ -8605,7 +8605,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data/TEXTURE/arenaTexture0000.jpg";
+    "data/TEXTURE/arena/arenaTexture0000.jpg";
    }
   }
  }

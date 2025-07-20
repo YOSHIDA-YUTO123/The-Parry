@@ -163,6 +163,8 @@ void CMotion::FinishFirstBlend(void)
 
 		m_nKey = 0;
 
+		m_nKeyBlend = 0;
+		
 		// モーションをブレンドしたモーションにする
 		m_nType = m_nTypeBlend;
 

@@ -481,7 +481,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data/TEXTURE/wepontexture000.jpg";
+    "data/TEXTURE/enemy/wepontexture000.jpg";
    }
   }
  }

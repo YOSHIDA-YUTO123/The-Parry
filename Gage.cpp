@@ -9,11 +9,14 @@
 // インクルードファイル
 //************************************************
 #include "Gage.h"
+#include "GageFrame.h"
+
+using namespace Const; // 名前空間Constを使用
 
 //================================================
 // コンストラクタ
 //================================================
-CGage::CGage()
+CGage::CGage(int nPriority) : CObject2D(nPriority)
 {
 	m_Observer = nullptr;
 }
@@ -72,6 +75,7 @@ CHpGage::CHpGage()
 {
 	m_nLife = NULL;
 	m_nMaxLife = NULL;
+	m_bDecRightToLeft = true;
 }
 
 //================================================
@@ -84,7 +88,7 @@ CHpGage::~CHpGage()
 //================================================
 // HPゲージの生成処理
 //================================================
-CHpGage* CHpGage::Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size, const D3DXCOLOR col, const int nLife)
+CHpGage* CHpGage::Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size, const D3DXCOLOR col, const int nLife, const bool bDecRightToLeft)
 {
 	// HPゲージの生成
 	CHpGage* pGage = new CHpGage;
@@ -92,10 +96,12 @@ CHpGage* CHpGage::Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size, const D3
 	// 設定処理
 	pGage->Init();
 	pGage->SetPosition(pos);
+	pGage->SetSize(Size);
 	pGage->SetSize(Size.x, Size.x, Size.y, Size.y);
 	pGage->SetVtx(col);
 	pGage->m_nLife = nLife;
 	pGage->m_nMaxLife = nLife;
+	pGage->m_bDecRightToLeft = bDecRightToLeft;
 
 	return pGage;
 }
@@ -137,8 +143,17 @@ void CHpGage::Update(void)
 	// 大きさの取得
 	float fLength = fRateLife * Size.x;
 
-	// 設定処理
-	CObject2D::SetSize(Size.x, fLength, Size.y, Size.y);
+	// 右から左に減るなら
+	if (m_bDecRightToLeft)
+	{
+		// 設定処理
+		CObject2D::SetSize(0.0f, fLength, Size.y, Size.y);
+	}
+	else
+	{
+		// 設定処理
+		CObject2D::SetSize(fLength, 0.0f, Size.y, Size.y);
+	}
 }
 
 //================================================

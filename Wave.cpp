@@ -82,7 +82,7 @@ HRESULT CMeshWave::Init(void)
 	}
 
 	// テクスチャのIDの設定
-	CMesh::SetTextureID("data/TEXTURE/wave000.png");
+	CMesh::SetTextureID("data/TEXTURE/gradation/wave000.png");
 
 	return S_OK;
 }

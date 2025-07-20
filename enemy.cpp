@@ -34,6 +34,7 @@
 #include"slow.h"
 #include"camera.h"
 #include "game.h"
+#include"Observer.h"
 
 //***************************************************
 // 定数定義
@@ -111,7 +112,7 @@ HRESULT CEnemy::Init(void)
 	m_pCharactor = make_unique<CCharacter3D>();
 
 	// キャラクターの設定処理
-	m_pCharactor->SetCharacter(10, 12.0f,D3DXVECTOR3(5.0f, 1.0f, 5.0f));
+	m_pCharactor->SetCharacter(MAX_LIFE, 12.0f,D3DXVECTOR3(5.0f, 1.0f, 5.0f));
 
 	// 位置の取得処理
 	D3DXVECTOR3 pos = m_pCharactor->GetPosition();
@@ -169,6 +170,13 @@ void CEnemy::Uninit(void)
 	// nullにする
 	m_pOrbit = nullptr;
 	m_pAABB = nullptr;
+
+	// オブザーバーの破棄
+	if (m_pObserver != nullptr)
+	{
+		delete m_pObserver;
+		m_pObserver = nullptr;
+	}
 
 	if (m_pCharactor != nullptr)
 	{
@@ -391,6 +399,9 @@ void CEnemy::Update(void)
 		m_pMachine->Update();
 	}
 
+	// オブザーバーへの通知処理
+	Notify();
+
 	// キャラクターがnullじゃないなら
 	if (m_pCharactor != nullptr)
 	{
@@ -611,6 +622,8 @@ void CEnemy::SelectDamageMotion(int success)
 
 		// 状態の設定
 		ChangeState(make_shared<CEnemyDamageL>());
+
+		m_pCharactor->Hit(5);
 	}
 		break;
 	default:
@@ -961,6 +974,24 @@ void CEnemy::Load(void)
 	{
 		MessageBox(NULL, "system.iniが開けません", "ファイルが存在しません。", MB_OK | MB_ICONWARNING);
 		return;
+	}
+}
+
+//===================================================
+// オブザーバーへの通知処理
+//===================================================
+void CEnemy::Notify(void)
+{
+	// キャラクターが無かったら処理しない
+	if (m_pCharactor == nullptr) return;
+
+	if (m_pObserver != nullptr)
+	{
+		// HPの取得
+		int nLife = m_pCharactor->GetLife();
+
+		// HPの変化を通知する
+		m_pObserver->OnNotify(nLife);
 	}
 }
 

@@ -51,7 +51,7 @@ unique_ptr<CShadow> CShadow::Create(const D3DXVECTOR3 pos, const float fWidth, c
 	CTextureManager* pTexture = CManager::GetTexture();
 
 	// 影のテクスチャの設定
-	pShadow->m_nTextureIdx = pTexture->Register("data/TEXTURE/effect000.jpg");
+	pShadow->m_nTextureIdx = pTexture->Register("data/TEXTURE/effect/effect000.jpg");
 
 	// 位置、向き、大きさの設定
 	pShadow->m_pRot = make_unique<CRotation>();

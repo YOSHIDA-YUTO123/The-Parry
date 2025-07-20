@@ -127,7 +127,7 @@ HRESULT CMeshOrbit::Init(void)
 	}
 
 	// テクスチャのID
-	SetTextureID("data/TEXTURE/orbit.png");
+	SetTextureID("data/TEXTURE/gradation/orbit.png");
 
 	return S_OK;
 }

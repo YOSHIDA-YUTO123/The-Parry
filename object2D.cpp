@@ -222,9 +222,6 @@ void CObject2D::SetSize(const float leftWidth, const float rightWdth, const floa
 	// ˆÊ’u
 	D3DXVECTOR3 pos = m_pos;
 
-	// ‘å‚«‚³‚Ìİ’èˆ—
-	m_Size = { leftWidth, topHeight };
-
 	// ’¸“_À•W‚Ìİ’è
 	pVtx[0].pos = D3DXVECTOR3(pos.x - leftWidth, pos.y - topHeight, 0.0f);
 	pVtx[1].pos = D3DXVECTOR3(pos.x + rightWdth, pos.y - topHeight, 0.0f);

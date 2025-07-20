@@ -53,11 +53,11 @@ HRESULT CEffect3D::Init(void)
 	{
 	case TYPE_NORAML:
 		// IDÇÃê›íË
-		CObjectBillboard::SetTextureID("data/TEXTURE/effect000.jpg");
+		CObjectBillboard::SetTextureID("data/TEXTURE/effect/effect000.jpg");
 		break;
 	case TYPE_HIT:
 		// IDÇÃê›íË
-		CObjectBillboard::SetTextureID("data/TEXTURE/star_A.jpg");
+		CObjectBillboard::SetTextureID("data/TEXTURE/effect/star_A.jpg");
 		break;
 	default:
 		break;

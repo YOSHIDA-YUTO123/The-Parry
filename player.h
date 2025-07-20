@@ -103,7 +103,6 @@ private:
 class CPlayerGame : public CPlayer
 {
 public:
-
 	// ƒpƒŠƒB‚Ì¬Œ÷“x
 	enum PARRY
 	{

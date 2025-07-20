@@ -36,6 +36,7 @@ class CEnemyMovement;
 class CColliderAABB;
 class CVelocity;
 class CPlayerGame;
+class CObserver;
 
 //***************************************************
 // 敵クラスの定義
@@ -43,6 +44,8 @@ class CPlayerGame;
 class CEnemy : public CObject
 {
 public:
+
+	static constexpr int MAX_LIFE = 50; // 最大のHP
 
 	// モーションの種類
 	typedef enum
@@ -89,11 +92,13 @@ public:
 	bool CollisionObstacle(D3DXVECTOR3* pPos);
 	void SetSuccess(const int success) { m_nParrySuccess = success; }   // 成功度の設定
 	void SetHitStop(const int nTime);
+	void SetObserver(CObserver* pObserver) { m_pObserver = pObserver; }
 private:
 	void CollisionPlayer(CMotion* pPlayerMotion, CPlayerGame* pPlayer);
 	void SetParent(const int nCnt);
 	void Load(void);
-	
+	void Notify(void);									// オブザーバーへの通知処理
+
 	std::unique_ptr<CColliderAABB> m_pAABB;				// AABBのコライダー
 	std::unique_ptr<CStateMachine> m_pMachine;
 	std::shared_ptr<CCharacter3D> m_pCharactor;			// キャラクタークラス
@@ -102,6 +107,7 @@ private:
 	std::shared_ptr<CVelocity> m_pMove;					// 移動クラスの生成
 	std::vector<CModel*> m_apModel;						// モデルクラスへのポインタ
 	std::unique_ptr<CEnemyMovement> m_pMovement;		// 敵の移動制御クラス
+	CObserver* m_pObserver;							// オブザーバークラスへのポインタ
 	CMeshOrbit* m_pOrbit;								// 軌跡
 	D3DXMATRIX m_weponMatrix;							// 武器のワールドマトリックス
 	D3DXVECTOR3 m_posOld;								// 前回の位置
