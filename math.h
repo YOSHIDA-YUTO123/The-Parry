@@ -16,6 +16,7 @@
 //***************************************************
 #include"main.h"
 #include <random>
+
 // ”ÍˆÍ“à‚ÉŽû‚ß‚é
 template <class T> T Clamp(const T value, const T min, const T max)
 {

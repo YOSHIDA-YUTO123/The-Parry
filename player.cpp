@@ -35,6 +35,9 @@
 #include "game.h"
 #include"Observer.h"
 #include"Gage.h"
+#include "EffectAnim.h"
+#include "MoveSmoke.h"
+#include"Orbit.h"
 
 using namespace math; // 名前空間mathを使用
 using namespace std;  // 名前空間をstdを使用する
@@ -48,6 +51,7 @@ constexpr float SHADOW_SIZE = 50.0f;		// 影の大きさ
 constexpr float SHADOW_MAX_HEIGHT = 500.0f; // 影が見える最大の高さ
 constexpr float SHADOW_A_LEVEL = 0.9f;		// 影のアルファ値のオフセット
 constexpr int PARRY_TIME = 10;				// パリィの有効時間
+constexpr int ATTACK_TIME = 120;			// 攻撃の有効時間
 
 //===================================================
 // コンストラクタ
@@ -111,12 +115,6 @@ void CPlayer::Uninit(void)
 			m_apModel[nCnt] = nullptr;
 		}
 	}
-
-	//// 移動クラスの破棄
-	//if (m_pMove != nullptr)
-	//{
-	//	m_pMove = nullptr;
-	//}
 
 	if (m_pMotion != nullptr)
 	{
@@ -203,7 +201,7 @@ void CPlayer::Update(void)
 
 	D3DXVECTOR3 rot = m_pCharacter3D->GetRotation()->Get();
 
-	D3DXVECTOR3 modelpos = math::GetPositionFromMatrix(m_apModel[1]->GetMatrixWorld());
+	D3DXVECTOR3 modelpos = GetPositionFromMatrix(m_apModel[1]->GetMatrixWorld());
 
 	posRDest.x = modelpos.x + sinf(rot.y) * 1.0f;
 	posRDest.y = (modelpos.y + 0.0f) + sinf(rot.y) * 1.0f;
@@ -316,6 +314,18 @@ void CPlayer::ChangeState(std::shared_ptr<CPlayerState> pNewState)
 	{
 		// 状態の変更
 		m_pMachine->Change(pNewState);
+	}
+}
+
+//===================================================
+// モーションの更新処理
+//===================================================
+void CPlayer::UpdateMotion(void)
+{
+	if (m_pMotion != nullptr)
+	{
+		// モーションの更新処理
+		m_pMotion->Update(&m_apModel[0], m_nNumModel);
 	}
 }
 
@@ -433,6 +443,13 @@ bool CPlayerMovement::MoveKeyboard(CInputKeyboard* pKeyboard,const float fSpeed,
 
 	// 移動量
 	D3DXVECTOR3 move = m_pMove->Get();
+
+	CInputJoypad* pJoyPad = CManager::GetInputJoypad();
+
+	if (pJoyPad->GetJoyStickL())
+	{
+		return false;
+	}
 
 	if (pKeyboard->GetPress(DIK_A))
 	{
@@ -572,7 +589,7 @@ bool CPlayerMovement::MoveJoypad(CInputJoypad* pJoypad, const float fSpeed, floa
 		float speedWk = fSpeed * ((magnitude - deadzone) / (32767.0f - deadzone));
 
 		// 移動量
-		D3DXVECTOR3 moveWk = VEC3_NULL;
+		D3DXVECTOR3 moveWk = m_pMove->Get();
 
 		// プレイヤーの移動
 		moveWk.x += moveX * speedWk;
@@ -624,6 +641,8 @@ CPlayerGame::CPlayerGame()
 	m_bJump = false;		
 	m_bDash = false;
 	m_pObserver = nullptr;
+	m_pOrbit = nullptr;
+	m_nAttackCounter = NULL;
 }
 
 //===================================================
@@ -672,7 +691,8 @@ void CPlayerGame::Uninit(void)
 	m_pSphere = nullptr;
 	m_pMove = nullptr;
 	m_pMovement = nullptr;
-	
+	m_pOrbit = nullptr;
+
 	// オブザーバーの破棄
 	if (m_pObserver != nullptr)
 	{
@@ -731,11 +751,9 @@ void CPlayerGame::Update(void)
 
 	float fAngleDest = 0.0f;
 
-	// 移動できるか判定
-	const bool bNotMove = pMotion->GetBlendType() == TYPE_DAMAGE || pMotion->GetBlendType() == TYPE_AVOID;
 
 	// 移動できるなら
-	if (bNotMove == false)
+	if (IsMove())
 	{
 		// 移動を入力していたら
 		const bool bKeyboardMove = m_pMovement->MoveKeyboard(pKeyboard, fSpeed, &fAngleDest);
@@ -760,9 +778,17 @@ void CPlayerGame::Update(void)
 
 			pCharacter->SetState(STATE::STATE_MOVE, 1);
 
-			// 状態の変更
-			ChangeState(make_shared<CPlayerMove>());
-
+			// ダッシュ状態だったら
+			if (motiontype == TYPE::TYPE_DASH)
+			{
+				// 状態の変更
+				ChangeState(make_shared<CPlayerDash>());
+			}
+			else
+			{
+				// 状態の変更
+				ChangeState(make_shared<CPlayerMove>());
+			}
 		}
 		else
 		{
@@ -780,20 +806,20 @@ void CPlayerGame::Update(void)
 		}
 	}
 
-	if (pMotion->IsEventFrame(0,15,TYPE_ROUNDKICK))
+	if (pMotion->IsEventFrame(0, 15, TYPE_ROUNDKICK))
 	{
 		D3DXVECTOR3 rot = pCharacter->GetRotation()->GetDest();
 
 		pCamera->ZoomIn(rot.y + D3DX_PI);
 	}
-	else if(pCamera->GetState() == CCamera::STATE_ZOOMIN)
+	else if (pCamera->GetState() == CCamera::STATE_ZOOMIN)
 	{
 		pCamera->SetState(CCamera::STATE_TRACKING);
 	}
 
 
 	// ダッシュボタンを押したら
-	if ((pKeyboard->GetPress(DIK_LSHIFT) || pJoypad->GetPress(pJoypad->JOYKEY_RIGHT_SHOULDER)))
+	if ((pKeyboard->GetPress(DIK_LSHIFT) || pJoypad->GetPress(pJoypad->JOYKEY_LEFT_SHOULDER)))
 	{
 		m_bDash = true;
 	}
@@ -837,7 +863,7 @@ void CPlayerGame::Update(void)
 			auto pCircle = CMeshCircle::Create(D3DCOLOR_RGBA(220, 220, 220, 200), pos, 0.0f, 50.0f, 32);
 
 			// サークルの設定
-			pCircle->SetCircle(0.0f,10.0f,30,true);
+			pCircle->SetCircle(0.0f, 10.0f, 30, true);
 		}
 	}
 	else
@@ -852,6 +878,17 @@ void CPlayerGame::Update(void)
 	if (pCylinder != nullptr && pCylinder->Collision(&pos))
 	{
 		// ここに処理があれば書く
+	}
+
+	if (pMotion->IsEventFrame(24, 24, TYPE_ROUNDKICK))
+	{
+		// 軌跡のリセット
+		DeleteOrbit();
+	}
+	else if (pMotion->IsEventFrame(25,35, TYPE_ROUNDKICK))
+	{
+		// 軌跡の設定
+		Orbit(32, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
 	}
 
 	// 障害物との当たり判定
@@ -921,7 +958,7 @@ void CPlayerGame::Update(void)
 	}
 
 	// 回避
-	if (pMouse->OnMouseTriggerDown(1))
+	if (pMouse->OnMouseTriggerDown(1) || pJoypad->GetTrigger(pJoypad->JOYKEY_B))
 	{
 		// 回避
 		ChangeState(make_shared<CPlayerAvoid>(20.0f));
@@ -932,15 +969,21 @@ void CPlayerGame::Update(void)
 #endif // _DEBUG
 
 	// カウンター状態
-	if (pMouse->OnMouseTriggerDown(0) && pMotion->GetBlendType() != TYPE_DAMAGE)
+	if ((pMouse->OnMouseTriggerDown(0) || pJoypad->GetTrigger(pJoypad->JOYKEY_X)) && pMotion->GetBlendType() != TYPE_DAMAGE)
 	{
-		pMotion->SetMotion(TYPE_ACTION, true, 4);
+		pMotion->SetMotion(TYPE_STANCE, true, 10);
 
 		// パリィの時間
 		m_nParryTime = PARRY_TIME;
 		m_nParryCounter = 0;
 
 		pCharacter->SetState(pCharacter->STATE_ACTION, PARRY_TIME);
+	}
+
+	if (pKeyboard->GetTrigger(DIK_F) && m_nAttackCounter >= 0)
+	{
+		// 回し蹴り状態を設定
+		ChangeState(make_shared<CPlayerRoundKick>());
 	}
 
 	// 当たり判定の設定処理
@@ -1014,6 +1057,13 @@ void CPlayerGame::UpdateParry(void)
 	{
 		m_nParryCounter++;
 	}
+
+	// 0以上だったら
+	if (m_nAttackCounter >= 0)
+	{
+		// 攻撃カウンターを減らす
+		m_nAttackCounter--;
+	}
 }
 
 //===================================================
@@ -1033,13 +1083,16 @@ int CPlayerGame::SuccessParry(const int nParfectTime)
 	// パーフェクトタイムまでの差分を求める
 	int nDiff = abs(nParfectTime - m_nParryCounter);
 
+	// 攻撃の有効時間を設定
+	m_nAttackCounter = ATTACK_TIME;
+
 	// パーフェクトだったら
-	if (nDiff >= 0 && nDiff <= 5)
+	if (nDiff >= 0 && nDiff <= 3)
 	{
 		// 完璧
 		return PARRY_PARFECT;
 	}
-	else if (nDiff > 5 && nDiff <= 10)
+	else if (nDiff > 3 && nDiff <= 10)
 	{
 		// 普通
 		return PARRY_NORMAL;
@@ -1179,6 +1232,84 @@ bool CPlayerGame::CollisionObstacle(D3DXVECTOR3* pPos)
 		}
 	}
 	return false;
+}
+
+//===================================================
+// 軌跡の処理
+//===================================================
+void CPlayerGame::Orbit(const int nSegH, const D3DXCOLOR col)
+{
+	// 武器の先端の位置
+	D3DXVECTOR3 Top = GetModelPos(9);
+	D3DXVECTOR3 Bottom = GetModelPos(11);
+
+	// 軌跡の生成
+	if (m_pOrbit == nullptr)
+	{
+		m_pOrbit = CMeshOrbit::Create(Top, Bottom, nSegH, col);
+	}
+
+	// 軌跡が使われていて寿命が無かったら
+	if (m_pOrbit != nullptr)
+	{
+		m_pOrbit->SetPosition(Top, Bottom);
+	}
+}
+
+//===================================================
+// 軌跡のリセット
+//===================================================
+void CPlayerGame::DeleteOrbit(void)
+{
+	if (m_pOrbit != nullptr)
+	{
+		m_pOrbit->Uninit();
+		m_pOrbit = nullptr;
+	}
+}
+
+//===================================================
+// 構えモーションの設定
+//===================================================
+void CPlayerGame::SetStance(void)
+{
+	// モーションの取得
+	auto pMotion = GetMotion();
+
+	if (pMotion != nullptr)
+	{
+		// モーションの再生
+		pMotion->SetMotion(TYPE_ACTION, false, 0);
+
+		// モーションを更新してポーズを設定
+		CPlayer::UpdateMotion();
+	}
+}
+
+//===================================================
+// 移動できるか判定
+//===================================================
+bool CPlayerGame::IsMove(void)
+{
+	// モーションの取得
+	auto pMotion = GetMotion();
+
+	// ダメージ状態だったら移動できない
+	if (pMotion->GetBlendType() == TYPE_DAMAGE) return false;
+
+	// 回避状態だったら移動できない
+	if (pMotion->GetBlendType() == TYPE_AVOID) return false;
+
+	// 構え状態だったら移動できない
+	if (pMotion->IsEventFrame(1,40,TYPE_ACTION))
+	{
+		return false;
+	}
+
+	// 反撃状態だったら移動できない
+	if (pMotion->GetBlendType() == TYPE_ROUNDKICK) return false;
+
+	return true;
 }
 
 //===================================================

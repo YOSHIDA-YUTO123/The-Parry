@@ -40,6 +40,7 @@ public:
 		ID_DOWNNEUTRAL,
 		ID_AVOID,
 		ID_ROUNDKICK,
+		ID_DASH,
 		ID_MAX
 	};
 
@@ -131,6 +132,19 @@ class CPlayerRoundKick : public CPlayerState
 public:
 	CPlayerRoundKick();
 	~CPlayerRoundKick();
+	void Init(void) override;
+	void Update(void) override;
+private:
+};
+
+//***************************************************
+// プレイヤーの状態(RoundKick)の定義
+//***************************************************
+class CPlayerDash : public CPlayerState
+{
+public:
+	CPlayerDash();
+	~CPlayerDash();
 	void Init(void) override;
 	void Update(void) override;
 private:

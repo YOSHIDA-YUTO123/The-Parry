@@ -37,6 +37,7 @@ class CPlayerState;
 class CShadowS;
 class CPlayerMovement;
 class CObserver;
+class CMeshOrbit;
 
 //***************************************************
 // プレイヤークラスの定義
@@ -61,6 +62,7 @@ public:
 		TYPE_DOWN_NEUTRAL,
 		TYPE_AVOID,
 		TYPE_ROUNDKICK,
+		TYPE_STANCE,
 		TYPE_MAX
 	};
 
@@ -86,6 +88,7 @@ public:
 
 	void ChangeState(std::shared_ptr<CPlayerState> pNewState);
 	void SetHitStop(const int nTime) { m_pCharacter3D->SetHitStop(nTime); }
+	void UpdateMotion(void); // モーションの更新
 
 protected:
 	CCharacter3D* GetCharacter(void) { return m_pCharacter3D.get(); }
@@ -133,7 +136,11 @@ public:
 	void SetAngle(const float angleY);
 	bool CollisionObstacle(D3DXVECTOR3* pPos);
 	void SetObserver(CObserver* pObserver) { m_pObserver = pObserver; }
+	void Orbit(const int nSegH, const D3DXCOLOR col); // 軌跡の処理
+	void DeleteOrbit(void);							  // 軌跡のリセット
+	void SetStance(void);							  // 構えモーションの設定
 private:
+	bool IsMove(void); // 移動できるか判定
 	void Notify(void);
 	void UpdateParry(void);
 
@@ -141,11 +148,13 @@ private:
 	std::unique_ptr<CColliderFOV> m_pFOV;			// 視界の判定
 	std::unique_ptr<CColliderSphere> m_pSphere;		// 円のコライダー
 	std::unique_ptr<CVelocity> m_pMove;				// 移動量
+	CMeshOrbit* m_pOrbit;							// 軌跡の処理
 	CObserver* m_pObserver;							// オブザーバークラスへのポインタ
 	D3DXVECTOR3 m_posOld;							// 前回の位置
 	int m_nParryTime;								// パリィの有効時間
-	int m_nParryCounter;							// パリィ―のカウンター
+	int m_nParryCounter;							// パリィのカウンター
 
+	int m_nAttackCounter;							// 攻撃の有効時間	
 	bool m_bJump;									// ジャンプできるかどうか
 	bool m_bDash;									// 走ってるかどうか
 };

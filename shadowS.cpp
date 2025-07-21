@@ -160,7 +160,7 @@ void CShadowS::Draw(void)
 	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
 
 	// ‰e‚Ì•\Ž¦
-	if (pKeyboard != nullptr && pKeyboard->GetTrigger(DIK_2))
+	if (pKeyboard != nullptr && pKeyboard->GetTrigger(DIK_F3))
 	{
 		m_bShowShadow = m_bShowShadow ? false : true;
 	}

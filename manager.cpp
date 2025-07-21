@@ -382,6 +382,8 @@ void CManager::Update(void)
 		bWireFrame = bWireFrame ? false : true;
 	}
 
+#ifdef _DEBUG
+
 	if (bWireFrame == true)
 	{
 		m_pRenderer->onWireFrame();
@@ -390,6 +392,8 @@ void CManager::Update(void)
 	{
 		m_pRenderer->offWireFrame();
 	}
+
+#endif // _DEBUG
 }
 //===================================================
 // •`‰æˆ—

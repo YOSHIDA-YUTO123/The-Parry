@@ -408,7 +408,6 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 	// モーションが終了したら
 	if (IsEndMotion())
 	{
-
 		// ブレンドのフレームを計算
 		int nBlendFrame = m_aInfo[m_nType].aKeyInfo[m_nNumKey - 1].nFrame * (int)pSlow->GetLevel(true);
 
@@ -539,6 +538,7 @@ void CMotion::SetMotion(const int motiontype,bool bBlend,const int nBlendFrame)
 		m_nType = motiontype;			// ブレンドするモーションのタイプを代入
 		m_nTypeBlend = motiontype;		// ブレンドするモーションのタイプを代入
 		m_bFinish = false;
+		m_bFirst = false;
 	}
 
 	m_bBlend = bBlend; // ブレンドするかどうか判定
@@ -554,10 +554,10 @@ bool CMotion::IsEndMotion(void)
 	// モーションが終了したら
 	if (m_bFinish == false &&
 		m_nKey >= m_nNumKey - 1 &&
-		m_bBlend == true &&
 		m_bLoopMotion == false &&
 		m_bFirst == false)
 	{
+		m_bBlend = true;
 		return true;
 	}
 	return false;

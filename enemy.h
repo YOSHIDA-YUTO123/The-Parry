@@ -63,6 +63,8 @@ public:
 		MOTION_HIT,			// カウンターが当たった時
 		MOTION_DAMAGES,		// 小ダメージ
 		MOTION_GUARD,		// ガード
+		MOTION_STEP,		// ステップ
+		MOTION_SWING,		// スイング攻撃
 		MOTION_MAX
 	}MOTION;
 

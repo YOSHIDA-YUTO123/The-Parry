@@ -85,6 +85,12 @@
     <Filter Include="ヘッダー ファイル\statemachine">
       <UniqueIdentifier>{407cfe16-c6c9-4eb7-a71d-8058ac2c150b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\objectBillboard\effect">
+      <UniqueIdentifier>{8b7d4b2f-e596-46a5-9b1b-d84d1ac1bc00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\objectBillboard\effect">
+      <UniqueIdentifier>{d7c2ed5c-6769-4ccf-8727-7038e5052230}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="testword.cpp">
@@ -138,9 +144,6 @@
     <ClCompile Include="billboard.cpp">
       <Filter>ソース ファイル\objectBillboard</Filter>
     </ClCompile>
-    <ClCompile Include="particle.cpp">
-      <Filter>ソース ファイル\objectBillboard</Filter>
-    </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>ソース ファイル\system</Filter>
     </ClCompile>
@@ -185,9 +188,6 @@
     </ClCompile>
     <ClCompile Include="debugproc.cpp">
       <Filter>ソース ファイル\system</Filter>
-    </ClCompile>
-    <ClCompile Include="effect.cpp">
-      <Filter>ソース ファイル\objectBillboard</Filter>
     </ClCompile>
     <ClCompile Include="dust.cpp">
       <Filter>ソース ファイル\objectX</Filter>
@@ -264,6 +264,18 @@
     <ClCompile Include="GageFrame.cpp">
       <Filter>ソース ファイル\object2D</Filter>
     </ClCompile>
+    <ClCompile Include="EffectAnim.cpp">
+      <Filter>ソース ファイル\objectBillboard\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="effect.cpp">
+      <Filter>ソース ファイル\objectBillboard\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="particle.cpp">
+      <Filter>ソース ファイル\objectBillboard\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="MoveSmoke.cpp">
+      <Filter>ソース ファイル\objectBillboard\effect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="testword.h">
@@ -319,9 +331,6 @@
     </ClInclude>
     <ClInclude Include="dust.h">
       <Filter>ヘッダー ファイル\objectX</Filter>
-    </ClInclude>
-    <ClInclude Include="particle.h">
-      <Filter>ヘッダー ファイル\objectBillboard</Filter>
     </ClInclude>
     <ClInclude Include="shadow.h">
       <Filter>ヘッダー ファイル\object3D</Filter>
@@ -442,6 +451,15 @@
     </ClInclude>
     <ClInclude Include="GageFrame.h">
       <Filter>ヘッダー ファイル\object2D</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectAnim.h">
+      <Filter>ヘッダー ファイル\objectBillboard\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveSmoke.h">
+      <Filter>ヘッダー ファイル\objectBillboard\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="particle.h">
+      <Filter>ヘッダー ファイル\objectBillboard\effect</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

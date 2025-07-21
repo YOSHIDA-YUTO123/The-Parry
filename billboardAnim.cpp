@@ -137,6 +137,14 @@ void CBillboardAnimation::UpdateVertexPos(const D3DXVECTOR3 pos)
 }
 
 //===================================================
+// アニメーションの消去判定
+//===================================================
+bool CBillboardAnimation::Delete(void)
+{
+	return false;
+}
+
+//===================================================
 // 初期化処理
 //===================================================
 HRESULT CBillboardAnimation::Init(void)

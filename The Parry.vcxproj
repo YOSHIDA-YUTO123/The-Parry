@@ -163,6 +163,7 @@
     <ClCompile Include="dome.cpp" />
     <ClCompile Include="dust.cpp" />
     <ClCompile Include="effect.cpp" />
+    <ClCompile Include="EffectAnim.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="EnemyState.cpp" />
     <ClCompile Include="explosion.cpp" />
@@ -170,6 +171,7 @@
     <ClCompile Include="GageFrame.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="Gage.cpp" />
+    <ClCompile Include="MoveSmoke.cpp" />
     <ClCompile Include="Observer.cpp" />
     <ClCompile Include="impact.cpp" />
     <ClCompile Include="input.cpp" />
@@ -229,6 +231,7 @@
     <ClInclude Include="dome.h" />
     <ClInclude Include="dust.h" />
     <ClInclude Include="effect.h" />
+    <ClInclude Include="EffectAnim.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="EnemyState.h" />
     <ClInclude Include="explosion.h" />
@@ -236,6 +239,7 @@
     <ClInclude Include="GageFrame.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="Gage.h" />
+    <ClInclude Include="MoveSmoke.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="impact.h" />
     <ClInclude Include="input.h" />

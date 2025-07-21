@@ -234,7 +234,7 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindow)
 		pVtx[2].rhw = 1.0f;
 		pVtx[3].rhw = 1.0f;
 
-		float fA = (nCnt == 0) ? 1.0f : 0.5f;
+		float fA = (nCnt == 0) ? 1.0f : 0.8f;
 
 		// í∏ì_ÉJÉâÅ[ÇÃê›íË
 		pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, fA);

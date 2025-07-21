@@ -15,9 +15,11 @@
 #include "impact.h"
 #include "game.h"
 #include "meshfield.h"
+#include "MoveSmoke.h"
 
 using MOTION = CPlayer::TYPE; // プレイヤーの列挙型の使用
 using namespace std;		  // 名前空間stdの使用
+using namespace Const;		  // 名前空間Constの使用
 
 //===================================================
 // コンストラクタ
@@ -85,7 +87,6 @@ CPlayerMove::~CPlayerMove()
 //===================================================
 void CPlayerMove::Update(void)
 {
-
 }
 
 //===================================================
@@ -278,7 +279,7 @@ void CPlayerRoundKick::Update(void)
 		if (pMotion->IsEventFrame(15, 15, m_pPlayer->TYPE_ROUNDKICK))
 		{
 			// 移動量の設定
-			m_pPlayer->GetMovement()->Set(D3DXVECTOR3(0.0f, 15.0f, 0.0f));
+			m_pPlayer->GetMovement()->Set(D3DXVECTOR3(0.0f, 18.0f, 0.0f));
 
 			// 位置の取得
 			D3DXVECTOR3 pos = m_pPlayer->GetPos();
@@ -297,6 +298,71 @@ void CPlayerRoundKick::Update(void)
 		if (pMotion->FinishMotion())
 		{
 			m_pPlayer->ChangeState(make_shared<CPlayerNormal>());
+		}
+	}
+}
+
+//===================================================
+// コンストラクタ(ダッシュ)
+//===================================================
+CPlayerDash::CPlayerDash() : CPlayerState(ID_DASH)
+{
+}
+
+//===================================================
+// デストラクタ(ダッシュ)
+//===================================================
+CPlayerDash::~CPlayerDash()
+{
+}
+
+//===================================================
+// 初期化処理(ダッシュ)
+//===================================================
+void CPlayerDash::Init(void)
+{
+}
+
+//===================================================
+// 更新処理(ダッシュ)
+//===================================================
+void CPlayerDash::Update(void)
+{
+	// モーションの取得
+	CMotion* pMotion = m_pPlayer->GetMotion();
+
+	// 向きの取得
+	D3DXVECTOR3 rot = m_pCharacter->GetRotation()->Get();
+
+	// プレイヤーの後ろ方向を設定
+	float fMoveX = sinf(rot.y) * 2.0f;
+	float fMoveZ = cosf(rot.y) * 2.0f;
+
+	if (pMotion != nullptr)
+	{
+		// 10フレーム目になったら
+		if (pMotion->IsEventFrame(10, 10, CPlayer::TYPE_DASH))
+		{
+			// 位置の取得
+			D3DXVECTOR3 pos = m_pPlayer->GetModelPos(11);
+
+			// エフェクトの生成
+			auto pEffect = CMoveSmoke::Create(D3DXVECTOR3(pos.x,pos.y + 50.0f,pos.z), 100.0f, D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f));
+
+			// エフェクトの設定処理
+			pEffect->SetEffect(60, D3DXVECTOR3(fMoveX, 0.0f, fMoveZ));
+		}
+		// 30フレーム目になったら
+		else if (pMotion->IsEventFrame(30, 30, CPlayer::TYPE_DASH))
+		{
+			// 位置の取得
+			D3DXVECTOR3 pos = m_pPlayer->GetModelPos(14);
+
+			// エフェクトの生成
+			auto pEffect = CMoveSmoke::Create(D3DXVECTOR3(pos.x, pos.y + 50.0f, pos.z), 100.0f, D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f));
+
+			// エフェクトの設定処理
+			pEffect->SetEffect(60, D3DXVECTOR3(fMoveX, 0.0f, fMoveZ));
 		}
 	}
 }

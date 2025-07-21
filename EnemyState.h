@@ -47,6 +47,8 @@ public:
 		ID_HIT,		 // カウンターがヒットした時
 		ID_DAMAGES,	 // 小ダメージ
 		ID_GUARD,	 // ガード
+		ID_STEP,	 // ステップ
+		ID_SWING,	 // スイング攻撃
 		ID_MAX
 	};
 
@@ -71,6 +73,7 @@ class CEnemyIdle : public CEnemyState
 public:
 	CEnemyIdle(int nNextCount);
 	~CEnemyIdle();
+	void Init(void) override;
 	void Update(void) override;
 private:
 	int m_nNextStateCount; // 次のステートに移るカウンター
@@ -227,6 +230,32 @@ class CEnemyGuard : public CEnemyState
 public:
 	CEnemyGuard();
 	~CEnemyGuard();
+	void Init(void) override;
+	void Update(void) override;
+private:
+};
+
+//***************************************************
+// 敵の状態(Step)クラスの定義
+//***************************************************
+class CEnemyStep : public CEnemyState
+{
+public:
+	CEnemyStep();
+	~CEnemyStep();
+	void Init(void) override;
+	void Update(void) override;
+private:
+};
+
+//***************************************************
+// 敵の状態(Swing)クラスの定義
+//***************************************************
+class CEnemySwing : public CEnemyState
+{
+public:
+	CEnemySwing();
+	~CEnemySwing();
 	void Init(void) override;
 	void Update(void) override;
 private:

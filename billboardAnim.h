@@ -26,10 +26,10 @@ public:
 	CBillboardAnimation(int nPriority = 4);
 	~CBillboardAnimation();
 
-	HRESULT Init(void);
-	void Uninit(void);
-	void Update(void);
-	void Draw(void);
+	virtual HRESULT Init(void);
+	virtual void Uninit(void);
+	virtual void Update(void);
+	virtual void Draw(void);
 
 	D3DXVECTOR3 GetPosition(void) const { return m_pos; }
 	D3DXVECTOR2 GetSize(void) const { return m_Size; }
@@ -42,6 +42,7 @@ public:
 	void SetColor(const D3DXCOLOR col);
 	void SetTextureID(const char* pTextureName);
 	void UpdateVertexPos(const D3DXVECTOR3 pos);
+	bool Delete(void);
 
 private:
 	D3DXVECTOR3 m_pos;						// 位置のクラスのポインタ

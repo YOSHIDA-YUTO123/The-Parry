@@ -213,28 +213,28 @@ void CEnemy::Update(void)
 	// キーボードの取得
 	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
 
-	CDebugProc::Print("ボスの攻撃(スマッシュ) [ F3 ]\n");
-	CDebugProc::Print("ボスの攻撃(衝撃波) [ F4 ]\n");
-	CDebugProc::Print("ボスの攻撃(方向→ダッシュ→回転) [ F5 ]\n");
-	CDebugProc::Print("ボスの消去 [ 1 ]\n");
+	CDebugProc::Print("ボスの攻撃(スマッシュ) [ 1 ]\n");
+	CDebugProc::Print("ボスの攻撃(衝撃波) [ 2 ]\n");
+	CDebugProc::Print("ボスの攻撃(方向→ダッシュ→回転) [ 3 ]\n");
+	CDebugProc::Print("ボスの消去 [ F1 ]\n");
 
-	if (pKeyboard->GetPress(DIK_F3))
+	if (pKeyboard->GetPress(DIK_1))
 	{
 		ChangeState(make_shared<CEnemyAttackSmash>());
 	}
-	if (pKeyboard->GetPress(DIK_F4))
+	if (pKeyboard->GetPress(DIK_2))
 	{
 		ChangeState(make_shared<CEnemyAttackImpact>());
 	}
-	if (pKeyboard->GetPress(DIK_F5))
+	if (pKeyboard->GetPress(DIK_3))
 	{
 		ChangeState(make_shared<CEnemyRoar>());
 	}
-	if (pKeyboard->GetTrigger(DIK_T))
+	if (pKeyboard->GetTrigger(DIK_4))
 	{
 		ChangeState(make_shared<CEnemyBackStep>());
 	}
-	if (pKeyboard->GetTrigger(DIK_1))
+	if (pKeyboard->GetTrigger(DIK_F1))
 	{
 		// 影の消去
 		m_pCharactor->DeleteShadow();
@@ -338,7 +338,14 @@ void CEnemy::Update(void)
 		CMeshWave::Config WaveConfig = { WHITE,50.0f,50.0f,0.0f,30 };
 		CMeshWave::Create(WaveConfig, pos);
 	}
+	else if (m_pMotion->IsEventFrame(20, 20, MOTION::MOTION_SWING))
+	{
+		// パーティクルの生成
+		auto pParticle = CParticle3DNormal::Create(chestpos, 100.0f, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
 
+		// パーティクルの設定
+		pParticle->SetParticle(15.0f, 240, 50, 1);
+	}
 
 	// 攻撃モーションのたたきつけになったら
 	if (m_pMotion->IsEventFrame(72,72, MOTION_SMASH))
@@ -543,7 +550,7 @@ void CEnemy::SelectDamageMotion(int success)
 		auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.6f, 0.8f), playerFootR, 0.0f, 50.0f);
 
 		// サークルの設定処理
-		pCircle->SetCircle(35.0f, 15.0f, 120, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
+		pCircle->SetCircle(35.0f, 15.0f, 60, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
 	}
 		break;
 	case CPlayerGame::PARRY_NORMAL:
@@ -576,7 +583,7 @@ void CEnemy::SelectDamageMotion(int success)
 		auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.6f, 0.8f), playerFootR, 0.0f, 50.0f);
 
 		// サークルの設定処理
-		pCircle->SetCircle(35.0f, 15.0f, 120, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
+		pCircle->SetCircle(35.0f, 15.0f, 60, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
 
 		// 状態の設定
 		ChangeState(make_shared<CEnemyDamageS>());
@@ -593,11 +600,11 @@ void CEnemy::SelectDamageMotion(int success)
 		// プレイヤーの位置の取得
 		D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
 
-		// プレイヤーの右手の位置
-		D3DXVECTOR3 playerHandR = pPlayer->GetModelPos(5);
+		// プレイヤーの右足の位置
+		D3DXVECTOR3 playerFootR = pPlayer->GetModelPos(11);
 
 		// パーティクルの生成
-		auto pParticle = CParticle3DNormal::Create(playerHandR, 10.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
+		auto pParticle = CParticle3DNormal::Create(playerFootR, 10.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
 
 		// パーティクルの設定処理
 		pParticle->SetParticle(15.0f, 240, 50, 5);
@@ -609,7 +616,7 @@ void CEnemy::SelectDamageMotion(int success)
 		pPlayer->SetAngle(fAngle + D3DX_PI);
 
 		// インパクトを生成
-		auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.4f, 0.8f), playerHandR, 0.0f, 100.0f);
+		auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.4f, 0.8f), playerFootR, 0.0f, 100.0f);
 
 		// サークルの設定処理
 		pCircle->SetCircle(35.0f, 10.0f, 120, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
