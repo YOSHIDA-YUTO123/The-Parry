@@ -117,7 +117,7 @@ void CPlayerDamage::Init(void)
 	if (pMotion != nullptr)
 	{
 		// ƒ‚[ƒVƒ‡ƒ“‚ÌÄ¶
-		pMotion->SetMotion(MOTION::TYPE_DAMAGE, true, 5);
+		pMotion->SetMotion(MOTION::TYPE_DAMAGE, true, 2);
 	}
 }
 

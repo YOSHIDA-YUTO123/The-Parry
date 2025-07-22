@@ -135,7 +135,7 @@ public:
 
 	// セッター
 	void SetObserver(CObserver* pObserver) { m_pObserver = pObserver; }
-	int SuccessParry(const int nParfectTime);
+	int SuccessParry(void);
 
 	void BlowOff(const D3DXVECTOR3 attacker, const float blowOff, const float jump);
 	bool IsParry(const D3DXVECTOR3 pos);

@@ -217,6 +217,9 @@ void CEnemy::Update(void)
 	CDebugProc::Print("ボスの攻撃(スマッシュ) [ 1 ]\n");
 	CDebugProc::Print("ボスの攻撃(衝撃波) [ 2 ]\n");
 	CDebugProc::Print("ボスの攻撃(方向→ダッシュ→回転) [ 3 ]\n");
+	CDebugProc::Print("バックステップする [ 4 ]\n");
+	CDebugProc::Print("ボスの攻撃(スイング) [ 5 ]\n");
+	CDebugProc::Print("ボスの攻撃(ジャンプ攻撃) [ 6 ]\n");
 	CDebugProc::Print("ボスの消去 [ F1 ]\n");
 
 	if (pKeyboard->GetPress(DIK_1))
@@ -234,6 +237,14 @@ void CEnemy::Update(void)
 	if (pKeyboard->GetTrigger(DIK_4))
 	{
 		ChangeState(make_shared<CEnemyBackStep>());
+	}
+	if (pKeyboard->GetTrigger(DIK_5))
+	{
+		ChangeState(make_shared<CEnemySwing>());
+	}
+	if (pKeyboard->GetTrigger(DIK_6))
+	{
+		ChangeState(make_shared<CEnemyJumpAttack>());
 	}
 	if (pKeyboard->GetTrigger(DIK_F1))
 	{
@@ -309,7 +320,7 @@ void CEnemy::Update(void)
 	if (bCollision && IsDamageMotion() == false)
 	{			
 		// 状態の設定
-		ChangeState(make_shared<CEnemyDamageL>());
+		ChangeState(make_shared<CEnemyDamageL>(5));
 
 		// モーションの設定
 		m_pMotion->SetMotion(MOTION_DAMAGEL, true, 2);
@@ -472,10 +483,10 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 	int random = rand() % 100;
 
 	// 30%の確率でガードする
-	if (random <= 30)
+	if (random <= 30 && success != CPlayerGame::PARRY_PARFECT)
 	{
 		// ガードする
-		ChangeState(make_shared<CEnemyGuard>(ImpactPos));
+		ChangeState(make_shared<CEnemyGuard>(ImpactPos,2));
 
 		return;
 	}
@@ -488,7 +499,7 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 	case CPlayerGame::PARRY_WEAK:
 	{
 		// 状態の設定
-		ChangeState(make_shared<CEnemyDamageS>());
+		ChangeState(make_shared<CEnemyDamageS>(1));
 
 		// 位置の取得
 		D3DXVECTOR3 pos = GetPosition();
@@ -517,9 +528,6 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 		break;
 	case CPlayerGame::PARRY_NORMAL:
 	{
-		// 状態の設定
-		ChangeState(make_shared<CEnemyDamageS>());
-
 		// 位置の取得
 		D3DXVECTOR3 pos = GetPosition();
 
@@ -545,7 +553,7 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 		pCircle->SetCircle(35.0f, 15.0f, 60, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
 
 		// 状態の設定
-		ChangeState(make_shared<CEnemyDamageS>());
+		ChangeState(make_shared<CEnemyDamageS>(5));
 	}
 		break;
 	case CPlayerGame::PARRY_PARFECT:
@@ -584,9 +592,7 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 		}
 
 		// 状態の設定
-		ChangeState(make_shared<CEnemyDamageL>());
-
-		m_pCharactor->Hit(5);
+		ChangeState(make_shared<CEnemyDamageL>(10));
 	}
 		break;
 	default:
@@ -866,7 +872,7 @@ bool CEnemy::CollisionObstacle(D3DXVECTOR3 *pPos)
 			m_pCharactor->GetRotation()->SetDest(D3DXVECTOR3(0.0f, fAngle, 0.0f));
 
 			// ダメージ状態にする
-			ChangeState(make_shared<CEnemyDamageL>(true));
+			ChangeState(make_shared<CEnemyDamageL>(10,true));
 
 			// モーションの設定
 			m_pMotion->SetMotion(MOTION_DAMAGEL, true, 2);
@@ -935,6 +941,18 @@ void CEnemy::SetRubble(void)
 
 		// 瓦礫を生成
 		CRubble::Create(WeponPos, D3DXVECTOR3(fMoveX, Jump, fMoveZ), nLife, nType);
+	}
+}
+
+//===================================================
+// ヒット時の処理
+//===================================================
+void CEnemy::Hit(const int nDamage)
+{
+	// ダメージ状態じゃないなら
+	if (IsDamageMotion() == false)
+	{
+		m_pCharactor->Hit(nDamage);
 	}
 }
 

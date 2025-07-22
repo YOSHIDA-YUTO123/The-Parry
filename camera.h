@@ -48,6 +48,7 @@ public:
 	void ZoomIn(void);
 	void SetZoomIn(const int nTime, const float fAngle);
 
+	void ResetState(void) { m_state = m_Oldstate; }
 	D3DXVECTOR3 GetRotaition(void) const { return m_rot; }
 	D3DXVECTOR3 GetPosV(void) const { return m_posV; }
 	D3DXVECTOR3 GetPosR(void) const { return m_posR; }
@@ -60,6 +61,7 @@ private:
 	void UpdatePositionR(void); // 注視点の更新処理
 
 	STATE m_state;				// カメラの状態
+	STATE m_Oldstate;			// 前の状態
 	D3DXMATRIX m_mtxView;		// ビューマトリックス
 	D3DXMATRIX m_mtxProjection;	// プロジェクションマトリックス
 	D3DXVECTOR3 m_posV;			// 視点

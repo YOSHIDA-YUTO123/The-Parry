@@ -50,7 +50,7 @@ constexpr float JUMP_HEIGHT = 25.0f;		// ジャンプ量
 constexpr float SHADOW_SIZE = 50.0f;		// 影の大きさ
 constexpr float SHADOW_MAX_HEIGHT = 500.0f; // 影が見える最大の高さ
 constexpr float SHADOW_A_LEVEL = 0.9f;		// 影のアルファ値のオフセット
-constexpr int PARRY_TIME = 10;				// パリィの有効時間
+constexpr int PARRY_TIME = 15;				// パリィの有効時間
 constexpr int ATTACK_TIME = 120;			// 攻撃の有効時間
 
 //===================================================
@@ -932,7 +932,7 @@ void CPlayerGame::Update(void)
 	if (pMotion->GetBlendType() != TYPE_PARRY && pCamera->GetState() == CCamera::STATE_ZOOMIN)
 	{
 		// カメラのズーム解除
-		pCamera->SetState(CCamera::STATE_TRACKING);
+		pCamera->ResetState();
 	}
 
 	// 反撃
@@ -1097,35 +1097,35 @@ void CPlayerGame::SetMoveAngle(CCamera* pCamera, CInputKeyboard* pKeyboard, CInp
 //===================================================
 // パリィの成功度の取得
 //===================================================
-int CPlayerGame::SuccessParry(const int nParfectTime)
+int CPlayerGame::SuccessParry(void)
 {
 	// キャラクターの取得
 	auto pCharacter = CPlayer::GetCharacter();
 
 	// キャラクターが無かったら処理しない
-	if (pCharacter == nullptr) return 0;
+	if (pCharacter == nullptr) return PARRY_MISS;
 
 	// 状態がアクションじゃなかったら抜ける
 	if (pCharacter->GetState() != STATE::STATE_ACTION) return PARRY_MISS;
 
-	// パーフェクトタイムまでの差分を求める
-	int nDiff = abs(nParfectTime - m_nParryCounter);
+	//// パーフェクトタイムまでの差分を求める
+	//int nDiff = abs(nParfectTime - m_nParryCounter);
 
 	// 攻撃の有効時間を設定
 	m_nAttackCounter = ATTACK_TIME;
 
 	// パーフェクトだったら
-	if (nDiff >= 0 && nDiff <= 3)
+	if (m_nParryCounter >= 0 && m_nParryCounter <= 3)
 	{
 		// 完璧
 		return PARRY_PARFECT;
 	}
-	else if (nDiff > 3 && nDiff <= 10)
+	else if (m_nParryCounter > 3 && m_nParryCounter <= 10)
 	{
 		// 普通
 		return PARRY_NORMAL;
 	}
-	else if (nDiff > 10 && nDiff <= m_nParryTime)
+	else if (m_nParryCounter > 10 && m_nParryCounter <= m_nParryTime)
 	{
 		// 弱い
 		return PARRY_WEAK;

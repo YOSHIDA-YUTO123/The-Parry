@@ -37,6 +37,7 @@ constexpr int START_IMPACT = 55;				// インパクト攻撃の開始確率
 constexpr int SPIN_TIME = 60;					// 回転モーションの時間
 constexpr int ABSSPIN_TIME = 30;				// 絶対回転する時間
 constexpr float JUMPATTACK_MOVE_FRAME = 25.0f;	// ジャンプ攻撃の移動フレーム
+constexpr int INIT_NEXT_ACTION = 999;			// 絶対に被らない数値
 
 //===================================================
 // コンストラクタ
@@ -231,6 +232,7 @@ void CEnemyMove::Update(void)
 //===================================================
 CEnemyAttackSmash::CEnemyAttackSmash() : CEnemyState(ID_SMASH)
 {
+	m_nNextAction = INIT_NEXT_ACTION;
 }
 
 //===================================================
@@ -250,6 +252,9 @@ void CEnemyAttackSmash::Init(void)
 
 	// 剣の軌跡のリセット
 	m_pEnemy->DeleteOrbit();
+
+	// 次の行動を選出
+	m_nNextAction = rand() % 100;
 
 	if (pMotion != nullptr)
 	{
@@ -293,7 +298,7 @@ void CEnemyAttackSmash::Update(void)
 			pPlayer->SetStance();
 
 			// 成功度
-			int nSuccess = pPlayer->SuccessParry(6);
+			int nSuccess = pPlayer->SuccessParry();
 
 			// 右手の位置
 			D3DXVECTOR3 playerHandR = pPlayer->GetModelPos(8);
@@ -350,6 +355,16 @@ void CEnemyAttackSmash::Update(void)
 		m_pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f));
 	}
 
+	// モーションが終わったら
+	if (pMotion->FinishMotion())
+	{
+		// 20%の確率
+		if (m_nNextAction <= 20)
+		{
+			// バックステップする
+			m_pEnemy->ChangeState(make_shared<CEnemyBackStep>());
+		}
+	}
 	// 攻撃モーションが終わったら
 	if (pMotion->IsFinishEndBlend())
 	{
@@ -363,8 +378,9 @@ void CEnemyAttackSmash::Update(void)
 //===================================================
 // コンストラクタ(大ダメージ)
 //===================================================
-CEnemyDamageL::CEnemyDamageL(const bool bBackStatp) : CEnemyState(ID_DAMAGEL)
+CEnemyDamageL::CEnemyDamageL(const int nDamage,const bool bBackStatp) : CEnemyState(ID_DAMAGEL)
 {
+	m_nDamage = nDamage;
 	m_bBackStap = bBackStatp;
 }
 
@@ -388,6 +404,9 @@ void CEnemyDamageL::Init(void)
 
 	// モーションクラスの取得
 	CMotion* pMotion = m_pEnemy->GetMotion();
+
+	// ダメージの設定
+	m_pEnemy->Hit(m_nDamage);
 
 	if (pMotion != nullptr)
 	{
@@ -498,7 +517,7 @@ void CEnemyAttackImpact::Update(void)
 	if (pMotion->IsFinishEndBlend())
 	{
 		// IDLEにする
-		m_pEnemy->ChangeState(make_shared<CEnemyIdle>(50));
+		m_pEnemy->ChangeState(make_shared<CEnemyIdle>(10));
 
 		return;
 	}
@@ -651,8 +670,7 @@ void CEnemySpin::Update(void)
 			// パリィモーションの再生
 			pPlayerMotion->SetMotion(pPlayer->TYPE_PUNCH, true, 2);
 
-			// 成功度
-			int nSuccess = pPlayer->SuccessParry(2);
+			int nSuccess = pPlayer->SuccessParry();
 
 			// 右手の位置
 			D3DXVECTOR3 playerHandR = pPlayer->GetModelPos(8);
@@ -768,6 +786,7 @@ void CEnemyBackStep::Update(void)
 //===================================================
 CEnemyLanding::CEnemyLanding() : CEnemyState(ID_LANDING)
 {
+	m_nNextAction = INIT_NEXT_ACTION;
 }
 
 //===================================================
@@ -775,6 +794,15 @@ CEnemyLanding::CEnemyLanding() : CEnemyState(ID_LANDING)
 //===================================================
 CEnemyLanding::~CEnemyLanding()
 {
+}
+
+//===================================================
+// 初期化処理(着地)
+//===================================================
+void CEnemyLanding::Init(void)
+{
+	// ランダムな値
+	m_nNextAction = rand() % 100;
 }
 
 //===================================================
@@ -790,15 +818,35 @@ void CEnemyLanding::Update(void)
 
 	if (pMotion != nullptr)
 	{
-		if (pMotion->FinishMotion())
+		// モーションが終わった後40%の確率で攻撃に移る
+		if (pMotion->FinishMotion() && m_nNextAction <= 50)
 		{
-			m_pEnemy->ChangeState(make_shared<CEnemyJumpAttack>());
+			// 次の行動を選出
+			int random = rand() % 3;
+
+			// 次の行動の遷移
+			switch (random)
+			{
+			case 0:
+				m_pEnemy->ChangeState(make_shared<CEnemyJumpAttack>());
+				break;
+			case 1:
+				m_pEnemy->ChangeState(make_shared<CEnemyAttackImpact>());
+				break;
+			case 2:
+				m_pEnemy->ChangeState(make_shared<CEnemyRoar>());
+				break;
+			default:
+				break;
+			}
 			return;
 		}
 
+		// モーションの終わりのブレンドが終わったら
 		if (pMotion->IsFinishEndBlend())
 		{
-			//m_pEnemy->ChangeState(make_shared<CEnemyIdle>(10));
+			// 状態をIdleに戻す
+			m_pEnemy->ChangeState(make_shared<CEnemyIdle>(1));
 		}
 	}
 }
@@ -849,9 +897,9 @@ void CEnemyHit::Update(void)
 //===================================================
 // コンストラクタ(ダメージ小)
 //===================================================
-CEnemyDamageS::CEnemyDamageS() : CEnemyState(ID_DAMAGES)
+CEnemyDamageS::CEnemyDamageS(const int nDamage) : CEnemyState(ID_DAMAGES)
 {
-
+	m_nDamage = nDamage;
 }
 
 //===================================================
@@ -877,6 +925,9 @@ void CEnemyDamageS::Init(void)
 
 	// 移動制御処理の取得
 	CEnemyMovement* pMovement = m_pEnemy->GetMovement();
+
+	// ダメージの設定
+	m_pEnemy->Hit(m_nDamage);
 
 	if (pMovement != nullptr && pPlayer != nullptr)
 	{
@@ -910,9 +961,11 @@ void CEnemyDamageS::Update(void)
 //===================================================
 // コンストラクタ(ガード)
 //===================================================
-CEnemyGuard::CEnemyGuard(const D3DXVECTOR3 ImpactPos) : CEnemyState(ID_GUARD)
+CEnemyGuard::CEnemyGuard(const D3DXVECTOR3 ImpactPos, const int nDamage) : CEnemyState(ID_GUARD)
 {
+	m_nDamage = nDamage;
 	m_ImpactPos = ImpactPos;
+	m_nNextAction = INIT_NEXT_ACTION;
 }
 
 //===================================================
@@ -927,6 +980,9 @@ CEnemyGuard::~CEnemyGuard()
 //===================================================
 void CEnemyGuard::Init(void)
 {
+	// ダメージの設定
+	m_pEnemy->Hit(m_nDamage);
+
 	// プレイヤーの取得
 	CPlayerGame* pPlayer = CGame::GetPlayer();
 
@@ -962,6 +1018,9 @@ void CEnemyGuard::Init(void)
 		// モーションの再生
 		pMotion->SetMotion(MOTION::MOTION_GUARD, true, 2);
 	}
+
+	// 次の行動を抽選
+	m_nNextAction = rand() % 100;
 }
 
 //===================================================
@@ -974,8 +1033,16 @@ void CEnemyGuard::Update(void)
 
 	if (pMotion->FinishMotion())
 	{
-		// 振り下ろし攻撃に派生
-		m_pEnemy->ChangeState(make_shared<CEnemyAttackSmash>());
+		if (m_nNextAction <= 50)
+		{
+			// バックステップする
+			m_pEnemy->ChangeState(make_shared<CEnemyBackStep>());
+		}
+		else
+		{
+			// 振り下ろし攻撃に派生
+			m_pEnemy->ChangeState(make_shared<CEnemyAttackSmash>());
+		}
 	}
 }
 
@@ -1037,6 +1104,7 @@ void CEnemyStep::Update(void)
 //===================================================
 CEnemySwing::CEnemySwing() : CEnemyState(ID_SWING)
 {
+	m_nNextAction = INIT_NEXT_ACTION;
 }
 
 //===================================================
@@ -1056,6 +1124,9 @@ void CEnemySwing::Init(void)
 
 	// 軌跡のリセット
 	m_pEnemy->DeleteOrbit();
+
+	// 次の行動を抽選
+	m_nNextAction = rand() % 100;
 
 	// モーションがあるなら
 	if (pMotion != nullptr)
@@ -1102,9 +1173,7 @@ void CEnemySwing::Update(void)
 			{
 				pPlayer->SetStance();
 
-				// 成功度
-				int nSuccess = pPlayer->SuccessParry(1);
-
+				int nSuccess = pPlayer->SuccessParry();
 				// 右手の位置
 				D3DXVECTOR3 playerHandR = pPlayer->GetModelPos(8);
 
@@ -1146,13 +1215,26 @@ void CEnemySwing::Update(void)
 			}
 		}
 
-		if (pMotion->IsEventFrame(0, 40, MOTION::MOTION_SWING))
+		if (pMotion->IsEventFrame(0, 20, MOTION::MOTION_SWING))
 		{
 			// プレイヤーの方向を見る処理
 			m_pEnemy->AngleToPlayer();
 		}
 
-		// モーションが終わった
+		// モーションが終わったら
+		if (pMotion->FinishMotion())
+		{
+			// 40%の確率
+			if (m_nNextAction <= 20)
+			{
+				// バックステップする
+				m_pEnemy->ChangeState(make_shared<CEnemyBackStep>());
+
+				return;
+			}
+		}
+
+		// モーションのブレンドが終わったら
 		if (pMotion->IsFinishEndBlend())
 		{
 			// 剣の軌跡の消去
@@ -1241,6 +1323,9 @@ void CEnemyJumpAttack::Update(void)
 		// ジャンプ中だったら
 		if (pMotion->IsEventFrame(40, 90, MOTION::MOTION_JUMPATTACK))
 		{
+			// 軌跡の設定
+			m_pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f));
+
 			// プレイヤーまでの差分を求める
 			D3DXVECTOR3 Diff = pPlayer->GetPos() - pos;
 
@@ -1292,8 +1377,7 @@ void CEnemyJumpAttack::CollisionPlayer(CPlayerGame* pPlayer,CMotion *pMotion)
 		{
 			pPlayer->SetStance();
 
-			// 成功度
-			int nSuccess = pPlayer->SuccessParry(6);
+			int nSuccess = pPlayer->SuccessParry();
 
 			// 右手の位置
 			D3DXVECTOR3 playerHandR = pPlayer->GetModelPos(8);
@@ -1317,21 +1401,18 @@ void CEnemyJumpAttack::CollisionPlayer(CPlayerGame* pPlayer,CMotion *pMotion)
 			// ヒット状態にする
 			m_pEnemy->ChangeState(make_shared<CEnemyHit>());
 		}
-		//// 回避だったら
-		//else if (m_pEnemy->CollisionWepon() && pPlayerMotion->GetBlendType() == pPlayer->TYPE_AVOID)
-		//{
-		//	CSlow *pSlow = CManager::GetSlow();
+		// 回避だったら
+		else if (m_pEnemy->CollisionWepon() && pPlayerMotion->GetBlendType() == pPlayer->TYPE_AVOID)
+		{
+			CSlow *pSlow = CManager::GetSlow();
 
-		//	pSlow->Start(60,4);
-		//}
+			pSlow->Start(60,4);
+		}
 		// 範囲内で視界に入っていない、カウンターしていない
 		else if (m_pEnemy->CollisionWepon() && bParry == false)
 		{
 			// 吹き飛び処理
-			pPlayer->BlowOff(pos, 10.0f, 10.0f);
-
-			// プレイヤーのモーションの設定
-			pPlayerMotion->SetMotion(pPlayer->TYPE_DAMAGE, true, 2);
+			pPlayer->BlowOff(pos, 100.0f, 10.0f);
 
 			// プレイヤー状態の変更
 			pPlayer->ChangeState(make_shared<CPlayerDamage>(2));

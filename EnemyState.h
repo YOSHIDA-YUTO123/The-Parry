@@ -115,8 +115,10 @@ class CEnemyLanding : public CEnemyState
 public:
 	CEnemyLanding();
 	~CEnemyLanding();
+	void Init(void) override;
 	void Update(void) override;
 private:
+	int m_nNextAction; // 次の行動
 };
 
 //***************************************************
@@ -130,6 +132,7 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 private:
+	int m_nNextAction; // 次の行動
 };
 
 //***************************************************
@@ -151,11 +154,12 @@ private:
 class CEnemyDamageL : public CEnemyState
 {
 public:
-	CEnemyDamageL(const bool bBackStatp = false);
+	CEnemyDamageL(const int nDamage,const bool bBackStatp = false);
 	~CEnemyDamageL();
 	void Init(void) override;
 	void Update(void) override;
 private:
+	int m_nDamage;	  // ダメージ量
 	bool m_bBackStap; // モーション終わりにバックステップするか判定
 };
 
@@ -217,11 +221,12 @@ private:
 class CEnemyDamageS : public CEnemyState
 {
 public:
-	CEnemyDamageS();
+	CEnemyDamageS(const int nDamage);
 	~CEnemyDamageS();
 	void Init(void) override;
 	void Update(void) override;
 private:
+	int m_nDamage; // ダメージ量
 };
 
 //***************************************************
@@ -230,12 +235,14 @@ private:
 class CEnemyGuard : public CEnemyState
 {
 public:
-	CEnemyGuard(const D3DXVECTOR3 ImpactPos);
+	CEnemyGuard(const D3DXVECTOR3 ImpactPos, const int nDamage);
 	~CEnemyGuard();
 	void Init(void) override;
 	void Update(void) override;
 private:
 	D3DXVECTOR3 m_ImpactPos; // インパクトの位置
+	int m_nDamage; // ダメージ量
+	int m_nNextAction; // 次の行動
 };
 
 //***************************************************
@@ -262,6 +269,7 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 private:
+	int m_nNextAction; // 次の行動
 };
 
 //***************************************************

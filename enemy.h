@@ -97,6 +97,7 @@ public:
 	void SetObserver(CObserver* pObserver) { m_pObserver = pObserver; }
 	void SetHitStop(const int nTime);
 	void SetRubble(void);
+	void Hit(const int nDamage);
 private:
 	void CollisionPlayer(CMotion* pPlayerMotion, CPlayerGame* pPlayer);
 	void SetParent(const int nCnt);

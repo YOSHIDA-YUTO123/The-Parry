@@ -41,6 +41,7 @@ CCamera::CCamera()
 	m_vecU = VEC3_NULL;
 	m_fDistance = NULL;
 	m_state = STATE_NONE;
+	m_Oldstate = STATE_NONE;
 	m_nZoomTime = NULL;
 	m_fDistanceBase = NULL;
 	m_fZoomAngleBase = NULL;
@@ -406,7 +407,7 @@ void CCamera::Rockon(D3DXVECTOR3 playerPos, D3DXVECTOR3 enemyPos)
 
 	// 注視点を敵の位置にする
 	posR.x = enemyPos.x;
-	posR.y = enemyPos.y;
+	posR.y = (playerPos.y + enemyPos.y) * 0.5f;
 	posR.z = enemyPos.z;
 
 	// 目的の注視点の設定
@@ -425,7 +426,7 @@ void CCamera::Rockon(D3DXVECTOR3 playerPos, D3DXVECTOR3 enemyPos)
 	dir *= m_fDistance;
 
 	// y座標を設定
-	dir.y = playerPos.y + ROCKON_HEIGHT;
+	dir.y = (playerPos.y + enemyPos.y) * 0.5f;
 
 	// 目的の視点の設定
 	m_posVDest = playerPos + dir;
@@ -448,6 +449,7 @@ void CCamera::SetZoomIn(const int nTime, const float fAngle)
 {
 	m_nZoomTime = nTime;
 	m_fZoomAngleBase = fAngle;
+	m_Oldstate = m_state;
 	m_state = STATE_ZOOMIN;
 }
 
@@ -483,7 +485,7 @@ void CCamera::ZoomIn(void)
 
 		if (m_nZoomTime <= 0)
 		{
-			m_state = STATE_TRACKING;
+			ResetState();
 		}
 	}
 }
