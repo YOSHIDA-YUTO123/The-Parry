@@ -23,6 +23,7 @@
 //***************************************************
 class CEnemy;
 class CMotion;
+class CPlayerGame;
 
 //***************************************************
 // 敵の状態クラスの定義(基底クラス)
@@ -33,22 +34,23 @@ public:
 	// IDの種類
 	enum ID
 	{
-		ID_BASE = 0, // 無し
-		ID_IDLE,	 // なにもしない状態
-		ID_MOVE,	 // 移動
-		ID_BACKSTEP, // バックステップ
-		ID_LANDING,  // 着地
-		ID_SMASH,    // 振り下ろし攻撃
-		ID_IMPACT,	 // 衝撃波攻撃
-		ID_DAMAGEL,	 // 大ダメージ
-		ID_ROAR,	 // 叫び
-		ID_DASH,	 // 走り
-		ID_SPIN,	 // 回転攻撃
-		ID_HIT,		 // カウンターがヒットした時
-		ID_DAMAGES,	 // 小ダメージ
-		ID_GUARD,	 // ガード
-		ID_STEP,	 // ステップ
-		ID_SWING,	 // スイング攻撃
+		ID_BASE = 0,   // 無し
+		ID_IDLE,	   // なにもしない状態
+		ID_MOVE,	   // 移動
+		ID_BACKSTEP,   // バックステップ
+		ID_LANDING,    // 着地
+		ID_SMASH,      // 振り下ろし攻撃
+		ID_IMPACT,	   // 衝撃波攻撃
+		ID_DAMAGEL,	   // 大ダメージ
+		ID_ROAR,	   // 叫び
+		ID_DASH,	   // 走り
+		ID_SPIN,	   // 回転攻撃
+		ID_HIT,		   // カウンターがヒットした時
+		ID_DAMAGES,	   // 小ダメージ
+		ID_GUARD,	   // ガード
+		ID_STEP,	   // ステップ
+		ID_SWING,	   // スイング攻撃
+		ID_JUMPATTACK, // ジャンプ攻撃
 		ID_MAX
 	};
 
@@ -228,11 +230,12 @@ private:
 class CEnemyGuard : public CEnemyState
 {
 public:
-	CEnemyGuard();
+	CEnemyGuard(const D3DXVECTOR3 ImpactPos);
 	~CEnemyGuard();
 	void Init(void) override;
 	void Update(void) override;
 private:
+	D3DXVECTOR3 m_ImpactPos; // インパクトの位置
 };
 
 //***************************************************
@@ -258,6 +261,20 @@ public:
 	~CEnemySwing();
 	void Init(void) override;
 	void Update(void) override;
+private:
+};
+
+//***************************************************
+// 敵の状態(JumpAttack)クラスの定義
+//***************************************************
+class CEnemyJumpAttack : public CEnemyState
+{
+public:
+	CEnemyJumpAttack();
+	~CEnemyJumpAttack();
+	void Init(void) override;
+	void Update(void) override;
+	void CollisionPlayer(CPlayerGame *pPlayer, CMotion* pMotion);
 private:
 };
 

@@ -65,6 +65,7 @@ public:
 		MOTION_GUARD,		// ガード
 		MOTION_STEP,		// ステップ
 		MOTION_SWING,		// スイング攻撃
+		MOTION_JUMPATTACK,  // ジャンプ攻撃
 		MOTION_MAX
 	}MOTION;
 
@@ -82,7 +83,7 @@ public:
 	CMotion* GetMotion(void);
 	CEnemyMovement* GetMovement(void);
 
-	void SelectDamageMotion(int success);	// どのダメージモーションが出るか判定する関数
+	void SelectDamageMotion(int success, const D3DXVECTOR3 ImpactPos);	// どのダメージモーションが出るか判定する関数
 	bool IsDamageMotion(void);				// ダメージモーションかどうか
 	bool CollisionWepon(void);
 	void ChasePlayer(float chaseScal, const float speedScal = 1.0f);	// プレイヤーを追いかける処理
@@ -93,8 +94,9 @@ public:
 	void ChangeState(std::shared_ptr<CEnemyState> pNewState);
 	bool CollisionObstacle(D3DXVECTOR3* pPos);
 	void SetSuccess(const int success) { m_nParrySuccess = success; }   // 成功度の設定
-	void SetHitStop(const int nTime);
 	void SetObserver(CObserver* pObserver) { m_pObserver = pObserver; }
+	void SetHitStop(const int nTime);
+	void SetRubble(void);
 private:
 	void CollisionPlayer(CMotion* pPlayerMotion, CPlayerGame* pPlayer);
 	void SetParent(const int nCnt);

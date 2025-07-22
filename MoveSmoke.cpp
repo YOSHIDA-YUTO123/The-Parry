@@ -49,7 +49,7 @@ CMoveSmoke* CMoveSmoke::Create(const D3DXVECTOR3 pos, const float fRadius, const
 HRESULT CMoveSmoke::Init(void)
 {
 	// アニメーションの設定
-	CMoveSmoke::SetAnim(10, 4, 3, true);
+	CMoveSmoke::SetAnim(5, 4, 3, true);
 
 	// 初期化処理
 	if (FAILED(CEffect3DAnim::Init()))

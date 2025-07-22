@@ -276,22 +276,32 @@ void CPlayerRoundKick::Update(void)
 	// モーションがあるなら
 	if (pMotion != nullptr)
 	{
+		// 位置の取得
+		D3DXVECTOR3 pos = m_pPlayer->GetPos();
+
+		if (pMotion->IsEventFrame(1, 10, m_pPlayer->TYPE_ROUNDKICK))
+		{
+			// 向いている方向に進む
+			m_pPlayer->GetMovement()->MoveForward(10.0f);
+		}
+
 		if (pMotion->IsEventFrame(15, 15, m_pPlayer->TYPE_ROUNDKICK))
 		{
 			// 移動量の設定
 			m_pPlayer->GetMovement()->Set(D3DXVECTOR3(0.0f, 18.0f, 0.0f));
 
-			// 位置の取得
-			D3DXVECTOR3 pos = m_pPlayer->GetPos();
-
 			// サークルの生成
 			auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f), pos, 0.0f, 20.0f);
 			pCircle->SetCircle(0.0f, 10.0f, 60, true);
+		}
 
-			CMeshField* pMeshField = CGame::GetField();
+		if (pMotion->IsEventFrame(15, 17, m_pPlayer->TYPE_ROUNDKICK))
+		{
+			// エフェクトの生成
+			auto pEffect = CMoveSmoke::Create(D3DXVECTOR3(pos.x, pos.y + 50.0f, pos.z), 100.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
-			CMeshFieldWave::Config config = { pos ,30.0f,50.0f,180.0f,20.0f,0.01f,120 };
-			pMeshField->SetWave(config);
+			// エフェクトの設定処理
+			pEffect->SetEffect(35, VEC3_NULL);
 		}
 
 		// モーションが終わったら

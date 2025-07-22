@@ -46,6 +46,7 @@ constexpr float ROCKON_HEIGHT = 100.0f;			// ロックオン時の見る場所
 constexpr int NUM_RUBBLE = 16;					// 瓦礫を出す数
 constexpr int NUM_MATRIX = 8;					// 武器につけるマトリックスの数
 constexpr int NEXT_ACTION_TIME = 300;			// 次の行動の抽選までの時間
+constexpr int MODEL_WEPON = 15;					// 武器のインデックス
 
 using namespace Const;							// 名前空間Constを使用する
 using namespace math;							// 名前空間mathを使用する
@@ -335,8 +336,11 @@ void CEnemy::Update(void)
 	}
 	else if (m_pMotion->IsEventFrame(50, 50, MOTION_IMPACT))
 	{
-		CMeshWave::Config WaveConfig = { WHITE,50.0f,50.0f,0.0f,30 };
-		CMeshWave::Create(WaveConfig, pos);
+		// ウェーブの生成
+		auto pWave = CMeshWave::Create(pos, 50.0f, 50.0f, WHITE);
+
+		// ウェーブの設定処理
+		pWave->SetWave(30,50.0f);
 	}
 	else if (m_pMotion->IsEventFrame(20, 20, MOTION::MOTION_SWING))
 	{
@@ -350,41 +354,8 @@ void CEnemy::Update(void)
 	// 攻撃モーションのたたきつけになったら
 	if (m_pMotion->IsEventFrame(72,72, MOTION_SMASH))
 	{
-		// フィールドの波の設定
-		CMeshFieldWave::Config config = { WeponPos,250.0f,380.0f,280.0f,12.0f,0.01f,120 };
-
-		// 地面に波を発生させる
-		pMesh->SetWave(config);
-
-		// メッシュサークルの生成
-		auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 0.5f, 0.5f, 1.0f), WeponPos, 0.0f, 35.0f);
-
-		// サークルの設定処理
-		pCircle->SetCircle(0.0f,50.0f,60,true);
-
-		// 瓦礫の数分出す
-		for (int nCnt = 0; nCnt < NUM_RUBBLE; nCnt++)
-		{
-			// 分割に応じた方向を求める
-			float fAngle = (D3DX_PI * 2.0f) / NUM_RUBBLE * nCnt;
-
-			// 吹っ飛び量を選出
-			float dir = rand() % 15 + 5.0f;
-			float Jump = rand() % 15 + 25.0f;
-
-			// 方向に応じた吹っ飛び量を計算
-			float fMoveX = sinf(fAngle) * dir;
-			float fMoveZ = cosf(fAngle) * dir;
-
-			// 寿命を選出
-			int nLife = rand() % 120 + 60;
-
-			// 種類を選出
-			int nType = rand() % CRubble::TYPE_MAX;
-
-			// 瓦礫を生成
-			CRubble::Create(WeponPos, D3DXVECTOR3(fMoveX, Jump, fMoveZ), nLife, nType);
-		}
+		// 瓦礫の設定処理
+		SetRubble();
 	}
 
 	// 衝撃波の生成
@@ -433,12 +404,6 @@ void CEnemy::Update(void)
 //===================================================
 void CEnemy::Draw(void)
 {
-	//// 影の描画処理
-	//if (m_pShadow != nullptr)
-	//{
-	//	m_pShadow->Draw();
-	//}
-
 	// キャラクターの描画
 	if (m_pCharactor != nullptr)
 	{
@@ -453,7 +418,7 @@ void CEnemy::Draw(void)
 			m_apModel[nCnt]->Draw();
 
 			// モデルが武器だったら
-			if (nCnt == 15)
+			if (nCnt == MODEL_WEPON)
 			{
 				// 親子関係の設定処理
 				SetParent(nCnt);
@@ -498,7 +463,7 @@ CEnemyMovement* CEnemy::GetMovement(void)
 //===================================================
 // どのダメージモーションが出るか判定
 //===================================================
-void CEnemy::SelectDamageMotion(int success)
+void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 {
 	// プレイヤーの取得
 	CPlayerGame* pPlayer = CGame::GetPlayer();
@@ -510,7 +475,7 @@ void CEnemy::SelectDamageMotion(int success)
 	if (random <= 30)
 	{
 		// ガードする
-		ChangeState(make_shared<CEnemyGuard>());
+		ChangeState(make_shared<CEnemyGuard>(ImpactPos));
 
 		return;
 	}
@@ -531,11 +496,8 @@ void CEnemy::SelectDamageMotion(int success)
 		// プレイヤーの位置の取得
 		D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
 
-		// プレイヤーの右手の位置
-		D3DXVECTOR3 playerFootR = pPlayer->GetModelPos(11);
-
 		// パーティクルの生成
-		auto pParticle = CParticle3DNormal::Create(playerFootR, 10.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
+		auto pParticle = CParticle3DNormal::Create(ImpactPos, 10.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
 
 		// パーティクルの設定処理
 		pParticle->SetParticle(15.0f, 240, 50, 5);
@@ -547,7 +509,7 @@ void CEnemy::SelectDamageMotion(int success)
 		pPlayer->SetAngle(fAngle + D3DX_PI);
 
 		// インパクトを生成
-		auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.6f, 0.8f), playerFootR, 0.0f, 50.0f);
+		auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.6f, 0.8f), ImpactPos, 0.0f, 50.0f);
 
 		// サークルの設定処理
 		pCircle->SetCircle(35.0f, 15.0f, 60, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
@@ -564,11 +526,8 @@ void CEnemy::SelectDamageMotion(int success)
 		// プレイヤーの位置の取得
 		D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
 
-		// プレイヤーの右手の位置
-		D3DXVECTOR3 playerFootR = pPlayer->GetModelPos(11);
-
 		// パーティクルの生成
-		auto pParticle = CParticle3DNormal::Create(playerFootR, 10.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
+		auto pParticle = CParticle3DNormal::Create(ImpactPos, 10.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
 
 		// パーティクルの設定処理
 		pParticle->SetParticle(15.0f, 240, 50, 5);
@@ -580,7 +539,7 @@ void CEnemy::SelectDamageMotion(int success)
 		pPlayer->SetAngle(fAngle + D3DX_PI);
 
 		// インパクトを生成
-		auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.6f, 0.8f), playerFootR, 0.0f, 50.0f);
+		auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.6f, 0.8f), ImpactPos, 0.0f, 50.0f);
 
 		// サークルの設定処理
 		pCircle->SetCircle(35.0f, 15.0f, 60, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
@@ -600,11 +559,8 @@ void CEnemy::SelectDamageMotion(int success)
 		// プレイヤーの位置の取得
 		D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
 
-		// プレイヤーの右足の位置
-		D3DXVECTOR3 playerFootR = pPlayer->GetModelPos(11);
-
 		// パーティクルの生成
-		auto pParticle = CParticle3DNormal::Create(playerFootR, 10.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
+		auto pParticle = CParticle3DNormal::Create(ImpactPos, 10.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
 
 		// パーティクルの設定処理
 		pParticle->SetParticle(15.0f, 240, 50, 5);
@@ -616,7 +572,7 @@ void CEnemy::SelectDamageMotion(int success)
 		pPlayer->SetAngle(fAngle + D3DX_PI);
 
 		// インパクトを生成
-		auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.4f, 0.8f), playerFootR, 0.0f, 100.0f);
+		auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.4f, 0.8f), ImpactPos, 0.0f, 100.0f);
 
 		// サークルの設定処理
 		pCircle->SetCircle(35.0f, 10.0f, 120, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
@@ -932,6 +888,57 @@ void CEnemy::SetHitStop(const int nTime)
 }
 
 //===================================================
+// 瓦礫の設定処理
+//===================================================
+void CEnemy::SetRubble(void)
+{
+	// 武器の先端の位置
+	D3DXVECTOR3 WeponPos = GetPositionFromMatrix(m_weponMatrix);
+
+	// フィールドの波の設定
+	CMeshFieldWave::Config config = { WeponPos,250.0f,380.0f,280.0f,12.0f,0.01f,120 };
+
+	// メッシュフィールドの取得処理
+	CMeshField* pMeshField = CGame::GetField();
+
+	if (pMeshField != nullptr)
+	{
+		// 地面に波を発生させる
+		pMeshField->SetWave(config);
+	}
+
+	// メッシュサークルの生成
+	auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 0.5f, 0.5f, 1.0f), WeponPos, 0.0f, 35.0f);
+
+	// サークルの設定処理
+	pCircle->SetCircle(0.0f, 50.0f, 60, true);
+
+	// 瓦礫の数分出す
+	for (int nCnt = 0; nCnt < NUM_RUBBLE; nCnt++)
+	{
+		// 分割に応じた方向を求める
+		float fAngle = (D3DX_PI * 2.0f) / NUM_RUBBLE * nCnt;
+
+		// 吹っ飛び量を選出
+		float dir = rand() % 15 + 5.0f;
+		float Jump = rand() % 15 + 25.0f;
+
+		// 方向に応じた吹っ飛び量を計算
+		float fMoveX = sinf(fAngle) * dir;
+		float fMoveZ = cosf(fAngle) * dir;
+
+		// 寿命を選出
+		int nLife = rand() % 120 + 60;
+
+		// 種類を選出
+		int nType = rand() % CRubble::TYPE_MAX;
+
+		// 瓦礫を生成
+		CRubble::Create(WeponPos, D3DXVECTOR3(fMoveX, Jump, fMoveZ), nLife, nType);
+	}
+}
+
+//===================================================
 // 読み込み処理
 //===================================================
 void CEnemy::Load(void)
@@ -1019,7 +1026,7 @@ void CEnemy::CollisionPlayer(CMotion *pPlayerMotion,CPlayerGame *pPlayer)
 	// パリィモーションの蹴りになったら
 	if (pPlayerMotion->IsEventFrame(38, 38, pPlayer->TYPE_ROUNDKICK) && IsDamageMotion() == false)
 	{
-		// プレイヤーの右手の位置
+		// プレイヤーの右足の位置
 		D3DXVECTOR3 playerFootR = pPlayer->GetModelPos(11);
 
 		// 円の当たり判定の取得
@@ -1029,19 +1036,35 @@ void CEnemy::CollisionPlayer(CMotion *pPlayerMotion,CPlayerGame *pPlayer)
 		CColliderSphere FootRSphere = CColliderSphere::CreateCollider(playerFootR, 50.0f);
 		CColliderSphere ChestSphere = CColliderSphere::CreateCollider(chestpos, 250.0f);
 
-		// カメラの取得
-		CCamera* pCamera = CManager::GetCamera();
-
-		pCamera->SetState(CCamera::STATE_ZOOMIN);
-		pCamera->SetZoomIn(120);
-
 		// 手が当たったら
 		if (pSphere != nullptr && pSphere->Collision(&ChestSphere, &FootRSphere))
 		{
 			// どの攻撃モーションがでるか判定
-			SelectDamageMotion(m_nParrySuccess);
+			SelectDamageMotion(m_nParrySuccess, playerFootR);
 		}
 	}
+
+	// パリィモーションの蹴りになったら
+	if (pPlayerMotion->IsEventFrame(13, 13, pPlayer->TYPE_PUNCH) && IsDamageMotion() == false)
+	{
+		// プレイヤーの右手の位置
+		D3DXVECTOR3 playerHandR = pPlayer->GetModelPos(5);
+
+		// 円の当たり判定の取得
+		CCollisionSphere* pSphere = CCollisionSphere::GetInstance();
+
+		// 右手の円
+		CColliderSphere HandRSphere = CColliderSphere::CreateCollider(playerHandR, 80.0f);
+		CColliderSphere ChestSphere = CColliderSphere::CreateCollider(chestpos, 250.0f);
+
+		// 手が当たったら
+		if (pSphere != nullptr && pSphere->Collision(&ChestSphere, &HandRSphere))
+		{
+			// どの攻撃モーションがでるか判定
+			SelectDamageMotion(m_nParrySuccess, playerHandR);
+		}
+	}
+
 }
 
 //===================================================

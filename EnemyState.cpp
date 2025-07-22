@@ -19,21 +19,24 @@
 #include "game.h"
 #include"particle.h"
 #include"impact.h"
+#include "Wave.h"
 
 //***************************************************
 // 名前空間
 //***************************************************
 using namespace std;  // 名前空間stdを使用
-using namespace math; // 名前空間sを使用
+using namespace math; // 名前空間mathを使用
+using namespace Const; // 名前空間Constを使用
 using MOTION = CEnemy::MOTION;
 
 //***************************************************
 // 定数宣言
 //***************************************************
-constexpr int NEXT_STAE_TIME = 120; // 次の行動に移るまでの時間
-constexpr int START_IMPACT = 55;	// インパクト攻撃の開始確率
-constexpr int SPIN_TIME = 60;		// 回転モーションの時間
-constexpr int ABSSPIN_TIME = 30;	// 絶対回転する時間
+constexpr int NEXT_STAE_TIME = 120;				// 次の行動に移るまでの時間
+constexpr int START_IMPACT = 55;				// インパクト攻撃の開始確率
+constexpr int SPIN_TIME = 60;					// 回転モーションの時間
+constexpr int ABSSPIN_TIME = 30;				// 絶対回転する時間
+constexpr float JUMPATTACK_MOVE_FRAME = 25.0f;	// ジャンプ攻撃の移動フレーム
 
 //===================================================
 // コンストラクタ
@@ -290,7 +293,7 @@ void CEnemyAttackSmash::Update(void)
 			pPlayer->SetStance();
 
 			// 成功度
-			int nSuccess = pPlayer->SuccessParry(2);
+			int nSuccess = pPlayer->SuccessParry(6);
 
 			// 右手の位置
 			D3DXVECTOR3 playerHandR = pPlayer->GetModelPos(8);
@@ -302,8 +305,10 @@ void CEnemyAttackSmash::Update(void)
 			pParticle->SetParticle(15.0f, 120, 150, 1);
 			pParticle->SetParticle(CEffect3D::TYPE_HIT);
 
+			// ヒットストップ
 			m_pEnemy->SetHitStop(25);
 
+			// ヒットストップ
 			pPlayer->SetHitStop(25);
 
 			// 成功度の設定
@@ -641,8 +646,35 @@ void CEnemySpin::Update(void)
 		// 当たったら
 		if (m_pEnemy->CollisionWepon() && bParry)
 		{
+			pPlayer->SetStance();
+
 			// パリィモーションの再生
-			pPlayerMotion->SetMotion(pPlayer->TYPE_PARRY, true, 2);
+			pPlayerMotion->SetMotion(pPlayer->TYPE_PUNCH, true, 2);
+
+			// 成功度
+			int nSuccess = pPlayer->SuccessParry(2);
+
+			// 右手の位置
+			D3DXVECTOR3 playerHandR = pPlayer->GetModelPos(8);
+
+			// パーティクルの生成
+			auto pParticle = CParticle3DNormal::Create(playerHandR, 25.0f, D3DXCOLOR(1.0f, 0.4f, 0.4f, 1.0f));
+
+			// パーティクルの設定処理
+			pParticle->SetParticle(15.0f, 120, 150, 1);
+			pParticle->SetParticle(CEffect3D::TYPE_HIT);
+
+			// ヒットストップ
+			m_pEnemy->SetHitStop(25);
+
+			// ヒットストップ
+			pPlayer->SetHitStop(25);
+
+			// 成功度の設定
+			m_pEnemy->SetSuccess(nSuccess);
+
+			// ヒット状態にする
+			m_pEnemy->ChangeState(make_shared<CEnemyHit>());
 		}
 		else if (m_pEnemy->CollisionWepon() && pPlayerMotion->GetBlendType() == pPlayer->TYPE_AVOID)
 		{
@@ -655,7 +687,7 @@ void CEnemySpin::Update(void)
 			m_nTime = 120;
 		}
 		// 武器との当たり判定
-		else if (m_pEnemy->CollisionWepon() == true && pPlayerMotion->GetBlendType() != pPlayer->TYPE_PARRY)
+		else if (m_pEnemy->CollisionWepon() == true && pPlayerMotion->GetBlendType() != pPlayer->TYPE_PUNCH)
 		{
 			// 吹き飛び処理
 			pPlayer->BlowOff(pos, 50.0f, 10.0f);
@@ -728,7 +760,6 @@ void CEnemyBackStep::Init(void)
 //===================================================
 void CEnemyBackStep::Update(void)
 {
-
 	m_pEnemy->GetMovement()->SetMoveDir(0.0f,20.0f);
 }
 
@@ -757,9 +788,18 @@ void CEnemyLanding::Update(void)
 	// モーションの設定
 	pMotion->SetMotion(MOTION::MOTION_LANDING, true, 10);
 
-	if (pMotion != nullptr && pMotion->IsFinishEndBlend())
+	if (pMotion != nullptr)
 	{
-		m_pEnemy->ChangeState(make_shared<CEnemyIdle>(10));
+		if (pMotion->FinishMotion())
+		{
+			m_pEnemy->ChangeState(make_shared<CEnemyJumpAttack>());
+			return;
+		}
+
+		if (pMotion->IsFinishEndBlend())
+		{
+			//m_pEnemy->ChangeState(make_shared<CEnemyIdle>(10));
+		}
 	}
 }
 
@@ -870,8 +910,9 @@ void CEnemyDamageS::Update(void)
 //===================================================
 // コンストラクタ(ガード)
 //===================================================
-CEnemyGuard::CEnemyGuard() : CEnemyState(ID_GUARD)
+CEnemyGuard::CEnemyGuard(const D3DXVECTOR3 ImpactPos) : CEnemyState(ID_GUARD)
 {
+	m_ImpactPos = ImpactPos;
 }
 
 //===================================================
@@ -895,11 +936,8 @@ void CEnemyGuard::Init(void)
 	// プレイヤーの位置の取得
 	D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
 
-	// プレイヤーの右足の位置
-	D3DXVECTOR3 playerFootR = pPlayer->GetModelPos(11);
-
 	// パーティクルの生成
-	auto pParticle = CParticle3DNormal::Create(playerFootR, 10.0f, D3DXCOLOR(1.0f, 0.4f, 0.4f, 1.0f));
+	auto pParticle = CParticle3DNormal::Create(m_ImpactPos, 10.0f, D3DXCOLOR(1.0f, 0.4f, 0.4f, 1.0f));
 
 	// パーティクルの設定処理
 	pParticle->SetParticle(15.0f, 240, 50, 5);
@@ -911,7 +949,7 @@ void CEnemyGuard::Init(void)
 	pPlayer->SetAngle(fAngle + D3DX_PI);
 
 	// インパクトを生成
-	auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 0.4f, 0.4f, 0.8f), playerFootR, 0.0f, 120.0f);
+	auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 0.4f, 0.4f, 0.8f), m_ImpactPos, 0.0f, 120.0f);
 
 	// サークルの設定処理
 	pCircle->SetCircle(35.0f, 15.0f, 120, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
@@ -1122,6 +1160,181 @@ void CEnemySwing::Update(void)
 
 			// 状態の変更
 			m_pEnemy->ChangeState(make_shared<CEnemyIdle>(5));
+		}
+	}
+}
+
+//===================================================
+// コンストラクタ(ジャンプ攻撃)
+//===================================================
+CEnemyJumpAttack::CEnemyJumpAttack() : CEnemyState(ID_JUMPATTACK)
+{
+}
+
+//===================================================
+// デストラクタ(ジャンプ攻撃)
+//===================================================
+CEnemyJumpAttack::~CEnemyJumpAttack()
+{
+}
+
+//===================================================
+// 初期化処理(ジャンプ攻撃)
+//===================================================
+void CEnemyJumpAttack::Init(void)
+{
+	// モーションクラスの取得
+	CMotion* pMotion = m_pEnemy->GetMotion();
+
+	// 軌跡のリセット
+	m_pEnemy->DeleteOrbit();
+
+	// モーションがあるなら
+	if (pMotion != nullptr)
+	{
+		// モーションの再生
+		pMotion->SetMotion(MOTION::MOTION_JUMPATTACK, true, 10);
+	}
+}
+
+//===================================================
+// 更新処理(ジャンプ攻撃)
+//===================================================
+void CEnemyJumpAttack::Update(void)
+{
+	// モーションクラスの取得
+	CMotion* pMotion = m_pEnemy->GetMotion();
+
+	// 位置の取得
+	D3DXVECTOR3 pos = m_pEnemy->GetPosition();
+
+	// プレイヤーの取得
+	auto pPlayer = CGame::GetPlayer();
+
+	// モーションがあるなら
+	if (pMotion != nullptr)
+	{
+		// 構え中だったら
+		if (pMotion->IsEventFrame(20, 20, MOTION::MOTION_JUMPATTACK))
+		{
+			// ウェーブの生成
+			auto pWave = CMeshWave::Create(pos, 50.0f, 50.0f, D3DXCOLOR(1.0f,0.4f,0.4f,1.0));
+
+			// ウェーブの設定処理
+			pWave->SetWave(30, 50.0f);
+		}
+
+		// 構え中だったら
+		if (pMotion->IsEventFrame(1, 30, MOTION::MOTION_JUMPATTACK))
+		{
+			// プレイヤーの方向を見る
+			m_pEnemy->AngleToPlayer();
+		}
+
+		// 40フレーム目になったら
+		if (pMotion->IsEventFrame(40, 40, MOTION::MOTION_JUMPATTACK))
+		{
+			// ジャンプする
+			m_pEnemy->GetMovement()->Jump(24.0f);
+		}
+
+		// ジャンプ中だったら
+		if (pMotion->IsEventFrame(40, 90, MOTION::MOTION_JUMPATTACK))
+		{
+			// プレイヤーまでの差分を求める
+			D3DXVECTOR3 Diff = pPlayer->GetPos() - pos;
+
+			// 距離を求める
+			float dir = GetDistance(Diff);
+
+			// ジャンプ攻撃中の移動
+			m_pEnemy->GetMovement()->MoveForWard(dir / JUMPATTACK_MOVE_FRAME);
+		}
+
+		// たたきつけになったら
+		if (pMotion->IsEventFrame(90, 90, MOTION::MOTION_JUMPATTACK))
+		{
+			// 瓦礫の設定
+			m_pEnemy->SetRubble();
+		}
+
+		// モーションのブレンドが終わったら
+		if (pMotion->IsFinishEndBlend())
+		{
+			m_pEnemy->ChangeState(make_shared<CEnemyIdle>(1));
+			return;
+		}
+	}
+
+	// プレイヤーとの当たり判定
+	CollisionPlayer(pPlayer, pMotion);
+}
+	
+//===================================================
+// プレイヤーとの当たり判定
+//===================================================
+void CEnemyJumpAttack::CollisionPlayer(CPlayerGame* pPlayer,CMotion *pMotion)
+{
+	// 位置の取得
+	D3DXVECTOR3 pos = m_pEnemy->GetPosition();
+
+	// プレイヤーのモーションの取得
+	CMotion* pPlayerMotion = pPlayer->GetMotion();
+
+	// イベントフレームの判定
+	if (pMotion->IsEventFrame(80, 88, MOTION::MOTION_JUMPATTACK) && m_pEnemy->IsDamageMotion() == false)
+	{
+		// プレイヤーの視界の中にいる
+		const bool bParry = pPlayer->IsParry(pos);
+
+		// 当たったら
+		if (m_pEnemy->CollisionWepon() && bParry)
+		{
+			pPlayer->SetStance();
+
+			// 成功度
+			int nSuccess = pPlayer->SuccessParry(6);
+
+			// 右手の位置
+			D3DXVECTOR3 playerHandR = pPlayer->GetModelPos(8);
+
+			// パーティクルの生成
+			auto pParticle = CParticle3DNormal::Create(playerHandR, 25.0f, D3DXCOLOR(1.0f, 0.4f, 0.4f, 1.0f));
+
+			// パーティクルの設定処理
+			pParticle->SetParticle(15.0f, 120, 150, 1);
+			pParticle->SetParticle(CEffect3D::TYPE_HIT);
+
+			// ヒットストップ
+			m_pEnemy->SetHitStop(25);
+
+			// ヒットストップ
+			pPlayer->SetHitStop(25);
+
+			// 成功度の設定
+			m_pEnemy->SetSuccess(nSuccess);
+
+			// ヒット状態にする
+			m_pEnemy->ChangeState(make_shared<CEnemyHit>());
+		}
+		//// 回避だったら
+		//else if (m_pEnemy->CollisionWepon() && pPlayerMotion->GetBlendType() == pPlayer->TYPE_AVOID)
+		//{
+		//	CSlow *pSlow = CManager::GetSlow();
+
+		//	pSlow->Start(60,4);
+		//}
+		// 範囲内で視界に入っていない、カウンターしていない
+		else if (m_pEnemy->CollisionWepon() && bParry == false)
+		{
+			// 吹き飛び処理
+			pPlayer->BlowOff(pos, 10.0f, 10.0f);
+
+			// プレイヤーのモーションの設定
+			pPlayerMotion->SetMotion(pPlayer->TYPE_DAMAGE, true, 2);
+
+			// プレイヤー状態の変更
+			pPlayer->ChangeState(make_shared<CPlayerDamage>(2));
 		}
 	}
 }

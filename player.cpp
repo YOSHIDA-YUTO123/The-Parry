@@ -739,6 +739,11 @@ void CPlayerGame::Update(void)
 	// カメラの取得
 	CCamera* pCamera = CManager::GetCamera();
 
+	if (pCharacter->HitStop())
+	{
+		return;
+	}
+
 #ifdef _DEBUG
 
 	// デバッグ表示
@@ -805,18 +810,6 @@ void CPlayerGame::Update(void)
 			}
 		}
 	}
-
-	if (pMotion->IsEventFrame(0, 15, TYPE_ROUNDKICK))
-	{
-		D3DXVECTOR3 rot = pCharacter->GetRotation()->GetDest();
-
-		pCamera->ZoomIn(rot.y + D3DX_PI);
-	}
-	else if (pCamera->GetState() == CCamera::STATE_ZOOMIN)
-	{
-		pCamera->SetState(CCamera::STATE_TRACKING);
-	}
-
 
 	// ダッシュボタンを押したら
 	if ((pKeyboard->GetPress(DIK_LSHIFT) || pJoypad->GetPress(pJoypad->JOYKEY_LEFT_SHOULDER)))
@@ -894,55 +887,8 @@ void CPlayerGame::Update(void)
 	// 障害物との当たり判定
 	CollisionObstacle(&pos);
 
-	// 最初の位置
-	D3DXVECTOR3 firstPos = VEC3_NULL;
-
-	// 衝撃波の位置
-	D3DXVECTOR3 ImpactPos = VEC3_NULL;
-
-	// インパクトとの判定
-	const bool bCollision = pMesh->CollisionImpact(pos, 150.0f, CMeshFieldImpact::OBJ_PLAYER, &firstPos, &ImpactPos);
-
-	if (bCollision && pCharacter->GetState() == STATE::STATE_ACTION)
-	{
-		// 方向の設定
-		D3DXVECTOR3 dir = firstPos - pos;
-
-		float fAngle = GetTargetAngle(firstPos, pos);
-
-		// 向きの設定
-		pCharacter->GetRotation()->SetDest(D3DXVECTOR3(0.0f, fAngle + D3DX_PI, 0.0f));
-
-		// 右手の位置
-		D3DXVECTOR3 playerHandR = GetModelPos(5);
-
-		// モーションをダメージにする
-		pMotion->SetMotion(TYPE_PARRY, true, 2);
-
-		// パーティクルの生成
-		auto pParticle = CParticle3DNormal::Create(playerHandR, 20.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
-
-		// パーティクルの設定処理
-		pParticle->SetParticle(15.0f, 240, 25, 2);
-
-		// インパクトを生成
-		auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), playerHandR, 0.0f,50.0f , 32);
-
-		// サークルの設定処理
-		pCircle->SetCircle(50.0f, 10.0f, 30, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
-
-		// 再設定
-		pMesh->ResetImpact(dir, CMeshFieldImpact::OBJ_PLAYER, playerHandR, D3DXCOLOR(1.0f, 1.0f, 0.5f, 1.0f));
-	}
 	// インパクトの当たり判定
-	else if (bCollision && pMotion->GetBlendType() != TYPE_DAMAGE)
-	{
-		// 吹き飛び処理
-		BlowOff(ImpactPos, 50.0f, 10.0f);
-
-		// モーションの設定
-		ChangeState(make_shared<CPlayerDamage>(5));
-	}
+	CollisionImpact(pMesh, &pos, pCharacter, pMotion);
 
 	// 重力を加算
 	m_pMove->Gravity(-MAX_GRABITY);
@@ -960,6 +906,8 @@ void CPlayerGame::Update(void)
 	// 回避
 	if (pMouse->OnMouseTriggerDown(1) || pJoypad->GetTrigger(pJoypad->JOYKEY_B))
 	{
+		SetMoveAngle(pCamera, pKeyboard, pJoypad, pCharacter);
+
 		// 回避
 		ChangeState(make_shared<CPlayerAvoid>(20.0f));
 	}
@@ -980,6 +928,14 @@ void CPlayerGame::Update(void)
 		pCharacter->SetState(pCharacter->STATE_ACTION, PARRY_TIME);
 	}
 
+	// ズームインだったら解除
+	if (pMotion->GetBlendType() != TYPE_PARRY && pCamera->GetState() == CCamera::STATE_ZOOMIN)
+	{
+		// カメラのズーム解除
+		pCamera->SetState(CCamera::STATE_TRACKING);
+	}
+
+	// 反撃
 	if (pKeyboard->GetTrigger(DIK_F) && m_nAttackCounter >= 0)
 	{
 		// 回し蹴り状態を設定
@@ -1003,13 +959,16 @@ void CPlayerGame::Update(void)
 	// オブザーバーへの通知処理
 	Notify();
 
+	// パリィの更新処理
 	UpdateParry();
 
 	// 位置の設定
 	pCharacter->SetPosition(pos);
 
+	// プレイヤーが死んだら
 	if (pCharacter->GetAlive() == false)
 	{
+		// ゲームを終了
 		CGame::SetState(CGame::STATE_END);
 	}
 }
@@ -1064,6 +1023,75 @@ void CPlayerGame::UpdateParry(void)
 		// 攻撃カウンターを減らす
 		m_nAttackCounter--;
 	}
+}
+
+//===================================================
+// 移動方向の設定処理
+//===================================================
+void CPlayerGame::SetMoveAngle(CCamera* pCamera, CInputKeyboard* pKeyboard, CInputJoypad* pJoypad,CCharacter3D *pCaracter)
+{
+	// カメラの向き
+	D3DXVECTOR3 cameraRot = pCamera->GetRotaition();
+
+	if (pJoypad->GetJoyStickL())
+	{
+		return;
+	}
+
+	// 角度の取得
+	D3DXVECTOR3 Angle = CPlayer::GetRotaition();
+
+	if (pKeyboard->GetPress(DIK_A))
+	{
+		//プレイヤーの移動(上)
+		if (pKeyboard->GetPress(DIK_W) == true)
+		{
+			Angle.y = cameraRot.y + D3DX_PI * 0.75f;
+		}
+		//プレイヤーの移動(下)
+		else if (pKeyboard->GetPress(DIK_S))
+		{
+			Angle.y = cameraRot.y + D3DX_PI * 0.25f;
+		}
+		// プレイヤーの移動(左)
+		else
+		{
+			Angle.y = cameraRot.y + D3DX_PI * 0.5f;
+		}
+	}
+	//プレイヤーの移動(右)
+	else if (pKeyboard->GetPress(DIK_D))
+	{
+		//プレイヤーの移動(上)
+		if (pKeyboard->GetPress(DIK_W))
+		{
+			Angle.y = cameraRot.y - D3DX_PI * 0.75f;
+		}
+		//プレイヤーの移動(下)
+		else if (pKeyboard->GetPress(DIK_S))
+		{
+			Angle.y = cameraRot.y - D3DX_PI * 0.25f;
+		}
+		// プレイヤーの移動(右)
+		else
+		{
+			Angle.y = cameraRot.y - D3DX_PI * 0.5f;
+		}
+	}
+	//プレイヤーの移動(上)
+	else if (pKeyboard->GetPress(DIK_W) == true)
+	{
+		Angle.y = cameraRot.y + D3DX_PI;
+	}
+	//プレイヤーの移動(下)
+	else if (pKeyboard->GetPress(DIK_S) == true)
+	{
+		Angle.y = cameraRot.y;
+	}
+
+	// 向きの設定
+	pCaracter->GetRotation()->Set(Angle);
+	pCaracter->GetRotation()->SetDest(Angle);
 }
 
 //===================================================
@@ -1273,16 +1301,83 @@ void CPlayerGame::DeleteOrbit(void)
 //===================================================
 void CPlayerGame::SetStance(void)
 {
+	D3DXVECTOR3 rot = CPlayer::GetRotaition();
+
+	// カメラの取得
+	CCamera* pCamera = CManager::GetCamera();
+
+	// ズームインの処理
+	pCamera->SetZoomIn(60, rot.y + D3DX_PI);
+
 	// モーションの取得
 	auto pMotion = GetMotion();
 
 	if (pMotion != nullptr)
 	{
 		// モーションの再生
-		pMotion->SetMotion(TYPE_ACTION, false, 0);
+		pMotion->SetMotion(TYPE_PARRY, false, 0);
 
 		// モーションを更新してポーズを設定
 		CPlayer::UpdateMotion();
+	}
+}
+
+//===================================================
+// インパクトの当たり判定
+//===================================================
+void CPlayerGame::CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos,CCharacter3D * pCharacter,CMotion*pMotion)
+{
+	// nullだったら処理しない
+	if (pMeshField == nullptr) return;
+
+	// 最初の位置
+	D3DXVECTOR3 firstPos = VEC3_NULL;
+
+	// 衝撃波の位置
+	D3DXVECTOR3 ImpactPos = VEC3_NULL;
+
+	// インパクトとの判定
+	const bool bCollision = pMeshField->CollisionImpact(*pPos, 150.0f, CMeshFieldImpact::OBJ_PLAYER, &firstPos, &ImpactPos);
+
+	if (bCollision && pCharacter->GetState() == STATE::STATE_ACTION)
+	{
+		// 方向の設定
+		D3DXVECTOR3 dir = firstPos - *pPos;
+
+		float fAngle = GetTargetAngle(firstPos, *pPos);
+
+		// 向きの設定
+		pCharacter->GetRotation()->SetDest(D3DXVECTOR3(0.0f, fAngle + D3DX_PI, 0.0f));
+
+		// 右手の位置
+		D3DXVECTOR3 playerHandR = GetModelPos(5);
+
+		// モーションをダメージにする
+		pMotion->SetMotion(TYPE_PUNCH, true, 2);
+
+		// パーティクルの生成
+		auto pParticle = CParticle3DNormal::Create(playerHandR, 20.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
+
+		// パーティクルの設定処理
+		pParticle->SetParticle(15.0f, 240, 25, 2);
+
+		// インパクトを生成
+		auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), playerHandR, 0.0f, 50.0f, 32);
+
+		// サークルの設定処理
+		pCircle->SetCircle(50.0f, 10.0f, 30, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
+
+		// 再設定
+		pMeshField->ResetImpact(dir, CMeshFieldImpact::OBJ_PLAYER, playerHandR, D3DXCOLOR(1.0f, 1.0f, 0.5f, 1.0f));
+	}
+	// インパクトの当たり判定
+	else if (bCollision && pMotion->GetBlendType() != TYPE_DAMAGE)
+	{
+		// 吹き飛び処理
+		BlowOff(ImpactPos, 50.0f, 10.0f);
+
+		// モーションの設定
+		ChangeState(make_shared<CPlayerDamage>(5));
 	}
 }
 
@@ -1301,14 +1396,15 @@ bool CPlayerGame::IsMove(void)
 	if (pMotion->GetBlendType() == TYPE_AVOID) return false;
 
 	// 構え状態だったら移動できない
-	if (pMotion->IsEventFrame(1,40,TYPE_ACTION))
-	{
-		return false;
-	}
+	if (pMotion->IsEventFrame(1, 40, TYPE_PARRY)) return false;
+
+	// パリィだったら移動できない
+	if (pMotion->GetBlendType() == TYPE_PUNCH) return false;
 
 	// 反撃状態だったら移動できない
 	if (pMotion->GetBlendType() == TYPE_ROUNDKICK) return false;
 
+	// 移動できる
 	return true;
 }
 

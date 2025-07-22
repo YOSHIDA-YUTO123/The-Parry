@@ -12,14 +12,18 @@
 #include"manager.h"
 #include"renderer.h"
 
-using namespace Const;							// 名前空間Constを使用する
+using namespace Const;	// 名前空間Constを使用する
 
 //================================================
 // コンストラクタ
 //================================================
 CMeshWave::CMeshWave()
 {
-	ZeroMemory(&m_Config, sizeof(m_Config));
+	m_col = WHITE;
+	m_fHeight = NULL;
+	m_fRadius = NULL;
+	m_fSpeed = NULL;
+	m_nLife = NULL;
 	m_fDecAlv = NULL;
 }
 
@@ -33,7 +37,7 @@ CMeshWave::~CMeshWave()
 //================================================
 // 生成処理
 //================================================
-CMeshWave* CMeshWave::Create(Config config, const D3DXVECTOR3 pos, const int nSegH, const D3DXVECTOR3 rot)
+CMeshWave* CMeshWave::Create(const D3DXVECTOR3 pos, const float fRadius, const float fHeight, const D3DXCOLOR col, const int nSegH)
 {
 	// メッシュウェーブを生成
 	CMeshWave* pMesh = new CMeshWave;
@@ -61,11 +65,11 @@ CMeshWave* CMeshWave::Create(Config config, const D3DXVECTOR3 pos, const int nSe
 
 	// 設定処理
 	pMesh->SetPosition(pos);
-	pMesh->SetRotation(rot);
-	pMesh->m_Config = config;
-	pMesh->m_fDecAlv = config.col.a / config.nLife;
+	pMesh->m_col = col;
+	pMesh->m_fRadius = fRadius;
+	pMesh->m_fHeight = fHeight;
 
-	pMesh->SetWave(nSegH, config.fRadius, config.fHeight);
+	pMesh->SetVtx(nSegH, fRadius, fHeight);
 
 	return pMesh;
 }
@@ -110,7 +114,7 @@ void CMeshWave::Update(void)
 	int nSegV = GetSegV();
 
 	// 半径の更新
-	m_Config.fRadius += m_Config.fSpeed;
+	m_fRadius += m_fSpeed;
 
 	for (int nCntZ = 0; nCntZ <= nSegV; nCntZ++)
 	{
@@ -122,9 +126,9 @@ void CMeshWave::Update(void)
 			// 計算用の位置
 			D3DXVECTOR3 posWk = VEC3_NULL;
 
-			posWk.x = sinf(fAngle) * m_Config.fRadius;
-			posWk.y = m_Config.fHeight - (m_Config.fHeight / nSegV * nCntZ);
-			posWk.z = cosf(fAngle) * m_Config.fRadius;
+			posWk.x = sinf(fAngle) * m_fRadius;
+			posWk.y = m_fHeight - (m_fHeight / nSegV * nCntZ);
+			posWk.z = cosf(fAngle) * m_fRadius;
 
 			// 法線の正規化
 			D3DXVECTOR3 nor = NormalizeNormal(nCntVtx);
@@ -133,7 +137,7 @@ void CMeshWave::Update(void)
 			SetVtxPos(posWk,nCntVtx);
 
 			// 頂点カラーの設定
-			SetVtxColor(m_Config.col, nCntVtx);
+			SetVtxColor(m_col, nCntVtx);
 
 			// 法線の設定
 			SetNormal(nor,nCntVtx);
@@ -144,13 +148,13 @@ void CMeshWave::Update(void)
 	}
 
 	// 透明度を下げる
-	m_Config.col.a -= m_fDecAlv;
+	m_col.a -= m_fDecAlv;
 
 	// 寿命を減らす
-	m_Config.nLife--;
+	m_nLife--;
 
 	// 寿命が尽きた
-	if (m_Config.nLife <= 0)
+	if (m_nLife <= 0)
 	{
 		Uninit();
 
@@ -197,7 +201,17 @@ void CMeshWave::Draw(void)
 //================================================
 // 波の設定処理
 //================================================
-void CMeshWave::SetWave(const int nSegH, const float fRadius, const float fHeight)
+void CMeshWave::SetWave(const int nLife,const float fSpeed)
+{
+	m_fSpeed = fSpeed;
+	m_nLife = nLife;
+	m_fDecAlv = m_col.a / m_nLife;
+}
+
+//================================================
+// 波の設定処理
+//================================================
+void CMeshWave::SetVtx(const int nSegH, const float fRadius, const float fHeight)
 {
 	int nCntVtx = 0; // 頂点数のカウンター
 

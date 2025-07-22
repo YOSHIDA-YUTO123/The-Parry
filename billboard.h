@@ -26,6 +26,8 @@ public:
 	CObjectBillboard(int nPriority = 4);
 	virtual ~CObjectBillboard();
 
+	static CObjectBillboard* Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 size, const char* pTextureName);
+
 	virtual HRESULT Init(void);
 	virtual void Uninit(void);
 	virtual void Update(void);
@@ -40,8 +42,6 @@ public:
 	void SetColor(const D3DXCOLOR col);
 	void SetTextureID(const char* pTextureName);
 	void UpdateVertexPos(const D3DXVECTOR3 pos);
-
-	static CObjectBillboard* Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 size, const char* pTextureName);
 
 private:
 	D3DXVECTOR3 m_pos;						// 位置のクラスのポインタ

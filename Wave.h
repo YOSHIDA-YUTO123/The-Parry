@@ -22,29 +22,23 @@
 class CMeshWave : public CMesh
 {
 public:
-
-	// 構成情報(色、速さ、高さ、半径、寿命)
-	struct Config
-	{
-		D3DXCOLOR col;	// 色
-		float fSpeed;	// 速さ
-		float fHeight;	// 高さ
-		float fRadius;	// 半径
-		int nLife;		// 寿命
-	};
-
 	CMeshWave();
 	~CMeshWave();
 
-	static CMeshWave* Create(Config config ,const D3DXVECTOR3 pos, const int nSegH = 32, const D3DXVECTOR3 rot = Const::VEC3_NULL);
+	static CMeshWave* Create(const D3DXVECTOR3 pos,const float fRadius,const float fHeight,const D3DXCOLOR col, const int nSegH = 32);
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
-	void SetWave(const int nSegH, const float fRadius, const float fHeight); // 頂点の設定
+	void SetWave(const int nLife, const float fSpeed);
 private:
-	Config m_Config;	// 波の構成
+	void SetVtx(const int nSegH, const float fRadius, const float fHeight); // 頂点の設定
+	D3DXCOLOR m_col;	// 色
+	float m_fSpeed;		// 速さ
+	float m_fHeight;	// 高さ
+	float m_fRadius;	// 半径
 	float m_fDecAlv;	// α値の減少スピード
+	int m_nLife;		// 寿命
 };
 
 #endif

@@ -43,6 +43,7 @@ CCamera::CCamera()
 	m_state = STATE_NONE;
 	m_nZoomTime = NULL;
 	m_fDistanceBase = NULL;
+	m_fZoomAngleBase = NULL;
 }
 
 //===================================================
@@ -86,7 +87,8 @@ HRESULT CCamera::Init(void)
 
 	m_state = STATE_TRACKING;
 
-	m_nZoomTime = NULL;
+	m_nZoomTime = -1;
+	m_fZoomAngleBase = NULL;
 
 	return S_OK;
 }
@@ -105,6 +107,9 @@ void CCamera::Update(void)
 {
 	// マウスの視点移動
 	MouseView();
+
+	// ズームの処理
+	ZoomIn();
 
 	// カメラの状態がズームじゃないなら
 	if (m_state != STATE_ZOOMIN)
@@ -437,27 +442,50 @@ void CCamera::Rockon(D3DXVECTOR3 playerPos, D3DXVECTOR3 enemyPos)
 }
 
 //===================================================
+// ズームの設定処理
+//===================================================
+void CCamera::SetZoomIn(const int nTime, const float fAngle)
+{
+	m_nZoomTime = nTime;
+	m_fZoomAngleBase = fAngle;
+	m_state = STATE_ZOOMIN;
+}
+
+//===================================================
 // ズーム処理
 //===================================================
-void CCamera::ZoomIn(const float fAngleY)
+void CCamera::ZoomIn(void)
 {
-	m_state = STATE_ZOOMIN;
+	m_nZoomTime--;
+	
+	// ズーム状態だったら
+	if (m_nZoomTime >= 0 && m_state == STATE_ZOOMIN)
+	{
+		// 目的の距離に近づける
+		m_fDistance += (m_fDistanceZoom - m_fDistance) * 0.07f;
 
-	m_fDistance += (m_fDistanceZoom - m_fDistance) * 0.07f;
+		// 目標の角度を設定
+		float fDestAngleX = 1.45f;
+		float fDestAngleY = m_fZoomAngleBase - 0.65f;
 
-	float X = 1.45f;
-	float Y = fAngleY - 0.65f;
+		// 目的の角度までの距離を求める
+		float fDiff = fDestAngleY - m_rot.y;
 
-	NormalizeRot(&Y);
+		// 目的の角度までPI以上あったら逆回りする
+		NormalizeDiffRot(fDiff,&m_rot.y);
 
-	m_rot.x += (X - m_rot.x) * 0.07f;
-	m_rot.y += (Y - m_rot.y) * 0.07f;
+		// 目的の角度に近づける
+		m_rot.x += (fDestAngleX - m_rot.x) * 0.07f;
+		m_rot.y += (fDestAngleY - m_rot.y) * 0.07f;
 
-	// 視点の更新処理
-	UpdatePositionV();
+		// 視点の更新処理
+		UpdatePositionV();
 
-	//// 注視点の更新処理
-	//UpdatePositionR();
+		if (m_nZoomTime <= 0)
+		{
+			m_state = STATE_TRACKING;
+		}
+	}
 }
 
 //===================================================

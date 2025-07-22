@@ -38,6 +38,8 @@ class CShadowS;
 class CPlayerMovement;
 class CObserver;
 class CMeshOrbit;
+class CMeshField;
+class CCamera;
 
 //***************************************************
 // プレイヤークラスの定義
@@ -53,12 +55,12 @@ public:
 	{
 		TYPE_NEUTRAL = 0,
 		TYPE_MOVE,
-		TYPE_ACTION,
+		TYPE_PARRY,
 		TYPE_JUMP,
 		TYPE_LANDING,
 		TYPE_DASH,
 		TYPE_DAMAGE,
-		TYPE_PARRY,
+		TYPE_PUNCH,
 		TYPE_DOWN_NEUTRAL,
 		TYPE_AVOID,
 		TYPE_ROUNDKICK,
@@ -89,6 +91,7 @@ public:
 	void ChangeState(std::shared_ptr<CPlayerState> pNewState);
 	void SetHitStop(const int nTime) { m_pCharacter3D->SetHitStop(nTime); }
 	void UpdateMotion(void); // モーションの更新
+	void UpdateAvoid(void);	 // 回避の更新処理
 
 protected:
 	CCharacter3D* GetCharacter(void) { return m_pCharacter3D.get(); }
@@ -129,20 +132,24 @@ public:
 	// ゲッター
 	CColliderSphere* GetSphereCollider(void) { return m_pSphere.get(); }
 	CPlayerMovement* GetMovement(void) { return m_pMovement.get(); }
+
+	// セッター
+	void SetObserver(CObserver* pObserver) { m_pObserver = pObserver; }
 	int SuccessParry(const int nParfectTime);
 
 	void BlowOff(const D3DXVECTOR3 attacker, const float blowOff, const float jump);
 	bool IsParry(const D3DXVECTOR3 pos);
 	void SetAngle(const float angleY);
 	bool CollisionObstacle(D3DXVECTOR3* pPos);
-	void SetObserver(CObserver* pObserver) { m_pObserver = pObserver; }
 	void Orbit(const int nSegH, const D3DXCOLOR col); // 軌跡の処理
 	void DeleteOrbit(void);							  // 軌跡のリセット
 	void SetStance(void);							  // 構えモーションの設定
 private:
-	bool IsMove(void); // 移動できるか判定
+	void CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos, CCharacter3D* pCharacter, CMotion* pMotion); // インパクトの当たり判定
+	bool IsMove(void);		// 移動できるか判定
 	void Notify(void);
 	void UpdateParry(void);
+	void SetMoveAngle(CCamera *pCamera, CInputKeyboard* pKeyboard, CInputJoypad* pJoypad, CCharacter3D* pCaracter);
 
 	std::unique_ptr<CPlayerMovement> m_pMovement;	// 移動処理
 	std::unique_ptr<CColliderFOV> m_pFOV;			// 視界の判定

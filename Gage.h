@@ -22,6 +22,7 @@
 //************************************************
 class CObserver;
 class CGageFrame;
+class CTemporaryGage;
 
 //************************************************
 // ゲージクラスの定義
@@ -36,10 +37,6 @@ public:
 	virtual void Uninit(void) override;
 	virtual void Update(void) override = 0; // 派生クラスで実装
 	virtual void Draw(void) override;
-
-	void SetObserver(CObserver* pObserver) { m_Observer = pObserver; }
-protected:
-	CObserver* m_Observer; // オブザーバークラスへのポインタ
 private:
 };
 
@@ -52,15 +49,37 @@ public:
 	CHpGage();
 	~CHpGage();
 
-	static CHpGage* Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size, const D3DXCOLOR col,const int nLife,const bool bDecRightToLeft);
+	static CHpGage* Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size, const D3DXCOLOR col,const D3DXCOLOR temporaryColor, const int nLife, const bool bDecRightToLeft);
 	HRESULT Init(void) override;
 	void Uninit(void) override;
 	void Update(void) override;
 	void Draw(void) override;
 	void SetHp(const int nLife) { m_nLife = nLife; }
 private:
-	int m_nMaxLife;			 // 最大のHP
-	int m_nLife;			 // HP
+	CTemporaryGage* m_pTemporary;	// 一時的なゲージ
+	int m_nMaxLife;					// 最大のHP
+	int m_nLife;					// HP
+	bool m_bDecRightToLeft;			// 右から左に減るか判定
+};
+
+//************************************************
+// ダメージ時の一時的なゲージの生成
+//************************************************
+class CTemporaryGage : public CGage
+{
+public:
+	CTemporaryGage(int nPriority = 6);
+	~CTemporaryGage();
+
+	HRESULT Init(void) override;
+	void Uninit(void) override;
+	void Update(void) override;
+	void Draw(void) override;
+	void SetLength(const float fLength) { m_fDestLength = fLength; }
+	void SetGage(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size, const D3DXCOLOR col, const bool bDecRightToLeft);
+private:
+	float m_fDestLength; // 目的の長さ
+	float m_fLength;	 // 長さ
 	bool m_bDecRightToLeft;  // 右から左に減るか判定
 };
 #endif

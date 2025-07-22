@@ -31,7 +31,7 @@ public:
 		TYPE_MAX
 	};
 
-	CGageFrame(int nPriority = 6);
+	CGageFrame(int nPriority = 5);
 	~CGageFrame();
 
 	static CGageFrame* Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size, const TYPE type);
