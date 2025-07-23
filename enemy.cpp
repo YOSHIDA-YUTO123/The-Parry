@@ -220,6 +220,7 @@ void CEnemy::Update(void)
 	CDebugProc::Print("バックステップする [ 4 ]\n");
 	CDebugProc::Print("ボスの攻撃(スイング) [ 5 ]\n");
 	CDebugProc::Print("ボスの攻撃(ジャンプ攻撃) [ 6 ]\n");
+	CDebugProc::Print("死亡モーション [ F4 ]\n");
 	CDebugProc::Print("ボスの消去 [ F1 ]\n");
 
 	if (pKeyboard->GetPress(DIK_1))
@@ -246,6 +247,15 @@ void CEnemy::Update(void)
 	{
 		ChangeState(make_shared<CEnemyJumpAttack>());
 	}
+	if (pKeyboard->GetTrigger(DIK_F4))
+	{
+		ChangeState(make_shared<CEnemyDeath>());
+	}
+	if (pKeyboard->GetTrigger(DIK_F5))
+	{
+		Hit(MAX_LIFE - 1);
+	}
+
 	if (pKeyboard->GetTrigger(DIK_F1))
 	{
 		// 影の消去
@@ -401,6 +411,12 @@ void CEnemy::Update(void)
 
 		// 向きの補間
 		m_pCharactor->GetRotation()->SetSmoothAngle(0.1f);
+
+		if (m_pCharactor->GetAlive() == false && m_pMotion->GetBlendType() != MOTION_DEATH && m_pMotion->GetBlendType() != MOTION_DOWN)
+		{
+			// HPが無かったら
+			ChangeState(make_shared<CEnemyDeath>());
+		}
 	}
 
 	// カメラがnullじゃないなら
@@ -860,7 +876,7 @@ bool CEnemy::CollisionObstacle(D3DXVECTOR3 *pPos)
 		m_pAABB->UpdateData(CenterPos, D3DXVECTOR3(m_posOld.x, m_posOld.y + m_Size.y * 0.5f, m_posOld.z));
 
 		// 当たっていたら
-		if (pObstacle != nullptr && pObstacle->Collision(m_pAABB.get(), pPos))
+		if (pObstacle != nullptr && pObstacle->Collision(m_pAABB.get(), pPos) && m_pMotion->GetBlendType() != MOTION_DEATH)
 		{
 			// 障害物の位置の取得
 			D3DXVECTOR3 obstaclePos = pObstacle->GetPosition();
@@ -1035,9 +1051,6 @@ void CEnemy::CollisionPlayer(CMotion *pPlayerMotion,CPlayerGame *pPlayer)
 	// 胸の位置の取得
 	D3DXVECTOR3 chestpos = GetPositionFromMatrix(m_apModel[2]->GetMatrixWorld());
 
-	// 位置の取得
-	D3DXVECTOR3 pos = m_pCharactor->GetPosition();
-
 	// プレイヤーの位置の取得
 	D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
 
@@ -1082,7 +1095,6 @@ void CEnemy::CollisionPlayer(CMotion *pPlayerMotion,CPlayerGame *pPlayer)
 			SelectDamageMotion(m_nParrySuccess, playerHandR);
 		}
 	}
-
 }
 
 //===================================================

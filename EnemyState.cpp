@@ -1389,7 +1389,7 @@ void CEnemyJumpAttack::Update(void)
 //===================================================
 // プレイヤーとの当たり判定
 //===================================================
-void CEnemyJumpAttack::CollisionPlayer(CPlayerGame* pPlayer,CMotion *pMotion)
+void CEnemyJumpAttack::CollisionPlayer(CPlayerGame* pPlayer, CMotion* pMotion)
 {
 	// 位置の取得
 	D3DXVECTOR3 pos = m_pEnemy->GetPosition();
@@ -1418,6 +1418,7 @@ void CEnemyJumpAttack::CollisionPlayer(CPlayerGame* pPlayer,CMotion *pMotion)
 			// 角度を設定
 			pPlayer->SetAngle(fAngle);
 
+			// 成功度の取得
 			int nSuccess = pPlayer->SuccessParry();
 
 			// 右手の位置
@@ -1459,4 +1460,101 @@ void CEnemyJumpAttack::CollisionPlayer(CPlayerGame* pPlayer,CMotion *pMotion)
 			pPlayer->ChangeState(make_shared<CPlayerDamage>(2));
 		}
 	}
+}
+
+//===================================================
+// コンストラクタ(死亡)
+//===================================================
+CEnemyDeath::CEnemyDeath() : CEnemyState(ID_DEATH)
+{
+}
+
+//===================================================
+// デストラクタ(死亡)
+//===================================================
+CEnemyDeath::~CEnemyDeath()
+{
+}
+
+//===================================================
+// 初期化処理(死亡)
+//===================================================
+void CEnemyDeath::Init(void)
+{
+	// モーションクラスの取得
+	CMotion* pMotion = m_pEnemy->GetMotion();
+
+	CSlow* pSlow = CManager::GetSlow();
+
+	pSlow->Start(60, 8);
+
+	// モーションがあるなら
+	if (pMotion != nullptr)
+	{
+		// モーションの再生
+		pMotion->SetMotion(MOTION::MOTION_DEATH, true, 1);
+	}
+}
+
+//===================================================
+// 更新処理(死亡)
+//===================================================
+void CEnemyDeath::Update(void)
+{
+	// モーションクラスの取得
+	CMotion* pMotion = m_pEnemy->GetMotion();
+
+	// モーションがあるなら
+	if (pMotion != nullptr)
+	{
+		// 吹き飛び中だったら
+		if (pMotion->IsEventFrame(1, 90, MOTION::MOTION_DEATH))
+		{
+			// 移動方向を設定
+			m_pEnemy->GetMovement()->SetMoveDir(0.0f, 20.0f);
+		}
+
+		if (pMotion->IsEventFrame(110, 110, MOTION::MOTION_DEATH))
+		{
+			m_pEnemy->ChangeState(make_shared<CEnemyDown>());
+		}
+	}
+}
+
+//===================================================
+// コンストラクタ(ダウン)
+//===================================================
+CEnemyDown::CEnemyDown() : CEnemyState(ID_DOWN)
+{
+}
+
+//===================================================
+// デストラクタ(ダウン)
+//===================================================
+CEnemyDown::~CEnemyDown()
+{
+}
+
+//===================================================
+// 初期化処理(ダウン)
+//===================================================
+void CEnemyDown::Init(void)
+{
+	// モーションクラスの取得
+	CMotion* pMotion = m_pEnemy->GetMotion();
+
+	// モーションがあるなら
+	if (pMotion != nullptr)
+	{
+		// モーションの再生
+		pMotion->SetMotion(MOTION::MOTION_DOWN, true, 4);
+	}
+}
+
+//===================================================
+// 更新処理(ダウン)
+//===================================================
+void CEnemyDown::Update(void)
+{
+
 }

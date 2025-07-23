@@ -40,6 +40,7 @@ class CObserver;
 class CMeshOrbit;
 class CMeshField;
 class CCamera;
+class CColliderAABB;
 
 //***************************************************
 // プレイヤークラスの定義
@@ -86,6 +87,8 @@ public:
 	D3DXVECTOR3 GetModelPos(const int nIdx) { return math::GetPositionFromMatrix(m_apModel[nIdx]->GetMatrixWorld()); }
 	D3DXVECTOR3 GetRotaition(void) const { return m_pCharacter3D->GetRotation()->GetDest(); }
 
+	void SetPosition(const D3DXVECTOR3 pos) { m_pCharacter3D->SetPosition(pos); }
+
 	CMotion* GetMotion(void) { return m_pMotion.get(); } // モーションの取得
 
 	void ChangeState(std::shared_ptr<CPlayerState> pNewState);
@@ -131,6 +134,7 @@ public:
 
 	// ゲッター
 	CColliderSphere* GetSphereCollider(void) { return m_pSphere.get(); }
+	CColliderAABB* GetAABB(void) { return m_pAABB.get(); }
 	CPlayerMovement* GetMovement(void) { return m_pMovement.get(); }
 
 	// セッター
@@ -146,15 +150,18 @@ public:
 	void SetStance(void);							  // 構えモーションの設定
 private:
 	void CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos, CCharacter3D* pCharacter, CMotion* pMotion); // インパクトの当たり判定
-	bool IsMove(void);		// 移動できるか判定
+	bool IsMove(CMotion* pMotion);		// 移動できるか判定
+	bool IsStance(CMotion* pMotion);	// 構えをだせるか判定
 	void Notify(void);
 	void UpdateParry(void);
 	void SetMoveAngle(CCamera *pCamera, CInputKeyboard* pKeyboard, CInputJoypad* pJoypad, CCharacter3D* pCaracter);
+	void UpdateCollider(D3DXVECTOR3 pos);
 
 	std::unique_ptr<CPlayerMovement> m_pMovement;	// 移動処理
 	std::unique_ptr<CColliderFOV> m_pFOV;			// 視界の判定
 	std::unique_ptr<CColliderSphere> m_pSphere;		// 円のコライダー
 	std::unique_ptr<CVelocity> m_pMove;				// 移動量
+	std::unique_ptr<CColliderAABB> m_pAABB;			// コライダーAABB
 	CMeshOrbit* m_pOrbit;							// 軌跡の処理
 	CObserver* m_pObserver;							// オブザーバークラスへのポインタ
 	D3DXVECTOR3 m_posOld;							// 前回の位置

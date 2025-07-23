@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="background.cpp" />
     <ClCompile Include="billboard.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="billboardAnim.cpp" />
@@ -220,6 +221,7 @@
     <ClCompile Include="word.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="background.h" />
     <ClInclude Include="billboard.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="billboardAnim.h" />

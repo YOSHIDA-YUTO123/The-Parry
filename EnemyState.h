@@ -34,23 +34,25 @@ public:
 	// IDの種類
 	enum ID
 	{
-		ID_BASE = 0,   // 無し
-		ID_IDLE,	   // なにもしない状態
-		ID_MOVE,	   // 移動
-		ID_BACKSTEP,   // バックステップ
-		ID_LANDING,    // 着地
-		ID_SMASH,      // 振り下ろし攻撃
-		ID_IMPACT,	   // 衝撃波攻撃
-		ID_DAMAGEL,	   // 大ダメージ
-		ID_ROAR,	   // 叫び
-		ID_DASH,	   // 走り
-		ID_SPIN,	   // 回転攻撃
-		ID_HIT,		   // カウンターがヒットした時
-		ID_DAMAGES,	   // 小ダメージ
-		ID_GUARD,	   // ガード
-		ID_STEP,	   // ステップ
-		ID_SWING,	   // スイング攻撃
-		ID_JUMPATTACK, // ジャンプ攻撃
+		ID_BASE = 0,	// 無し
+		ID_IDLE,		// なにもしない状態
+		ID_MOVE,		// 移動
+		ID_BACKSTEP,	// バックステップ
+		ID_LANDING,		// 着地
+		ID_SMASH,		// 振り下ろし攻撃
+		ID_IMPACT,		// 衝撃波攻撃
+		ID_DAMAGEL,		// 大ダメージ
+		ID_ROAR,		// 叫び
+		ID_DASH,		// 走り
+		ID_SPIN,		// 回転攻撃
+		ID_HIT,			// カウンターがヒットした時
+		ID_DAMAGES,		// 小ダメージ
+		ID_GUARD,		// ガード
+		ID_STEP,		// ステップ
+		ID_SWING,		// スイング攻撃
+		ID_JUMPATTACK,	// ジャンプ攻撃
+		ID_DEATH,		// 死亡
+		ID_DOWN,		// ダウン(死亡)
 		ID_MAX
 	};
 
@@ -283,6 +285,32 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 	void CollisionPlayer(CPlayerGame *pPlayer, CMotion* pMotion);
+private:
+};
+
+//***************************************************
+// 敵の状態(Death)クラスの定義
+//***************************************************
+class CEnemyDeath : public CEnemyState
+{
+public:
+	CEnemyDeath();
+	~CEnemyDeath();
+	void Init(void) override;
+	void Update(void) override;
+private:
+};
+
+//***************************************************
+// 敵の状態(Down)クラスの定義
+//***************************************************
+class CEnemyDown : public CEnemyState
+{
+public:
+	CEnemyDown();
+	~CEnemyDown();
+	void Init(void) override;
+	void Update(void) override;
 private:
 };
 

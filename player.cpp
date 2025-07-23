@@ -679,6 +679,11 @@ HRESULT CPlayerGame::Init(void)
 
 	m_pMovement->Init(m_pMove.get(),pCharacter->GetRotation());
 
+	D3DXVECTOR3 Size = { 50.0f,200.0f,50.0f };
+
+	// コライダーの生成
+	m_pAABB = CColliderAABB::Create(pos,m_posOld, Size);
+
 	return S_OK;
 }
 
@@ -692,6 +697,7 @@ void CPlayerGame::Uninit(void)
 	m_pMove = nullptr;
 	m_pMovement = nullptr;
 	m_pOrbit = nullptr;
+	m_pAABB = nullptr;
 
 	// オブザーバーの破棄
 	if (m_pObserver != nullptr)
@@ -709,9 +715,6 @@ void CPlayerGame::Uninit(void)
 //===================================================
 void CPlayerGame::Update(void)
 {
-	// プレイヤーの更新処理
-	CPlayer::Update();
-
 	// キャラクターの取得
 	auto pCharacter = CPlayer::GetCharacter();
 
@@ -723,6 +726,19 @@ void CPlayerGame::Update(void)
 
 	// モーションがなかったら処理しない
 	if (pMotion == nullptr) return;
+
+	// プレイヤーの更新処理
+	CPlayer::Update();
+
+	// 生きてるかどうか
+	bool bAlive = pCharacter->GetAlive();
+
+	// プレイヤーが死んだら
+	if (bAlive == false)
+	{
+		// ゲームを終了
+		CGame::SetState(CGame::STATE_END);
+	}
 
 	// キーボードの取得
 	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
@@ -758,7 +774,7 @@ void CPlayerGame::Update(void)
 
 
 	// 移動できるなら
-	if (IsMove())
+	if (IsMove(pMotion) && bAlive)
 	{
 		// 移動を入力していたら
 		const bool bKeyboardMove = m_pMovement->MoveKeyboard(pKeyboard, fSpeed, &fAngleDest);
@@ -778,9 +794,13 @@ void CPlayerGame::Update(void)
 			// ジャンプかjumpじゃないかを判定
 			int motiontype = m_bJump ? isDashMotion : TYPE_JUMP;
 
-			// モーションの設定
-			pMotion->SetMotion(motiontype, true, 5);
+			// フレームを設定
+			const int nFrame = m_bDash ? 5 : 10;
 
+			// モーションの設定
+			pMotion->SetMotion(motiontype, true, nFrame);
+
+			// 移動状態にする
 			pCharacter->SetState(STATE::STATE_MOVE, 1);
 
 			// ダッシュ状態だったら
@@ -896,36 +916,47 @@ void CPlayerGame::Update(void)
 	// ジャンプできるなら
 	if ((pKeyboard->GetPress(DIK_SPACE) == true || pJoypad->GetPress(pJoypad->JOYKEY_A) == true) && m_bJump == true)
 	{
-		pMotion->SetMotion(TYPE_JUMP, true, 2);
+		// 生きてるなら
+		if (bAlive)
+		{
+			pMotion->SetMotion(TYPE_JUMP, true, 2);
 
-		// 移動量を上方向に設定
-		m_pMove->Jump(JUMP_HEIGHT);
-		m_bJump = false;
+			// 移動量を上方向に設定
+			m_pMove->Jump(JUMP_HEIGHT);
+			m_bJump = false;
+		}
 	}
 
-	// 回避
-	if (pMouse->OnMouseTriggerDown(1) || pJoypad->GetTrigger(pJoypad->JOYKEY_B))
+	// 生きてるなら
+	if (bAlive == true)
 	{
-		SetMoveAngle(pCamera, pKeyboard, pJoypad, pCharacter);
-
 		// 回避
-		ChangeState(make_shared<CPlayerAvoid>(20.0f));
-	}
+		if (pMouse->OnMouseTriggerDown(1) || pJoypad->GetTrigger(pJoypad->JOYKEY_B))
+		{
+			SetMoveAngle(pCamera, pKeyboard, pJoypad, pCharacter);
 
+			// 回避
+			ChangeState(make_shared<CPlayerAvoid>(20.0f));
+		}
+	}
 #ifdef _DEBUG
 
 #endif // _DEBUG
 
 	// カウンター状態
-	if ((pMouse->OnMouseTriggerDown(0) || pJoypad->GetTrigger(pJoypad->JOYKEY_X)) && pMotion->GetBlendType() != TYPE_DAMAGE)
+	if ((pMouse->OnMouseTriggerDown(0) || pJoypad->GetTrigger(pJoypad->JOYKEY_X)))
 	{
-		pMotion->SetMotion(TYPE_STANCE, true, 10);
+		// 構えが出せるなら
+		if (IsStance(pMotion) && bAlive)
+		{
+			pMotion->SetMotion(TYPE_STANCE, true, 5);
 
-		// パリィの時間
-		m_nParryTime = PARRY_TIME;
-		m_nParryCounter = 0;
+			// パリィの時間
+			m_nParryTime = PARRY_TIME;
+			m_nParryCounter = 0;
 
-		pCharacter->SetState(pCharacter->STATE_ACTION, PARRY_TIME);
+			pCharacter->SetState(pCharacter->STATE_ACTION, PARRY_TIME);
+		}
 	}
 
 	// ズームインだったら解除
@@ -940,13 +971,6 @@ void CPlayerGame::Update(void)
 	{
 		// 回し蹴り状態を設定
 		ChangeState(make_shared<CPlayerRoundKick>());
-	}
-
-	// 当たり判定の設定処理
-	if (m_pSphere != nullptr)
-	{
-		// 位置の設定処理
-		m_pSphere->SetPosition(pos);
 	}
 
 	// 視界判定
@@ -965,12 +989,8 @@ void CPlayerGame::Update(void)
 	// 位置の設定
 	pCharacter->SetPosition(pos);
 
-	// プレイヤーが死んだら
-	if (pCharacter->GetAlive() == false)
-	{
-		// ゲームを終了
-		CGame::SetState(CGame::STATE_END);
-	}
+	// コライダーの更新
+	UpdateCollider(pos);
 }
 
 //===================================================
@@ -1092,6 +1112,31 @@ void CPlayerGame::SetMoveAngle(CCamera* pCamera, CInputKeyboard* pKeyboard, CInp
 	// 向きの設定
 	pCaracter->GetRotation()->Set(Angle);
 	pCaracter->GetRotation()->SetDest(Angle);
+}
+
+//===================================================
+// コライダーの更新処理
+//===================================================
+void CPlayerGame::UpdateCollider(D3DXVECTOR3 pos)
+{
+	// 当たり判定の設定処理
+	if (m_pSphere != nullptr)
+	{
+		// 位置の設定処理
+		m_pSphere->SetPosition(pos);
+	}
+
+	if (m_pAABB != nullptr)
+	{
+		// データの取得
+		auto dataAABB = m_pAABB->GetData();
+
+		// 大きさの取得
+		float fSizeY = dataAABB.Size.y * 0.5f;
+
+		// コライダーの更新処理
+		m_pAABB->UpdateData(D3DXVECTOR3(pos.x, pos.y + fSizeY, pos.z), D3DXVECTOR3(m_posOld.x, m_posOld.y + fSizeY, m_posOld.z));
+	}
 }
 
 //===================================================
@@ -1240,18 +1285,11 @@ bool CPlayerGame::CollisionObstacle(D3DXVECTOR3* pPos)
 		// 障害物の取得
 		CObstacle* pObstacle = pObstacleManager->GetObstacle(nCnt);
 
-		D3DXVECTOR3 Size = { 50.0f,200.0f,50.0f };
-
-		D3DXVECTOR3 center;
-
-		center.x = pPos->x;
-		center.y = pPos->y + Size.y * 0.5f;
-		center.z = pPos->z;
-
-		CColliderAABB aabb = CColliderAABB::CreateCollider(center, D3DXVECTOR3(m_posOld.x, m_posOld.y + Size.y * 0.5f, m_posOld.z), Size);
+		// コライダーを更新する
+		UpdateCollider(*pPos);
 
 		// 当たっていたら
-		if (pObstacle != nullptr && pObstacle->Collision(&aabb, pPos))
+		if (pObstacle != nullptr && pObstacle->Collision(m_pAABB.get(), pPos))
 		{
 			// ダメージ状態にする
 			ChangeState(make_shared<CPlayerDamage>(3));
@@ -1384,27 +1422,50 @@ void CPlayerGame::CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos,CCha
 //===================================================
 // 移動できるか判定
 //===================================================
-bool CPlayerGame::IsMove(void)
+bool CPlayerGame::IsMove(CMotion *pMotion)
 {
-	// モーションの取得
-	auto pMotion = GetMotion();
+	// モーションの種類
+	int motiontype = pMotion->GetBlendType();
 
 	// ダメージ状態だったら移動できない
-	if (pMotion->GetBlendType() == TYPE_DAMAGE) return false;
+	if (motiontype == TYPE_DAMAGE) return false;
 
 	// 回避状態だったら移動できない
-	if (pMotion->GetBlendType() == TYPE_AVOID) return false;
+	if (motiontype == TYPE_AVOID) return false;
 
-	// 構え状態だったら移動できない
+	// カウンター状態だったら移動できない
 	if (pMotion->IsEventFrame(1, 40, TYPE_PARRY)) return false;
 
 	// パリィだったら移動できない
-	if (pMotion->GetBlendType() == TYPE_PUNCH) return false;
+	if (motiontype == TYPE_PUNCH) return false;
 
 	// 反撃状態だったら移動できない
-	if (pMotion->GetBlendType() == TYPE_ROUNDKICK) return false;
+	if (motiontype == TYPE_ROUNDKICK) return false;
+
+	// 構え状態だったら移動できない
+	if (pMotion->IsEventFrame(1,35, TYPE_STANCE)) return false;
 
 	// 移動できる
+	return true;
+}
+
+//===================================================
+// 構えを出せるか判定
+//===================================================
+bool CPlayerGame::IsStance(CMotion *pMotion)
+{
+	// モーションの種類
+	int motiontype = pMotion->GetBlendType();
+
+	// ダメージモーションだったら
+	if (motiontype == TYPE_DAMAGE) return false;
+	
+	// 構え状態だったら
+	if (motiontype == TYPE_STANCE) return false;
+
+	// 回避状態だったら
+	if (motiontype == TYPE_AVOID) return false;
+
 	return true;
 }
 

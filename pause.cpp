@@ -17,10 +17,14 @@
 #include"fade.h"
 #include "game.h"
 #include "title.h"
+#include "background.h"
 
 using namespace Const; // –¼‘O‹óŠÔConst‚ğg—p
 using namespace std; // –¼‘O‹óŠÔstd‚ğg—p
 using namespace math; // –¼‘O‹óŠÔmath‚ğg—p
+
+constexpr float UI_MAG = 1.2f;	// Šg‘å—¦
+constexpr float COUNTER = 1.0f / 30.0f; // ƒJƒEƒ“ƒ^[
 
 //************************************************
 // Ã“Iƒƒ“ƒo•Ï”éŒ¾
@@ -34,6 +38,7 @@ unique_ptr<CPauseManager> CPauseManager::m_pInstance = nullptr; // ©•ª‚ÌƒCƒ“ƒXƒ
 CPause::CPause(const TYPE type)
 {
 	m_Type = type;
+	m_BaseSize = VEC2_NULL;
 }
 
 //================================================
@@ -74,7 +79,7 @@ CPause* CPause::Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size, const TYPE
 	pPause->SetPosition(pos);
 	pPause->SetSize(Size.x,Size.y);
 	pPause->SetVtx(WHITE);
-
+	pPause->m_BaseSize = Size;
 	return pPause;
 }
 
@@ -176,11 +181,26 @@ void CPauseContinue::Update(void)
 	// ƒpƒbƒh‚Ìæ“¾
 	CInputJoypad* pJoyPad = CManager::GetInputJoypad();
 
+	// ‘å‚«‚³‚Ìæ“¾
+	D3DXVECTOR2 Size = CObject2D::GetSize();
+
+	// Šî€‚Ì‘å‚«‚³‚Ìæ“¾
+	D3DXVECTOR2 BaseSize = CPause::GetBaseSize();
+
 	// ‘I‘ğ’†‚Ìí—Ş‚Æ©•ª‚Ìí—Ş‚ªˆê’v‚µ‚Ä‚¢‚½‚ç
 	if (select == CPause::GetType())
 	{
+		// –Ú“I‚Ì‘å‚«‚³
+		D3DXVECTOR2 DestSize = BaseSize * UI_MAG;
+
+		// –Ú“I‚Ì‘å‚«‚³‚É‹ß‚Ã‚¯‚é
+		Size += (DestSize - Size) * 0.1f;
+
+		// ‘å‚«‚³‚Ìİ’è
+		CObject2D::SetSize(Size.x, Size.y);
+
 		// F
-		SetColor(D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
+		CObject2D::SetColor(D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
 
 		// ENTERƒL[‚ª‰Ÿ‚³‚ê‚½‚ç
 		if (pKeyboard->GetTrigger(DIK_RETURN))
@@ -198,7 +218,14 @@ void CPauseContinue::Update(void)
 	}
 	else
 	{
-		SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+		// –Ú“I‚Ì‘å‚«‚³‚É‹ß‚Ã‚¯‚é
+		Size += (BaseSize - Size) * 0.5f;
+
+		// ‘å‚«‚³‚Ìİ’è
+		CObject2D::SetSize(Size.x, Size.y);
+
+		// F‚Ìİ’è
+		CObject2D::SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 }
 
@@ -276,10 +303,26 @@ void CPauseRetry::Update(void)
 	// ‘I‘ğ’†‚Ìí—Ş
 	TYPE select = pPauseManager->GetSelectMenu();
 
+	// ‘å‚«‚³‚Ìæ“¾
+	D3DXVECTOR2 Size = CObject2D::GetSize();
+
+	// Šî€‚Ì‘å‚«‚³‚Ìæ“¾
+	D3DXVECTOR2 BaseSize = CPause::GetBaseSize();
+
 	// ‘I‘ğ’†‚Ìí—Ş‚Æ©•ª‚Ìí—Ş‚ªˆê’v‚µ‚Ä‚¢‚½‚ç
 	if (select == CPause::GetType())
 	{
-		SetColor(D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
+		// –Ú“I‚Ì‘å‚«‚³
+		D3DXVECTOR2 DestSize = BaseSize * UI_MAG;
+
+		// –Ú“I‚Ì‘å‚«‚³‚É‹ß‚Ã‚¯‚é
+		Size += (DestSize - Size) * 0.1f;
+
+		// ‘å‚«‚³‚Ìİ’è
+		CObject2D::SetSize(Size.x, Size.y);
+
+		// F
+		CObject2D::SetColor(D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
 
 		// ENTERƒL[‚ª‰Ÿ‚³‚ê‚½‚ç
 		if (pKeyboard->GetTrigger(DIK_RETURN))
@@ -301,7 +344,14 @@ void CPauseRetry::Update(void)
 	}
 	else
 	{
-		SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+		// –Ú“I‚Ì‘å‚«‚³‚É‹ß‚Ã‚¯‚é
+		Size += (BaseSize - Size) * 0.5f;
+
+		// ‘å‚«‚³‚Ìİ’è
+		CObject2D::SetSize(Size.x, Size.y);
+
+		// F‚Ìİ’è
+		CObject2D::SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 }
 
@@ -378,11 +428,26 @@ void CPauseQuit::Update(void)
 	// ‘I‘ğ’†‚Ìí—Ş
 	TYPE select = pPauseManager->GetSelectMenu();
 
+	// ‘å‚«‚³‚Ìæ“¾
+	D3DXVECTOR2 Size = CObject2D::GetSize();
+
+	// Šî€‚Ì‘å‚«‚³‚Ìæ“¾
+	D3DXVECTOR2 BaseSize = CPause::GetBaseSize();
+
 	// ‘I‘ğ’†‚Ìí—Ş‚Æ©•ª‚Ìí—Ş‚ªˆê’v‚µ‚Ä‚¢‚½‚ç
 	if (select == CPause::GetType())
 	{
-		// F‚Ìİ’è
-		SetColor(D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
+		// –Ú“I‚Ì‘å‚«‚³
+		D3DXVECTOR2 DestSize = BaseSize * UI_MAG;
+
+		// –Ú“I‚Ì‘å‚«‚³‚É‹ß‚Ã‚¯‚é
+		Size += (DestSize - Size) * 0.1f;
+
+		// ‘å‚«‚³‚Ìİ’è
+		CObject2D::SetSize(Size.x, Size.y);
+
+		// F
+		CObject2D::SetColor(D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
 
 		// ENTERƒL[‚ª‰Ÿ‚³‚ê‚½‚ç
 		if (pKeyboard->GetTrigger(DIK_RETURN))
@@ -404,7 +469,14 @@ void CPauseQuit::Update(void)
 	}
 	else
 	{
-		SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+		// –Ú“I‚Ì‘å‚«‚³‚É‹ß‚Ã‚¯‚é
+		Size += (BaseSize - Size) * 0.5f;
+
+		// ‘å‚«‚³‚Ìİ’è
+		CObject2D::SetSize(Size.x, Size.y);
+
+		// F‚Ìİ’è
+		CObject2D::SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 }
 
@@ -444,8 +516,14 @@ void CPauseManager::Create(void)
 		// ©•ª‚Ì¶¬
 		m_pInstance.reset(new CPauseManager);
 
-		// ƒ|[ƒY‚Ìí—Ş•ª‰ñ‚·
-		for (int nCnt = 0; nCnt < CPause::TYPE_MAX; nCnt++)
+		// ”wŒi‚Ì¶¬
+		CBackGround::Create(D3DXVECTOR3(640.0f, 460.0f, 0.0f), D3DXVECTOR2(300.0f, 250.0f),D3DXCOLOR(0.5f,0.5f,0.5f,1.0f));
+
+		// ƒ|[ƒY’†
+		CPauseNow::Create(D3DXVECTOR3(80.0f,660.0f, 0.0f), D3DXVECTOR2(60.0f, 50.0f));
+
+		// ƒ|[ƒY‚Ì‘I‘ğƒƒjƒ…[•ª
+		for (int nCnt = CPause::TYPE_CONTINUE; nCnt <= CPause::TYPE_QUIT; nCnt++)
 		{
 			// ƒLƒƒƒXƒg‚·‚é
 			CPause::TYPE type = static_cast<CPause::TYPE>(nCnt);
@@ -543,4 +621,92 @@ void CPauseManager::SelectMenu(void)
 
 	// ”ÍˆÍ“à‚ğƒ‹[ƒv‚·‚é
 	m_SelectMenu = Wrap(m_SelectMenu, CPause::TYPE_CONTINUE, CPause::TYPE_QUIT);
+}
+
+//================================================
+// ƒRƒ“ƒXƒgƒ‰ƒNƒ^(ƒ|[ƒY’†)
+//================================================
+CPauseNow::CPauseNow()
+{
+	m_BaseSize = VEC2_NULL;
+	m_fCounter = NULL;
+}
+
+//================================================
+// ƒfƒXƒgƒ‰ƒNƒ^(ƒ|[ƒY’†)
+//================================================
+CPauseNow::~CPauseNow()
+{
+}
+
+//================================================
+// ¶¬ˆ—
+//================================================
+CPauseNow* CPauseNow::Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size)
+{
+	// ƒ|[ƒY’†‚Ì¶¬
+	CPauseNow* pPause = new CPauseNow;
+
+	pPause->Init();
+	pPause->SetPosition(pos);
+	pPause->SetSize(Size.x, Size.y);
+	pPause->SetVtx(WHITE);
+	pPause->m_BaseSize = Size;
+
+	return pPause;
+}
+
+//================================================
+// ‰Šú‰»ˆ—(ƒ|[ƒY’†)
+//================================================
+HRESULT CPauseNow::Init(void)
+{
+	// ‰Šú‰»ˆ—
+	if (FAILED(CObject2D::Init()))
+	{
+		return E_FAIL;
+	}
+
+	// í—Ş‚Ìİ’è
+	CObject::SetType(TYPE_PAUSE);
+
+	// ƒeƒNƒXƒ`ƒƒ‚ÌID‚Ìİ’è
+	CObject2D::SetTextureID("data/TEXTURE/pause/pausenow.png");
+
+	return S_OK;
+}
+
+//================================================
+// I—¹ˆ—(ƒ|[ƒY’†)
+//================================================
+void CPauseNow::Uninit(void)
+{
+	// I—¹ˆ—
+	CObject2D::Uninit();
+}
+
+//================================================
+// XVˆ—(ƒ|[ƒY’†)
+//================================================
+void CPauseNow::Update(void)
+{
+	m_fCounter += COUNTER;
+
+	D3DXVECTOR2 Size = VEC2_NULL;
+
+	// ‘å‚«‚³‚ğ‹‚ß‚é
+	Size.x = fabsf(sinf(m_fCounter) * (m_BaseSize.x * 0.2f)) + m_BaseSize.x;
+	Size.y = fabsf(sinf(m_fCounter) * (m_BaseSize.y * 0.2f)) + m_BaseSize.x;
+
+	// ‘å‚«‚³‚ğŒvZ
+	CObject2D::SetSize(Size.x, Size.y);
+}
+
+//================================================
+// •`‰æˆ—(ƒ|[ƒY’†)
+//================================================
+void CPauseNow::Draw(void)
+{
+	// •`‰æˆ—
+	CObject2D::Draw();
 }

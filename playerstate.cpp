@@ -357,7 +357,7 @@ void CPlayerDash::Update(void)
 			D3DXVECTOR3 pos = m_pPlayer->GetModelPos(11);
 
 			// エフェクトの生成
-			auto pEffect = CMoveSmoke::Create(D3DXVECTOR3(pos.x,pos.y + 50.0f,pos.z), 100.0f, D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f));
+			auto pEffect = CMoveSmoke::Create(D3DXVECTOR3(pos.x,pos.y,pos.z), 100.0f, WHITE);
 
 			// エフェクトの設定処理
 			pEffect->SetEffect(60, D3DXVECTOR3(fMoveX, 0.0f, fMoveZ));
@@ -369,7 +369,7 @@ void CPlayerDash::Update(void)
 			D3DXVECTOR3 pos = m_pPlayer->GetModelPos(14);
 
 			// エフェクトの生成
-			auto pEffect = CMoveSmoke::Create(D3DXVECTOR3(pos.x, pos.y + 50.0f, pos.z), 100.0f, D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f));
+			auto pEffect = CMoveSmoke::Create(D3DXVECTOR3(pos.x, pos.y, pos.z), 100.0f, WHITE);
 
 			// エフェクトの設定処理
 			pEffect->SetEffect(60, D3DXVECTOR3(fMoveX, 0.0f, fMoveZ));

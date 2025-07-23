@@ -279,6 +279,9 @@
     <ClCompile Include="pause.cpp">
       <Filter>ソース ファイル\object2D</Filter>
     </ClCompile>
+    <ClCompile Include="background.cpp">
+      <Filter>ソース ファイル\object2D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="testword.h">
@@ -465,6 +468,9 @@
       <Filter>ヘッダー ファイル\objectBillboard\effect</Filter>
     </ClInclude>
     <ClInclude Include="pause.h">
+      <Filter>ヘッダー ファイル\object2D</Filter>
+    </ClInclude>
+    <ClInclude Include="background.h">
       <Filter>ヘッダー ファイル\object2D</Filter>
     </ClInclude>
   </ItemGroup>

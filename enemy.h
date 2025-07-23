@@ -66,6 +66,8 @@ public:
 		MOTION_STEP,		// ステップ
 		MOTION_SWING,		// スイング攻撃
 		MOTION_JUMPATTACK,  // ジャンプ攻撃
+		MOTION_DEATH,		// 死亡
+		MOTION_DOWN,		// ダウン
 		MOTION_MAX
 	}MOTION;
 
