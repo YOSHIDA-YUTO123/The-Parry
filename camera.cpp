@@ -18,6 +18,7 @@
 #include"cylinder.h"
 #include"input.h"
 #include "game.h"
+#include"pause.h"
 
 using namespace Const; // 名前空間Constを使用
 
@@ -267,7 +268,7 @@ void CCamera::MouseView(void)
 	CCamera::PadView();
 
 	// ポーズ中かどうか
-	bool bPause = CManager::GetPause();
+	bool bPause = CPauseManager::GetPause();
 
 	static POINT prevCursorPos = { (long)SCREEN_WIDTH / (long)2.0f,(long)SCREEN_HEIGHT / (long)2.0f };
 

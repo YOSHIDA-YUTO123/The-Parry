@@ -11,6 +11,7 @@
 #include "object.h"
 #include "camera.h"
 #include "manager.h"
+#include "pause.h"
 
 using namespace Const; // 名前空間Constを使用
 
@@ -124,11 +125,20 @@ void CObject::UpdateAll(void)
 			// 次のオブジェクトのポインタを代入
 			CObject* pObjectNext = pObject->m_pNext;
 
-			if (pObject->m_bDeath == false)
+			// ポーズ状態の取得
+			bool bPause = CPauseManager::GetPause();
+
+			// ポーズ中だったらポーズ以外のオブジェクトの処理をしない
+			if (pObject->GetType() != TYPE_PAUSE && bPause == true)
 			{
-				// 更新処理
-				pObject->Update();
+				// 次のオブジェクトを代入
+				pObject = pObjectNext;
+
+				continue;
 			}
+
+			// 更新処理
+			pObject->Update();
 
 			// 次のオブジェクトを代入
 			pObject = pObjectNext;
@@ -165,8 +175,10 @@ void CObject::DrawAll(void)
 	// カメラの取得
 	CCamera* pCamera = CManager::GetCamera();
 
+	// カメラの設定
 	pCamera->SetCamera();
 
+	// 優先順位の数分だけ調べる
 	for (int nCntPriority = 0; nCntPriority < NUM_PRIORITY; nCntPriority++)
 	{
 		CObject* pObject = m_pTop[nCntPriority]; // 先頭オブジェクトを代入
@@ -175,6 +187,18 @@ void CObject::DrawAll(void)
 		while (pObject != nullptr)
 		{
 			CObject* pObjectNext = pObject->m_pNext; // 次のオブジェクトのポインタを代入
+
+			// ポーズ状態の取得
+			bool bPause = CPauseManager::GetPause();
+
+			// オブジェクトがポーズでポーズ中じゃないならポーズを描画しない
+			if (pObject->GetType() == TYPE_PAUSE && bPause == false)
+			{
+				pObject = pObjectNext; // 次のオブジェクトを代入
+
+				// 処理を飛ばす
+				continue;
+			}
 
 			// 更新処理
 			pObject->Draw();

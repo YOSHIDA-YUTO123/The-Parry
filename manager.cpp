@@ -28,9 +28,11 @@
 #include"object.h"
 #include"title.h"
 #include "fade.h"
+#include "pause.h"
 
 using namespace Const;			// –¼‘O‹óŠÔConst‚ğg—p‚·‚é
 using namespace std;			// –¼‘O‹óŠÔstd‚ğg—p‚·‚é
+using MODE = CScene::MODE;		// ƒV[ƒ“‚Ì’†‚Ìƒ‚[ƒh‚Ìg—p
 
 //***************************************************
 // Ã“Iƒƒ“ƒo•Ï”‚ÌéŒ¾
@@ -46,7 +48,6 @@ CTextureManager* CManager::m_pTexture = nullptr;		// ƒeƒNƒXƒ`ƒƒƒNƒ‰ƒX‚Ö‚Ìƒ|ƒCƒ“ƒ
 CCamera* CManager::m_pCamera = nullptr;					// ƒJƒƒ‰‚Ìƒ|ƒCƒ“ƒ^
 CLight* CManager::m_pLight = nullptr;					// ƒJƒƒ‰‚Ö‚Ìƒ|ƒCƒ“ƒ^
 CModelManager* CManager::m_pModel = nullptr;			// ƒ‚ƒfƒ‹‚ÌƒNƒ‰ƒX‚Ö‚Ìƒ|ƒCƒ“ƒ^
-bool CManager::m_bPause = false;						// ƒ|[ƒY
 CSlow* CManager::m_pSlow = nullptr;						// ƒXƒ[ƒ‚[ƒVƒ‡ƒ“‚Ìƒ|ƒCƒ“ƒ^
 unique_ptr<CScene> CManager::m_pScene = nullptr;		// ƒV[ƒ“ƒNƒ‰ƒX‚Ö‚Ìƒ|ƒCƒ“ƒ^
 CFade* CManager::m_pFade = nullptr;						// ƒtƒF[ƒhƒNƒ‰ƒX‚Ö‚Ìƒ|ƒCƒ“ƒ^
@@ -126,10 +127,6 @@ HRESULT CManager::Init(HINSTANCE hInstance,HWND hWnd, BOOL bWindow)
 	m_pLight->SetLight(D3DLIGHT_DIRECTIONAL, D3DXCOLOR(1.0f,1.0f, 1.0f,1.0f), D3DXVECTOR3(0.0f, -0.56f, 0.74f), D3DXVECTOR3(0.0f, 100.0f, 0.0f));
 	m_pLight->SetLight(D3DLIGHT_DIRECTIONAL, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, -0.56f, -0.74f), D3DXVECTOR3(0.0f, 100.0f, 0.0f));
 
-	//m_pLight->SetLight(D3DLIGHT_DIRECTIONAL, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(-0.18f, -0.29f, -0.74f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-
-	//m_pLight->SetLight(D3DLIGHT_DIRECTIONAL, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(0.5f, -1.0f, -0.74f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-
 	// ƒXƒ[ƒ‚[ƒVƒ‡ƒ“‚Ì¶¬ˆ—
 	m_pSlow = new CSlow;
 
@@ -137,31 +134,6 @@ HRESULT CManager::Init(HINSTANCE hInstance,HWND hWnd, BOOL bWindow)
 	m_pFade = CFade::Create();
 
 	SetMode(make_unique<CTitle>());
-
-	//// ƒtƒB[ƒ‹ƒh‚Ìİ’è
-	//m_pMeshField = CMeshField::Create(VEC3_NULL ,48,48, D3DXVECTOR2(5500.0f,5500.0f));
-
-	//// ƒh[ƒ€‚Ì¶¬
-	//CMeshDome::Create(VEC3_NULL,10,10,60000.0f,20000.0f);
-
-	//// ƒh[ƒ€‚Ì¶¬
-	//CMeshDome::Create(VEC3_NULL, 10, 10, 60000.0f, -20000.0f);
-
-	//// ƒVƒŠƒ“ƒ_[‚Ì¶¬
-	//m_pCylinder = CMeshCylinder::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 32, 1, 1900.0f, 1900.0f);
-
-	//// ƒvƒŒƒCƒ„[‚Ì¶¬
-	//m_pPlayer = CPlayer::Create(D3DXVECTOR3(1.0f,0.0f,-1500.0f));
-
-	//CObjectX::Create(VEC3_NULL, "data/MODEL/field/arena.x");
-
-	//CEnemy::Create(D3DXVECTOR3(0.0f,0.0f,1500.0f));
-
-	//// –Ê‚Ìİ’è
-	//int face = CCollisionAABB::FACE_LEFT;
-
-	//// ƒXƒpƒCƒNƒgƒ‰ƒbƒv
-	//CSpikeTrap::Create(D3DXVECTOR3(1840.0f, 0.0f, 0.0f), face);
 
 #ifdef _DEBUG
 
@@ -312,28 +284,25 @@ void CManager::Update(void)
 		m_nFrameCounter = 0;
 	}
 
-	EnablePause();
-
-	if (m_bPause == false)
+	if (m_pScene != nullptr)
 	{
-		if (m_pScene != nullptr)
-		{
-			// ƒV[ƒ“‚ÌXVˆ—
-			m_pScene->Update();
-		}
-
-		if (m_pFade != nullptr)
-		{
-			// ƒtƒF[ƒh‚ÌXVˆ—
-			m_pFade->Update();
-		}
-
-		if (m_pRenderer != nullptr)
-		{
-			// XVˆ—
-			m_pRenderer->Update();
-		}
+		// ƒV[ƒ“‚ÌXVˆ—
+		m_pScene->Update();
 	}
+
+	if (m_pFade != nullptr)
+	{
+		// ƒtƒF[ƒh‚ÌXVˆ—
+		m_pFade->Update();
+	}
+	
+
+	if (m_pRenderer != nullptr)
+	{
+		// XVˆ—
+		m_pRenderer->Update();
+	}
+	
 
 	if (m_pInputKeyboard != nullptr)
 	{
@@ -400,12 +369,6 @@ void CManager::Update(void)
 //===================================================
 void CManager::Draw(void)
 {
-	// ƒV[ƒ“‚Ì•`‰æˆ—
-	if (m_pScene != nullptr)
-	{
-		m_pScene->Draw();
-	}
-
 	if (m_pRenderer != nullptr)
 	{
 		// •`‰æˆ—
@@ -517,29 +480,19 @@ CModelManager* CManager::GetModel(void)
 }
 
 //===================================================
-// ƒ|[ƒY‚Ìİ’è
-//===================================================
-void CManager::EnablePause(void)
-{
-	if (m_pInputKeyboard->GetTrigger(DIK_P))
-	{
-		m_bPause = m_bPause ? false : true;
-	}
-}
-
-//===================================================
 // ƒV[ƒ“‚Ìİ’èˆ—
 //===================================================
 void CManager::SetMode(unique_ptr<CScene> pNewScene)
 {
-	if (m_pScene != nullptr)
-	{
-		// ƒV[ƒ“‚ª“¯‚¶‚¾‚Á‚½‚çİ’è‚µ‚È‚¢
-		if (m_pScene->GetMode() == pNewScene->GetMode())
-		{
-			return;
-		}
-	}
+	//if (m_pScene != nullptr)
+	//{
+	//	// ƒV[ƒ“‚ª“¯‚¶‚¾‚Á‚½‚çİ’è‚µ‚È‚¢
+	//	if (m_pScene->GetMode() == pNewScene->GetMode())
+	//	{
+	//		pNewScene.reset();
+	//		return;
+	//	}
+	//}
 
 	// ¡‚ÌƒV[ƒ“‚Ì”jŠü
 	if (m_pScene != nullptr)
@@ -562,5 +515,16 @@ void CManager::SetMode(unique_ptr<CScene> pNewScene)
 
 		// ƒV[ƒ“‚Ì‰Šú‰»ˆ—
 		m_pScene->Init();
+	}
+}
+
+//===================================================
+// ƒV[ƒ“‚Ì•`‰æ
+//===================================================
+void CManager::DrawScene(void)
+{
+	if (m_pScene != nullptr)
+	{
+		m_pScene->Draw();
 	}
 }

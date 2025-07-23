@@ -194,6 +194,7 @@
     <ClCompile Include="obstaclemanager.cpp" />
     <ClCompile Include="Orbit.cpp" />
     <ClCompile Include="particle.cpp" />
+    <ClCompile Include="pause.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
@@ -262,6 +263,7 @@
     <ClInclude Include="obstaclemanager.h" />
     <ClInclude Include="Orbit.h" />
     <ClInclude Include="particle.h" />
+    <ClInclude Include="pause.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="playerstate.h" />

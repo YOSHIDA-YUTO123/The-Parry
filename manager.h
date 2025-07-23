@@ -57,29 +57,26 @@ public:
 	static CCamera* GetCamera(void);
 	static CLight* GetLight(void);
 	static CModelManager* GetModel(void);
-	static void EnablePause(void);
-	static void SetPause(void) { m_bPause = true; }
-	static bool GetPause(void) { return m_bPause; }
 	static CSlow* GetSlow(void) { return m_pSlow; }
 	static void SetMode(std::unique_ptr<CScene> pNewScene);
 	static CScene::MODE GetMode(void) { return m_pScene->GetMode(); }
 	static CFade* GetFade(void) { return m_pFade; }
+	static void DrawScene(void);
 private:
 	static CRenderer* m_pRenderer;				// レンダラーのポインタ
 	static CInputKeyboard* m_pInputKeyboard;	// キーボードのポインタ
 	static CInputJoypad* m_pInputJoypad;		// パッドのポインタ
 	static CInputMouse* m_pInputMouse;			// マウスのポインタ
 	static CSound* m_pSound;					// サウンドのポインタ
-	int m_fps;									// fps格納用変数
-	static int m_nFrameCounter;					// フレームカウンター
-	static bool m_bShowDebug;					// デバッグ表示をするかしないか
 	static CTextureManager* m_pTexture;			// テクスチャクラスへのポインタ	
 	static CCamera* m_pCamera;					// カメラのポインタ
 	static CLight* m_pLight;					// ライトへのポインタ
 	static CModelManager* m_pModel;				// モデルクラスへのポインタ
-	static bool m_bPause;						// ポーズ
 	static CSlow* m_pSlow;						// スローモーションクラスへのポインタ
 	static std::unique_ptr<CScene> m_pScene;	// シーンのクラスへのポインタ
 	static CFade* m_pFade;				
+	static int m_nFrameCounter;					// フレームカウンター
+	static bool m_bShowDebug;					// デバッグ表示をするかしないか
+	int m_fps;									// fps格納用変数
 };
 #endif

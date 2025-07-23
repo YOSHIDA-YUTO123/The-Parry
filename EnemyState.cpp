@@ -214,6 +214,9 @@ void CEnemyMove::Update(void)
 		case 1:
 			m_pEnemy->ChangeState(make_shared<CEnemyRoar>());
 			break;
+		case 2:
+			m_pEnemy->ChangeState(make_shared<CEnemyJumpAttack>());
+			break;
 		default:
 			break;
 		}
@@ -295,7 +298,17 @@ void CEnemyAttackSmash::Update(void)
 		// 当たったら
 		if (m_pEnemy->CollisionWepon() && bParry)
 		{
+			// 構えの設定
 			pPlayer->SetStance();
+
+			// プレイヤーの位置の取得
+			D3DXVECTOR3 playerPos = pPlayer->GetPos();
+
+			// 角度を求める
+			float fAngle = GetTargetAngle(playerPos, pos);
+
+			// 角度を設定
+			pPlayer->SetAngle(fAngle);
 
 			// 成功度
 			int nSuccess = pPlayer->SuccessParry();
@@ -666,6 +679,14 @@ void CEnemySpin::Update(void)
 		if (m_pEnemy->CollisionWepon() && bParry)
 		{
 			pPlayer->SetStance();
+			// プレイヤーの位置の取得
+			D3DXVECTOR3 playerPos = pPlayer->GetPos();
+
+			// 角度を求める
+			float fAngle = GetTargetAngle(playerPos, pos);
+
+			// 角度を設定
+			pPlayer->SetAngle(fAngle);
 
 			// パリィモーションの再生
 			pPlayerMotion->SetMotion(pPlayer->TYPE_PUNCH, true, 2);
@@ -1173,7 +1194,17 @@ void CEnemySwing::Update(void)
 			{
 				pPlayer->SetStance();
 
+				// プレイヤーの位置の取得
+				D3DXVECTOR3 playerPos = pPlayer->GetPos();
+
+				// 角度を求める
+				float fAngle = GetTargetAngle(playerPos, pos);
+
+				// 角度を設定
+				pPlayer->SetAngle(fAngle);
+
 				int nSuccess = pPlayer->SuccessParry();
+
 				// 右手の位置
 				D3DXVECTOR3 playerHandR = pPlayer->GetModelPos(8);
 
@@ -1375,7 +1406,17 @@ void CEnemyJumpAttack::CollisionPlayer(CPlayerGame* pPlayer,CMotion *pMotion)
 		// 当たったら
 		if (m_pEnemy->CollisionWepon() && bParry)
 		{
+			// 構えの設定処理
 			pPlayer->SetStance();
+
+			// プレイヤーの位置の取得
+			D3DXVECTOR3 playerPos = pPlayer->GetPos();
+
+			// 角度を求める
+			float fAngle = GetTargetAngle(playerPos, pos);
+
+			// 角度を設定
+			pPlayer->SetAngle(fAngle);
 
 			int nSuccess = pPlayer->SuccessParry();
 

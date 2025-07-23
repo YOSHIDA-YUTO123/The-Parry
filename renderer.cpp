@@ -298,17 +298,17 @@ void CRenderer::Uninit(void)
 	}
 
 	// Drectxデバイスの破棄
-	if (m_pD3DDevice != NULL)
+	if (m_pD3DDevice != nullptr)
 	{
 		m_pD3DDevice->Release();
-		m_pD3DDevice = NULL;
+		m_pD3DDevice = nullptr;
 	}
 
 	// Drectxデバイスの破棄
-	if (m_pD3D != NULL)
+	if (m_pD3D != nullptr)
 	{
 		m_pD3D->Release();
-		m_pD3D = NULL;
+		m_pD3D = nullptr;
 	}
 }
 //===================================================
@@ -377,6 +377,9 @@ void CRenderer::Draw(const int fps)
 
 		// すべてのオブジェクトの描画処理
 		CObject::DrawAll();
+
+		// シーンの描画処理
+		CManager::DrawScene();
 
 		// フェードの取得
 		CFade* pFade = CManager::GetFade();

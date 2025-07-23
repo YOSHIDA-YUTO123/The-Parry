@@ -24,6 +24,7 @@
 #include "Gage.h"
 #include "Observer.h"
 #include"GageFrame.h"
+#include "pause.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -42,6 +43,7 @@ CGame::STATE CGame::m_state = STATE_NORMAL;     // ゲームの状態
 CGame::CGame() : CScene(MODE_GAME)
 {
 	m_nCounterState = NULL;
+	m_pPauseManager = nullptr;
 }
 
 //===================================================
@@ -114,6 +116,12 @@ HRESULT CGame::Init(void)
 	// スパイクトラップ
 	CSpikeTrap::Create(D3DXVECTOR3(-1840.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f,D3DX_PI, 0.0f), face);
 
+	// ポーズマネージャーの生成
+	CPauseManager::Create();
+
+	// ポーズマネージャーの取得
+	m_pPauseManager = CPauseManager::GetInstance();
+
 	return S_OK;
 }
 
@@ -125,6 +133,13 @@ void CGame::Uninit(void)
 	m_pMeshField = nullptr;
 	m_pCylinder = nullptr;
 	m_pPlayer = nullptr;
+
+	// ポーズマネージャーの破棄
+	if (m_pPauseManager != nullptr)
+	{
+		m_pPauseManager->Uninit();
+		m_pPauseManager = nullptr;
+	}
 }
 
 //===================================================
@@ -132,6 +147,16 @@ void CGame::Uninit(void)
 //===================================================
 void CGame::Update(void)
 {
+	// ポーズの更新
+	if (m_pPauseManager != nullptr)
+	{
+		// ポーズの切り替え処理
+		m_pPauseManager->EnablePause();
+
+		// メニューの選択処理
+		m_pPauseManager->SelectMenu();
+	}
+
 	// フェードの取得
 	CFade* pFade = CManager::GetFade();
 

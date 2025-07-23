@@ -276,6 +276,9 @@
     <ClCompile Include="MoveSmoke.cpp">
       <Filter>ソース ファイル\objectBillboard\effect</Filter>
     </ClCompile>
+    <ClCompile Include="pause.cpp">
+      <Filter>ソース ファイル\object2D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="testword.h">
@@ -460,6 +463,9 @@
     </ClInclude>
     <ClInclude Include="particle.h">
       <Filter>ヘッダー ファイル\objectBillboard\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="pause.h">
+      <Filter>ヘッダー ファイル\object2D</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

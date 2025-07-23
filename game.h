@@ -23,6 +23,7 @@
 class CMeshField;
 class CPlayerGame;
 class CMeshCylinder;
+class CPauseManager;
 
 //***************************************************
 // ゲームクラスの定義
@@ -51,11 +52,12 @@ public:
 	static CPlayerGame* GetPlayer(void) { return m_pPlayer; }
 	static CMeshCylinder* GetCylinder(void){ return m_pCylinder; }
 private:
-	static STATE m_state;						// ゲームの状態
-	int m_nCounterState;				// 状態のカウンター
+	static STATE m_state;				// ゲームの状態
 	static CMeshField* m_pMeshField;	// メッシュフィールドへのポインタ
-	static CPlayerGame* m_pPlayer;			// プレイヤークラスへのポインタ
+	static CPlayerGame* m_pPlayer;		// プレイヤークラスへのポインタ
 	static CMeshCylinder* m_pCylinder;	// メッシュシリンダーへのポインタ
+	CPauseManager* m_pPauseManager;		// ポーズマネージャークラスへのポインタ
+	int m_nCounterState;				// 状態のカウンター
 };
 
 #endif

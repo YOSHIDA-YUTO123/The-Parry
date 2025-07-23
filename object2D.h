@@ -38,10 +38,10 @@ public:
 
 	static CObject2D* Create(const float fWidth, const float fHeight, const D3DXVECTOR3 pos);
 
-	HRESULT Init(void);
-	void Uninit(void);
-	void Update(void);
-	void Draw(void);
+	virtual HRESULT Init(void) override;
+	virtual void Uninit(void) override;
+	virtual void Update(void) override;
+	virtual void Draw(void) override;
 
 	D3DXVECTOR3 GetPosition(void) const { return m_pos; }
 	D3DXVECTOR2 GetSize(void) const { return m_Size; }
