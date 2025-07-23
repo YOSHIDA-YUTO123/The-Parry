@@ -100,6 +100,8 @@ public:
 	void SetHitStop(const int nTime);
 	void SetRubble(void);
 	void Hit(const int nDamage);
+	void MoveSmoke(void);
+	void SetAngle(const float fAngle);
 private:
 	void CollisionPlayer(CMotion* pPlayerMotion, CPlayerGame* pPlayer);
 	void SetParent(const int nCnt);

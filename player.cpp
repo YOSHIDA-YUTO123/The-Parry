@@ -211,7 +211,7 @@ void CPlayer::Update(void)
 	D3DXVECTOR3 posVDest(modelpos);
 
 	// ƒJƒƒ‰‚Ì’Ç]ˆ—
-	pCamera->SetTracking(posVDest,posRDest,1.0f,0.1f);
+	pCamera->SetTracking(posVDest,posRDest,0.1f,CCamera::TRACKOBJ_PLAYER);
 }
 
 //===================================================

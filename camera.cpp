@@ -46,6 +46,7 @@ CCamera::CCamera()
 	m_nZoomTime = NULL;
 	m_fDistanceBase = NULL;
 	m_fZoomAngleBase = NULL;
+	m_TrackObj = TRACKOBJ_PLAYER;
 }
 
 //===================================================
@@ -88,6 +89,7 @@ HRESULT CCamera::Init(void)
 	m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);				// 上方向ベクトル
 
 	m_state = STATE_TRACKING;
+	m_TrackObj = TRACKOBJ_PLAYER;
 
 	m_nZoomTime = -1;
 	m_fZoomAngleBase = NULL;
@@ -369,13 +371,15 @@ void CCamera::PadView(void)
 //===================================================
 // カメラの追従処理
 //===================================================
-void CCamera::SetTracking(const D3DXVECTOR3 posVDest,const D3DXVECTOR3 posRDest, const float fSpeed, const float fcoef)
+void CCamera::SetTracking(const D3DXVECTOR3 posVDest,const D3DXVECTOR3 posRDest, const float fcoef, const TRACKOBJ obj)
 {
 	if (m_state != STATE_TRACKING) return;
 
-	m_posRDest.x = posRDest.x * fSpeed;
-	m_posRDest.y = posRDest.y * fSpeed;
-	m_posRDest.z = posRDest.z * fSpeed;
+	if (m_TrackObj != obj) return;
+
+	m_posRDest.x = posRDest.x * 1.0f;
+	m_posRDest.y = posRDest.y * 1.0f;
+	m_posRDest.z = posRDest.z * 1.0f;
 
 	m_posVDest.x = posVDest.x - sinf(m_rot.y) * m_fDistance;
 	m_posVDest.y = posVDest.y - cosf(m_rot.y) * m_fDistance;

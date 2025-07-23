@@ -35,6 +35,7 @@
 #include"camera.h"
 #include "game.h"
 #include"Observer.h"
+#include "MoveSmoke.h"
 
 //***************************************************
 // 定数定義
@@ -392,6 +393,13 @@ void CEnemy::Update(void)
 		pMesh->SetImpact(config);
 	}
 
+	// カメラが使われていたら
+	if (pCamera != nullptr)
+	{
+		// カメラ追従
+		pCamera->SetTracking(D3DXVECTOR3(chestpos.x, chestpos.y + 500.0f, chestpos.z), chestpos, 0.1f, CCamera::TRACKOBJ_ENEMY);
+	}
+
 	if (m_pMachine != nullptr)
 	{
 		// 状態の更新処理
@@ -414,6 +422,9 @@ void CEnemy::Update(void)
 
 		if (m_pCharactor->GetAlive() == false && m_pMotion->GetBlendType() != MOTION_DEATH && m_pMotion->GetBlendType() != MOTION_DOWN)
 		{
+			// 敵を追従する
+			pCamera->SetTracking(CCamera::TRACKOBJ_ENEMY);
+
 			// HPが無かったら
 			ChangeState(make_shared<CEnemyDeath>());
 		}
@@ -876,7 +887,7 @@ bool CEnemy::CollisionObstacle(D3DXVECTOR3 *pPos)
 		m_pAABB->UpdateData(CenterPos, D3DXVECTOR3(m_posOld.x, m_posOld.y + m_Size.y * 0.5f, m_posOld.z));
 
 		// 当たっていたら
-		if (pObstacle != nullptr && pObstacle->Collision(m_pAABB.get(), pPos) && m_pMotion->GetBlendType() != MOTION_DEATH)
+		if (pObstacle != nullptr && pObstacle->Collision(m_pAABB.get(), pPos))
 		{
 			// 障害物の位置の取得
 			D3DXVECTOR3 obstaclePos = pObstacle->GetPosition();
@@ -887,11 +898,12 @@ bool CEnemy::CollisionObstacle(D3DXVECTOR3 *pPos)
 			// 向きの設定
 			m_pCharactor->GetRotation()->SetDest(D3DXVECTOR3(0.0f, fAngle, 0.0f));
 
-			// ダメージ状態にする
-			ChangeState(make_shared<CEnemyDamageL>(10,true));
-
-			// モーションの設定
-			m_pMotion->SetMotion(MOTION_DAMAGEL, true, 2);
+			// 死亡状態じゃないなら
+			if (m_pMotion->GetBlendType() != MOTION_DEATH)
+			{
+				// ダメージ状態にする
+				ChangeState(make_shared<CEnemyDamageL>(10, true));
+			}
 
 			return true;
 		}
@@ -969,6 +981,59 @@ void CEnemy::Hit(const int nDamage)
 	if (IsDamageMotion() == false)
 	{
 		m_pCharactor->Hit(nDamage);
+	}
+}
+
+//===================================================
+// 移動時の煙
+//===================================================
+void CEnemy::MoveSmoke(void)
+{
+	// 向きの取得
+	D3DXVECTOR3 rot = m_pCharactor->GetRotation()->Get();
+
+	// プレイヤーの後ろ方向を設定
+	float fMoveX = sinf(rot.y) * 2.0f;
+	float fMoveZ = cosf(rot.y) * 2.0f;
+
+	if (m_pMotion != nullptr)
+	{
+		// 17フレーム目になったら
+		if (m_pMotion->IsEventFrame(17, 17, MOTION::MOTION_MOVE))
+		{
+			// 位置の取得
+			D3DXVECTOR3 pos = GetPositionFromMatrix(m_apModel[11]->GetMatrixWorld());
+
+			// エフェクトの生成
+			auto pEffect = CMoveSmoke::Create(D3DXVECTOR3(pos.x, pos.y, pos.z), 100.0f, WHITE);
+
+			// エフェクトの設定処理
+			pEffect->SetEffect(60, D3DXVECTOR3(fMoveX, 0.0f, fMoveZ));
+		}
+		// 40フレーム目になったら
+		if (m_pMotion->IsEventFrame(40, 40, MOTION::MOTION_MOVE))
+		{
+			// 位置の取得
+			D3DXVECTOR3 pos = GetPositionFromMatrix(m_apModel[14]->GetMatrixWorld());
+
+			// エフェクトの生成
+			auto pEffect = CMoveSmoke::Create(D3DXVECTOR3(pos.x, pos.y, pos.z), 100.0f, WHITE);
+
+			// エフェクトの設定処理
+			pEffect->SetEffect(60, D3DXVECTOR3(fMoveX, 0.0f, fMoveZ));
+		}
+
+	}
+}
+
+//===================================================
+// 向きの設定
+//===================================================
+void CEnemy::SetAngle(const float fAngle)
+{
+	if (m_pCharactor != nullptr)
+	{
+		m_pCharactor->GetRotation()->SetDest(D3DXVECTOR3(0.0f, fAngle, 0.0f));
 	}
 }
 

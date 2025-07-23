@@ -20,6 +20,8 @@
 #include"particle.h"
 #include"impact.h"
 #include "Wave.h"
+#include"camera.h"
+#include "MoveSmoke.h"
 
 //***************************************************
 // 名前空間
@@ -38,6 +40,8 @@ constexpr int SPIN_TIME = 60;					// 回転モーションの時間
 constexpr int ABSSPIN_TIME = 30;				// 絶対回転する時間
 constexpr float JUMPATTACK_MOVE_FRAME = 25.0f;	// ジャンプ攻撃の移動フレーム
 constexpr int INIT_NEXT_ACTION = 999;			// 絶対に被らない数値
+constexpr int MAX_AWAYPOS_X = 1300;				// 最大の離れる位置X
+constexpr int MAX_AWAYPOS_Z = 1300;				// 最大の離れる位置Z
 
 //===================================================
 // コンストラクタ
@@ -153,6 +157,9 @@ void CEnemyMove::Update(void)
 {
 	// モーションクラスの取得
 	CMotion* pMotion = m_pEnemy->GetMotion();
+
+	// 移動時の煙
+	m_pEnemy->MoveSmoke();
 
 	// 距離が近かったら
 	if (m_pEnemy->CheckDistane(250.0f))
@@ -974,8 +981,10 @@ void CEnemyDamageS::Update(void)
 	// モーションが終わったら
 	if (pMotion != nullptr && pMotion->FinishMotion())
 	{
-		// 通常状態に戻す
-		m_pEnemy->ChangeState(make_shared<CEnemyIdle>(5));
+		//// 通常状態に戻す
+		//m_pEnemy->ChangeState(make_shared<CEnemyIdle>(5));
+
+		m_pEnemy->ChangeState(make_shared<CEnemyAway>());
 	}
 }
 
@@ -1003,6 +1012,8 @@ void CEnemyGuard::Init(void)
 {
 	// ダメージの設定
 	m_pEnemy->Hit(m_nDamage);
+
+	m_pEnemy->GetMovement()->SetMoveDir(0.0f, 20.0f);
 
 	// プレイヤーの取得
 	CPlayerGame* pPlayer = CGame::GetPlayer();
@@ -1526,6 +1537,7 @@ void CEnemyDeath::Update(void)
 //===================================================
 CEnemyDown::CEnemyDown() : CEnemyState(ID_DOWN)
 {
+	m_nTrackingTime = 120;
 }
 
 //===================================================
@@ -1556,5 +1568,80 @@ void CEnemyDown::Init(void)
 //===================================================
 void CEnemyDown::Update(void)
 {
+	// 追従時間
+	m_nTrackingTime--;
 
+	// 追従時間が終わったら
+	if (m_nTrackingTime <= 0)
+	{
+		// カメラの取得
+		CCamera* pCamera = CManager::GetCamera();
+
+		// プレイヤーに戻す
+		pCamera->SetTracking(CCamera::TRACKOBJ_PLAYER);
+	}
+}
+
+//===================================================
+// コンストラクタ(距離を取る状態)
+//===================================================
+CEnemyAway::CEnemyAway() : CEnemyState(ID_AWAY)
+{
+	m_fDistance = NULL;
+	m_pos = VEC3_NULL;
+}
+
+//===================================================
+// デストラクタ(距離を取る状態)
+//===================================================
+CEnemyAway::~CEnemyAway()
+{
+}
+
+//===================================================
+// 初期化処理(距離を取る状態)
+//===================================================
+void CEnemyAway::Init(void)
+{
+	// モーションクラスの取得
+	CMotion* pMotion = m_pEnemy->GetMotion();
+
+	int nPosXMax = MAX_AWAYPOS_X * 2;
+	float fPosXMin = static_cast<float>(MAX_AWAYPOS_X);
+
+	int nPosZMax = MAX_AWAYPOS_Z * 2;
+	float fPosZMin = static_cast<float>(MAX_AWAYPOS_X);
+
+	m_pos.x = static_cast<float>(rand() % nPosXMax - fPosXMin);
+	m_pos.z = static_cast<float>(rand() % nPosZMax - fPosZMin);
+
+	// 位置の取得
+	D3DXVECTOR3 pos = m_pEnemy->GetPosition();
+
+	// 距離を求める
+	m_fDistance = GetDistance(m_pos - pos);
+
+	// モーションがあるなら
+	if (pMotion != nullptr)
+	{
+		// モーションの再生
+		pMotion->SetMotion(MOTION::MOTION_JUMP, true, 4);
+	}
+
+	// 向きを求める
+	float fAngle = GetTargetAngle(m_pos, pos);
+
+	// 向きの設定
+	m_pEnemy->SetAngle(fAngle);
+
+	// ジャンプする
+	m_pEnemy->GetMovement()->Jump(25.0f);
+}
+
+//===================================================
+// 更新処理(距離を取る状態)
+//===================================================
+void CEnemyAway::Update(void)
+{
+	m_pEnemy->GetMovement()->MoveForWard(m_fDistance / 30.0f);
 }

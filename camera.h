@@ -23,7 +23,7 @@ class CCamera
 {
 public:
 
-	// 追従するオブジェクトの種類
+	// カメラの状態の種類
 	typedef enum
 	{
 		STATE_NONE = 0,
@@ -33,8 +33,17 @@ public:
 		STATE_MAX
 	}STATE;
 
+	// カメラ追従するオブジェクトの種類
+	typedef enum
+	{
+		TRACKOBJ_PLAYER = 0,
+		TRACKOBJ_ENEMY,
+		TRACKOBJ_MAX
+	}TRACKOBJ;
+
 	CCamera();
 	~CCamera();
+
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
@@ -43,7 +52,7 @@ public:
 	void MouseView(void);
 	void PadView(void);
 	void SetState(const STATE state) { m_state = state; }
-	void SetTracking(const D3DXVECTOR3 posVDest, const D3DXVECTOR3 posRDest, const float fSpeed, const float fcoef);
+	void SetTracking(const D3DXVECTOR3 posVDest, const D3DXVECTOR3 posRDest, const float fcoef,const TRACKOBJ obj);
 	void Rockon(D3DXVECTOR3 playerPos, D3DXVECTOR3 enemyPos);
 	void ZoomIn(void);
 	void SetZoomIn(const int nTime, const float fAngle);
@@ -55,13 +64,16 @@ public:
 	void SetAngle(const D3DXVECTOR3 posR) { m_posRDest = posR; }
 	void SetRot(const D3DXVECTOR3 rot) { m_rot = rot; }
 	STATE GetState(void) const { return m_state; }
-
+	void SetTracking(const TRACKOBJ obj) { m_TrackObj = obj; }
 private:
 	void UpdatePositionV(void); // 視点の更新処理
 	void UpdatePositionR(void); // 注視点の更新処理
 
 	STATE m_state;				// カメラの状態
 	STATE m_Oldstate;			// 前の状態
+
+	TRACKOBJ m_TrackObj;		// 追従するオブジェクトの種類
+
 	D3DXMATRIX m_mtxView;		// ビューマトリックス
 	D3DXMATRIX m_mtxProjection;	// プロジェクションマトリックス
 	D3DXVECTOR3 m_posV;			// 視点

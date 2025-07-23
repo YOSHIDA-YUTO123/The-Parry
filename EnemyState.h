@@ -53,6 +53,7 @@ public:
 		ID_JUMPATTACK,	// ジャンプ攻撃
 		ID_DEATH,		// 死亡
 		ID_DOWN,		// ダウン(死亡)
+		ID_AWAY,		// 距離を取る
 		ID_MAX
 	};
 
@@ -312,6 +313,22 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 private:
+	int m_nTrackingTime; // 追従する時間
+};
+
+//***************************************************
+// 敵の状態(Away)クラスの定義
+//***************************************************
+class CEnemyAway : public CEnemyState
+{
+public:
+	CEnemyAway();
+	~CEnemyAway();
+	void Init(void) override;
+	void Update(void) override;
+private:
+	D3DXVECTOR3 m_pos; // 移動先
+	float m_fDistance; // 移動先までの距離
 };
 
 #endif
