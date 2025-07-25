@@ -56,19 +56,19 @@ HRESULT CGageFrame::Init(void)
 		return E_FAIL;
 	}
 
-	switch (m_type)
-	{
-	case TYPE_HP_PLAYER:
-		// テクスチャのID
-		SetTextureID("data/TEXTURE/GageFrame/playerHpFrame.png");
-		break;
-	case TYPE_HP_ENEMY:
-		// テクスチャのID
-		SetTextureID("data/TEXTURE/GageFrame/enemyHpgageFrame.png");
-		break;
-	default:
-		break;
-	}
+	//switch (m_type)
+	//{
+	//case TYPE_HP_PLAYER:
+	//	// テクスチャのID
+	//	SetTextureID("data/TEXTURE/GageFrame/playerHpFrame.png");
+	//	break;
+	//case TYPE_HP_ENEMY:
+	//	// テクスチャのID
+	//	SetTextureID("data/TEXTURE/GageFrame/enemyHpgageFrame.png");
+	//	break;
+	//default:
+	//	break;
+	//}
 
 	return S_OK;
 }

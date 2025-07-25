@@ -415,6 +415,7 @@ void CEnemy::Update(void)
 		// 位置の設定処理
 		m_pCharactor->SetPosition(pos);
 
+		// キャラクターの更新
 		m_pCharactor->Update();
 
 		// 向きの補間
@@ -1035,6 +1036,46 @@ void CEnemy::SetAngle(const float fAngle)
 	{
 		m_pCharactor->GetRotation()->SetDest(D3DXVECTOR3(0.0f, fAngle, 0.0f));
 	}
+}
+
+//===================================================
+// 攻撃の結果を返す
+//===================================================
+CEnemy::RESULT CEnemy::AttackResult(CPlayerGame* pPlayer)
+{
+	// 位置の取得
+	D3DXVECTOR3 pos = GetPosition();
+
+	// 武器が当たったら
+	if (CollisionWepon())
+	{
+		// パリィできるか判定
+		const bool bParry = pPlayer->IsParry(pos);
+
+		// プレイヤーのモーションの取得
+		CMotion* pPlayerMotion = pPlayer->GetMotion();
+
+		// パリィできた
+		if (bParry)
+		{
+			// パリィした
+			return RESULT_PARRY;
+		}
+		// 回避だったら
+		else if (pPlayerMotion->GetBlendType() == pPlayer->TYPE_AVOID)
+		{
+			// 回避した
+			return RESULT_AVOID;
+		}
+		// カウンター失敗した
+		else if (bParry == false)
+		{
+			// 当たった
+			return RESULT_HIT;
+		}
+	}
+
+	return RESULT_NONE;
 }
 
 //===================================================

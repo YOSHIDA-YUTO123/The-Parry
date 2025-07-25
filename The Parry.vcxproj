@@ -173,6 +173,7 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="Gage.cpp" />
     <ClCompile Include="MoveSmoke.cpp" />
+    <ClCompile Include="object2DMT.cpp" />
     <ClCompile Include="Observer.cpp" />
     <ClCompile Include="impact.cpp" />
     <ClCompile Include="input.cpp" />
@@ -243,6 +244,7 @@
     <ClInclude Include="game.h" />
     <ClInclude Include="Gage.h" />
     <ClInclude Include="MoveSmoke.h" />
+    <ClInclude Include="object2DMT.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="impact.h" />
     <ClInclude Include="input.h" />

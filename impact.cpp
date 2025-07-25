@@ -239,6 +239,10 @@ void CMeshCircle::Draw(void)
 	// ライトを無効にする
 	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 
+	//// Zテスト
+	//pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+	//pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+
 	// aブレンディング
 	pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
@@ -257,6 +261,10 @@ void CMeshCircle::Draw(void)
 
 	// ライトを無効にする
 	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+
+	//// Zテスト
+	//pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+	//pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 }
 
 //================================================

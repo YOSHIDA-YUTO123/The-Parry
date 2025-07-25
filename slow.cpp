@@ -34,18 +34,9 @@ CSlow::~CSlow()
 //===================================================
 void CSlow::Update(void)
 {
-	// Š„‡‚ð‹‚ß‚é
-	float fRate = m_nCount / (float)m_nTime;
-
 	if (m_nCount >= 0)
 	{
 		m_nCount--;
-		//m_fLevel += (1.0f - m_fLevel) * (1.0f - fRate);
-
-		//if (m_fLevel <= 2.0f)
-		//{
-		//	m_fLevel = 2.0f;
-		//}
 	}
 	else
 	{

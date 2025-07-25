@@ -80,6 +80,7 @@ CPause* CPause::Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size, const TYPE
 	pPause->SetSize(Size.x,Size.y);
 	pPause->SetVtx(WHITE);
 	pPause->m_BaseSize = Size;
+
 	return pPause;
 }
 

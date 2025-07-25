@@ -91,6 +91,12 @@
     <Filter Include="ソース ファイル\objectBillboard\effect">
       <UniqueIdentifier>{d7c2ed5c-6769-4ccf-8727-7038e5052230}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\object2DMT">
+      <UniqueIdentifier>{3c56afb8-71ea-4654-911f-ef092abb3511}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\object2DMT">
+      <UniqueIdentifier>{ee81d011-3cf9-47c8-b118-6d44b3767d67}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="testword.cpp">
@@ -282,6 +288,9 @@
     <ClCompile Include="background.cpp">
       <Filter>ソース ファイル\object2D</Filter>
     </ClCompile>
+    <ClCompile Include="object2DMT.cpp">
+      <Filter>ソース ファイル\object2DMT</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="testword.h">
@@ -472,6 +481,9 @@
     </ClInclude>
     <ClInclude Include="background.h">
       <Filter>ヘッダー ファイル\object2D</Filter>
+    </ClInclude>
+    <ClInclude Include="object2DMT.h">
+      <Filter>ヘッダー ファイル\object2DMT</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

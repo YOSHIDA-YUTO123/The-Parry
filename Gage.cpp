@@ -263,3 +263,95 @@ void CTemporaryGage::SetGage(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size, cons
 	m_fLength = m_fDestLength = Size.x;	 // 長さの設定
 	m_bDecRightToLeft = bDecRightToLeft; // 右から減るか左から減るか
 }
+
+//================================================
+// コンストラクタ
+//================================================
+CStaminaGage::CStaminaGage() 
+{
+}
+
+//================================================
+// デストラクタ
+//================================================
+CStaminaGage::~CStaminaGage()
+{
+}
+
+//================================================
+// 生成処理
+//================================================
+CStaminaGage* CStaminaGage::Create(const D3DXVECTOR3 pos, D3DXVECTOR2 Size, const D3DXCOLOR col,const float fStamina)
+{
+	// スタミナゲージの生成
+	CStaminaGage* pGage = new CStaminaGage;
+
+	if (FAILED(pGage->Init()))
+	{// 初期化に失敗したら
+		// 終了処理
+		pGage->Uninit();
+		pGage = nullptr;
+
+		return nullptr;
+	}
+
+	// 設定処理
+	pGage->SetPosition(pos);
+	pGage->SetSize(Size);
+	pGage->SetSize(Size.x, Size.x, Size.y, Size.y);
+	pGage->SetVtx(col);
+	pGage->m_fMaxStamina = fStamina;
+	pGage->m_fStamina = fStamina;
+
+	return pGage;
+}
+
+//================================================
+// 初期化処理
+//================================================
+HRESULT CStaminaGage::Init(void)
+{
+	// 初期化処理
+	if (FAILED(CGage::Init()))
+	{
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+//================================================
+// 終了処理
+//================================================
+void CStaminaGage::Uninit(void)
+{
+	// 終了処理
+	CGage::Uninit();
+}
+
+//================================================
+// 更新処理
+//================================================
+void CStaminaGage::Update(void)
+{
+	// スタミナの割合を求める
+	float fRate = m_fStamina / m_fMaxStamina;
+
+	// 大きさの取得
+	D3DXVECTOR2 Size = CObject2D::GetSize();
+
+	// 割合の大きさを求める
+	float fLength = Size.x * fRate;
+
+	// 設定処理
+	CObject2D::SetSize(0.0f, fLength, Size.y, Size.y);
+}
+
+//================================================
+// 描画処理
+//================================================
+void CStaminaGage::Draw(void)
+{
+	// 描画処理
+	CGage::Draw();
+}

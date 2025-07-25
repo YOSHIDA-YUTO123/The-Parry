@@ -36,7 +36,10 @@ class CStateMachine;
 class CPlayerState;
 class CShadowS;
 class CPlayerMovement;
+
+template <class T>
 class CObserver;
+
 class CMeshOrbit;
 class CMeshField;
 class CCamera;
@@ -49,7 +52,7 @@ class CPlayer : public CObject
 {
 public:
 
-	static constexpr int MAX_LIFE = 10;	// HP
+	static constexpr int MAX_LIFE = 10;		// HP
 
 	// モーションの種類
 	enum TYPE
@@ -112,6 +115,8 @@ private:
 class CPlayerGame : public CPlayer
 {
 public:
+	static constexpr float MAX_STAMINA = 100.0f;	// スタミナ
+
 	// パリィの成功度
 	enum PARRY
 	{
@@ -120,6 +125,15 @@ public:
 		PARRY_NORMAL,
 		PARRY_PARFECT,
 		PARRY_MAX
+	};
+
+	// オブザーバーの種類
+	enum OBSERVER
+	{
+		OBSERVER_HP = 0,
+		OBSERVER_STAMINA,
+		OBSERVER_SPECAL,
+		OBSERVER_MAX
 	};
 
 	CPlayerGame();
@@ -138,7 +152,9 @@ public:
 	CPlayerMovement* GetMovement(void) { return m_pMovement.get(); }
 
 	// セッター
-	void SetObserver(CObserver* pObserver) { m_pObserver = pObserver; }
+	void SetHpObserver(CObserver<int>* pObserver) { m_pHpObserver = pObserver; }
+	void SetStaminaObserver(CObserver<float>* pObserver) { m_pStaminaObserver = pObserver; }
+
 	int SuccessParry(void);
 
 	void BlowOff(const D3DXVECTOR3 attacker, const float blowOff, const float jump);
@@ -148,14 +164,17 @@ public:
 	void Orbit(const int nSegH, const D3DXCOLOR col); // 軌跡の処理
 	void DeleteOrbit(void);							  // 軌跡のリセット
 	void SetStance(void);							  // 構えモーションの設定
+	void SetStamina(const float fStamina);
 private:
 	void CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos, CCharacter3D* pCharacter, CMotion* pMotion); // インパクトの当たり判定
 	bool IsMove(CMotion* pMotion);		// 移動できるか判定
 	bool IsStance(CMotion* pMotion);	// 構えをだせるか判定
+	bool IsAvoid(CMotion* pMotion);		// 回避を出せるか判定
 	void Notify(void);
 	void UpdateParry(void);
 	void SetMoveAngle(CCamera *pCamera, CInputKeyboard* pKeyboard, CInputJoypad* pJoypad, CCharacter3D* pCaracter);
 	void UpdateCollider(D3DXVECTOR3 pos);
+	void UpdateStamina(void);
 
 	std::unique_ptr<CPlayerMovement> m_pMovement;	// 移動処理
 	std::unique_ptr<CColliderFOV> m_pFOV;			// 視界の判定
@@ -163,11 +182,13 @@ private:
 	std::unique_ptr<CVelocity> m_pMove;				// 移動量
 	std::unique_ptr<CColliderAABB> m_pAABB;			// コライダーAABB
 	CMeshOrbit* m_pOrbit;							// 軌跡の処理
-	CObserver* m_pObserver;							// オブザーバークラスへのポインタ
+	CObserver<int>* m_pHpObserver;						// HPオブザーバークラスへのポインタ
+	CObserver<float>* m_pStaminaObserver;					// スタミナオブザーバークラスへのポインタ
 	D3DXVECTOR3 m_posOld;							// 前回の位置
 	int m_nParryTime;								// パリィの有効時間
 	int m_nParryCounter;							// パリィのカウンター
 
+	float m_fStamina;								// スタミナ
 	int m_nAttackCounter;							// 攻撃の有効時間	
 	bool m_bJump;									// ジャンプできるかどうか
 	bool m_bDash;									// 走ってるかどうか

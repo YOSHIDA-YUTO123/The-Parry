@@ -484,19 +484,10 @@ CModelManager* CManager::GetModel(void)
 //===================================================
 void CManager::SetMode(unique_ptr<CScene> pNewScene)
 {
-	//if (m_pScene != nullptr)
-	//{
-	//	// シーンが同じだったら設定しない
-	//	if (m_pScene->GetMode() == pNewScene->GetMode())
-	//	{
-	//		pNewScene.reset();
-	//		return;
-	//	}
-	//}
-
 	// 今のシーンの破棄
 	if (m_pScene != nullptr)
 	{
+		// 終了処理
 		m_pScene->Uninit();
 		m_pScene.reset();
 		m_pScene = nullptr;
@@ -511,6 +502,7 @@ void CManager::SetMode(unique_ptr<CScene> pNewScene)
 		// 新しいシーンを設定
 		m_pScene = std::move(pNewScene);
 
+		// カメラの初期化処理
 		m_pCamera->Init();
 
 		// シーンの初期化処理

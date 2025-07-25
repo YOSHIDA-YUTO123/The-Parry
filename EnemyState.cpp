@@ -42,6 +42,7 @@ constexpr float JUMPATTACK_MOVE_FRAME = 25.0f;	// ジャンプ攻撃の移動フレーム
 constexpr int INIT_NEXT_ACTION = 999;			// 絶対に被らない数値
 constexpr int MAX_AWAYPOS_X = 1300;				// 最大の離れる位置X
 constexpr int MAX_AWAYPOS_Z = 1300;				// 最大の離れる位置Z
+constexpr float AWAY_TIME = 24.0f;				// ジャンプする時間
 
 //===================================================
 // コンストラクタ
@@ -299,11 +300,11 @@ void CEnemyAttackSmash::Update(void)
 	// イベントフレームの判定
 	if (pMotion->IsEventFrame(64, 71, MOTION::MOTION_SMASH) && m_pEnemy->IsDamageMotion() == false)
 	{
-		// プレイヤーの視界の中にいる
-		const bool bParry = pPlayer->IsParry(pos);
+		// 攻撃の結果を取得
+		CEnemy::RESULT result = m_pEnemy->AttackResult(pPlayer);
 
-		// 当たったら
-		if (m_pEnemy->CollisionWepon() && bParry)
+		// パリィされた
+		if (result == CEnemy::RESULT_PARRY)
 		{
 			// 構えの設定
 			pPlayer->SetStance();
@@ -349,8 +350,8 @@ void CEnemyAttackSmash::Update(void)
 
 		//	pSlow->Start(60,4);
 		//}
-		// 範囲内で視界に入っていない、カウンターしていない
-		else if (m_pEnemy->CollisionWepon() && bParry == false)
+		// 攻撃があたった
+		else if (result == CEnemy::RESULT_HIT)
 		{
 			// 吹き飛び処理
 			pPlayer->BlowOff(pos, 10.0f, 10.0f);
@@ -679,13 +680,15 @@ void CEnemySpin::Update(void)
 	// 回転モーション
 	if (pMotion->IsEventFrame(0, 999, MOTION::MOTION_SPIN))
 	{
-		// プレイヤーの視界の中にいる
-		const bool bParry = pPlayer->IsParry(pos);
+		// 攻撃の結果を取得
+		CEnemy::RESULT result = m_pEnemy->AttackResult(pPlayer);
 
-		// 当たったら
-		if (m_pEnemy->CollisionWepon() && bParry)
+		// パリィされた
+		if (result == CEnemy::RESULT_PARRY)
 		{
+			// 構えの設定
 			pPlayer->SetStance();
+
 			// プレイヤーの位置の取得
 			D3DXVECTOR3 playerPos = pPlayer->GetPos();
 
@@ -694,9 +697,6 @@ void CEnemySpin::Update(void)
 
 			// 角度を設定
 			pPlayer->SetAngle(fAngle);
-
-			// パリィモーションの再生
-			pPlayerMotion->SetMotion(pPlayer->TYPE_PUNCH, true, 2);
 
 			int nSuccess = pPlayer->SuccessParry();
 
@@ -722,7 +722,8 @@ void CEnemySpin::Update(void)
 			// ヒット状態にする
 			m_pEnemy->ChangeState(make_shared<CEnemyHit>());
 		}
-		else if (m_pEnemy->CollisionWepon() && pPlayerMotion->GetBlendType() == pPlayer->TYPE_AVOID)
+		// 回避された
+		else if (result == CEnemy::RESULT_AVOID)
 		{
 			// スローモーションの取得
 			CSlow* pSlow = CManager::GetSlow();
@@ -732,8 +733,8 @@ void CEnemySpin::Update(void)
 
 			m_nTime = 120;
 		}
-		// 武器との当たり判定
-		else if (m_pEnemy->CollisionWepon() == true && pPlayerMotion->GetBlendType() != pPlayer->TYPE_PUNCH)
+		// 攻撃があたった
+		else if (result == CEnemy::RESULT_HIT)
 		{
 			// 吹き飛び処理
 			pPlayer->BlowOff(pos, 50.0f, 10.0f);
@@ -927,6 +928,7 @@ void CEnemyHit::Update(void)
 //===================================================
 CEnemyDamageS::CEnemyDamageS(const int nDamage) : CEnemyState(ID_DAMAGES)
 {
+	m_nNextAction = INIT_NEXT_ACTION;
 	m_nDamage = nDamage;
 }
 
@@ -953,6 +955,9 @@ void CEnemyDamageS::Init(void)
 
 	// 移動制御処理の取得
 	CEnemyMovement* pMovement = m_pEnemy->GetMovement();
+
+	// 次の行動を抽選
+	m_nNextAction = rand() % 100;
 
 	// ダメージの設定
 	m_pEnemy->Hit(m_nDamage);
@@ -981,10 +986,18 @@ void CEnemyDamageS::Update(void)
 	// モーションが終わったら
 	if (pMotion != nullptr && pMotion->FinishMotion())
 	{
-		//// 通常状態に戻す
-		//m_pEnemy->ChangeState(make_shared<CEnemyIdle>(5));
+		// 30%の確率
+		if (m_nNextAction <= 30)
+		{
+			// 距離を取る
+			m_pEnemy->ChangeState(make_shared<CEnemyAway>());
+		}
+		else
+		{
+			// 通常状態に戻す
+			m_pEnemy->ChangeState(make_shared<CEnemyIdle>(5));
+		}
 
-		m_pEnemy->ChangeState(make_shared<CEnemyAway>());
 	}
 }
 
@@ -1013,8 +1026,6 @@ void CEnemyGuard::Init(void)
 	// ダメージの設定
 	m_pEnemy->Hit(m_nDamage);
 
-	m_pEnemy->GetMovement()->SetMoveDir(0.0f, 20.0f);
-
 	// プレイヤーの取得
 	CPlayerGame* pPlayer = CGame::GetPlayer();
 
@@ -1032,6 +1043,9 @@ void CEnemyGuard::Init(void)
 
 	// ボスまでの角度を取得
 	float fAngle = GetTargetAngle(pos, PlayerPos);
+
+	// 吹き飛ばす
+	m_pEnemy->GetMovement()->BlowOff(PlayerPos,100.0f, 0.0f);
 
 	// 向きの設定
 	pPlayer->SetAngle(fAngle + D3DX_PI);
@@ -1197,11 +1211,11 @@ void CEnemySwing::Update(void)
 		// イベントフレームの判定
 		if (pMotion->IsEventFrame(40, 60, MOTION::MOTION_SWING) && m_pEnemy->IsDamageMotion() == false)
 		{
-			// プレイヤーの視界の中にいる
-			const bool bParry = pPlayer->IsParry(pos);
+			// 攻撃の結果を取得
+			CEnemy::RESULT result = m_pEnemy->AttackResult(pPlayer);
 
-			// 当たったら
-			if (m_pEnemy->CollisionWepon() && bParry)
+			// パリィされた
+			if (result == CEnemy::RESULT_PARRY)
 			{
 				pPlayer->SetStance();
 
@@ -1237,14 +1251,14 @@ void CEnemySwing::Update(void)
 				m_pEnemy->ChangeState(make_shared<CEnemyHit>());
 			}
 			// 回避だったら
-			else if (m_pEnemy->CollisionWepon() && pPlayerMotion->GetBlendType() == pPlayer->TYPE_AVOID)
+			else if (result == CEnemy::RESULT_AVOID)
 			{
 				CSlow *pSlow = CManager::GetSlow();
 
 				pSlow->Start(60,4);
 			}
 			// 範囲内で視界に入っていない、カウンターしていない
-			else if (m_pEnemy->CollisionWepon() && bParry == false)
+			else if (result == CEnemy::RESULT_HIT)
 			{
 				// 吹き飛び処理
 				pPlayer->BlowOff(pos, 10.0f, 10.0f);
@@ -1405,17 +1419,14 @@ void CEnemyJumpAttack::CollisionPlayer(CPlayerGame* pPlayer, CMotion* pMotion)
 	// 位置の取得
 	D3DXVECTOR3 pos = m_pEnemy->GetPosition();
 
-	// プレイヤーのモーションの取得
-	CMotion* pPlayerMotion = pPlayer->GetMotion();
-
 	// イベントフレームの判定
 	if (pMotion->IsEventFrame(80, 88, MOTION::MOTION_JUMPATTACK) && m_pEnemy->IsDamageMotion() == false)
 	{
-		// プレイヤーの視界の中にいる
-		const bool bParry = pPlayer->IsParry(pos);
+		// 攻撃の結果を取得
+		CEnemy::RESULT result = m_pEnemy->AttackResult(pPlayer);
 
-		// 当たったら
-		if (m_pEnemy->CollisionWepon() && bParry)
+		// パリィされた
+		if (result == CEnemy::RESULT_PARRY)
 		{
 			// 構えの設定処理
 			pPlayer->SetStance();
@@ -1455,14 +1466,14 @@ void CEnemyJumpAttack::CollisionPlayer(CPlayerGame* pPlayer, CMotion* pMotion)
 			m_pEnemy->ChangeState(make_shared<CEnemyHit>());
 		}
 		// 回避だったら
-		else if (m_pEnemy->CollisionWepon() && pPlayerMotion->GetBlendType() == pPlayer->TYPE_AVOID)
+		else if (result == CEnemy::RESULT_AVOID)
 		{
 			CSlow *pSlow = CManager::GetSlow();
 
 			pSlow->Start(60,4);
 		}
-		// 範囲内で視界に入っていない、カウンターしていない
-		else if (m_pEnemy->CollisionWepon() && bParry == false)
+		// 攻撃があたった
+		else if (result == CEnemy::RESULT_HIT)
 		{
 			// 吹き飛び処理
 			pPlayer->BlowOff(pos, 100.0f, 10.0f);
@@ -1587,7 +1598,6 @@ void CEnemyDown::Update(void)
 //===================================================
 CEnemyAway::CEnemyAway() : CEnemyState(ID_AWAY)
 {
-	m_fDistance = NULL;
 	m_pos = VEC3_NULL;
 }
 
@@ -1610,7 +1620,7 @@ void CEnemyAway::Init(void)
 	float fPosXMin = static_cast<float>(MAX_AWAYPOS_X);
 
 	int nPosZMax = MAX_AWAYPOS_Z * 2;
-	float fPosZMin = static_cast<float>(MAX_AWAYPOS_X);
+	float fPosZMin = static_cast<float>(MAX_AWAYPOS_Z);
 
 	m_pos.x = static_cast<float>(rand() % nPosXMax - fPosXMin);
 	m_pos.z = static_cast<float>(rand() % nPosZMax - fPosZMin);
@@ -1619,7 +1629,15 @@ void CEnemyAway::Init(void)
 	D3DXVECTOR3 pos = m_pEnemy->GetPosition();
 
 	// 距離を求める
-	m_fDistance = GetDistance(m_pos - pos);
+	float fDistance = GetDistance(m_pos - pos);
+
+	// 目標地点までの距離が1000以下だったら
+	if (fDistance <= 1000.0f)
+	{
+		// ジャンプ攻撃に派生
+		m_pEnemy->ChangeState(make_shared<CEnemyJumpAttack>());
+		return;
+	}
 
 	// モーションがあるなら
 	if (pMotion != nullptr)
@@ -1632,7 +1650,7 @@ void CEnemyAway::Init(void)
 	float fAngle = GetTargetAngle(m_pos, pos);
 
 	// 向きの設定
-	m_pEnemy->SetAngle(fAngle);
+	m_pEnemy->SetAngle(fAngle + D3DX_PI);
 
 	// ジャンプする
 	m_pEnemy->GetMovement()->Jump(25.0f);
@@ -1643,5 +1661,15 @@ void CEnemyAway::Init(void)
 //===================================================
 void CEnemyAway::Update(void)
 {
-	m_pEnemy->GetMovement()->MoveForWard(m_fDistance / 30.0f);
+	// 位置の取得
+	D3DXVECTOR3 pos = m_pEnemy->GetPosition();
+
+	// 距離を求める
+	float fDistance = GetDistance(m_pos - pos);
+
+	// 距離を到達時間で割る
+	float dir = fDistance / AWAY_TIME;
+
+	// 移動量を設定する
+	m_pEnemy->GetMovement()->MoveForWard(dir);
 }

@@ -161,7 +161,7 @@ void CMotion::FinishFirstBlend(void)
 		// ‚à‚Æ‚É–ß‚·
 		m_bFirst = false;
 
-		m_nKey = 0;
+		m_nKey = m_nKeyBlend;
 
 		m_nKeyBlend = 0;
 		

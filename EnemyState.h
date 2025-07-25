@@ -230,6 +230,7 @@ public:
 	void Update(void) override;
 private:
 	int m_nDamage; // ダメージ量
+	int m_nNextAction; // 次の行動
 };
 
 //***************************************************
@@ -328,7 +329,6 @@ public:
 	void Update(void) override;
 private:
 	D3DXVECTOR3 m_pos; // 移動先
-	float m_fDistance; // 移動先までの距離
 };
 
 #endif

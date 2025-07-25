@@ -75,16 +75,47 @@ HRESULT CGame::Init(void)
 	m_pPlayer = CPlayerGame::Create(D3DXVECTOR3(1.0f, 0.0f, -1500.0f));
 
 	// ゲージのフレームの生成
-	CGageFrame::Create(D3DXVECTOR3(220.0f, 36.0f, 0.0f), D3DXVECTOR2(200.0f, 25.0f),CGageFrame::TYPE_HP_PLAYER);
+	auto gageFrame = CGageFrame::Create(D3DXVECTOR3(220.0f, 36.0f, 0.0f), D3DXVECTOR2(200.0f, 25.0f),CGageFrame::TYPE_HP_PLAYER);
+
+
+	// 生成できていたら
+	if (gageFrame != nullptr)
+	{
+		// テクスチャのIDの設定
+		gageFrame->SetTextureID("data/TEXTURE/GageFrame/playerHpFrame.png");
+	}
+
+	// スタミナゲージの生成
+	auto pStamina = CStaminaGage::Create(D3DXVECTOR3(110.0f, 81.0f, 0.0f), D3DXVECTOR2(298.0f, 8.0f), D3DXCOLOR(1.0f, 1.0f, 0.3f, 1.0f), CPlayerGame::MAX_STAMINA);
+
+	if (pStamina != nullptr)
+	{
+		// スタミナオブザーバーの生成
+		CStaminaObserver* pStaminaOb = new CStaminaObserver(pStamina);
+
+		// オブザーバーの設定
+		m_pPlayer->SetStaminaObserver(pStaminaOb);
+
+	}
+
+	// ゲージのフレームの生成
+	gageFrame = CGageFrame::Create(D3DXVECTOR3(258.0f, 80.0f, 0.0f), D3DXVECTOR2(160.0f, 20.0f), CGageFrame::TYPE_STAMINA);
+
+	// 生成できていたら
+	if (gageFrame != nullptr)
+	{
+		// テクスチャのIDの設定
+		gageFrame->SetTextureID("data/TEXTURE/GageFrame/staminaFrame.png");
+	}
 
 	// HPゲージの生成
-	auto pGage = CHpGage::Create(D3DXVECTOR3(103.0f, 36.0f, 0.0f), D3DXVECTOR2(310.0f, 17.0f), D3DXCOLOR(0.0f,1.0f,0.0f,1.0f),D3DXCOLOR(1.0f,0.0f,0.0f,1.0f), CPlayerGame::MAX_LIFE,true);
+	auto pGage = CHpGage::Create(D3DXVECTOR3(109.0f, 36.0f, 0.0f), D3DXVECTOR2(302.0f, 14.0f), D3DXCOLOR(0.0f,1.0f,0.0f,1.0f),D3DXCOLOR(1.0f,0.0f,0.0f,1.0f), CPlayerGame::MAX_LIFE,true);
 
 	// Hpゲージのオブザーバーの設定
 	CHpObserver *observer = new CHpObserver(pGage);
 
 	// オブザーバーの設定
-	m_pPlayer->SetObserver(observer);
+	m_pPlayer->SetHpObserver(observer);
 
 	// アリーナの生成
 	CObjectX::Create(VEC3_NULL, "data/MODEL/field/arena.x");
@@ -93,7 +124,14 @@ HRESULT CGame::Init(void)
 	auto pEnemy = CEnemy::Create(D3DXVECTOR3(0.0f, 0.0f, 1500.0f));
 
 	// ゲージのフレームの生成
-	CGageFrame::Create(D3DXVECTOR3(1000.0f, 36.0f, 0.0f), D3DXVECTOR2(200.0f, 25.0f), CGageFrame::TYPE_HP_ENEMY);
+	gageFrame = CGageFrame::Create(D3DXVECTOR3(1000.0f, 36.0f, 0.0f), D3DXVECTOR2(200.0f, 25.0f), CGageFrame::TYPE_HP_ENEMY);
+
+	// 生成できていたら
+	if (gageFrame != nullptr)
+	{
+		// テクスチャのIDの設定
+		gageFrame->SetTextureID("data/TEXTURE/GageFrame/enemyHpgageFrame.png");
+	}
 
 	// HPゲージの生成
 	pGage = CHpGage::Create(D3DXVECTOR3(1115.0f, 36.0f, 0.0f), D3DXVECTOR2(308.0f, 17.0f), D3DXCOLOR(1.0f, 0.2f, 0.0f, 1.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), CEnemy::MAX_LIFE, false);

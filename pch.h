@@ -39,8 +39,9 @@
 #define WINDOW_NAME "The Parry"		// ウインドウの名前(キャプションに表示)
 #define SCREEN_WIDTH (1280)			// ウインドウの幅
 #define SCREEN_HEIGHT (720)			// ウインドウの高さ
-#define FVF_VERTEX_2D (D3DFVF_XYZRHW|D3DFVF_DIFFUSE|D3DFVF_TEX1)
-#define FVF_VERTEX_3D (D3DFVF_XYZ | D3DFVF_NORMAL |  D3DFVF_DIFFUSE | D3DFVF_TEX1) // 座標,法線,カラー,テクスチャ
+#define FVF_VERTEX_2D (D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1)			     // 2Dの頂点情報
+#define FVF_VERTEX_2DMT (D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX2)				 // 2Dマルチテクスチャの頂点情報
+#define FVF_VERTEX_3D (D3DFVF_XYZ | D3DFVF_NORMAL |  D3DFVF_DIFFUSE | D3DFVF_TEX1)   // 座標,法線,カラー,テクスチャ
 
 //***************************************************
 // 定数の名前空間
@@ -66,6 +67,18 @@ typedef struct
 	D3DCOLOR col;					// 頂点カラー
 	D3DXVECTOR2 tex;				// テクスチャ座標
 }VERTEX_2D;
+
+//**********************
+// 頂点情報[3D]の構造体
+//**********************
+typedef struct
+{
+	D3DXVECTOR3 pos;			// 頂点座標
+	float rhw;					// 座標返還係数(1.0fで指定)
+	D3DCOLOR col;				// 頂点カラー
+	D3DXVECTOR2 tex;			// テクスチャ座標
+	D3DXVECTOR2 texMT;			// テクスチャ座標MT
+}VERTEX_2D_MULT;
 
 //**********************
 // 頂点情報[3D]の構造体

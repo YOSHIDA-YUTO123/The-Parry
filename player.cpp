@@ -52,6 +52,7 @@ constexpr float SHADOW_MAX_HEIGHT = 500.0f; // 影が見える最大の高さ
 constexpr float SHADOW_A_LEVEL = 0.9f;		// 影のアルファ値のオフセット
 constexpr int PARRY_TIME = 15;				// パリィの有効時間
 constexpr int ATTACK_TIME = 120;			// 攻撃の有効時間
+constexpr float AVOID_STAMINA = 30.0f;		// 回避に使用するスタミナ
 
 //===================================================
 // コンストラクタ
@@ -640,9 +641,11 @@ CPlayerGame::CPlayerGame()
 	m_nParryCounter = NULL;
 	m_bJump = false;		
 	m_bDash = false;
-	m_pObserver = nullptr;
+	m_pHpObserver = nullptr;
+	m_pStaminaObserver = nullptr;
 	m_pOrbit = nullptr;
 	m_nAttackCounter = NULL;
+	m_fStamina = NULL;
 }
 
 //===================================================
@@ -684,6 +687,9 @@ HRESULT CPlayerGame::Init(void)
 	// コライダーの生成
 	m_pAABB = CColliderAABB::Create(pos,m_posOld, Size);
 
+	// スタミナを設定
+	m_fStamina = MAX_STAMINA;
+
 	return S_OK;
 }
 
@@ -699,11 +705,18 @@ void CPlayerGame::Uninit(void)
 	m_pOrbit = nullptr;
 	m_pAABB = nullptr;
 
-	// オブザーバーの破棄
-	if (m_pObserver != nullptr)
+	// HPオブザーバーの破棄
+	if (m_pHpObserver != nullptr)
 	{
-		delete m_pObserver;
-		m_pObserver = nullptr;
+		delete m_pHpObserver;
+		m_pHpObserver = nullptr;
+	}
+
+	// Staminaオブザーバーの破棄
+	if (m_pStaminaObserver != nullptr)
+	{
+		delete m_pStaminaObserver;
+		m_pStaminaObserver = nullptr;
 	}
 
 	// プレイヤーの破棄
@@ -873,7 +886,7 @@ void CPlayerGame::Update(void)
 			pMotion->SetMotion(TYPE_LANDING, true, 5);
 
 			// サークルを生成
-			auto pCircle = CMeshCircle::Create(D3DCOLOR_RGBA(220, 220, 220, 200), pos, 0.0f, 50.0f, 32);
+			auto pCircle = CMeshCircle::Create(D3DCOLOR_RGBA(220, 220, 220, 200), D3DXVECTOR3(pos.x,pos.y + 3.0f,pos.z), 0.0f, 50.0f, 32);
 
 			// サークルの設定
 			pCircle->SetCircle(0.0f, 10.0f, 30, true);
@@ -927,18 +940,23 @@ void CPlayerGame::Update(void)
 		}
 	}
 
-	// 生きてるなら
-	if (bAlive == true)
+	// 回避ボタンを押したかつ生きているなら
+	if ((pMouse->OnMouseTriggerDown(1) || pJoypad->GetTrigger(pJoypad->JOYKEY_B)) && bAlive)
 	{
-		// 回避
-		if (pMouse->OnMouseTriggerDown(1) || pJoypad->GetTrigger(pJoypad->JOYKEY_B))
+		// 回避できるなら
+		if (IsAvoid(pMotion))
 		{
+			// スタミナの設定
+			SetStamina(-AVOID_STAMINA);
+
+			// 向きを設定
 			SetMoveAngle(pCamera, pKeyboard, pJoypad, pCharacter);
 
 			// 回避
 			ChangeState(make_shared<CPlayerAvoid>(20.0f));
 		}
 	}
+	
 #ifdef _DEBUG
 
 #endif // _DEBUG
@@ -969,6 +987,8 @@ void CPlayerGame::Update(void)
 	// 反撃
 	if (pKeyboard->GetTrigger(DIK_F) && m_nAttackCounter >= 0)
 	{
+		m_nAttackCounter = 0;
+
 		// 回し蹴り状態を設定
 		ChangeState(make_shared<CPlayerRoundKick>());
 	}
@@ -979,6 +999,9 @@ void CPlayerGame::Update(void)
 		// 位置の設定
 		m_pFOV->SetPosition(pos);
 	}
+
+	// スタミナの更新処理
+	UpdateStamina();
 
 	// オブザーバーへの通知処理
 	Notify();
@@ -1138,6 +1161,24 @@ void CPlayerGame::UpdateCollider(D3DXVECTOR3 pos)
 		m_pAABB->UpdateData(D3DXVECTOR3(pos.x, pos.y + fSizeY, pos.z), D3DXVECTOR3(m_posOld.x, m_posOld.y + fSizeY, m_posOld.z));
 	}
 }
+
+//===================================================
+// スタミナの更新処理
+//===================================================
+void CPlayerGame::UpdateStamina(void)
+{
+	m_fStamina += 0.1f;
+
+	// 範囲制限する
+	m_fStamina = Clamp(m_fStamina, 0.0f, MAX_STAMINA);
+}
+
+////===================================================
+//// オブザーバーの設定処理
+////===================================================
+//template <class T> void CPlayerGame::SetObserver(CObserver<T>* pObserver, const OBSERVER type)
+//{
+//}
 
 //===================================================
 // パリィの成功度の取得
@@ -1361,6 +1402,14 @@ void CPlayerGame::SetStance(void)
 }
 
 //===================================================
+// スタミナの設定
+//===================================================
+void CPlayerGame::SetStamina(const float fStamina)
+{
+	m_fStamina += fStamina;
+}
+
+//===================================================
 // インパクトの当たり判定
 //===================================================
 void CPlayerGame::CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos,CCharacter3D * pCharacter,CMotion*pMotion)
@@ -1470,6 +1519,26 @@ bool CPlayerGame::IsStance(CMotion *pMotion)
 }
 
 //===================================================
+// 回避を出せるか判定
+//===================================================
+bool CPlayerGame::IsAvoid(CMotion* pMotion)
+{
+	// 反撃受付時間は回避できない
+	if (pMotion->IsEventFrame(1, m_nParryTime, TYPE_STANCE)) return false;
+
+	// 反撃モーションの時一定時間回避できない
+	if (pMotion->IsEventFrame(1, 15, TYPE_PARRY)) return false;
+
+	// 回避モーションの時回避できない
+	if (pMotion->GetBlendType() == TYPE_AVOID) return false;
+
+	// スタミナが消費分無かったら
+	if (m_fStamina < AVOID_STAMINA) return false;
+
+	return true;
+}
+
+//===================================================
 // 通知処理
 //===================================================
 void CPlayerGame::Notify(void)
@@ -1480,12 +1549,18 @@ void CPlayerGame::Notify(void)
 	// キャラクターが無かったら処理しない
 	if (pCharacter == nullptr) return;
 
-	if (m_pObserver != nullptr)
+	if (m_pHpObserver != nullptr)
 	{
 		// HPの取得
 		int nLife = pCharacter->GetLife();
 
 		// HPの変化を通知する
-		m_pObserver->OnNotify(nLife);
+		m_pHpObserver->OnNotify(nLife);
+	}
+
+	if (m_pStaminaObserver != nullptr)
+	{
+		// スタミナの変化を通知する
+		m_pStaminaObserver->OnNotify(m_fStamina);
 	}
 }

@@ -100,9 +100,10 @@ void CObject2D::Draw(void)
 	// 頂点フォーマットの設定
 	pDevice->SetFVF(FVF_VERTEX_2D);
 
+	// テクスチャがあるなら
 	if (m_nTextureIdx != -1)
 	{
-		// NULLに戻す
+		// テクスチャを設定
 		pDevice->SetTexture(0, pTexture->GetAdress(m_nTextureIdx));
 	}
 	else
@@ -110,7 +111,7 @@ void CObject2D::Draw(void)
 		// テクスチャがない
 		pDevice->SetTexture(0, NULL);
 	}
-	// プレイヤーの描画
+	// ポリゴンの描画
 	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2); // プリミティブの種類	
 }
 

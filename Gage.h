@@ -20,7 +20,9 @@
 //************************************************
 // 前方宣言
 //************************************************
+template <class T>
 class CObserver;
+
 class CGageFrame;
 class CTemporaryGage;
 
@@ -30,7 +32,7 @@ class CTemporaryGage;
 class CGage : public CObject2D
 {
 public:
-	CGage(int nPriority = 7);
+	CGage(int nPriority = 6);
 	~CGage();
 
 	virtual HRESULT Init(void) override;
@@ -68,7 +70,7 @@ private:
 class CTemporaryGage : public CGage
 {
 public:
-	CTemporaryGage(int nPriority = 6);
+	CTemporaryGage(int nPriority = 5);
 	~CTemporaryGage();
 
 	HRESULT Init(void) override;
@@ -78,8 +80,29 @@ public:
 	void SetLength(const float fLength) { m_fDestLength = fLength; }
 	void SetGage(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size, const D3DXCOLOR col, const bool bDecRightToLeft);
 private:
-	float m_fDestLength; // 目的の長さ
-	float m_fLength;	 // 長さ
+	float m_fDestLength;	 // 目的の長さ
+	float m_fLength;		 // 長さ
 	bool m_bDecRightToLeft;  // 右から左に減るか判定
+};
+
+//************************************************
+// スタミナゲージクラスの定義
+//************************************************
+class CStaminaGage : public CGage
+{
+public:
+	CStaminaGage();
+	~CStaminaGage();
+
+	static CStaminaGage* Create(const D3DXVECTOR3 pos, D3DXVECTOR2 Size, const D3DXCOLOR col, const float fStamina);
+
+	HRESULT Init(void) override;
+	void Uninit(void) override;
+	void Update(void) override;
+	void Draw(void) override;
+	void Set(const float fStamina) { m_fStamina = fStamina; } // スタミナゲージの設定処理
+private:
+	float m_fMaxStamina;	// 最大のスタミナ
+	float m_fStamina;		// 現在のスタミナ
 };
 #endif

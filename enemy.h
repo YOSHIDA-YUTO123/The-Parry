@@ -36,6 +36,8 @@ class CEnemyMovement;
 class CColliderAABB;
 class CVelocity;
 class CPlayerGame;
+
+template <class T>
 class CObserver;
 
 //***************************************************
@@ -48,7 +50,7 @@ public:
 	static constexpr int MAX_LIFE = 50; // 最大のHP
 
 	// モーションの種類
-	typedef enum
+	enum MOTION
 	{
 		MOTION_NEUTRAL = 0, // ニュートラル
 		MOTION_MOVE,		// 移動
@@ -69,7 +71,17 @@ public:
 		MOTION_DEATH,		// 死亡
 		MOTION_DOWN,		// ダウン
 		MOTION_MAX
-	}MOTION;
+	};
+
+	// 攻撃の結果
+	enum RESULT
+	{
+		RESULT_NONE = 0,  // 何も無し
+		RESULT_PARRY,	  // パリィされた
+		RESULT_AVOID,	  // 回避された
+		RESULT_HIT,		  // 攻撃が当たった
+		RESULT_MAX
+	};
 
 	CEnemy();
 	~CEnemy();
@@ -96,12 +108,13 @@ public:
 	void ChangeState(std::shared_ptr<CEnemyState> pNewState);
 	bool CollisionObstacle(D3DXVECTOR3* pPos);
 	void SetSuccess(const int success) { m_nParrySuccess = success; }   // 成功度の設定
-	void SetObserver(CObserver* pObserver) { m_pObserver = pObserver; }
+	void SetObserver(CObserver<int>* pObserver) { m_pObserver = pObserver; }
 	void SetHitStop(const int nTime);
 	void SetRubble(void);
 	void Hit(const int nDamage);
 	void MoveSmoke(void);
 	void SetAngle(const float fAngle);
+	RESULT AttackResult(CPlayerGame* pPlayer);					// 攻撃の結果
 private:
 	void CollisionPlayer(CMotion* pPlayerMotion, CPlayerGame* pPlayer);
 	void SetParent(const int nCnt);
@@ -109,14 +122,14 @@ private:
 	void Notify(void);									// オブザーバーへの通知処理
 
 	std::unique_ptr<CColliderAABB> m_pAABB;				// AABBのコライダー
-	std::unique_ptr<CStateMachine> m_pMachine;
+	std::unique_ptr<CStateMachine> m_pMachine;			// 状態マシーン
 	std::shared_ptr<CCharacter3D> m_pCharactor;			// キャラクタークラス
 	std::unique_ptr<CColliderSphere> m_pSphere;			// 円の当たり判定クラス
 	std::unique_ptr<CMotion> m_pMotion;					// 敵のモーションの制御クラスのポインタ
 	std::shared_ptr<CVelocity> m_pMove;					// 移動クラスの生成
 	std::vector<CModel*> m_apModel;						// モデルクラスへのポインタ
 	std::unique_ptr<CEnemyMovement> m_pMovement;		// 敵の移動制御クラス
-	CObserver* m_pObserver;							// オブザーバークラスへのポインタ
+	CObserver<int>* m_pObserver;								// オブザーバークラスへのポインタ
 	CMeshOrbit* m_pOrbit;								// 軌跡
 	D3DXMATRIX m_weponMatrix;							// 武器のワールドマトリックス
 	D3DXVECTOR3 m_posOld;								// 前回の位置

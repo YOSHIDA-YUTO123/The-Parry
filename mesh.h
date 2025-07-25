@@ -23,7 +23,7 @@
 class CMesh : public CObject 
 {
 public:
-	CMesh(int nPriority = 6);
+	CMesh(int nPriority = 3);
 	virtual ~CMesh();
 	virtual HRESULT Init(void);
 	virtual void Uninit(void);

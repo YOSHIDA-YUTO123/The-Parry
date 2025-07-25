@@ -18,6 +18,9 @@
 #include<memory>
 #include"scene.h"
 
+//***************************************************
+// ‘O•ûéŒ¾
+//***************************************************
 class CCollisionManager;
 class CRenderer;
 class CScene;

@@ -28,10 +28,11 @@ public:
 	{
 		TYPE_HP_PLAYER = 0,
 		TYPE_HP_ENEMY,
+		TYPE_STAMINA,
 		TYPE_MAX
 	};
 
-	CGageFrame(int nPriority = 5);
+	CGageFrame(int nPriority = 4);
 	~CGageFrame();
 
 	static CGageFrame* Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size, const TYPE type);
