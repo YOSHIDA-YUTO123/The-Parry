@@ -329,7 +329,7 @@ void CEnemyAttackSmash::Update(void)
 
 			// パーティクルの設定処理
 			pParticle->SetParticle(15.0f, 120, 150, 1);
-			pParticle->SetParticle(CEffect3D::TYPE_HIT);
+			pParticle->SetParam(CEffect3D::TYPE_HIT);
 
 			// ヒットストップ
 			m_pEnemy->SetHitStop(25);
@@ -708,7 +708,7 @@ void CEnemySpin::Update(void)
 
 			// パーティクルの設定処理
 			pParticle->SetParticle(15.0f, 120, 150, 1);
-			pParticle->SetParticle(CEffect3D::TYPE_HIT);
+			pParticle->SetParam(CEffect3D::TYPE_HIT);
 
 			// ヒットストップ
 			m_pEnemy->SetHitStop(25);
@@ -1238,7 +1238,7 @@ void CEnemySwing::Update(void)
 
 				// パーティクルの設定処理
 				pParticle->SetParticle(15.0f, 120, 150, 1);
-				pParticle->SetParticle(CEffect3D::TYPE_HIT);
+				pParticle->SetParam(CEffect3D::TYPE_HIT);
 
 				m_pEnemy->SetHitStop(25);
 
@@ -1451,7 +1451,7 @@ void CEnemyJumpAttack::CollisionPlayer(CPlayerGame* pPlayer, CMotion* pMotion)
 
 			// パーティクルの設定処理
 			pParticle->SetParticle(15.0f, 120, 150, 1);
-			pParticle->SetParticle(CEffect3D::TYPE_HIT);
+			pParticle->SetParam(CEffect3D::TYPE_HIT);
 
 			// ヒットストップ
 			m_pEnemy->SetHitStop(25);

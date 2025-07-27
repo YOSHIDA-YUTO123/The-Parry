@@ -112,6 +112,9 @@ void CCamera::Update(void)
 	// マウスの視点移動
 	MouseView();
 
+	// パッドの視点操作
+	CCamera::PadView();
+
 	// ズームの処理
 	ZoomIn();
 
@@ -266,9 +269,6 @@ void CCamera::MouseView(void)
 	CCamera::MouseWheel();
 #endif
 
-	// パッドの視点操作
-	CCamera::PadView();
-
 	// ポーズ中かどうか
 	bool bPause = CPauseManager::GetPause();
 
@@ -359,13 +359,27 @@ void CCamera::PadView(void)
 
 			float fAngle = fMag * 0.000003f;
 
-			m_rot.y += NormalizeX * 0.5f * fAngle;
-			m_rot.x -= NormalizeY * 0.5f * fAngle;
+			// 回転量を計算
+			float fAngleX = NormalizeX * 0.5f * fAngle;
+			float fAngleY = NormalizeY * 0.5f * fAngle;
+
+			m_rot.y += fAngleX;
+			m_rot.x -= fAngleY;
+
+			// 回転量を制限
+			if (m_rot.x > MAX_VIEW_TOP)
+			{
+				m_rot.x += fAngleY;
+			}
+			else if (m_rot.x < MAX_VIEW_BOTTOM)
+			{
+				m_rot.x += fAngleY;
+			}
+
+			// 視点の更新処理
+			UpdatePositionV();
 		}
 	}
-
-	// 視点の更新処理
-	UpdatePositionV();
 }
 
 //===================================================

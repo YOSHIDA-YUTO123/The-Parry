@@ -97,6 +97,12 @@
     <Filter Include="ヘッダー ファイル\object2DMT">
       <UniqueIdentifier>{ee81d011-3cf9-47c8-b118-6d44b3767d67}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\objectBillboard\particle">
+      <UniqueIdentifier>{cc823b23-974c-4dbc-8e5d-c43e2efa41f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\objectBillboard\particle">
+      <UniqueIdentifier>{a1ca54b9-5511-4a7f-8874-603b405dac4a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="testword.cpp">
@@ -149,9 +155,6 @@
     </ClCompile>
     <ClCompile Include="billboard.cpp">
       <Filter>ソース ファイル\objectBillboard</Filter>
-    </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <Filter>ソース ファイル\system</Filter>
     </ClCompile>
     <ClCompile Include="transform.cpp">
       <Filter>ソース ファイル\system</Filter>
@@ -276,9 +279,6 @@
     <ClCompile Include="effect.cpp">
       <Filter>ソース ファイル\objectBillboard\effect</Filter>
     </ClCompile>
-    <ClCompile Include="particle.cpp">
-      <Filter>ソース ファイル\objectBillboard\effect</Filter>
-    </ClCompile>
     <ClCompile Include="MoveSmoke.cpp">
       <Filter>ソース ファイル\objectBillboard\effect</Filter>
     </ClCompile>
@@ -290,6 +290,21 @@
     </ClCompile>
     <ClCompile Include="object2DMT.cpp">
       <Filter>ソース ファイル\object2DMT</Filter>
+    </ClCompile>
+    <ClCompile Include="ZoneEffect.cpp">
+      <Filter>ソース ファイル\objectBillboard\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="particle.cpp">
+      <Filter>ソース ファイル\objectBillboard\particle</Filter>
+    </ClCompile>
+    <ClCompile Include="ZoneParticle.cpp">
+      <Filter>ソース ファイル\objectBillboard\particle</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>ソース ファイル\base</Filter>
+    </ClCompile>
+    <ClCompile Include="overlay.cpp">
+      <Filter>ソース ファイル\object2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -355,9 +370,6 @@
     </ClInclude>
     <ClInclude Include="score.h">
       <Filter>ヘッダー ファイル\number</Filter>
-    </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>ヘッダー ファイル\system</Filter>
     </ClInclude>
     <ClInclude Include="camera.h">
       <Filter>ヘッダー ファイル\system</Filter>
@@ -473,9 +485,6 @@
     <ClInclude Include="MoveSmoke.h">
       <Filter>ヘッダー ファイル\objectBillboard\effect</Filter>
     </ClInclude>
-    <ClInclude Include="particle.h">
-      <Filter>ヘッダー ファイル\objectBillboard\effect</Filter>
-    </ClInclude>
     <ClInclude Include="pause.h">
       <Filter>ヘッダー ファイル\object2D</Filter>
     </ClInclude>
@@ -484,6 +493,21 @@
     </ClInclude>
     <ClInclude Include="object2DMT.h">
       <Filter>ヘッダー ファイル\object2DMT</Filter>
+    </ClInclude>
+    <ClInclude Include="ZoneEffect.h">
+      <Filter>ヘッダー ファイル\objectBillboard\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>ヘッダー ファイル\base</Filter>
+    </ClInclude>
+    <ClInclude Include="ZoneParticle.h">
+      <Filter>ヘッダー ファイル\objectBillboard\particle</Filter>
+    </ClInclude>
+    <ClInclude Include="particle.h">
+      <Filter>ヘッダー ファイル\objectBillboard\particle</Filter>
+    </ClInclude>
+    <ClInclude Include="overlay.h">
+      <Filter>ヘッダー ファイル\object2D</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

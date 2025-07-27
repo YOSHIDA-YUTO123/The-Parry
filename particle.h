@@ -46,6 +46,7 @@ public:
 	virtual void Uninit(void);
 	virtual void Update(void) = 0;
 	virtual void Draw(void);
+	void SetParticle(const float fSpeed, const int nLife, const int nNumParticle, const int nTime);
 
 protected:
 	int GetMaxLife(void) const { return m_nMaxLife; }
@@ -67,13 +68,12 @@ public:
 	~CParticle3DNormal();
 
 	static CParticle3DNormal* Create(const D3DXVECTOR3 pos,const float fRadius,const D3DXCOLOR col);
-	void SetParticle(const float fSpeed, const int nLife, const int nNumParticle, const int nTime);
-	void SetParticle(CEffect3D::TYPE type);
+	void SetParam(CEffect3D::TYPE type);
 
-	HRESULT Init(void);
-	void Uninit(void);
-	void Update(void);
-	void Draw(void) {};
+	HRESULT Init(void) override;
+	void Uninit(void) override;
+	void Update(void) override;
+	void Draw(void) override {};
 private:
 	CEffect3D::TYPE m_type;
 };

@@ -599,7 +599,7 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 		auto pParticle = CParticle3DNormal::Create(ImpactPos, 10.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
 
 		// パーティクルの設定処理
-		pParticle->SetParticle(15.0f, 240, 50, 5);
+		pParticle->SetParticle(15.0f, 60, 50, 5);
 
 		// ボスまでの角度を取得
 		float fAngle = GetTargetAngle(pos, PlayerPos);
@@ -1046,14 +1046,17 @@ CEnemy::RESULT CEnemy::AttackResult(CPlayerGame* pPlayer)
 	// 位置の取得
 	D3DXVECTOR3 pos = GetPosition();
 
+	// プレイヤーのモーションの取得
+	CMotion* pPlayerMotion = pPlayer->GetMotion();
+
+	// プレイヤーのモーションの取得
+	int playerMotionType = pPlayerMotion->GetBlendType();
+
 	// 武器が当たったら
-	if (CollisionWepon())
+	if (CollisionWepon() && playerMotionType != pPlayer->TYPE_PARRY)
 	{
 		// パリィできるか判定
 		const bool bParry = pPlayer->IsParry(pos);
-
-		// プレイヤーのモーションの取得
-		CMotion* pPlayerMotion = pPlayer->GetMotion();
 
 		// パリィできた
 		if (bParry)
@@ -1062,7 +1065,7 @@ CEnemy::RESULT CEnemy::AttackResult(CPlayerGame* pPlayer)
 			return RESULT_PARRY;
 		}
 		// 回避だったら
-		else if (pPlayerMotion->GetBlendType() == pPlayer->TYPE_AVOID)
+		else if (playerMotionType == pPlayer->TYPE_AVOID)
 		{
 			// 回避した
 			return RESULT_AVOID;

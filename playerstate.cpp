@@ -217,21 +217,25 @@ void CPlayerAvoid::Update(void)
 	// 移動制御の取得
 	auto pMoveMent = m_pPlayer->GetMovement();
 
-	// 移動クラスの取得
-	if (pMoveMent != nullptr)
+	// モーションがあるなら
+	if (pMotion != nullptr)
 	{
-		// 向いている方向に進む処理
-		pMoveMent->MoveForward(m_fSpeed);
-	}
+		// 移動クラスの取得
+		if (pMoveMent != nullptr && pMotion->IsEventFrame(1,15,CPlayer::TYPE_AVOID))
+		{
+			// 向いている方向に進む処理
+			pMoveMent->MoveForward(m_fSpeed);
+		}
 
-	// モーションが終わったら
-	if (pMotion->FinishMotion())
-	{
-		m_pPlayer->ChangeState(make_shared<CPlayerNormal>());
+		// モーションが終わったら
+		if (pMotion->FinishMotion())
+		{
+			m_pPlayer->ChangeState(make_shared<CPlayerNormal>());
 
-		pMotion->SetMotion(m_pPlayer->TYPE_NEUTRAL, true, 5);
+			pMotion->SetMotion(m_pPlayer->TYPE_NEUTRAL, true, 5);
 
-		return;
+			return;
+		}
 	}
 }
 
@@ -373,6 +377,101 @@ void CPlayerDash::Update(void)
 
 			// エフェクトの設定処理
 			pEffect->SetEffect(60, D3DXVECTOR3(fMoveX, 0.0f, fMoveZ));
+		}
+	}
+}
+
+//===================================================
+// コンストラクタ(ジャンプ)
+//===================================================
+CPlayerJump::CPlayerJump() : CPlayerState(ID_JUMP)
+{
+
+}
+
+//===================================================
+// デストラクタ(ジャンプ)
+//===================================================
+CPlayerJump::~CPlayerJump()
+{
+}
+
+//===================================================
+// 初期化処理(ジャンプ)
+//===================================================
+void CPlayerJump::Init(void)
+{
+	// モーションの取得
+	CMotion* pMotion = m_pPlayer->GetMotion();
+
+	if (pMotion != nullptr)
+	{
+		// モーションの再生
+		pMotion->SetMotion(MOTION::TYPE_JUMP, true, 2);
+	}
+}
+
+//===================================================
+// 更新処理(ジャンプ)
+//===================================================
+void CPlayerJump::Update(void)
+{
+
+}
+
+//===================================================
+// コンストラクタ(着地)
+//===================================================
+CPlayerLanding::CPlayerLanding() : CPlayerState(ID_LANDING)
+{
+
+}
+
+//===================================================
+// デストラクタ(着地)
+//===================================================
+CPlayerLanding::~CPlayerLanding()
+{
+}
+
+//===================================================
+// 初期化処理(着地)
+//===================================================
+void CPlayerLanding::Init(void)
+{
+	// モーションの取得
+	CMotion* pMotion = m_pPlayer->GetMotion();
+
+	if (pMotion != nullptr)
+	{
+		// 着地モーションの再生
+		pMotion->SetMotion(MOTION::TYPE_LANDING, true, 5);
+	}
+
+	// 位置の取得
+	D3DXVECTOR3 pos = m_pPlayer->GetPos();
+
+	// サークルを生成
+	auto pCircle = CMeshCircle::Create(D3DCOLOR_RGBA(220, 220, 220, 200), D3DXVECTOR3(pos.x, pos.y + 3.0f, pos.z), 0.0f, 50.0f, 32);
+
+	// サークルの設定
+	pCircle->SetCircle(0.0f, 10.0f, 30, true);
+}
+
+//===================================================
+// 更新処理(着地)
+//===================================================
+void CPlayerLanding::Update(void)
+{
+	// モーションの取得
+	CMotion* pMotion = m_pPlayer->GetMotion();
+
+	if (pMotion != nullptr)
+	{
+		// モーションが終わったら
+		if (pMotion->IsFinishEndBlend())
+		{
+			m_pPlayer->ChangeState(make_shared<CPlayerNormal>());
 		}
 	}
 }

@@ -37,34 +37,6 @@ CParticle3D::~CParticle3D()
 {
 }
 
-////===================================================
-//// 生成処理
-////===================================================
-//CParticle3D* CParticle3D::Create(const D3DXVECTOR3 pos, const D3DXCOLOR col, const int nLife, const float fRadius, const int nNumParticle, const int nTime, const float fSpeed)
-//{
-//	CParticle3D* pParticle = nullptr;
-//
-//	// 3Dオブジェクトの生成
-//	pParticle = new CParticle3D;
-//
-//	if (pParticle == nullptr) return nullptr;
-//
-//	// 初期化処理
-//	pParticle->Init();
-//
-//	// 設定処理
-//	pParticle->m_pos = pos;
-//	pParticle->m_fRadius = fRadius;
-//	pParticle->m_nLife = nLife;
-//	pParticle->m_nMaxLife = nLife;
-//	pParticle->m_col = col;
-//	pParticle->m_nNumParticle = nNumParticle;
-//	pParticle->m_nTime = nTime;
-//	pParticle->m_fSpeed = fSpeed;
-//
-//	return pParticle;
-//}
-
 //===================================================
 // 初期化処理
 //===================================================
@@ -97,6 +69,25 @@ void CParticle3D::Uninit(void)
 void CParticle3D::Draw(void)
 {
 
+}
+
+//===================================================
+// パーティクルの設定処理
+//===================================================
+void CParticle3D::SetParticle(const float fSpeed, const int nLife, const int nNumParticle, const int nTime)
+{
+	// 情報の取得
+	Info info = GetInfo();
+
+	// 設定処理
+	info.fSpeed = fSpeed;
+	m_nMaxLife = nLife;
+	info.nLife = nLife;
+	info.nNumParticle = nNumParticle;
+	info.nTime = nTime;
+
+	// 情報の設定
+	SetInfo(info);
 }
 
 //===================================================
@@ -139,25 +130,7 @@ CParticle3DNormal* CParticle3DNormal::Create(const D3DXVECTOR3 pos, const float 
 //===================================================
 // パーティクルの設定処理
 //===================================================
-void CParticle3DNormal::SetParticle(const float fSpeed, const int nLife, const int nNumParticle, const int nTime)
-{
-	// 情報の取得
-	Info info = GetInfo();
-
-	// 設定処理
-	info.fSpeed = fSpeed;
-	info.nLife = nLife;
-	info.nNumParticle = nNumParticle;
-	info.nTime = nTime;
-
-	// 情報の設定
-	SetInfo(info);
-}
-
-//===================================================
-// パーティクルの設定処理(オーバーロード)
-//===================================================
-void CParticle3DNormal::SetParticle(CEffect3D::TYPE type)
+void CParticle3DNormal::SetParam(CEffect3D::TYPE type)
 {
 	m_type = type;
 }
@@ -167,7 +140,11 @@ void CParticle3DNormal::SetParticle(CEffect3D::TYPE type)
 //===================================================
 HRESULT CParticle3DNormal::Init(void)
 {
-	CParticle3D::Init();
+	// 初期化処理
+	if (FAILED(CParticle3D::Init()))
+	{
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -177,8 +154,8 @@ HRESULT CParticle3DNormal::Init(void)
 //===================================================
 void CParticle3DNormal::Uninit(void)
 {
-	// 自分自身の破棄
-	Release();
+	// 終了処理
+	CParticle3D::Uninit();
 }
 
 //===================================================
@@ -229,10 +206,25 @@ void CParticle3DNormal::Update(void)
 		if (info.nTime > 0)
 		{
 			// エフェクトの生成
-			auto pEffect = CEffect3D::Create(pos,fRadius,col,m_type);
+			auto pEffect = CEffect3D::Create(pos,fRadius,col);
 
 			// エフェクトの設定処理
-			pEffect->SetEffect(nLife, moveWk);
+			pEffect->Set(nLife, moveWk);
+
+			// 種類の遷移
+			switch (m_type)
+			{
+			case CEffect3D::TYPE_NORAML:
+				// IDの設定
+				pEffect->SetTextureID("data/TEXTURE/effect/effect000.jpg");
+				break;
+			case CEffect3D::TYPE_HIT:
+				// IDの設定
+				pEffect->SetTextureID("data/TEXTURE/effect/star_A.jpg");
+				break;
+			default:
+				break;
+			}
 		}
 	}
 	

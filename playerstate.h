@@ -36,6 +36,8 @@ public:
 		ID_BASE = 0,
 		ID_NORMAL,
 		ID_MOVE,
+		ID_JUMP,
+		ID_LANDING,
 		ID_DAMAGE,
 		ID_DOWNNEUTRAL,
 		ID_AVOID,
@@ -145,6 +147,32 @@ class CPlayerDash : public CPlayerState
 public:
 	CPlayerDash();
 	~CPlayerDash();
+	void Init(void) override;
+	void Update(void) override;
+private:
+};
+
+//***************************************************
+// プレイヤーの状態(Jump)の定義
+//***************************************************
+class CPlayerJump : public CPlayerState
+{
+public:
+	CPlayerJump();
+	~CPlayerJump();
+	void Init(void) override;
+	void Update(void) override;
+private:
+};
+
+//***************************************************
+// プレイヤーの状態(Landing)の定義
+//***************************************************
+class CPlayerLanding : public CPlayerState
+{
+public:
+	CPlayerLanding();
+	~CPlayerLanding();
 	void Init(void) override;
 	void Update(void) override;
 private:

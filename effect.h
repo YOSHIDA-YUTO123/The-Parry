@@ -29,35 +29,44 @@ class CVelocity;
 class CEffect3D : public CObjectBillboard
 {
 public:
-
 	// エフェクトの種類
 	enum TYPE
 	{
 		TYPE_NORAML = 0,
 		TYPE_HIT,
+		TYPE_ZONE,
 		TYPE_MAX
+	};
+
+	// エフェクトのデータ
+	struct Data
+	{
+		std::shared_ptr<CVelocity> pMove;	// 移動量
+		D3DXCOLOR col;						// 色
+		float decRadius;					// 大きさの減少スピード
+		float decAlv;						// α値の減少スピード
+		float fRadius;						// 半径
+		int nLife;							// 寿命
 	};
 
 	CEffect3D(int nPriority = 4);
 	~CEffect3D();
 
-	static CEffect3D* Create(const D3DXVECTOR3 pos, const float fRadius, const D3DXCOLOR col,const TYPE type);
-	void SetEffect(const int nLife, const D3DXVECTOR3 move);
+	static CEffect3D* Create(const D3DXVECTOR3 pos, const float fRadius, const D3DXCOLOR col);
+	void Set(const int nLife, const D3DXVECTOR3 move);
 
-	HRESULT Init(void);
-	void Uninit(void);
-	void Update(void);
-	void Draw(void);
+	virtual HRESULT Init(void) override;
+	virtual void Uninit(void) override;
+	virtual void Update(void) override;
+	virtual void Draw(void) override;
 
-	CVelocity* GetVelocity(void) { return m_pMove.get(); }
+	CVelocity* GetVelocity(void) { return m_Data.pMove.get(); }
+protected:
+	HRESULT SetUp(const D3DXVECTOR3 pos, const float fRadius, const D3DXCOLOR col);
+	Data GetData(void) const { return m_Data; }
+	void SetData(const Data data) { m_Data = data; }
 private:
-	TYPE m_type;
-	std::shared_ptr<CVelocity> m_pMove;	// 移動量
-	D3DXCOLOR m_col;					// 色
-	float m_decRadius;					// 大きさの減少スピード
-	float m_decAlv;						// α値の減少スピード
-	float m_fRadius;					// 半径
-	int m_nLife;						// 寿命
+	Data m_Data; // エフェクトのデータ
 };
 
 #endif

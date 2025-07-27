@@ -22,12 +22,9 @@ using namespace std; // 名前空間stdを使用
 //===================================================
 CEffect3D::CEffect3D(int nPriority) : CObjectBillboard(nPriority)
 {
-	m_pMove = nullptr;
-	m_col = WHITE;
-	m_nLife = NULL;
-	m_fRadius = NULL;
-	m_decAlv = NULL;
-	m_decRadius = NULL;
+	// 値をクリアする
+	ZeroMemory(&m_Data, sizeof(m_Data));
+	m_Data.col = WHITE;
 }
 
 //===================================================
@@ -48,23 +45,23 @@ HRESULT CEffect3D::Init(void)
 		return E_FAIL;
 	}
 
-	// 種類の遷移
-	switch (m_type)
-	{
-	case TYPE_NORAML:
-		// IDの設定
-		CObjectBillboard::SetTextureID("data/TEXTURE/effect/effect000.jpg");
-		break;
-	case TYPE_HIT:
-		// IDの設定
-		CObjectBillboard::SetTextureID("data/TEXTURE/effect/star_A.jpg");
-		break;
-	default:
-		break;
-	}
+	//// 種類の遷移
+	//switch (m_Data.type)
+	//{
+	//case TYPE_NORAML:
+	//	// IDの設定
+	//	CObjectBillboard::SetTextureID("data/TEXTURE/effect/effect000.jpg");
+	//	break;
+	//case TYPE_HIT:
+	//	// IDの設定
+	//	CObjectBillboard::SetTextureID("data/TEXTURE/effect/star_A.jpg");
+	//	break;
+	//default:
+	//	break;
+	//}
 
 	// 移動クラスの生成
-	m_pMove = make_unique<CVelocity>();
+	m_Data.pMove = make_unique<CVelocity>();
 
 	return S_OK;
 }
@@ -74,7 +71,7 @@ HRESULT CEffect3D::Init(void)
 //===================================================
 void CEffect3D::Uninit(void)
 {
-	m_pMove = nullptr;
+	m_Data.pMove = nullptr;
 
 	// 終了処理
 	CObjectBillboard::Uninit();
@@ -88,31 +85,33 @@ void CEffect3D::Update(void)
 	// 位置の取得
 	D3DXVECTOR3 pos = GetPosition();
 
-	if (m_pMove != nullptr)
+	if (m_Data.pMove != nullptr)
 	{
+		m_Data.pMove->SetInertia3D(0.01f);
+
 		// 移動量の更新
-		pos += m_pMove->Get();
+		pos += m_Data.pMove->Get();
 	}
 
 	// 半径を減らす
-	m_fRadius -= m_decRadius;
+	m_Data.fRadius -= m_Data.decRadius;
 
 	// 透明度を上げる
-	m_col.a -= m_decAlv;
+	m_Data.col.a -= m_Data.decAlv;
 
 	// 寿命
-	m_nLife--;
+	m_Data.nLife--;
 
 	// 色の設定
-	SetColor(m_col);
+	SetColor(m_Data.col);
 
 	// 大きさの設定
-	SetSize(D3DXVECTOR2(m_fRadius, m_fRadius));
+	SetSize(D3DXVECTOR2(m_Data.fRadius, m_Data.fRadius));
 
 	// 位置の設定
 	UpdateVertexPos(pos);
 
-	if (m_nLife <= 0)
+	if (m_Data.nLife <= 0)
 	{
 		// 破棄
 		Uninit();
@@ -160,9 +159,29 @@ void CEffect3D::Draw(void)
 }
 
 //===================================================
+// エフェクトの設定処理
+//===================================================
+HRESULT CEffect3D::SetUp(const D3DXVECTOR3 pos, const float fRadius, const D3DXCOLOR col)
+{
+	SetPosition(pos);
+	SetSize(D3DXVECTOR2(fRadius, fRadius));
+
+	// 初期化に失敗したら
+	if (FAILED(Init()))
+	{
+		return E_FAIL;
+	}
+
+	m_Data.fRadius = fRadius;
+	m_Data.col = col;
+
+	return S_OK;
+}
+
+//===================================================
 // 生成処理
 //===================================================
-CEffect3D* CEffect3D::Create(const D3DXVECTOR3 pos, const float fRadius, const D3DXCOLOR col, const TYPE type)
+CEffect3D* CEffect3D::Create(const D3DXVECTOR3 pos, const float fRadius, const D3DXCOLOR col)
 {
 	CEffect3D* pEffect = nullptr;
 
@@ -173,10 +192,9 @@ CEffect3D* CEffect3D::Create(const D3DXVECTOR3 pos, const float fRadius, const D
 
 	pEffect->SetPosition(pos);
 	pEffect->SetSize(D3DXVECTOR2(fRadius, fRadius));
-	pEffect->m_type = type;
 	pEffect->Init();
-	pEffect->m_fRadius = fRadius;
-	pEffect->m_col = col;
+	pEffect->m_Data.fRadius = fRadius;
+	pEffect->m_Data.col = col;
 
 	return pEffect;
 }
@@ -184,19 +202,19 @@ CEffect3D* CEffect3D::Create(const D3DXVECTOR3 pos, const float fRadius, const D
 //===================================================
 // エフェクトの設定処理
 //===================================================
-void CEffect3D::SetEffect(const int nLife, const D3DXVECTOR3 move)
+void CEffect3D::Set(const int nLife, const D3DXVECTOR3 move)
 {
 	// 減少値の計算
-	m_decAlv = m_col.a / nLife;
-	m_decRadius = m_fRadius / nLife;
+	m_Data.decAlv = m_Data.col.a / nLife;
+	m_Data.decRadius = m_Data.fRadius / nLife;
 
-	m_nLife = nLife;
+	m_Data.nLife = nLife;
 
-	if (m_pMove == nullptr)
+	if (m_Data.pMove == nullptr)
 	{
 		// 移動量の生成
-		m_pMove = make_shared<CVelocity>();
+		m_Data.pMove = make_shared<CVelocity>();
 	}
 
-	m_pMove->Set(move);
+	m_Data.pMove->Set(move);
 }

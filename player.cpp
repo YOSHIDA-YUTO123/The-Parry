@@ -38,6 +38,8 @@
 #include "EffectAnim.h"
 #include "MoveSmoke.h"
 #include"Orbit.h"
+#include "ZoneParticle.h"
+#include "overlay.h"
 
 using namespace math; // 名前空間mathを使用
 using namespace std;  // 名前空間をstdを使用する
@@ -52,7 +54,7 @@ constexpr float SHADOW_MAX_HEIGHT = 500.0f; // 影が見える最大の高さ
 constexpr float SHADOW_A_LEVEL = 0.9f;		// 影のアルファ値のオフセット
 constexpr int PARRY_TIME = 15;				// パリィの有効時間
 constexpr int ATTACK_TIME = 120;			// 攻撃の有効時間
-constexpr float AVOID_STAMINA = 30.0f;		// 回避に使用するスタミナ
+constexpr float AVOID_STAMINA = 15.0f;		// 回避に使用するスタミナ
 
 //===================================================
 // コンストラクタ
@@ -873,6 +875,9 @@ void CPlayerGame::Update(void)
 	// メッシュフィールドの当たり判定
 	if (pMesh != nullptr && pMesh->Collision(pos, &fHeight))
 	{
+		//// 位置の設定
+		//SetPosition(pos);
+
 		// 高さの設定
 		pos.y = fHeight;
 
@@ -882,14 +887,8 @@ void CPlayerGame::Update(void)
 		// モーションがジャンプだったら
 		if (pMotion->GetBlendType() == TYPE_JUMP)
 		{
-			// 着地モーションの再生
-			pMotion->SetMotion(TYPE_LANDING, true, 5);
-
-			// サークルを生成
-			auto pCircle = CMeshCircle::Create(D3DCOLOR_RGBA(220, 220, 220, 200), D3DXVECTOR3(pos.x,pos.y + 3.0f,pos.z), 0.0f, 50.0f, 32);
-
-			// サークルの設定
-			pCircle->SetCircle(0.0f, 10.0f, 30, true);
+			// 着地状態に派生
+			ChangeState(make_shared<CPlayerLanding>());
 		}
 	}
 	else
@@ -927,12 +926,13 @@ void CPlayerGame::Update(void)
 	m_pMove->Gravity(-MAX_GRABITY);
 
 	// ジャンプできるなら
-	if ((pKeyboard->GetPress(DIK_SPACE) == true || pJoypad->GetPress(pJoypad->JOYKEY_A) == true) && m_bJump == true)
+	if ((pKeyboard->GetTrigger(DIK_SPACE) == true || pJoypad->GetTrigger(pJoypad->JOYKEY_A) == true) && m_bJump == true)
 	{
 		// 生きてるなら
 		if (bAlive)
 		{
-			pMotion->SetMotion(TYPE_JUMP, true, 2);
+			// ジャンプ状態に移行する
+			ChangeState(make_shared<CPlayerJump>());
 
 			// 移動量を上方向に設定
 			m_pMove->Jump(JUMP_HEIGHT);
@@ -953,7 +953,7 @@ void CPlayerGame::Update(void)
 			SetMoveAngle(pCamera, pKeyboard, pJoypad, pCharacter);
 
 			// 回避
-			ChangeState(make_shared<CPlayerAvoid>(20.0f));
+			ChangeState(make_shared<CPlayerAvoid>(35.0f));
 		}
 	}
 	
@@ -962,11 +962,21 @@ void CPlayerGame::Update(void)
 #endif // _DEBUG
 
 	// カウンター状態
-	if ((pMouse->OnMouseTriggerDown(0) || pJoypad->GetTrigger(pJoypad->JOYKEY_X)))
+	if ((pMouse->OnMouseTriggerDown(0) || pJoypad->GetTriggerTrigger(pJoypad->JOYKEY_L2)))
 	{
 		// 構えが出せるなら
 		if (IsStance(pMotion) && bAlive)
 		{
+			//// オーバーレイの生成
+			//auto pOverlay = COverlay::Create(D3DXVECTOR3(640.0f, 360.0f, 0.0f), D3DXVECTOR2(640.0f, 360.0f), 120);
+			//pOverlay->SetTextureID("data/TEXTURE/overlay/overlay.png");
+			
+			D3DXVECTOR3 handRpos = GetModelPos(8);
+
+			auto pParticle = CZoneParticle3D::Create(handRpos, 10, D3DCOLOR_RGBA(100, 100, 200, 255));
+			pParticle->SetParticle(1.0f, 60, 10, PARRY_TIME);
+			pParticle->SetZone(handRpos, 500);
+
 			pMotion->SetMotion(TYPE_STANCE, true, 5);
 
 			// パリィの時間
@@ -984,13 +994,18 @@ void CPlayerGame::Update(void)
 		pCamera->ResetState();
 	}
 
-	// 反撃
-	if (pKeyboard->GetTrigger(DIK_F) && m_nAttackCounter >= 0)
+	// 反撃ボタンを押したら
+	if (pKeyboard->GetTrigger(DIK_F) || pJoypad->GetTriggerTrigger(pJoypad->JOYKEY_R2))
 	{
-		m_nAttackCounter = 0;
+		// 反撃の受付時間いないだったら
+		if (m_nAttackCounter >= 0)
+		{
+			// 反撃受付しない
+			m_nAttackCounter = 0;
 
-		// 回し蹴り状態を設定
-		ChangeState(make_shared<CPlayerRoundKick>());
+			// 回し蹴り状態を設定
+			ChangeState(make_shared<CPlayerRoundKick>());
+		}
 	}
 
 	// 視界判定
@@ -1076,13 +1091,46 @@ void CPlayerGame::SetMoveAngle(CCamera* pCamera, CInputKeyboard* pKeyboard, CInp
 	// カメラの向き
 	D3DXVECTOR3 cameraRot = pCamera->GetRotaition();
 
-	if (pJoypad->GetJoyStickL())
-	{
-		return;
-	}
-
 	// 角度の取得
 	D3DXVECTOR3 Angle = CPlayer::GetRotaition();
+
+	if (pJoypad->GetJoyStickL())
+	{
+		XINPUT_STATE* pStick;
+
+		pStick = pJoypad->GetJoyStickAngle();
+
+		// Lスティックの角度
+		float LStickAngleY = pStick->Gamepad.sThumbLY;
+		float LStickAngleX = pStick->Gamepad.sThumbLX;
+
+		// デッドゾーン
+		float deadzone = 32767.0f * 0.25f;
+
+		// スティックの傾けた角度を求める
+		float magnitude = sqrtf((LStickAngleX * LStickAngleX) + (LStickAngleY * LStickAngleY));
+
+		// 動かせる
+		if (magnitude > deadzone)
+		{
+			// アングルを正規化
+			float normalizeX = (LStickAngleX / magnitude);
+			float normalizeY = (LStickAngleY / magnitude);
+
+			// プレイヤーの移動量
+			float moveX = normalizeX * cosf(-cameraRot.y) - normalizeY * sinf(-cameraRot.y);
+			float moveZ = normalizeX * sinf(-cameraRot.y) + normalizeY * cosf(-cameraRot.y);
+
+			// プレイヤーの角度を移動方向にする
+			Angle.y = atan2f(-moveX, -moveZ);
+		}
+
+		// 向きの設定
+		pCaracter->GetRotation()->Set(Angle);
+		pCaracter->GetRotation()->SetDest(Angle);
+
+		return;
+	}
 
 	if (pKeyboard->GetPress(DIK_A))
 	{
@@ -1283,7 +1331,8 @@ bool CPlayerGame::IsParry(const D3DXVECTOR3 pos)
 	// 視界内かつ状態が攻撃の時
 	if (pCharacter->GetState() == CCharacter3D::STATE_ACTION &&
 		pCollision->Collision(pos, m_pFOV.get()) &&
-		pMotion->GetBlendType() != TYPE_PARRY)
+		pMotion->GetBlendType() != TYPE_PARRY&&
+		pMotion->GetBlendType() != TYPE_DAMAGE)
 	{
 		return true;
 	}
@@ -1523,6 +1572,9 @@ bool CPlayerGame::IsStance(CMotion *pMotion)
 //===================================================
 bool CPlayerGame::IsAvoid(CMotion* pMotion)
 {
+	// モーションの種類の取得
+	int motiontype = pMotion->GetBlendType();
+
 	// 反撃受付時間は回避できない
 	if (pMotion->IsEventFrame(1, m_nParryTime, TYPE_STANCE)) return false;
 
@@ -1530,7 +1582,10 @@ bool CPlayerGame::IsAvoid(CMotion* pMotion)
 	if (pMotion->IsEventFrame(1, 15, TYPE_PARRY)) return false;
 
 	// 回避モーションの時回避できない
-	if (pMotion->GetBlendType() == TYPE_AVOID) return false;
+	if (motiontype == TYPE_AVOID) return false;
+
+	// ジャンプ中は回避できない
+	if (motiontype == TYPE_JUMP) return false;
 
 	// スタミナが消費分無かったら
 	if (m_fStamina < AVOID_STAMINA) return false;
