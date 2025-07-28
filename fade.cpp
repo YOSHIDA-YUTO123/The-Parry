@@ -61,6 +61,7 @@ void CFade::SetFade(unique_ptr<CScene> pNewScene)
 	{
 		// ”jŠü‚·‚é
 		pNewScene.reset();
+		pNewScene = nullptr;
 
 		return;
 	}

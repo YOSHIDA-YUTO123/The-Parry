@@ -24,15 +24,6 @@ class CObject2D : public CObject
 {
 public:
 
-	// オブジェクトの種類
-	typedef enum
-	{
-		TYPE_NONE = 0,
-		TYPE_BACKGROUND,
-		TYPE_PLAYER,
-		TYPE_MAX
-	}TYPE;
-
 	CObject2D(int nPriority = 7);
 	~CObject2D();
 

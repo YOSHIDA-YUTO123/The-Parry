@@ -22,6 +22,7 @@
 #include "effect.h"
 #include "particle.h"
 #include "debugproc.h"
+#include "TitleLogo.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std;   // 名前空間stdを使用
@@ -59,6 +60,9 @@ HRESULT CTitle::Init(void)
 	// ライトの取得
 	CLight* pLight = CManager::GetLight();
 	pLight->Init();
+
+	// タイトルロゴ
+	CTitleLogo::Create(D3DXVECTOR3(350.0f,100.0f,0.0f),D3DXVECTOR2(300.0f,100.0f));
 
 	pLight->SetPoint(D3DXVECTOR3(-200.0f, 300.0f, 0.0f),1000.0f, D3DCOLOR_RGBA(255, 255, 255,255), D3DCOLOR_RGBA(255, 255, 255, 255));
 	//pLight->SetPoint(D3DXVECTOR3(0.0f, 200.0f, 100.0f), 1000.0f, D3DCOLOR_RGBA(255, 255, 255, 255), D3DCOLOR_RGBA(255, 255, 255, 255));

@@ -1,6 +1,6 @@
 //===================================================
 //
-// タイトルロゴ [TitleLogo.cpp]
+// タイトルメニュー [TitleMenu.cpp]
 // Author:YUTO YOSHIDA
 //
 //===================================================
@@ -8,87 +8,47 @@
 //***************************************************
 // インクルードファイル
 //***************************************************
-#include "TitleLogo.h"
-
-using namespace Const; // 名前空間Constを使用
+#include "TitleMenu.h"
 
 //===================================================
 // コンストラクタ
 //===================================================
-CTitleLogo::CTitleLogo()
+CTitleMenu::CTitleMenu()
 {
 }
 
 //===================================================
 // デストラクタ
 //===================================================
-CTitleLogo::~CTitleLogo()
+CTitleMenu::~CTitleMenu()
 {
-}
-
-//===================================================
-// 生成処理
-//===================================================
-CTitleLogo* CTitleLogo::Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size)
-{
-	CTitleLogo* pLogo = nullptr;
-
-	// タイトルロゴの生成
-	pLogo = new CTitleLogo;
-
-	if (FAILED(pLogo->Init()))
-	{
-		pLogo->Uninit();
-		pLogo = nullptr;
-		return nullptr;
-	}
-
-	pLogo->SetPosition(pos);
-	pLogo->SetSize(Size.x, Size.y);
-	pLogo->SetVtx(WHITE);
-
-	return pLogo;
 }
 
 //===================================================
 // 初期化処理
 //===================================================
-HRESULT CTitleLogo::Init(void)
+HRESULT CTitleMenu::Init(void)
 {
-	// 初期化処理
-	if (FAILED(CObject2D::Init()))
-	{
-		return E_FAIL;
-	}
-
-	// テクスチャのIDの設定
-	SetTextureID("data/TEXTURE/title/title000.png");
-
-	return S_OK;
+	return E_NOTIMPL;
 }
 
 //===================================================
 // 終了処理
 //===================================================
-void CTitleLogo::Uninit(void)
+void CTitleMenu::Uninit(void)
 {
-	// 終了処理
-	CObject2D::Uninit();
 }
 
 //===================================================
 // 更新処理
 //===================================================
-void CTitleLogo::Update(void)
+void CTitleMenu::Update(void)
 {
-
 }
 
 //===================================================
 // 描画処理
 //===================================================
-void CTitleLogo::Draw(void)
+void CTitleMenu::Draw(void)
 {
-	// 描画処理
-	CObject2D::Draw();
 }

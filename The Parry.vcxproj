@@ -163,6 +163,7 @@
     <ClCompile Include="overlay.cpp" />
     <ClCompile Include="TitleCamera.cpp" />
     <ClCompile Include="TitleLogo.cpp" />
+    <ClCompile Include="TitleMenu.cpp" />
     <ClCompile Include="TitlePlayer.cpp" />
     <ClCompile Include="ZoneParticle.cpp" />
     <ClCompile Include="cylinder.cpp" />
@@ -241,6 +242,7 @@
     <ClInclude Include="overlay.h" />
     <ClInclude Include="TitleCamera.h" />
     <ClInclude Include="TitleLogo.h" />
+    <ClInclude Include="TitleMenu.h" />
     <ClInclude Include="TitlePlayer.h" />
     <ClInclude Include="ZoneParticle.h" />
     <ClInclude Include="cylinder.h" />
