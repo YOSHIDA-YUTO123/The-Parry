@@ -45,7 +45,7 @@ CSound* CManager::m_pSound = nullptr;					// サウンドのポインタ
 int CManager::m_nFrameCounter = 0;						// フレームのカウンター
 bool CManager::m_bShowDebug = true;						// デバッグ表示をするかしないか
 CTextureManager* CManager::m_pTexture = nullptr;		// テクスチャクラスへのポインタ
-CCamera* CManager::m_pCamera = nullptr;					// カメラのポインタ
+//CCamera* CManager::m_pCamera = nullptr;					// カメラのポインタ
 CLight* CManager::m_pLight = nullptr;					// カメラへのポインタ
 CModelManager* CManager::m_pModel = nullptr;			// モデルのクラスへのポインタ
 CSlow* CManager::m_pSlow = nullptr;						// スローモーションのポインタ
@@ -118,14 +118,12 @@ HRESULT CManager::Init(HINSTANCE hInstance,HWND hWnd, BOOL bWindow)
 	m_pModel->Load();
 
 	// カメラの生成
-	m_pCamera = new CCamera;
-	m_pCamera->Init();
+	//m_pCamera = new CCamera;
+	//m_pCamera->Init();
 
 	// ライトの生成
 	m_pLight = new CLight;
 	m_pLight->Init();
-	m_pLight->SetLight(D3DLIGHT_DIRECTIONAL, D3DXCOLOR(1.0f,1.0f, 1.0f,1.0f), D3DXVECTOR3(0.0f, -0.56f, 0.74f), D3DXVECTOR3(0.0f, 100.0f, 0.0f));
-	m_pLight->SetLight(D3DLIGHT_DIRECTIONAL, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, -0.56f, -0.74f), D3DXVECTOR3(0.0f, 100.0f, 0.0f));
 
 	// スローモーションの生成処理
 	m_pSlow = new CSlow;
@@ -168,16 +166,16 @@ void CManager::Uninit(void)
 		m_pModel = nullptr;
 	}
 
-	// カメラの破棄
-	if (m_pCamera != nullptr)
-	{
-		// 終了処理
-		m_pCamera->Uninit();
+	//// カメラの破棄
+	//if (m_pCamera != nullptr)
+	//{
+	//	// 終了処理
+	//	m_pCamera->Uninit();
 
-		delete m_pCamera;
+	//	delete m_pCamera;
 
-		m_pCamera = nullptr;
-	}
+	//	m_pCamera = nullptr;
+	//}
 
 	// ライトの破棄
 	if (m_pLight != nullptr)
@@ -322,11 +320,11 @@ void CManager::Update(void)
 		m_pInputMouse->Update();
 	}
 
-	if (m_pCamera != nullptr)
-	{
-		// カメラの更新処理
-		m_pCamera->Update();
-	}
+	//if (m_pCamera != nullptr)
+	//{
+	//	// カメラの更新処理
+	//	m_pCamera->Update();
+	//}
 
 	if (m_pLight != nullptr)
 	{	// ライトの更新処理
@@ -446,16 +444,16 @@ CTextureManager* CManager::GetTexture(void)
 	return m_pTexture;
 }
 
-//===================================================
-// カメラの取得
-//===================================================
-CCamera* CManager::GetCamera(void)
-{
-	// NULLだったら
-	if (m_pCamera == nullptr) return nullptr;
-
-	return m_pCamera;
-}
+////===================================================
+//// カメラの取得
+////===================================================
+//CCamera* CManager::GetCamera(void)
+//{
+//	// NULLだったら
+//	if (m_pCamera == nullptr) return nullptr;
+//
+//	return m_pCamera;
+//}
 
 //===================================================
 // ライトの取得
@@ -501,9 +499,6 @@ void CManager::SetMode(unique_ptr<CScene> pNewScene)
 	{
 		// 新しいシーンを設定
 		m_pScene = std::move(pNewScene);
-
-		// カメラの初期化処理
-		m_pCamera->Init();
 
 		// シーンの初期化処理
 		m_pScene->Init();

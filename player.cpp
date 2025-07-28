@@ -30,7 +30,7 @@
 #include"playerstate.h"
 #include"shadowS.h"
 #include"meshfield.h"
-#include"camera.h"
+#include"GameCamera.h"
 #include"slow.h"
 #include "game.h"
 #include"Observer.h"
@@ -131,6 +131,7 @@ void CPlayer::Uninit(void)
 		m_pCharacter3D->Uninit();
 	}
 
+	// 自分自身の破棄
 	CObject::Release();
 }
 
@@ -139,15 +140,6 @@ void CPlayer::Uninit(void)
 //===================================================
 void CPlayer::Update(void)
 {
-	// キーボードの取得
-	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
-
-	// コントローラーの取得
-	CInputJoypad* pJoypad = CManager::GetInputJoypad();
-
-	// カメラの取得処理
-	CCamera* pCamera = CManager::GetCamera();
-
 	// 読み込めていなかったら
 	if (m_pMotion->IsLoad() == false)
 	{
@@ -159,23 +151,6 @@ void CPlayer::Update(void)
 	{
 		// 更新を止める
 		return;
-	}
-
-	// 位置の取得
-	D3DXVECTOR3 pos = m_pCharacter3D->GetPosition();
-
-	// ロックオン
-	if (pKeyboard->GetTrigger(DIK_R) || pJoypad->GetTrigger(pJoypad->JOYKEY_RIGHT_THUMB))
-	{
-		CCamera::STATE state; // カメラの状態
-
-		// カメラの状態を判定
-		const bool rockon = pCamera->GetState() == CCamera::STATE_ROCKON;
-
-		// ロックオンじゃなかったらロックオン
-		state = rockon ? CCamera::STATE_TRACKING : CCamera::STATE_ROCKON;
-
-		pCamera->SetState(state);
 	}
 
 	if (m_pCharacter3D != nullptr)
@@ -199,22 +174,6 @@ void CPlayer::Update(void)
 		// 状態の更新処理
 		m_pMachine->Update();
 	}
-
-	D3DXVECTOR3 posRDest;
-
-	D3DXVECTOR3 rot = m_pCharacter3D->GetRotation()->Get();
-
-	D3DXVECTOR3 modelpos = GetPositionFromMatrix(m_apModel[1]->GetMatrixWorld());
-
-	posRDest.x = modelpos.x + sinf(rot.y) * 1.0f;
-	posRDest.y = (modelpos.y + 0.0f) + sinf(rot.y) * 1.0f;
-	posRDest.z = modelpos.z + cosf(rot.y) * 1.0f;
-
-	// 視点の設定
-	D3DXVECTOR3 posVDest(modelpos);
-
-	// カメラの追従処理
-	pCamera->SetTracking(posVDest,posRDest,0.1f,CCamera::TRACKOBJ_PLAYER);
 }
 
 //===================================================
@@ -345,7 +304,6 @@ CPlayer* CPlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 	if (pPlayer == nullptr) return nullptr;
 
 	pPlayer->Init();
-	pPlayer->m_pCharacter3D->Init();
 
 	// 初期化処理
 	pPlayer->m_pCharacter3D->SetPosition(pos);
@@ -439,7 +397,7 @@ bool CPlayerMovement::MoveKeyboard(CInputKeyboard* pKeyboard,const float fSpeed,
 	bool bMove = false;
 
 	// カメラの取得
-	CCamera* pCamera = CManager::GetCamera();
+	CGameCamera* pCamera = CGame::GetCamera();
 
 	// カメラの向き
 	D3DXVECTOR3 cameraRot = pCamera->GetRotaition();
@@ -560,7 +518,7 @@ bool CPlayerMovement::MoveJoypad(CInputJoypad* pJoypad, const float fSpeed, floa
 	pStick = pJoypad->GetJoyStickAngle();
 
 	// カメラの取得
-	CCamera* pCamera = CManager::GetCamera();
+	CGameCamera* pCamera = CGame::GetCamera();
 
 	// カメラの向き
 	D3DXVECTOR3 cameraRot = pCamera->GetRotaition();
@@ -768,7 +726,7 @@ void CPlayerGame::Update(void)
 	CMeshField* pMesh = CGame::GetField();
 
 	// カメラの取得
-	CCamera* pCamera = CManager::GetCamera();
+	CGameCamera* pCamera = CGame::GetCamera();
 
 	if (pCharacter->HitStop())
 	{
@@ -925,6 +883,20 @@ void CPlayerGame::Update(void)
 	// 重力を加算
 	m_pMove->Gravity(-MAX_GRABITY);
 
+	// ロックオン
+	if (pKeyboard->GetTrigger(DIK_R) || pJoypad->GetTrigger(pJoypad->JOYKEY_RIGHT_THUMB))
+	{
+		CGameCamera::STATE state; // カメラの状態
+
+		// カメラの状態を判定
+		const bool rockon = pCamera->GetState() == CGameCamera::STATE_ROCKON;
+
+		// ロックオンじゃなかったらロックオン
+		state = rockon ? CGameCamera::STATE_TRACKING : CGameCamera::STATE_ROCKON;
+
+		pCamera->SetState(state);
+	}
+
 	// ジャンプできるなら
 	if ((pKeyboard->GetTrigger(DIK_SPACE) == true || pJoypad->GetTrigger(pJoypad->JOYKEY_A) == true) && m_bJump == true)
 	{
@@ -971,12 +943,6 @@ void CPlayerGame::Update(void)
 			//auto pOverlay = COverlay::Create(D3DXVECTOR3(640.0f, 360.0f, 0.0f), D3DXVECTOR2(640.0f, 360.0f), 120);
 			//pOverlay->SetTextureID("data/TEXTURE/overlay/overlay.png");
 			
-			D3DXVECTOR3 handRpos = GetModelPos(8);
-
-			auto pParticle = CZoneParticle3D::Create(handRpos, 10, D3DCOLOR_RGBA(100, 100, 200, 255));
-			pParticle->SetParticle(1.0f, 60, 10, PARRY_TIME);
-			pParticle->SetZone(handRpos, 500);
-
 			pMotion->SetMotion(TYPE_STANCE, true, 5);
 
 			// パリィの時間
@@ -987,8 +953,15 @@ void CPlayerGame::Update(void)
 		}
 	}
 
+	if (pMotion->IsEventFrame(13, 13, TYPE_STANCE))
+	{
+		D3DXVECTOR3 handRpos = GetModelPos(8);
+		auto pParticle = CZoneParticle3D::Create(handRpos, 10, D3DCOLOR_RGBA(200, 200, 200, 255));
+		pParticle->SetParticle(3.0f, 60, 20, PARRY_TIME, 314);
+		pParticle->SetZone(handRpos, 500);
+	}
 	// ズームインだったら解除
-	if (pMotion->GetBlendType() != TYPE_PARRY && pCamera->GetState() == CCamera::STATE_ZOOMIN)
+	if (pMotion->GetBlendType() != TYPE_PARRY && pCamera->GetState() == CGameCamera::STATE_ZOOMIN)
 	{
 		// カメラのズーム解除
 		pCamera->ResetState();
@@ -1029,6 +1002,22 @@ void CPlayerGame::Update(void)
 
 	// コライダーの更新
 	UpdateCollider(pos);
+
+	D3DXVECTOR3 posRDest;
+
+	D3DXVECTOR3 rot = pCharacter->GetRotation()->Get();
+
+	D3DXVECTOR3 modelpos = GetModelPos(1);
+
+	posRDest.x = modelpos.x + sinf(rot.y) * 1.0f;
+	posRDest.y = (modelpos.y + 0.0f) + sinf(rot.y) * 1.0f;
+	posRDest.z = modelpos.z + cosf(rot.y) * 1.0f;
+
+	// 視点の設定
+	D3DXVECTOR3 posVDest(modelpos);
+
+	// カメラの追従処理
+	pCamera->SetTracking(posVDest, posRDest, 0.1f, CGameCamera::TRACKOBJ_PLAYER);
 }
 
 //===================================================
@@ -1086,7 +1075,7 @@ void CPlayerGame::UpdateParry(void)
 //===================================================
 // 移動方向の設定処理
 //===================================================
-void CPlayerGame::SetMoveAngle(CCamera* pCamera, CInputKeyboard* pKeyboard, CInputJoypad* pJoypad,CCharacter3D *pCaracter)
+void CPlayerGame::SetMoveAngle(CGameCamera* pCamera, CInputKeyboard* pKeyboard, CInputJoypad* pJoypad,CCharacter3D *pCaracter)
 {
 	// カメラの向き
 	D3DXVECTOR3 cameraRot = pCamera->GetRotaition();
@@ -1432,7 +1421,7 @@ void CPlayerGame::SetStance(void)
 	D3DXVECTOR3 rot = CPlayer::GetRotaition();
 
 	// カメラの取得
-	CCamera* pCamera = CManager::GetCamera();
+	CGameCamera* pCamera = CGame::GetCamera();
 
 	// ズームインの処理
 	pCamera->SetZoomIn(60, rot.y + D3DX_PI);
@@ -1495,7 +1484,7 @@ void CPlayerGame::CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos,CCha
 		auto pParticle = CParticle3DNormal::Create(playerHandR, 20.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
 
 		// パーティクルの設定処理
-		pParticle->SetParticle(15.0f, 240, 25, 2);
+		pParticle->SetParticle(15.0f, 240, 25, 2,314);
 
 		// インパクトを生成
 		auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), playerHandR, 0.0f, 50.0f, 32);

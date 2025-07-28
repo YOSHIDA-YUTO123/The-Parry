@@ -41,12 +41,6 @@ CCamera::CCamera()
 	m_posVDest = VEC3_NULL;
 	m_vecU = VEC3_NULL;
 	m_fDistance = NULL;
-	m_state = STATE_NONE;
-	m_Oldstate = STATE_NONE;
-	m_nZoomTime = NULL;
-	m_fDistanceBase = NULL;
-	m_fZoomAngleBase = NULL;
-	m_TrackObj = TRACKOBJ_PLAYER;
 }
 
 //===================================================
@@ -63,36 +57,15 @@ HRESULT CCamera::Init(void)
 {
 	m_posR = VEC3_NULL;
 
-	m_posV = D3DXVECTOR3(0.0f, 250.0f, -350.0f);		// 視点
+	m_posV = VEC3_NULL;		// 視点
 
-	m_rot = D3DXVECTOR3(D3DX_PI * 0.65f, 0.0f, 0.0f);	// 角度
+	m_rot = VEC3_NULL;	// 角度
 
-	float fRotX = m_posV.x - m_posR.x;
-	float fRotY = m_posV.y - m_posR.y;
-	float fRotZ = m_posV.z - m_posR.z;
+	//m_posV = D3DXVECTOR3(0.0f, 250.0f, -350.0f);		// 視点
 
-	// 距離を求める
-	m_fDistance = sqrtf((fRotX * fRotX) + (fRotY * fRotY) + (fRotZ * fRotZ));
-	m_fDistanceBase = m_fDistance; // 距離を保存する
-	m_fDistanceZoom = m_fDistance - 150.0f;
-
-	//カメラの注視点初期座標を設定
-	m_posR.x = m_posV.x + sinf(m_rot.x) * sinf(m_rot.y) * m_fDistance;
-	m_posR.y = m_posV.y + cosf(m_rot.x) * m_fDistance;
-	m_posR.z = m_posV.z + sinf(m_rot.x) * cosf(m_rot.y) * m_fDistance;
-
-	// カメラの視点の情報
-	m_posV.x = m_posR.x - sinf(m_rot.x) * sinf(m_rot.y) * m_fDistance;
-	m_posV.y = m_posR.y - cosf(m_rot.x) * m_fDistance;
-	m_posV.z = m_posR.z - sinf(m_rot.x) * cosf(m_rot.y) * m_fDistance;
+	//m_rot = D3DXVECTOR3(D3DX_PI * 0.65f, 0.0f, 0.0f);	// 角度
 
 	m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);				// 上方向ベクトル
-
-	m_state = STATE_TRACKING;
-	m_TrackObj = TRACKOBJ_PLAYER;
-
-	m_nZoomTime = -1;
-	m_fZoomAngleBase = NULL;
 
 	return S_OK;
 }
@@ -109,22 +82,6 @@ void CCamera::Uninit(void)
 //===================================================
 void CCamera::Update(void)
 {
-	// マウスの視点移動
-	MouseView();
-
-	// パッドの視点操作
-	CCamera::PadView();
-
-	// ズームの処理
-	ZoomIn();
-
-	// カメラの状態がズームじゃないなら
-	if (m_state != STATE_ZOOMIN)
-	{
-		// 距離をもとに戻す
-		m_fDistance += (m_fDistanceBase - m_fDistance) * 0.1f;
-	}
-
 #if 0
 
 	// プレイヤーの取得
@@ -221,6 +178,34 @@ void CCamera::SetCamera(void)
 }
 
 //===================================================
+// カメラの設定処理
+//===================================================
+void CCamera::SetCamera(const D3DXVECTOR3 posV, const D3DXVECTOR3 posR, const D3DXVECTOR3 rot)
+{
+	// 設定処理
+	m_posV = posV;
+	m_posR = posR;
+	m_rot = rot;
+
+	float fRotX = m_posV.x - m_posR.x;
+	float fRotY = m_posV.y - m_posR.y;
+	float fRotZ = m_posV.z - m_posR.z;
+
+	// 距離を求める
+	m_fDistance = sqrtf((fRotX * fRotX) + (fRotY * fRotY) + (fRotZ * fRotZ));
+
+	//カメラの注視点初期座標を設定
+	m_posR.x = m_posV.x + sinf(m_rot.x) * sinf(m_rot.y) * m_fDistance;
+	m_posR.y = m_posV.y + cosf(m_rot.x) * m_fDistance;
+	m_posR.z = m_posV.z + sinf(m_rot.x) * cosf(m_rot.y) * m_fDistance;
+
+	// カメラの視点の情報
+	m_posV.x = m_posR.x - sinf(m_rot.x) * sinf(m_rot.y) * m_fDistance;
+	m_posV.y = m_posR.y - cosf(m_rot.x) * m_fDistance;
+	m_posV.z = m_posR.z - sinf(m_rot.x) * cosf(m_rot.y) * m_fDistance;
+}
+
+//===================================================
 // マウスホイールの処理
 //===================================================
 void CCamera::MouseWheel(void)
@@ -254,8 +239,6 @@ void CCamera::MouseWheel(void)
 //===================================================
 void CCamera::MouseView(void)
 {
-	if (m_state != STATE_TRACKING) return;
-
 	// マウスの取得
 	CInputMouse* pMouse = CManager::GetInputMouse();
 
@@ -309,7 +292,7 @@ void CCamera::MouseView(void)
 	}
 #ifdef _DEBUG
 
-	if (pMouse->OnMousePress(1) && bPause == true)
+	if (pMouse->OnMousePress(1))
 	{
 		// 回転量を更新
 		m_rot.y += X;
@@ -383,133 +366,6 @@ void CCamera::PadView(void)
 }
 
 //===================================================
-// カメラの追従処理
-//===================================================
-void CCamera::SetTracking(const D3DXVECTOR3 posVDest,const D3DXVECTOR3 posRDest, const float fcoef, const TRACKOBJ obj)
-{
-	if (m_state != STATE_TRACKING) return;
-
-	if (m_TrackObj != obj) return;
-
-	m_posRDest.x = posRDest.x * 1.0f;
-	m_posRDest.y = posRDest.y * 1.0f;
-	m_posRDest.z = posRDest.z * 1.0f;
-
-	m_posVDest.x = posVDest.x - sinf(m_rot.y) * m_fDistance;
-	m_posVDest.y = posVDest.y - cosf(m_rot.y) * m_fDistance;
-	m_posVDest.z = posVDest.z - cosf(m_rot.y) * m_fDistance;
-
-	m_posR.x += ((m_posRDest.x - m_posR.x) * fcoef);
-	m_posR.y += ((m_posRDest.y - m_posR.y) * fcoef);
-	m_posR.z += ((m_posRDest.z - m_posR.z) * fcoef);
-
-	m_posV.x += ((m_posVDest.x - m_posV.x) * fcoef);
-	m_posV.z += ((m_posVDest.z - m_posV.z) * fcoef);
-}
-
-//===================================================
-// ロックオン処理
-//===================================================
-void CCamera::Rockon(D3DXVECTOR3 playerPos, D3DXVECTOR3 enemyPos)
-{
-	// カメラの状態がロックオンじゃないなら
-	if (m_state != STATE_ROCKON) return;
-
-	// プレイヤーまでの方向を求める
-	D3DXVECTOR3 dir = playerPos - enemyPos;
-
-	// 角度を求める
-	float fAngle = atan2f(dir.x, dir.z) + D3DX_PI;
-
-	// 注視点
-	D3DXVECTOR3 posR;
-
-	// 注視点を敵の位置にする
-	posR.x = enemyPos.x;
-	posR.y = (playerPos.y + enemyPos.y) * 0.5f;
-	posR.z = enemyPos.z;
-
-	// 目的の注視点の設定
-	m_posRDest = posR;
-
-	// カメラのrotを設定
-	m_rot.y = fAngle;
-	
-	// y座標は考慮しない
-	dir.y = 0.0f; 
-
-	// 方向ベクトルにする
-	D3DXVec3Normalize(&dir, &dir);
-
-	// 距離を掛ける
-	dir *= m_fDistance;
-
-	// y座標を設定
-	dir.y = (playerPos.y + enemyPos.y) * 0.5f;
-
-	// 目的の視点の設定
-	m_posVDest = playerPos + dir;
-
-	// 目的の注視点に近づける
-	m_posR.x += ((m_posRDest.x - m_posR.x) * 0.1f);
-	m_posR.y += ((m_posRDest.y - m_posR.y) * 0.1f);
-	m_posR.z += ((m_posRDest.z - m_posR.z) * 0.1f);
-
-	// 目的の視点に近づける
-	m_posV.x += ((m_posVDest.x - m_posV.x) * 0.1f);
-	m_posV.y += ((m_posVDest.y - m_posV.y) * 0.1f);
-	m_posV.z += ((m_posVDest.z - m_posV.z) * 0.1f);
-}
-
-//===================================================
-// ズームの設定処理
-//===================================================
-void CCamera::SetZoomIn(const int nTime, const float fAngle)
-{
-	m_nZoomTime = nTime;
-	m_fZoomAngleBase = fAngle;
-	m_Oldstate = m_state;
-	m_state = STATE_ZOOMIN;
-}
-
-//===================================================
-// ズーム処理
-//===================================================
-void CCamera::ZoomIn(void)
-{
-	m_nZoomTime--;
-	
-	// ズーム状態だったら
-	if (m_nZoomTime >= 0 && m_state == STATE_ZOOMIN)
-	{
-		// 目的の距離に近づける
-		m_fDistance += (m_fDistanceZoom - m_fDistance) * 0.07f;
-
-		// 目標の角度を設定
-		float fDestAngleX = 1.45f;
-		float fDestAngleY = m_fZoomAngleBase - 0.65f;
-
-		// 目的の角度までの距離を求める
-		float fDiff = fDestAngleY - m_rot.y;
-
-		// 目的の角度までPI以上あったら逆回りする
-		NormalizeDiffRot(fDiff,&m_rot.y);
-
-		// 目的の角度に近づける
-		m_rot.x += (fDestAngleX - m_rot.x) * 0.07f;
-		m_rot.y += (fDestAngleY - m_rot.y) * 0.07f;
-
-		// 視点の更新処理
-		UpdatePositionV();
-
-		if (m_nZoomTime <= 0)
-		{
-			ResetState();
-		}
-	}
-}
-
-//===================================================
 // 視点の更新処理
 //===================================================
 void CCamera::UpdatePositionV(void)
@@ -529,4 +385,29 @@ void CCamera::UpdatePositionR(void)
 	m_posR.x = m_posV.x + sinf(m_rot.x) * sinf(m_rot.y) * m_fDistance;
 	m_posR.y = m_posV.y + cosf(m_rot.x) * m_fDistance;
 	m_posR.z = m_posV.z + sinf(m_rot.x) * cosf(m_rot.y) * m_fDistance;
+}
+
+//===================================================
+// 位置を目的の位置に近づける
+//===================================================
+void CCamera::LerpPos(const D3DXVECTOR3 posRDest, const D3DXVECTOR3 posVDest, const float fCoef)
+{
+	// 目的の注視点の設定
+	m_posRDest.x = posRDest.x;
+	m_posRDest.y = posRDest.y;
+	m_posRDest.z = posRDest.z;
+
+	// 目的の視点の設定
+	m_posVDest.x = posVDest.x;
+	m_posVDest.y = posVDest.y;
+	m_posVDest.z = posVDest.z;
+
+	// 目的の注視点に近づける
+	m_posR.x += ((m_posRDest.x - m_posR.x) * fCoef);
+	m_posR.y += ((m_posRDest.y - m_posR.y) * fCoef);
+	m_posR.z += ((m_posRDest.z - m_posR.z) * fCoef);
+
+	// 目的の視点に近づける
+	m_posV.x += ((m_posVDest.x - m_posV.x) * fCoef);
+	m_posV.z += ((m_posVDest.z - m_posV.z) * fCoef);
 }

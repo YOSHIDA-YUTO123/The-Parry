@@ -18,6 +18,11 @@
 #include "scene.h"
 
 //***************************************************
+// 前方宣言
+//***************************************************
+class CTitleCamera;
+
+//***************************************************
 // タイトルクラスの定義
 //***************************************************
 class CTitle : public CScene
@@ -29,7 +34,10 @@ public:
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
+
+	static CTitleCamera* GetCamera(void) { return m_pCamera; }
 private:
+	static CTitleCamera* m_pCamera; // タイトルカメラクラスへのポインタ
 };
 
 #endif

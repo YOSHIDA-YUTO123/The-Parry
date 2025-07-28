@@ -15,12 +15,12 @@
 // インクルードファイル
 //***************************************************
 #include"main.h"
-#include"objectX.h"
+#include<vector>
 
 //***************************************************
 // マクロ定義
 //***************************************************
-#define NUM_LIGHT (30) // ライトの総数
+#define MAX_LIGHT (8) // ライトの最大数
 
 //***************************************************
 // ライトのクラスの定義
@@ -33,7 +33,10 @@ public:
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
-	void SetLight(const D3DLIGHTTYPE type, const D3DXCOLOR Diffuse, const D3DXVECTOR3 dir, const D3DXVECTOR3 pos);
+	void SetDirectional(const D3DXCOLOR Diffuse, const D3DXVECTOR3 dir, const D3DXVECTOR3 pos); // ディレクショナルライトの設定処理
+	void SetPoint(const D3DXVECTOR3 pos,const float fRange,const D3DXCOLOR Diffuse,const D3DXCOLOR Ambient);			// ポイントライトの設定処理
+	void SetLight(void);
+
 	D3DXVECTOR3 GetDir(void) const { return m_aLightInfo[0].aLight.Direction; }
 private:
 
@@ -44,6 +47,7 @@ private:
 		bool bUse;			// 使用状態
 	};
 
-	LightInfo m_aLightInfo[NUM_LIGHT]; // ライトの構造体
+	int m_nNumAll;						 // ライトの総数
+	std::vector<LightInfo> m_aLightInfo; // ライトの構造体
 };
 #endif

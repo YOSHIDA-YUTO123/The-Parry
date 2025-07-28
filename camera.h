@@ -22,58 +22,43 @@
 class CCamera
 {
 public:
-
-	// カメラの状態の種類
-	typedef enum
-	{
-		STATE_NONE = 0,
-		STATE_TRACKING,
-		STATE_ROCKON,
-		STATE_ZOOMIN,
-		STATE_MAX
-	}STATE;
-
-	// カメラ追従するオブジェクトの種類
-	typedef enum
-	{
-		TRACKOBJ_PLAYER = 0,
-		TRACKOBJ_ENEMY,
-		TRACKOBJ_MAX
-	}TRACKOBJ;
-
 	CCamera();
-	~CCamera();
+	virtual ~CCamera();
 
-	HRESULT Init(void);
-	void Uninit(void);
-	void Update(void);
+	virtual HRESULT Init(void);
+	virtual void Uninit(void);
+	virtual void Update(void);
+
 	void SetCamera(void);
+	void SetCamera(const D3DXVECTOR3 posV, const D3DXVECTOR3 posR, const D3DXVECTOR3 rot);
 	void MouseWheel(void);
 	void MouseView(void);
 	void PadView(void);
-	void SetState(const STATE state) { m_state = state; }
-	void SetTracking(const D3DXVECTOR3 posVDest, const D3DXVECTOR3 posRDest, const float fcoef,const TRACKOBJ obj);
-	void Rockon(D3DXVECTOR3 playerPos, D3DXVECTOR3 enemyPos);
-	void ZoomIn(void);
-	void SetZoomIn(const int nTime, const float fAngle);
 
-	void ResetState(void) { m_state = m_Oldstate; }
+	// ゲッター
 	D3DXVECTOR3 GetRotaition(void) const { return m_rot; }
 	D3DXVECTOR3 GetPosV(void) const { return m_posV; }
 	D3DXVECTOR3 GetPosR(void) const { return m_posR; }
-	void SetAngle(const D3DXVECTOR3 posR) { m_posRDest = posR; }
+
+	// セッター
 	void SetRot(const D3DXVECTOR3 rot) { m_rot = rot; }
-	STATE GetState(void) const { return m_state; }
-	void SetTracking(const TRACKOBJ obj) { m_TrackObj = obj; }
+
+protected:
+
+	// ゲッター
+	D3DXVECTOR3 GetDestPosV(void) const { return m_posVDest; }
+	D3DXVECTOR3 GetDestPosR(void) const { return m_posRDest; }
+	float GetDistance(void) const { return m_fDistance; }
+
+	// セッター
+	void SetDestPosV(const D3DXVECTOR3 destpos) { m_posVDest = destpos; }
+	void SetDestPosR(const D3DXVECTOR3 destpos) { m_posRDest = destpos; }
+	void SetDistance(const float fDistance) { m_fDistance = fDistance; }
+
+	void UpdatePositionV(void);			// 視点の更新処理
+	void UpdatePositionR(void);			// 注視点の更新処理
+	void LerpPos(const D3DXVECTOR3 posRDest, const D3DXVECTOR3 posVDest, const float fCoef);	// 位置を目的の位置に近づける
 private:
-	void UpdatePositionV(void); // 視点の更新処理
-	void UpdatePositionR(void); // 注視点の更新処理
-
-	STATE m_state;				// カメラの状態
-	STATE m_Oldstate;			// 前の状態
-
-	TRACKOBJ m_TrackObj;		// 追従するオブジェクトの種類
-
 	D3DXMATRIX m_mtxView;		// ビューマトリックス
 	D3DXMATRIX m_mtxProjection;	// プロジェクションマトリックス
 	D3DXVECTOR3 m_posV;			// 視点
@@ -83,10 +68,6 @@ private:
 	D3DXVECTOR3 m_posRDest;		// 目的の注視点
 	D3DXVECTOR3 m_posVDest;		// 目的の視点
 	float m_fDistance;			// 距離
-	float m_fDistanceBase;		// 保存用の距離
-	float m_fDistanceZoom;		// ズームする距離
-	float m_fZoomAngleBase;		// ズームの角度の基準
-	int m_nZoomTime;			// ズームの時間
 };
 
 #endif

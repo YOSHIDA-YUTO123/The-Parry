@@ -34,6 +34,7 @@ public:
 		D3DXCOLOR col;		// F
 		float fRadius;		// ”¼Œa
 		float fSpeed;		// ‘¬‚³
+		int nAngle;			// •úË”ÍˆÍ
 		int nLife;			// õ–½
 		int nNumParticle;	// —±q‚Ì”
 		int nTime;			// ”­¶‚³‚¹‚éŠÔ
@@ -46,7 +47,7 @@ public:
 	virtual void Uninit(void);
 	virtual void Update(void) = 0;
 	virtual void Draw(void);
-	void SetParticle(const float fSpeed, const int nLife, const int nNumParticle, const int nTime);
+	void SetParticle(const float fSpeed, const int nLife, const int nNumParticle, const int nTime, const int nAngle);
 
 protected:
 	int GetMaxLife(void) const { return m_nMaxLife; }

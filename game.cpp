@@ -25,6 +25,8 @@
 #include "Observer.h"
 #include"GageFrame.h"
 #include "pause.h"
+#include"GameCamera.h"
+#include"light.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -33,9 +35,10 @@ using namespace std; // 名前空間stdを使用
 // 静的メンバ変数宣言
 //***************************************************
 CMeshField* CGame::m_pMeshField = nullptr;		// メッシュフィールドへのポインタ
-CPlayerGame* CGame::m_pPlayer = nullptr;			// プレイヤーへのポインタ
+CPlayerGame* CGame::m_pPlayer = nullptr;		// プレイヤーへのポインタ
 CMeshCylinder* CGame::m_pCylinder = nullptr;	// メッシュシリンダーへのポインタ
 CGame::STATE CGame::m_state = STATE_NORMAL;     // ゲームの状態
+CGameCamera* CGame::m_pCamera = nullptr;		// ゲームカメラクラスへのポインタ
 
 //===================================================
 // コンストラクタ
@@ -59,6 +62,18 @@ CGame::~CGame()
 //===================================================
 HRESULT CGame::Init(void)
 {
+	// ゲームのカメラの生成
+	m_pCamera = new CGameCamera;
+	m_pCamera->Init();
+
+	// ライトの取得
+	CLight* pLight = CManager::GetLight();
+	pLight->Init();
+
+	// ライトの設定処理
+	pLight->SetDirectional(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, -0.56f, 0.74f), D3DXVECTOR3(0.0f, 100.0f, 0.0f));
+	pLight->SetDirectional(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, -0.56f, -0.74f), D3DXVECTOR3(0.0f, 100.0f, 0.0f));
+
 	// フィールドの設定
 	m_pMeshField = CMeshField::Create(VEC3_NULL, 48, 48, D3DXVECTOR2(5500.0f, 5500.0f));
 
@@ -118,7 +133,7 @@ HRESULT CGame::Init(void)
 	m_pPlayer->SetHpObserver(observer);
 
 	// アリーナの生成
-	CObjectX::Create(VEC3_NULL, "data/MODEL/field/arena.x");
+	CObjectX::Create(VEC3_NULL, "data/MODEL/field/arena.x",VEC3_NULL);
 
 	// 敵の生成
 	auto pEnemy = CEnemy::Create(D3DXVECTOR3(0.0f, 0.0f, 1500.0f));
@@ -172,6 +187,14 @@ void CGame::Uninit(void)
 	m_pCylinder = nullptr;
 	m_pPlayer = nullptr;
 
+	// カメラの破棄
+	if (m_pCamera != nullptr)
+	{
+		m_pCamera->Uninit();
+		delete m_pCamera;
+		m_pCamera = nullptr;
+	}
+
 	// ポーズマネージャーの破棄
 	if (m_pPauseManager != nullptr)
 	{
@@ -185,6 +208,12 @@ void CGame::Uninit(void)
 //===================================================
 void CGame::Update(void)
 {
+	// カメラの更新
+	if (m_pCamera != nullptr)
+	{
+		m_pCamera->Update();
+	}
+
 	// ポーズの更新
 	if (m_pPauseManager != nullptr)
 	{
@@ -231,6 +260,13 @@ void CGame::Update(void)
 //===================================================
 void CGame::Draw(void)
 {
+	// カメラの設定
+	if (m_pCamera != nullptr)
+	{
+		// カメラの設定
+		m_pCamera->SetCamera();
+	}
+
 	CDebugProc::Print("デバッグ 非表示      : [ F2 ]\n");
 
 	CDebugProc::Print("影の表示 : [ F3 ]\n");

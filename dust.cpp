@@ -59,15 +59,15 @@ CRubble* CRubble::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 dir, const int
 	switch (nType)
 	{
 	case TYPE::TYPE_ONE:
-		pDust->m_pObjectX = CObjectX::Create(pos, "data/MODEL/dust/dust000.x");
+		pDust->m_pObjectX = CObjectX::Create(pos, "data/MODEL/dust/dust000.x",VEC3_NULL);
 		pDust->m_fShadowSize = SHADOW_SIZE_000;
 		break;
 	case TYPE::TYPE_TWO:
-		pDust->m_pObjectX = CObjectX::Create(pos, "data/MODEL/dust/dust001.x");
+		pDust->m_pObjectX = CObjectX::Create(pos, "data/MODEL/dust/dust001.x", VEC3_NULL);
 		pDust->m_fShadowSize = SHADOW_SIZE_001;
 		break;
 	case TYPE::TYPE_THREE:
-		pDust->m_pObjectX = CObjectX::Create(pos, "data/MODEL/dust/dust002.x");
+		pDust->m_pObjectX = CObjectX::Create(pos, "data/MODEL/dust/dust002.x", VEC3_NULL);
 		pDust->m_fShadowSize = SHADOW_SIZE_002;
 		break;
 	default:

@@ -42,7 +42,7 @@ class CObserver;
 
 class CMeshOrbit;
 class CMeshField;
-class CCamera;
+class CGameCamera;
 class CColliderAABB;
 
 //***************************************************
@@ -172,7 +172,7 @@ private:
 	bool IsAvoid(CMotion* pMotion);		// âÒîÇèoÇπÇÈÇ©îªíË
 	void Notify(void);
 	void UpdateParry(void);
-	void SetMoveAngle(CCamera *pCamera, CInputKeyboard* pKeyboard, CInputJoypad* pJoypad, CCharacter3D* pCaracter);
+	void SetMoveAngle(CGameCamera*pCamera, CInputKeyboard* pKeyboard, CInputJoypad* pJoypad, CCharacter3D* pCaracter);
 	void UpdateCollider(D3DXVECTOR3 pos);
 	void UpdateStamina(void);
 

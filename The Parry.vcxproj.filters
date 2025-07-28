@@ -103,6 +103,15 @@
     <Filter Include="ヘッダー ファイル\objectBillboard\particle">
       <UniqueIdentifier>{a1ca54b9-5511-4a7f-8874-603b405dac4a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\system\camera">
+      <UniqueIdentifier>{fcaf3336-e5d2-4f0b-8301-3b17ffcd8eb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\system\camera">
+      <UniqueIdentifier>{2c7312d9-1948-4663-aaf1-49a048bc90fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\model\player">
+      <UniqueIdentifier>{9eb30e37-1b46-4945-91f7-7c5894ac9373}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="testword.cpp">
@@ -189,9 +198,6 @@
     <ClCompile Include="explosion.cpp">
       <Filter>ソース ファイル\objectBillboard</Filter>
     </ClCompile>
-    <ClCompile Include="camera.cpp">
-      <Filter>ソース ファイル\system</Filter>
-    </ClCompile>
     <ClCompile Include="Collision.cpp">
       <Filter>ソース ファイル\system</Filter>
     </ClCompile>
@@ -258,9 +264,6 @@
     <ClCompile Include="statebase.cpp">
       <Filter>ソース ファイル\statemachine</Filter>
     </ClCompile>
-    <ClCompile Include="player.cpp">
-      <Filter>ソース ファイル\model</Filter>
-    </ClCompile>
     <ClCompile Include="enemy.cpp">
       <Filter>ソース ファイル\model</Filter>
     </ClCompile>
@@ -304,6 +307,24 @@
       <Filter>ソース ファイル\base</Filter>
     </ClCompile>
     <ClCompile Include="overlay.cpp">
+      <Filter>ソース ファイル\object2D</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleCamera.cpp">
+      <Filter>ソース ファイル\system\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>ソース ファイル\system\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCamera.cpp">
+      <Filter>ソース ファイル\system\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>ソース ファイル\model\player</Filter>
+    </ClCompile>
+    <ClCompile Include="TitlePlayer.cpp">
+      <Filter>ソース ファイル\model\player</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleLogo.cpp">
       <Filter>ソース ファイル\object2D</Filter>
     </ClCompile>
   </ItemGroup>
@@ -370,9 +391,6 @@
     </ClInclude>
     <ClInclude Include="score.h">
       <Filter>ヘッダー ファイル\number</Filter>
-    </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>ヘッダー ファイル\system</Filter>
     </ClInclude>
     <ClInclude Include="Collision.h">
       <Filter>ヘッダー ファイル\system</Filter>
@@ -508,6 +526,21 @@
     </ClInclude>
     <ClInclude Include="overlay.h">
       <Filter>ヘッダー ファイル\object2D</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCamera.h">
+      <Filter>ヘッダー ファイル\system\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleCamera.h">
+      <Filter>ヘッダー ファイル\system\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>ヘッダー ファイル\system\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="TitlePlayer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleLogo.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

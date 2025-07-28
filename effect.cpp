@@ -87,6 +87,7 @@ void CEffect3D::Update(void)
 
 	if (m_Data.pMove != nullptr)
 	{
+		// ˆÚ“®—Ê‚ÌŒ¸Š
 		m_Data.pMove->SetInertia3D(0.01f);
 
 		// ˆÚ“®—Ê‚ÌXV

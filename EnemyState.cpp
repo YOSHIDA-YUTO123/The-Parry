@@ -20,7 +20,7 @@
 #include"particle.h"
 #include"impact.h"
 #include "Wave.h"
-#include"camera.h"
+#include"GameCamera.h"
 #include "MoveSmoke.h"
 
 //***************************************************
@@ -328,7 +328,7 @@ void CEnemyAttackSmash::Update(void)
 			auto pParticle = CParticle3DNormal::Create(playerHandR, 25.0f, D3DXCOLOR(1.0f,0.4f,0.4f, 1.0f));
 
 			// パーティクルの設定処理
-			pParticle->SetParticle(15.0f, 120, 150, 1);
+			pParticle->SetParticle(15.0f, 120, 150, 1,314);
 			pParticle->SetParam(CEffect3D::TYPE_HIT);
 
 			// ヒットストップ
@@ -707,7 +707,7 @@ void CEnemySpin::Update(void)
 			auto pParticle = CParticle3DNormal::Create(playerHandR, 25.0f, D3DXCOLOR(1.0f, 0.4f, 0.4f, 1.0f));
 
 			// パーティクルの設定処理
-			pParticle->SetParticle(15.0f, 120, 150, 1);
+			pParticle->SetParticle(15.0f, 120, 150, 1,314);
 			pParticle->SetParam(CEffect3D::TYPE_HIT);
 
 			// ヒットストップ
@@ -1039,7 +1039,7 @@ void CEnemyGuard::Init(void)
 	auto pParticle = CParticle3DNormal::Create(m_ImpactPos, 10.0f, D3DXCOLOR(1.0f, 0.4f, 0.4f, 1.0f));
 
 	// パーティクルの設定処理
-	pParticle->SetParticle(15.0f, 240, 50, 5);
+	pParticle->SetParticle(15.0f, 240, 50, 5,314);
 
 	// ボスまでの角度を取得
 	float fAngle = GetTargetAngle(pos, PlayerPos);
@@ -1237,7 +1237,7 @@ void CEnemySwing::Update(void)
 				auto pParticle = CParticle3DNormal::Create(playerHandR, 25.0f, D3DXCOLOR(1.0f, 0.4f, 0.4f, 1.0f));
 
 				// パーティクルの設定処理
-				pParticle->SetParticle(15.0f, 120, 150, 1);
+				pParticle->SetParticle(15.0f, 120, 150, 1,314);
 				pParticle->SetParam(CEffect3D::TYPE_HIT);
 
 				m_pEnemy->SetHitStop(25);
@@ -1450,7 +1450,7 @@ void CEnemyJumpAttack::CollisionPlayer(CPlayerGame* pPlayer, CMotion* pMotion)
 			auto pParticle = CParticle3DNormal::Create(playerHandR, 25.0f, D3DXCOLOR(1.0f, 0.4f, 0.4f, 1.0f));
 
 			// パーティクルの設定処理
-			pParticle->SetParticle(15.0f, 120, 150, 1);
+			pParticle->SetParticle(15.0f, 120, 150, 1,314);
 			pParticle->SetParam(CEffect3D::TYPE_HIT);
 
 			// ヒットストップ
@@ -1586,10 +1586,10 @@ void CEnemyDown::Update(void)
 	if (m_nTrackingTime <= 0)
 	{
 		// カメラの取得
-		CCamera* pCamera = CManager::GetCamera();
+		CGameCamera* pCamera = CGame::GetCamera();
 
 		// プレイヤーに戻す
-		pCamera->SetTracking(CCamera::TRACKOBJ_PLAYER);
+		pCamera->SetTracking(CGameCamera::TRACKOBJ_PLAYER);
 	}
 }
 

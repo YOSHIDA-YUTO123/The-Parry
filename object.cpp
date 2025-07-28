@@ -172,12 +172,6 @@ void CObject::UpdateAll(void)
 //===================================================
 void CObject::DrawAll(void)
 {
-	// ƒJƒƒ‰‚Ìæ“¾
-	CCamera* pCamera = CManager::GetCamera();
-
-	// ƒJƒƒ‰‚Ìİ’è
-	pCamera->SetCamera();
-
 	// —Dæ‡ˆÊ‚Ì”•ª‚¾‚¯’²‚×‚é
 	for (int nCntPriority = 0; nCntPriority < NUM_PRIORITY; nCntPriority++)
 	{

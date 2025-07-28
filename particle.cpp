@@ -42,6 +42,7 @@ CParticle3D::~CParticle3D()
 //===================================================
 HRESULT CParticle3D::Init(void)
 {
+	m_Info.nAngle = 314;
 	m_Info.col = WHITE;
 	m_Info.nNumParticle = MIN_PARTICLE;
 	return S_OK;
@@ -74,7 +75,7 @@ void CParticle3D::Draw(void)
 //===================================================
 // パーティクルの設定処理
 //===================================================
-void CParticle3D::SetParticle(const float fSpeed, const int nLife, const int nNumParticle, const int nTime)
+void CParticle3D::SetParticle(const float fSpeed, const int nLife, const int nNumParticle, const int nTime, const int nAngle)
 {
 	// 情報の取得
 	Info info = GetInfo();
@@ -85,7 +86,7 @@ void CParticle3D::SetParticle(const float fSpeed, const int nLife, const int nNu
 	info.nLife = nLife;
 	info.nNumParticle = nNumParticle;
 	info.nTime = nTime;
-
+	info.nAngle = nAngle;
 	// 情報の設定
 	SetInfo(info);
 }
@@ -174,9 +175,11 @@ void CParticle3DNormal::Update(void)
 		// 色の取得
 		D3DXCOLOR col = info.col;
 
+		int nAngleMax = (info.nAngle * 2) + 1;
+
 		// 角度の選出
-		float fAngleX = (float)(rand() % 629 - 314) * 0.01f;
-		float fAngleY = (float)(rand() % 629 - 314) * 0.01f;
+		float fAngleX = (float)(rand() % nAngleMax - info.nAngle) * 0.01f;
+		float fAngleY = (float)(rand() % nAngleMax - info.nAngle) * 0.01f;
 
 		// 速さをint型に変換
 		int speed = (int)info.fSpeed;
@@ -221,6 +224,10 @@ void CParticle3DNormal::Update(void)
 			case CEffect3D::TYPE_HIT:
 				// IDの設定
 				pEffect->SetTextureID("data/TEXTURE/effect/star_A.jpg");
+				break;
+			case CEffect3D::TYPE_FIRE:
+				// IDの設定
+				pEffect->SetTextureID("data/TEXTURE/effect/smoke.jpg");
 				break;
 			default:
 				break;

@@ -39,7 +39,7 @@ CObjectX::~CObjectX()
 //===================================================
 // ¶¬ˆ—
 //===================================================
-CObjectX* CObjectX::Create(const D3DXVECTOR3 pos, const char* pModelName)
+CObjectX* CObjectX::Create(const D3DXVECTOR3 pos, const char* pModelName,const D3DXVECTOR3 rot)
 {
 	CObjectX* pObjectX = nullptr;
 
@@ -50,6 +50,7 @@ CObjectX* CObjectX::Create(const D3DXVECTOR3 pos, const char* pModelName)
 
 	pObjectX->Init();
 	pObjectX->m_pos = pos;
+	pObjectX->GetRotaition()->Set(rot);
 	pObjectX->LoadModel(pModelName);
 
 	return pObjectX;

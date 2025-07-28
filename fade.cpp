@@ -57,7 +57,13 @@ CFade* CFade::Create(void)
 //===================================================
 void CFade::SetFade(unique_ptr<CScene> pNewScene)
 {
-	if (m_Fade != FADE_NONE) return;
+	if (m_Fade != FADE_NONE)
+	{
+		// ”jŠü‚·‚é
+		pNewScene.reset();
+
+		return;
+	}
 
 	if (m_pScene != nullptr)
 	{

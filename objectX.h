@@ -32,7 +32,7 @@ public:
 	CObjectX(int nPriority = 2);
 	~CObjectX();
 
-	static CObjectX* Create(const D3DXVECTOR3 pos, const char* pModelName);
+	static CObjectX* Create(const D3DXVECTOR3 pos, const char* pModelName,const D3DXVECTOR3 rot);
 
 	HRESULT Init(void) override;
 	void Uninit(void) override;

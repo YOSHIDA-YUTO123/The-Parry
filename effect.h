@@ -32,9 +32,10 @@ public:
 	// エフェクトの種類
 	enum TYPE
 	{
-		TYPE_NORAML = 0,
-		TYPE_HIT,
-		TYPE_ZONE,
+		TYPE_NORAML = 0, // 通常
+		TYPE_HIT,		 // ヒット時
+		TYPE_FIRE,		 // 火
+		TYPE_ZONE,		 // 集中
 		TYPE_MAX
 	};
 

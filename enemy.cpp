@@ -32,7 +32,7 @@
 #include"meshfield.h"
 #include"cylinder.h"
 #include"slow.h"
-#include"camera.h"
+#include"GameCamera.h"
 #include "game.h"
 #include"Observer.h"
 #include "MoveSmoke.h"
@@ -198,7 +198,7 @@ void CEnemy::Update(void)
 	CPlayerGame* pPlayer = CGame::GetPlayer();
 
 	// カメラの取得処理
-	CCamera* pCamera = CManager::GetCamera();
+	CGameCamera* pCamera = CGame::GetCamera();
 
 	// 位置の取得
 	D3DXVECTOR3 pos = m_pCharactor->GetPosition();
@@ -354,7 +354,7 @@ void CEnemy::Update(void)
 		auto pParticle = CParticle3DNormal::Create(chestpos, 100.0f, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
 
 		// パーティクルの設定
-		pParticle->SetParticle(15.0f, 240, 50, 1);
+		pParticle->SetParticle(15.0f, 240, 50, 1,314);
 	}
 	else if (m_pMotion->IsEventFrame(50, 50, MOTION_IMPACT))
 	{
@@ -370,7 +370,7 @@ void CEnemy::Update(void)
 		auto pParticle = CParticle3DNormal::Create(chestpos, 100.0f, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
 
 		// パーティクルの設定
-		pParticle->SetParticle(15.0f, 240, 50, 1);
+		pParticle->SetParticle(15.0f, 240, 50, 1,314);
 	}
 
 	// 攻撃モーションのたたきつけになったら
@@ -397,7 +397,7 @@ void CEnemy::Update(void)
 	if (pCamera != nullptr)
 	{
 		// カメラ追従
-		pCamera->SetTracking(D3DXVECTOR3(chestpos.x, chestpos.y + 500.0f, chestpos.z), chestpos, 0.1f, CCamera::TRACKOBJ_ENEMY);
+		pCamera->SetTracking(D3DXVECTOR3(chestpos.x, chestpos.y + 500.0f, chestpos.z), chestpos, 0.1f, CGameCamera::TRACKOBJ_ENEMY);
 	}
 
 	if (m_pMachine != nullptr)
@@ -424,7 +424,7 @@ void CEnemy::Update(void)
 		if (m_pCharactor->GetAlive() == false && m_pMotion->GetBlendType() != MOTION_DEATH && m_pMotion->GetBlendType() != MOTION_DOWN)
 		{
 			// 敵を追従する
-			pCamera->SetTracking(CCamera::TRACKOBJ_ENEMY);
+			pCamera->SetTracking(CGameCamera::TRACKOBJ_ENEMY);
 
 			// HPが無かったら
 			ChangeState(make_shared<CEnemyDeath>());
@@ -539,7 +539,7 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 		auto pParticle = CParticle3DNormal::Create(ImpactPos, 10.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
 
 		// パーティクルの設定処理
-		pParticle->SetParticle(15.0f, 240, 50, 5);
+		pParticle->SetParticle(15.0f, 240, 50, 5,314);
 
 		// ボスまでの角度を取得
 		float fAngle = GetTargetAngle(pos, PlayerPos);
@@ -566,7 +566,7 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 		auto pParticle = CParticle3DNormal::Create(ImpactPos, 10.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
 
 		// パーティクルの設定処理
-		pParticle->SetParticle(15.0f, 240, 50, 5);
+		pParticle->SetParticle(15.0f, 240, 50, 5,314);
 
 		// ボスまでの角度を取得
 		float fAngle = GetTargetAngle(pos, PlayerPos);
@@ -599,7 +599,7 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 		auto pParticle = CParticle3DNormal::Create(ImpactPos, 10.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
 
 		// パーティクルの設定処理
-		pParticle->SetParticle(15.0f, 60, 50, 5);
+		pParticle->SetParticle(15.0f, 60, 50, 5,314);
 
 		// ボスまでの角度を取得
 		float fAngle = GetTargetAngle(pos, PlayerPos);

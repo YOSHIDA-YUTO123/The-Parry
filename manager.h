@@ -29,7 +29,7 @@ class CInputJoypad;
 class CInputMouse;
 class CSound;
 class CTextureManager;
-class CCamera;
+//class CCamera;
 class CLight;
 class CModelManager;
 class CSlow;
@@ -57,7 +57,7 @@ public:
 	static int GetFrameCounter(void);
 	static bool GetShowDebug(void) { return m_bShowDebug; }
 	static CTextureManager* GetTexture(void);
-	static CCamera* GetCamera(void);
+	//static CCamera* GetCamera(void);
 	static CLight* GetLight(void);
 	static CModelManager* GetModel(void);
 	static CSlow* GetSlow(void) { return m_pSlow; }
@@ -72,7 +72,7 @@ private:
 	static CInputMouse* m_pInputMouse;			// マウスのポインタ
 	static CSound* m_pSound;					// サウンドのポインタ
 	static CTextureManager* m_pTexture;			// テクスチャクラスへのポインタ	
-	static CCamera* m_pCamera;					// カメラのポインタ
+	//static CCamera* m_pCamera;					// カメラのポインタ
 	static CLight* m_pLight;					// ライトへのポインタ
 	static CModelManager* m_pModel;				// モデルクラスへのポインタ
 	static CSlow* m_pSlow;						// スローモーションクラスへのポインタ

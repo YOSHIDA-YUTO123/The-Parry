@@ -340,9 +340,6 @@ void CRenderer::Draw(const int fps)
 		(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL),
 		D3DCOLOR_RGBA(0, 0, 0, 255), 1.0f, 0);
 
-	CCamera* pCamera = CManager::GetCamera();
-
-	D3DXVECTOR3 posV = pCamera->GetPosV(), posR = pCamera->GetPosR();
 	D3DXVECTOR3 vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 
 	LPDIRECT3DSURFACE9 pRenderDef, pZBuffer;
@@ -380,11 +377,11 @@ void CRenderer::Draw(const int fps)
 				D3DCOLOR_RGBA(0, 0, 0, 255), 1.0f, 0);
 		}
 
-		// すべてのオブジェクトの描画処理
-		CObject::DrawAll();
-
 		// シーンの描画処理
 		CManager::DrawScene();
+
+		// すべてのオブジェクトの描画処理
+		CObject::DrawAll();
 
 		// フェードの取得
 		CFade* pFade = CManager::GetFade();
