@@ -23,7 +23,7 @@ using namespace Const; // 名前空間Constを使用
 //===================================================
 // コンストラクタ
 //===================================================
-CCharacter3D::CCharacter3D() : CObject(3)
+CCharacter3D::CCharacter3D() : CObject(4)
 {
 	m_nNumModel = NULL;
 	m_pMotion = nullptr;

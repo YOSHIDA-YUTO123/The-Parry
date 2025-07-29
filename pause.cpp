@@ -518,7 +518,7 @@ void CPauseManager::Create(void)
 		m_pInstance.reset(new CPauseManager);
 
 		// îwåiÇÃê∂ê¨
-		CBackGround::Create(D3DXVECTOR3(640.0f, 460.0f, 0.0f), D3DXVECTOR2(300.0f, 250.0f),D3DXCOLOR(0.5f,0.5f,0.5f,1.0f));
+		CBackGround::Create(D3DXVECTOR3(640.0f, 460.0f, 0.0f), D3DXVECTOR2(300.0f, 250.0f),D3DXCOLOR(0.5f,0.5f,0.5f,1.0f),CBackGround::TYPE_PAUSE);
 
 		// É|Å[ÉYíÜ
 		CPauseNow::Create(D3DXVECTOR3(80.0f,660.0f, 0.0f), D3DXVECTOR2(60.0f, 50.0f));

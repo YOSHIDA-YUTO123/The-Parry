@@ -39,6 +39,7 @@ CPlayer* CGame::m_pPlayer = nullptr;		// プレイヤーへのポインタ
 CMeshCylinder* CGame::m_pCylinder = nullptr;	// メッシュシリンダーへのポインタ
 CGame::STATE CGame::m_state = STATE_NORMAL;     // ゲームの状態
 CGameCamera* CGame::m_pCamera = nullptr;		// ゲームカメラクラスへのポインタ
+CGame::RESULTTYPE CGame::m_ResultType = CGame::RESULTTYPE_WIN; // リザルトの種類
 
 //===================================================
 // コンストラクタ
@@ -236,8 +237,14 @@ void CGame::Update(void)
 
 		if (m_nCounterState >= 60 && pFade != nullptr)
 		{
-			// 新しいモードの設定
-			pFade->SetFade(make_unique<CResult>());
+			switch (m_ResultType)
+			{
+			case RESULTTYPE_WIN: pFade->SetFade(make_unique<CResultWin>()); break;
+
+			case RESULTTYPE_LOSE: pFade->SetFade(make_unique<CResultLose>()); break;
+
+			default: break;
+			}
 
 			m_state = STATE_NORMAL;
 		}

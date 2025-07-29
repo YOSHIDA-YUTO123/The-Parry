@@ -22,16 +22,25 @@
 class CBackGround : public CObject2D
 {
 public:
+
+	enum TYPE
+	{
+		TYPE_PAUSE = 0,
+		TYPE_RESULT,
+		TYPE_MAX
+	};
+
 	CBackGround();
 	~CBackGround();
 
-	static CBackGround* Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size, const D3DXCOLOR col);
+	static CBackGround* Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size, const D3DXCOLOR col,const TYPE type);
 
 	virtual HRESULT Init(void) override;
 	virtual void Uninit(void) override;
 	virtual void Update(void) override {};
 	virtual void Draw(void) override;
 private:
+	TYPE m_type; // éÌóﬁ
 	D3DXCOLOR m_col; // êF
 };
 

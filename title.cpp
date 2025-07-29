@@ -68,11 +68,8 @@ HRESULT CTitle::Init(void)
 	// タイトルメニューの生成
 	CTitleMenuManager::Create();
 
+	// ポイントライトの設定処理
 	pLight->SetPoint(D3DXVECTOR3(-200.0f, 300.0f, 0.0f),1000.0f, D3DCOLOR_RGBA(255, 255, 255,255), D3DCOLOR_RGBA(255, 255, 255, 255));
-
-	//pLight->SetPoint(D3DXVECTOR3(0.0f, 200.0f, 100.0f), 1000.0f, D3DCOLOR_RGBA(255, 255, 255, 255), D3DCOLOR_RGBA(255, 255, 255, 255));
-
-	//pLight->SetPoint(D3DXVECTOR3(0.0f, 200.0f, 100.0f), 1000.0f, D3DCOLOR_RGBA(255, 255, 255, 255), D3DCOLOR_RGBA(255, 255, 255, 255));
 
 	// フィールドの設定
 	CMeshField::Create(VEC3_NULL, 48, 48, D3DXVECTOR2(5500.0f, 5500.0f));
@@ -86,8 +83,8 @@ HRESULT CTitle::Init(void)
 	// トーチの生成
 	CObjectX::Create(D3DXVECTOR3(250.0f, 150.0f, -165.0f), "data/MODEL/obj/torch.x", D3DXVECTOR3(D3DX_PI * 0.15f, 0.0f, 0.0f));
 
-	//// プレイヤーの生成
-	//CTitlePlayer::Create(VEC3_NULL,D3DXVECTOR3(0.0f,-D3DX_PI * 0.5f,0.0f));
+	// プレイヤーの生成
+	CTitlePlayer::Create(VEC3_NULL,D3DXVECTOR3(0.0f,-D3DX_PI * 0.5f,0.0f));
 
 	//auto pObj2D = CObject2DMT::Create(D3DXVECTOR3(640.0f, 360.0f, 0.0f), D3DXVECTOR2(350.0f, 150.0f));
 	//pObj2D->SetTextureID("data/TEXTURE/GageFrame/playerHpFrame.png", "data/TEXTURE/gradation/wave000.png");
@@ -128,16 +125,6 @@ void CTitle::Update(void)
 	if (m_pCamera != nullptr)
 	{
 		m_pCamera->Update();
-	}
-	// キーボードの取得
-	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
-
-	if (pKeyboard->GetTrigger(DIK_RETURN))
-	{
-		CFade* pFade = CManager::GetFade();
-
-		// 新しいモードの設定
-		pFade->SetFade(make_unique<CGame>());
 	}
 }
 

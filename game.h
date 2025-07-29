@@ -33,11 +33,20 @@ class CGame : public CScene
 {
 public:
 
+	// ゲームの状態
 	enum STATE
 	{
 		STATE_NORMAL = 0,
 		STATE_END,
 		STATE_MAX
+	};
+
+	// リザルトの種類
+	enum RESULTTYPE
+	{
+		RESULTTYPE_WIN = 0,
+		RESULTTYPE_LOSE,
+		RESULTTYPE_MAX
 	};
 
 	CGame();
@@ -49,6 +58,7 @@ public:
 	void Draw(void);
 
 	static void SetState(const STATE state) { m_state = state; }
+	static void SetResult(const RESULTTYPE type) { m_ResultType = type; }
 	static CMeshField* GetField(void) { return m_pMeshField; }
 	static CPlayer* GetPlayer(void) { return m_pPlayer; }
 	static CMeshCylinder* GetCylinder(void){ return m_pCylinder; }
@@ -60,6 +70,7 @@ private:
 	static CMeshCylinder* m_pCylinder;	// メッシュシリンダーへのポインタ
 	static CGameCamera* m_pCamera;		// ゲームカメラクラスへのポインタ
 	CPauseManager* m_pPauseManager;		// ポーズマネージャークラスへのポインタ
+	static RESULTTYPE m_ResultType;		// リザルトの種類
 	int m_nCounterState;				// 状態のカウンター
 };
 

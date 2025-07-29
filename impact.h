@@ -23,11 +23,6 @@ class CMeshCircle : public CMesh
 {
 public:
 
-	//// サークルの構成(高さ、速さ、半径内側、半径外側、寿命、地面判定)
-	//struct Confing
-	//{
-	//};
-
 	CMeshCircle();
 	~CMeshCircle();
 

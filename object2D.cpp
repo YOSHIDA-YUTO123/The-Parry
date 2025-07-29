@@ -13,7 +13,7 @@
 #include "manager.h"
 #include"textureManager.h"
 
-using namespace Const;							// 名前空間Constを使用する
+using namespace Const;	// 名前空間Constを使用する
 
 //===================================================
 // コンストラクタ

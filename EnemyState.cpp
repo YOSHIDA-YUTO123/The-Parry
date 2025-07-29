@@ -22,6 +22,8 @@
 #include "Wave.h"
 #include"GameCamera.h"
 #include "MoveSmoke.h"
+#include "result.h"
+#include"fade.h"
 
 //***************************************************
 // –¼‘O‹óŠÔ
@@ -1585,6 +1587,9 @@ void CEnemyDown::Update(void)
 	// ’Ç]ŠÔ‚ªI‚í‚Á‚½‚ç
 	if (m_nTrackingTime <= 0)
 	{
+		CGame::SetState(CGame::STATE_END);
+		CGame::SetResult(CGame::RESULTTYPE_WIN);
+
 		// ƒJƒƒ‰‚Ìæ“¾
 		CGameCamera* pCamera = CGame::GetCamera();
 

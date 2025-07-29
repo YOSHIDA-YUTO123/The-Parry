@@ -16,16 +16,40 @@
 //***************************************************
 #include"main.h"
 #include "scene.h"
+#include<memory>
 
 //***************************************************
-// ゲームクラスの定義
+// 前方宣言
 //***************************************************
-class CResult : public CScene
+class CResultCamera;
+
+//***************************************************
+// リザルト(勝利)クラスの定義
+//***************************************************
+class CResultWin : public CScene
 {
 public:
 
-	CResult();
-	~CResult();
+	CResultWin();
+	~CResultWin();
+
+	HRESULT Init(void);
+	void Uninit(void);
+	void Update(void);
+	void Draw(void);
+private:
+	std::unique_ptr<CResultCamera> m_pCamera; // カメラクラスへのポインタ
+};
+
+//***************************************************
+// リザルト(敗北)クラスの定義
+//***************************************************
+class CResultLose : public CScene
+{
+public:
+
+	CResultLose();
+	~CResultLose();
 
 	HRESULT Init(void);
 	void Uninit(void);

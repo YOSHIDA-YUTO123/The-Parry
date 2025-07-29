@@ -12,11 +12,14 @@
 
 using namespace Const; // 名前空間Constの使用
 
+
 //================================================
 // コンストラクタ
 //================================================
 CBackGround::CBackGround()
 {
+	m_type = TYPE_PAUSE;
+
 	m_col = WHITE;
 }
 
@@ -30,11 +33,12 @@ CBackGround::~CBackGround()
 //================================================
 // 生成処理
 //================================================
-CBackGround* CBackGround::Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size,const D3DXCOLOR col)
+CBackGround* CBackGround::Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size,const D3DXCOLOR col, const TYPE type)
 {
 	// 背景の生成
 	CBackGround* pBg = new CBackGround;
 
+	pBg->m_type = type;
 	pBg->Init();
 	pBg->SetPosition(pos);
 	pBg->SetSize(Size.x, Size.y);
@@ -55,10 +59,23 @@ HRESULT CBackGround::Init(void)
 		return E_FAIL;
 	}
 
-	SetTextureID("data/TEXTURE/pause/pauseBg.png");
+	// 種類の遷移
+	switch (m_type)
+	{
+	case TYPE_PAUSE:
+		// テクスチャのID
+		SetTextureID("data/TEXTURE/pause/pauseBg.png");
 
-	// ポーズ中にしか描画しない
-	CObject::SetType(TYPE_PAUSE);
+		// ポーズ中にしか描画しない
+		CObject::SetType(CObject::TYPE_PAUSE);
+		break;
+	case TYPE_RESULT:
+		// テクスチャのID
+		SetTextureID("data/TEXTURE/gradation/result_bg.jpg");
+		break;
+	default:
+		break;
+	}
 
 	return S_OK;
 }

@@ -161,6 +161,8 @@
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="overlay.cpp" />
+    <ClCompile Include="ResultCamera.cpp" />
+    <ClCompile Include="ResultMenu.cpp" />
     <ClCompile Include="TitleCamera.cpp" />
     <ClCompile Include="TitleLogo.cpp" />
     <ClCompile Include="TitleMenu.cpp" />
@@ -240,6 +242,8 @@
     <ClInclude Include="Collision.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="overlay.h" />
+    <ClInclude Include="ResultCamera.h" />
+    <ClInclude Include="ResultMenu.h" />
     <ClInclude Include="TitleCamera.h" />
     <ClInclude Include="TitleLogo.h" />
     <ClInclude Include="TitleMenu.h" />

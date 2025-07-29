@@ -9,12 +9,16 @@
 // インクルードファイル
 //***************************************************
 #include "TitlePlayer.h"
+#include"transform.h"
+#include"player.h"
 
 //===================================================
 // コンストラクタ
 //===================================================
 CTitlePlayer::CTitlePlayer()
 {
+	m_pMove = nullptr;
+	m_pMoveMent = nullptr;
 }
 
 //===================================================
@@ -35,12 +39,10 @@ CTitlePlayer* CTitlePlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 	// プレイヤーの初期化
 	pPlayer->Init();
 
-	// キャラクターの取得
-	//auto pCharacter = pPlayer->GetCharacter();
+	pPlayer->SetPosition(pos);
+	pPlayer->GetRotaition()->Set(rot);
+	pPlayer->GetRotaition()->SetDest(rot);
 
-	//pCharacter->SetPosition(pos);
-	//pCharacter->GetRotation()->Set(rot);
-	//pCharacter->GetRotation()->SetDest(rot);
 	return pPlayer;
 }
 
@@ -49,6 +51,9 @@ CTitlePlayer* CTitlePlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 //===================================================
 HRESULT CTitlePlayer::Init(void)
 {
+	// キャラクタークラスへのポインタ
+	CCharacter3D::LoadMotion("data/MOTION/motionPlayer.txt", TYPE_MAX);
+
 	// 初期化処理
 	CCharacter3D::Init();
 
@@ -69,6 +74,9 @@ void CTitlePlayer::Uninit(void)
 //===================================================
 void CTitlePlayer::Update(void)
 {
+	// モーションの更新処理
+	CCharacter3D::UpdateMotion();
+
 	// 更新処理
 	CCharacter3D::Update();
 }

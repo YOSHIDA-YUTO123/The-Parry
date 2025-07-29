@@ -333,6 +333,12 @@
     <ClCompile Include="TitleMenu.cpp">
       <Filter>ソース ファイル\object2D</Filter>
     </ClCompile>
+    <ClCompile Include="ResultCamera.cpp">
+      <Filter>ソース ファイル\system\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="ResultMenu.cpp">
+      <Filter>ソース ファイル\object2D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="testword.h">
@@ -549,6 +555,12 @@
       <Filter>ヘッダー ファイル\object2D</Filter>
     </ClInclude>
     <ClInclude Include="TitleMenu.h">
+      <Filter>ヘッダー ファイル\object2D</Filter>
+    </ClInclude>
+    <ClInclude Include="ResultCamera.h">
+      <Filter>ヘッダー ファイル\system\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ResultMenu.h">
       <Filter>ヘッダー ファイル\object2D</Filter>
     </ClInclude>
   </ItemGroup>

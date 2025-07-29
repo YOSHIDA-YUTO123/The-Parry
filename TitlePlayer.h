@@ -18,6 +18,12 @@
 #include<memory>
 
 //***************************************************
+// 前方宣言
+//***************************************************
+class CVelocity;
+class CPlayerMovement;
+
+//***************************************************
 // タイトルのプレイヤークラスの定義
 //***************************************************
 class CTitlePlayer : public CCharacter3D
@@ -33,6 +39,8 @@ public:
 	void Update(void) override;
 	void Draw(void) override;
 private:
+	std::shared_ptr<CVelocity> m_pMove;				// 移動量クラスへのポインタ
+	std::unique_ptr<CPlayerMovement> m_pMoveMent;	// 移動制御クラスへのポインタ
 };
 
 #endif

@@ -288,6 +288,7 @@ void CEnemy::Update(void)
 	// 障害物との当たり判定
 	if (CollisionObstacle(&pos))
 	{
+
 	}
 
 	// シリンダーの取得
@@ -378,14 +379,14 @@ void CEnemy::Update(void)
 		pCamera->SetTracking(D3DXVECTOR3(chestpos.x, chestpos.y + 500.0f, chestpos.z), chestpos, 0.1f, CGameCamera::TRACKOBJ_ENEMY);
 	}
 
+	// モーションの更新処理
+	CCharacter3D::UpdateMotion();
+
 	if (m_pMachine != nullptr)
 	{
 		// 状態の更新処理
 		m_pMachine->Update();
 	}
-
-	// モーションの更新処理
-	CCharacter3D::UpdateMotion();
 
 	// オブザーバーへの通知処理
 	Notify();

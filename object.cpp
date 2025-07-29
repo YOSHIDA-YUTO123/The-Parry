@@ -284,6 +284,7 @@ void CObject::Destroy(CObject *pObject)
 	m_pNext = nullptr;
 	m_pPrev = nullptr;
 
+	// オブジェクトの数を減らす
 	m_nNumAll[nPriority]--;
 
 	delete pObject;

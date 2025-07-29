@@ -192,6 +192,7 @@ void CPlayer::Update(void)
 	{
 		// ゲームを終了
 		CGame::SetState(CGame::STATE_END);
+		CGame::SetResult(CGame::RESULTTYPE_LOSE);
 	}
 
 	// キーボードの取得
@@ -441,6 +442,7 @@ void CPlayer::Update(void)
 		pParticle->SetParticle(3.0f, 60, 20, PARRY_TIME, 314);
 		pParticle->SetZone(handRpos, 500);
 	}
+
 	// ズームインだったら解除
 	if (pMotion->GetBlendType() != TYPE_PARRY && pCamera->GetState() == CGameCamera::STATE_ZOOMIN)
 	{

@@ -33,6 +33,14 @@ class CCharacter3D : public CObject
 {
 public:
 
+	// ƒ‚[ƒVƒ‡ƒ“‚Ìí—Ş
+	enum TYPE
+	{
+		TYPE_NEUTRAL = 0,
+		TYPE_MOVE,
+		TYPE_MAX
+	};
+
 	// ó‘Ô‚Ìí—Ş
 	enum STATE
 	{

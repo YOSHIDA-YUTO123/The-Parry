@@ -5,15 +5,18 @@
 //
 //===================================================
 
-//*************************************************
+//***************************************************
 // インクルードファイル
-//*************************************************
+//***************************************************
 #include "result.h"
 #include"meshfield.h"
 #include"manager.h"
 #include"title.h"
 #include"input.h"
 #include"fade.h"
+#include "objectX.h"
+#include"ResultCamera.h"
+#include "ResultMenu.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -21,24 +24,32 @@ using namespace std; // 名前空間stdを使用
 //===================================================
 // コンストラクタ
 //===================================================
-CResult::CResult() : CScene(MODE_RESULT)
+CResultWin::CResultWin() : CScene(MODE_RESULT)
 {
+	m_pCamera = nullptr;
 }
 
 //===================================================
 // デストラクタ
 //===================================================
-CResult::~CResult()
+CResultWin::~CResultWin()
 {
 }
 
 //===================================================
 // 初期化処理
 //===================================================
-HRESULT CResult::Init(void)
+HRESULT CResultWin::Init(void)
 {
-	// フィールドの設定
-	CMeshField::Create(VEC3_NULL, 48, 48, D3DXVECTOR2(5500.0f, 5500.0f));
+	// リザルトのカメラの生成
+	m_pCamera = make_unique<CResultCamera>();
+	m_pCamera->Init();
+
+	// アレーナの生成
+	CObjectX::Create(VEC3_NULL, "data/MODEL/field/arena.x", VEC3_NULL);
+
+	// フィールドの生成
+	CMeshField::Create(VEC3_NULL, 48, 48, D3DXVECTOR2(5000.0f, 5000.0f));
 
 	return S_OK;
 }
@@ -46,19 +57,35 @@ HRESULT CResult::Init(void)
 //===================================================
 // 終了処理
 //===================================================
-void CResult::Uninit(void)
+void CResultWin::Uninit(void)
 {
+	// カメラの破棄
+	if (m_pCamera != nullptr)
+	{
+		m_pCamera->Uninit();
+		m_pCamera.reset();
+		m_pCamera = nullptr;
+	}
 }
 
 //===================================================
 // 更新処理
 //===================================================
-void CResult::Update(void)
+void CResultWin::Update(void)
 {
+	if (m_pCamera != nullptr)
+	{
+		// 更新処理
+		m_pCamera->Update();
+	}
+
 	// キーボードの取得
 	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
 
-	if (pKeyboard->GetTrigger(DIK_RETURN))
+	// パッドの取得
+	CInputJoypad* pJoyPad = CManager::GetInputJoypad();
+
+	if (pKeyboard->GetTrigger(DIK_RETURN) || pJoyPad->GetTrigger(pJoyPad->JOYKEY_A))
 	{
 		CFade* pFade = CManager::GetFade();
 
@@ -70,6 +97,61 @@ void CResult::Update(void)
 //===================================================
 // 描画処理
 //===================================================
-void CResult::Draw(void)
+void CResultWin::Draw(void)
 {
+	if (m_pCamera != nullptr)
+	{
+		// 更新処理
+		m_pCamera->SetCamera();
+	}
+}
+
+//===================================================
+// コンストラクタ
+//===================================================
+CResultLose::CResultLose() : CScene(MODE_RESULT)
+{
+
+}
+
+//===================================================
+// デストラクタ
+//===================================================
+CResultLose::~CResultLose()
+{
+}
+
+//===================================================
+// 初期化処理
+//===================================================
+HRESULT CResultLose::Init(void)
+{
+	// リザルトマネージャーの生成
+	CResultMenuManager::Create();
+
+	return S_OK;
+}
+
+//===================================================
+// 終了処理
+//===================================================
+void CResultLose::Uninit(void)
+{
+
+}
+
+//===================================================
+// 更新処理
+//===================================================
+void CResultLose::Update(void)
+{
+
+}
+
+//===================================================
+// 描画処理
+//===================================================
+void CResultLose::Draw(void)
+{
+
 }
