@@ -23,6 +23,7 @@
 #include "particle.h"
 #include "debugproc.h"
 #include "TitleLogo.h"
+#include "TitleMenu.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std;   // 名前空間stdを使用
@@ -64,7 +65,11 @@ HRESULT CTitle::Init(void)
 	// タイトルロゴ
 	CTitleLogo::Create(D3DXVECTOR3(350.0f,100.0f,0.0f),D3DXVECTOR2(300.0f,100.0f));
 
+	// タイトルメニューの生成
+	CTitleMenuManager::Create();
+
 	pLight->SetPoint(D3DXVECTOR3(-200.0f, 300.0f, 0.0f),1000.0f, D3DCOLOR_RGBA(255, 255, 255,255), D3DCOLOR_RGBA(255, 255, 255, 255));
+
 	//pLight->SetPoint(D3DXVECTOR3(0.0f, 200.0f, 100.0f), 1000.0f, D3DCOLOR_RGBA(255, 255, 255, 255), D3DCOLOR_RGBA(255, 255, 255, 255));
 
 	//pLight->SetPoint(D3DXVECTOR3(0.0f, 200.0f, 100.0f), 1000.0f, D3DCOLOR_RGBA(255, 255, 255, 255), D3DCOLOR_RGBA(255, 255, 255, 255));
@@ -81,8 +86,8 @@ HRESULT CTitle::Init(void)
 	// トーチの生成
 	CObjectX::Create(D3DXVECTOR3(250.0f, 150.0f, -165.0f), "data/MODEL/obj/torch.x", D3DXVECTOR3(D3DX_PI * 0.15f, 0.0f, 0.0f));
 
-	// プレイヤーの生成
-	CTitlePlayer::Create(VEC3_NULL,D3DXVECTOR3(0.0f,-D3DX_PI * 0.5f,0.0f));
+	//// プレイヤーの生成
+	//CTitlePlayer::Create(VEC3_NULL,D3DXVECTOR3(0.0f,-D3DX_PI * 0.5f,0.0f));
 
 	//auto pObj2D = CObject2DMT::Create(D3DXVECTOR3(640.0f, 360.0f, 0.0f), D3DXVECTOR2(350.0f, 150.0f));
 	//pObj2D->SetTextureID("data/TEXTURE/GageFrame/playerHpFrame.png", "data/TEXTURE/gradation/wave000.png");

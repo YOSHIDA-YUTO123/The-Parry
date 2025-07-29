@@ -36,11 +36,11 @@ CTitlePlayer* CTitlePlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 	pPlayer->Init();
 
 	// キャラクターの取得
-	auto pCharacter = pPlayer->GetCharacter();
+	//auto pCharacter = pPlayer->GetCharacter();
 
-	pCharacter->SetPosition(pos);
-	pCharacter->GetRotation()->Set(rot);
-	pCharacter->GetRotation()->SetDest(rot);
+	//pCharacter->SetPosition(pos);
+	//pCharacter->GetRotation()->Set(rot);
+	//pCharacter->GetRotation()->SetDest(rot);
 	return pPlayer;
 }
 
@@ -50,9 +50,9 @@ CTitlePlayer* CTitlePlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 HRESULT CTitlePlayer::Init(void)
 {
 	// 初期化処理
-	CPlayer::Init();
+	CCharacter3D::Init();
 
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 //===================================================
@@ -61,7 +61,7 @@ HRESULT CTitlePlayer::Init(void)
 void CTitlePlayer::Uninit(void)
 {
 	// 終了処理
-	CPlayer::Uninit();
+	CCharacter3D::Uninit();
 }
 
 //===================================================
@@ -70,7 +70,7 @@ void CTitlePlayer::Uninit(void)
 void CTitlePlayer::Update(void)
 {
 	// 更新処理
-	CPlayer::Update();
+	CCharacter3D::Update();
 }
 
 //===================================================
@@ -79,5 +79,5 @@ void CTitlePlayer::Update(void)
 void CTitlePlayer::Draw(void)
 {
 	// 描画処理
-	CPlayer::Draw();
+	CCharacter3D::Draw();
 }

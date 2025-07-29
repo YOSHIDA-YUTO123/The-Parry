@@ -23,7 +23,7 @@
 //***************************************************
 class CEnemy;
 class CMotion;
-class CPlayerGame;
+class CPlayer;
 
 //***************************************************
 // 敵の状態クラスの定義(基底クラス)
@@ -286,7 +286,7 @@ public:
 	~CEnemyJumpAttack();
 	void Init(void) override;
 	void Update(void) override;
-	void CollisionPlayer(CPlayerGame *pPlayer, CMotion* pMotion);
+	void CollisionPlayer(CPlayer *pPlayer, CMotion* pMotion);
 private:
 };
 

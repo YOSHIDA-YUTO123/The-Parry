@@ -53,11 +53,11 @@ public:
 	virtual void Uninit(void) override {};
 	virtual int GetID(void) const { return m_ID; }
 
-	void SetOwner(CPlayer* pPlayer, CCharacter3D* pCaracter);
+	void SetOwner(CPlayer* pPlayer);
 protected:
-	CPlayer* m_pPlayer;			// プレイヤーのクラスへのポインタ
-	CCharacter3D* m_pCharacter;	// キャラクタークラスへのポインタ
+	CPlayer* GetPlayer(void) { return m_pPlayer; }
 private:
+	CPlayer* m_pPlayer;			// プレイヤーのクラスへのポインタ
 	ID m_ID; // ID
 };
 

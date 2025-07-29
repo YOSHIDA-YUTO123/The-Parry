@@ -14,14 +14,19 @@
 #include"renderer.h"
 #include"math.h"
 #include"shadowS.h"
+#include"model.h"
+#include"motion.h"
 
+using namespace math; // 名前空間mathを使用
 using namespace Const; // 名前空間Constを使用
 
 //===================================================
 // コンストラクタ
 //===================================================
-CCharacter3D::CCharacter3D()
+CCharacter3D::CCharacter3D() : CObject(3)
 {
+	m_nNumModel = NULL;
+	m_pMotion = nullptr;
 	m_pos = VEC3_NULL;
 	m_pRot = nullptr;
 	memset(m_mtxWorld, NULL, sizeof(m_mtxWorld));
@@ -58,6 +63,26 @@ HRESULT CCharacter3D::Init(void)
 //===================================================
 void CCharacter3D::Uninit(void)
 {
+	for (int nCnt = 0; nCnt < (int)m_apModel.size(); nCnt++)
+	{
+		// モデルの破棄
+		if (m_apModel[nCnt] != nullptr)
+		{
+			// 終了処理
+			m_apModel[nCnt]->Uninit();
+
+			delete m_apModel[nCnt];
+
+			m_apModel[nCnt] = nullptr;
+		}
+	}
+
+	if (m_pMotion != nullptr)
+	{
+		// モーションの終了処理
+		m_pMotion->Uninit();
+	}
+
 	// 向きの破棄
 	if (m_pRot != nullptr)
 	{
@@ -70,6 +95,9 @@ void CCharacter3D::Uninit(void)
 	{
 		m_pShadowS = nullptr;
 	}
+
+	// 自分自身の破棄
+	CObject::Release();
 }
 
 //===================================================
@@ -147,6 +175,61 @@ void CCharacter3D::Draw(void)
 
 	//ワールドマトリックスの設定
 	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+
+	// モデルの描画
+	for (int nCnt = 0; nCnt < m_nNumModel; nCnt++)
+	{
+		if (m_apModel[nCnt] != nullptr)
+		{
+			// 描画処理
+			m_apModel[nCnt]->Draw();
+		}
+	}
+}
+
+//===================================================
+// モーションのロード
+//===================================================
+void CCharacter3D::LoadMotion(const char* pFileName,const int nNumMotion)
+{
+	// モーションのロード処理
+	m_pMotion = CMotion::Load(pFileName, m_apModel, &m_nNumModel, nNumMotion, CMotion::LOAD_TEXT);
+}
+
+//===================================================
+// モデルの位置の取得
+//===================================================
+D3DXVECTOR3 CCharacter3D::GetModelPos(const int nIdx)
+{
+	// モデルのマトリックスの取得
+	D3DXMATRIX mtx = m_apModel[nIdx]->GetMatrixWorld();
+
+	// ワールドマトリックスの位置の取得
+	D3DXVECTOR3 modelPos = GetPositionFromMatrix(mtx);
+
+	return modelPos;
+}
+
+//===================================================
+// モデルの向きの取得
+//===================================================
+D3DXVECTOR3 CCharacter3D::GetModelRot(const int nIdx)
+{
+	// モデルの位置の取得
+	D3DXVECTOR3 modelRot = m_apModel[nIdx]->GetRotaition();
+
+	return modelRot;
+}
+
+//===================================================
+// モデルの大きさの取得
+//===================================================
+D3DXVECTOR3 CCharacter3D::GetModelSize(const int nIdx)
+{
+	// モデルの大きさの取得
+	D3DXVECTOR3 modelSize = m_apModel[nIdx]->GetSize();
+
+	return modelSize;
 }
 
 //===================================================
@@ -206,6 +289,18 @@ bool CCharacter3D::HitStop(void)
 		return false;
 	}
 	return true;
+}
+
+//===================================================
+// モーションの更新処理
+//===================================================
+void CCharacter3D::UpdateMotion(void)
+{
+	if (m_pMotion != nullptr)
+	{
+		// モーションの更新処理
+		m_pMotion->Update(&m_apModel[0], m_nNumModel);
+	}
 }
 
 //===================================================

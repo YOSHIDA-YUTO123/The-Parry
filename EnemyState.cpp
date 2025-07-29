@@ -283,7 +283,7 @@ void CEnemyAttackSmash::Update(void)
 	CMotion* pMotion = m_pEnemy->GetMotion();
 
 	// プレイヤーの取得
-	CPlayerGame* pPlayer = CGame::GetPlayer();
+	CPlayer* pPlayer = CGame::GetPlayer();
 
 	// プレイヤーが使われていないなら
 	if (pPlayer == nullptr)
@@ -310,7 +310,7 @@ void CEnemyAttackSmash::Update(void)
 			pPlayer->SetStance();
 
 			// プレイヤーの位置の取得
-			D3DXVECTOR3 playerPos = pPlayer->GetPos();
+			D3DXVECTOR3 playerPos = pPlayer->GetPosition();
 
 			// 角度を求める
 			float fAngle = GetTargetAngle(playerPos, pos);
@@ -332,10 +332,10 @@ void CEnemyAttackSmash::Update(void)
 			pParticle->SetParam(CEffect3D::TYPE_HIT);
 
 			// ヒットストップ
-			m_pEnemy->SetHitStop(25);
+			m_pEnemy->SetHitStop(20);
 
 			// ヒットストップ
-			pPlayer->SetHitStop(25);
+			pPlayer->SetHitStop(20);
 
 			// 成功度の設定
 			m_pEnemy->SetSuccess(nSuccess);
@@ -418,10 +418,10 @@ CEnemyDamageL::~CEnemyDamageL()
 void CEnemyDamageL::Init(void)
 {
 	// プレイヤーの取得
-	CPlayerGame* pPlayer = CGame::GetPlayer();
+	CPlayer* pPlayer = CGame::GetPlayer();
 
 	// プレイヤーの位置の取得
-	D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
+	D3DXVECTOR3 PlayerPos = pPlayer->GetPosition();
 
 	// モーションクラスの取得
 	CMotion* pMotion = m_pEnemy->GetMotion();
@@ -458,7 +458,7 @@ void CEnemyDamageL::Update(void)
 		// プレイヤーの取得
 		CPlayer* pPlayer = CGame::GetPlayer();
 
-		D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
+		D3DXVECTOR3 PlayerPos = pPlayer->GetPosition();
 
 		// 吹き飛び処理
 		m_pEnemy->GetMovement()->BlowOff(PlayerPos, 50.0f, 5.0f);
@@ -659,7 +659,7 @@ void CEnemySpin::Update(void)
 {
 	// モーションクラスの取得
 	CMotion* pMotion = m_pEnemy->GetMotion();
-	CPlayerGame* pPlayer = CGame::GetPlayer();
+	CPlayer* pPlayer = CGame::GetPlayer();
 	CMotion* pPlayerMotion = pPlayer->GetMotion();
 
 	// 向いている方向に移動する
@@ -690,7 +690,7 @@ void CEnemySpin::Update(void)
 			pPlayer->SetStance();
 
 			// プレイヤーの位置の取得
-			D3DXVECTOR3 playerPos = pPlayer->GetPos();
+			D3DXVECTOR3 playerPos = pPlayer->GetPosition();
 
 			// 角度を求める
 			float fAngle = GetTargetAngle(playerPos, pos);
@@ -945,10 +945,10 @@ CEnemyDamageS::~CEnemyDamageS()
 void CEnemyDamageS::Init(void)
 {
 	// プレイヤーの取得
-	CPlayerGame* pPlayer = CGame::GetPlayer();
+	CPlayer* pPlayer = CGame::GetPlayer();
 
 	// プレイヤーの位置の取得
-	D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
+	D3DXVECTOR3 PlayerPos = pPlayer->GetPosition();
 
 	// モーションクラスの取得
 	CMotion* pMotion = m_pEnemy->GetMotion();
@@ -1027,13 +1027,13 @@ void CEnemyGuard::Init(void)
 	m_pEnemy->Hit(m_nDamage);
 
 	// プレイヤーの取得
-	CPlayerGame* pPlayer = CGame::GetPlayer();
+	CPlayer* pPlayer = CGame::GetPlayer();
 
 	// 位置の取得
 	D3DXVECTOR3 pos = m_pEnemy->GetPosition();
 
 	// プレイヤーの位置の取得
-	D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
+	D3DXVECTOR3 PlayerPos = pPlayer->GetPosition();
 
 	// パーティクルの生成
 	auto pParticle = CParticle3DNormal::Create(m_ImpactPos, 10.0f, D3DXCOLOR(1.0f, 0.4f, 0.4f, 1.0f));
@@ -1191,7 +1191,7 @@ void CEnemySwing::Update(void)
 	CMotion* pMotion = m_pEnemy->GetMotion();
 
 	// プレイヤーの取得
-	CPlayerGame* pPlayer = CGame::GetPlayer();
+	CPlayer* pPlayer = CGame::GetPlayer();
 
 	// プレイヤーの取得
 	CMotion* pPlayerMotion = pPlayer->GetMotion();
@@ -1220,7 +1220,7 @@ void CEnemySwing::Update(void)
 				pPlayer->SetStance();
 
 				// プレイヤーの位置の取得
-				D3DXVECTOR3 playerPos = pPlayer->GetPos();
+				D3DXVECTOR3 playerPos = pPlayer->GetPosition();
 
 				// 角度を求める
 				float fAngle = GetTargetAngle(playerPos, pos);
@@ -1383,7 +1383,7 @@ void CEnemyJumpAttack::Update(void)
 			m_pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f));
 
 			// プレイヤーまでの差分を求める
-			D3DXVECTOR3 Diff = pPlayer->GetPos() - pos;
+			D3DXVECTOR3 Diff = pPlayer->GetPosition() - pos;
 
 			// 距離を求める
 			float dir = GetDistance(Diff);
@@ -1414,7 +1414,7 @@ void CEnemyJumpAttack::Update(void)
 //===================================================
 // プレイヤーとの当たり判定
 //===================================================
-void CEnemyJumpAttack::CollisionPlayer(CPlayerGame* pPlayer, CMotion* pMotion)
+void CEnemyJumpAttack::CollisionPlayer(CPlayer* pPlayer, CMotion* pMotion)
 {
 	// 位置の取得
 	D3DXVECTOR3 pos = m_pEnemy->GetPosition();
@@ -1432,7 +1432,7 @@ void CEnemyJumpAttack::CollisionPlayer(CPlayerGame* pPlayer, CMotion* pMotion)
 			pPlayer->SetStance();
 
 			// プレイヤーの位置の取得
-			D3DXVECTOR3 playerPos = pPlayer->GetPos();
+			D3DXVECTOR3 playerPos = pPlayer->GetPosition();
 
 			// 角度を求める
 			float fAngle = GetTargetAngle(playerPos, pos);

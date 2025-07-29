@@ -35,7 +35,7 @@ using namespace std; // 名前空間stdを使用
 // 静的メンバ変数宣言
 //***************************************************
 CMeshField* CGame::m_pMeshField = nullptr;		// メッシュフィールドへのポインタ
-CPlayerGame* CGame::m_pPlayer = nullptr;		// プレイヤーへのポインタ
+CPlayer* CGame::m_pPlayer = nullptr;		// プレイヤーへのポインタ
 CMeshCylinder* CGame::m_pCylinder = nullptr;	// メッシュシリンダーへのポインタ
 CGame::STATE CGame::m_state = STATE_NORMAL;     // ゲームの状態
 CGameCamera* CGame::m_pCamera = nullptr;		// ゲームカメラクラスへのポインタ
@@ -87,7 +87,7 @@ HRESULT CGame::Init(void)
 	m_pCylinder = CMeshCylinder::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 32, 1, 1900.0f, 1900.0f);
 
 	// プレイヤーの生成
-	m_pPlayer = CPlayerGame::Create(D3DXVECTOR3(1.0f, 0.0f, -1500.0f));
+	m_pPlayer = CPlayer::Create(D3DXVECTOR3(1.0f, 0.0f, -1500.0f));
 
 	// ゲージのフレームの生成
 	auto gageFrame = CGageFrame::Create(D3DXVECTOR3(220.0f, 36.0f, 0.0f), D3DXVECTOR2(200.0f, 25.0f),CGageFrame::TYPE_HP_PLAYER);
@@ -101,7 +101,7 @@ HRESULT CGame::Init(void)
 	}
 
 	// スタミナゲージの生成
-	auto pStamina = CStaminaGage::Create(D3DXVECTOR3(110.0f, 81.0f, 0.0f), D3DXVECTOR2(298.0f, 8.0f), D3DXCOLOR(1.0f, 1.0f, 0.3f, 1.0f), CPlayerGame::MAX_STAMINA);
+	auto pStamina = CStaminaGage::Create(D3DXVECTOR3(110.0f, 81.0f, 0.0f), D3DXVECTOR2(298.0f, 8.0f), D3DXCOLOR(1.0f, 1.0f, 0.3f, 1.0f), CPlayer::MAX_STAMINA);
 
 	if (pStamina != nullptr)
 	{
@@ -124,7 +124,7 @@ HRESULT CGame::Init(void)
 	}
 
 	// HPゲージの生成
-	auto pGage = CHpGage::Create(D3DXVECTOR3(109.0f, 36.0f, 0.0f), D3DXVECTOR2(302.0f, 14.0f), D3DXCOLOR(0.0f,1.0f,0.0f,1.0f),D3DXCOLOR(1.0f,0.0f,0.0f,1.0f), CPlayerGame::MAX_LIFE,true);
+	auto pGage = CHpGage::Create(D3DXVECTOR3(109.0f, 36.0f, 0.0f), D3DXVECTOR2(302.0f, 14.0f), D3DXCOLOR(0.0f,1.0f,0.0f,1.0f),D3DXCOLOR(1.0f,0.0f,0.0f,1.0f), CPlayer::MAX_LIFE,true);
 
 	// Hpゲージのオブザーバーの設定
 	CHpObserver *observer = new CHpObserver(pGage);

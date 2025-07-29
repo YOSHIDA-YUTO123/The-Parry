@@ -15,7 +15,7 @@
 // インクルードファイル
 //***************************************************
 #include"main.h"
-#include"object.h"
+#include"character3D.h"
 #include<memory>
 #include<vector>
 
@@ -35,7 +35,7 @@ class CColliderSphere;
 class CEnemyMovement;
 class CColliderAABB;
 class CVelocity;
-class CPlayerGame;
+class CPlayer;
 
 template <class T>
 class CObserver;
@@ -43,7 +43,7 @@ class CObserver;
 //***************************************************
 // 敵クラスの定義
 //***************************************************
-class CEnemy : public CObject
+class CEnemy : public CCharacter3D
 {
 public:
 
@@ -94,7 +94,6 @@ public:
 	void Draw(void) override;
 
 	D3DXVECTOR3 GetPosition(void);
-	CMotion* GetMotion(void);
 	CEnemyMovement* GetMovement(void);
 
 	void SelectDamageMotion(int success, const D3DXVECTOR3 ImpactPos);	// どのダメージモーションが出るか判定する関数
@@ -114,20 +113,16 @@ public:
 	void Hit(const int nDamage);
 	void MoveSmoke(void);
 	void SetAngle(const float fAngle);
-	RESULT AttackResult(CPlayerGame* pPlayer);					// 攻撃の結果
+	RESULT AttackResult(CPlayer* pPlayer);					// 攻撃の結果
 private:
-	void CollisionPlayer(CMotion* pPlayerMotion, CPlayerGame* pPlayer);
+	void CollisionPlayer(CMotion* pPlayerMotion, CPlayer* pPlayer);
 	void SetParent(const int nCnt);
-	void Load(void);
 	void Notify(void);									// オブザーバーへの通知処理
 
 	std::unique_ptr<CColliderAABB> m_pAABB;				// AABBのコライダー
 	std::unique_ptr<CStateMachine> m_pMachine;			// 状態マシーン
-	std::shared_ptr<CCharacter3D> m_pCharactor;			// キャラクタークラス
 	std::unique_ptr<CColliderSphere> m_pSphere;			// 円の当たり判定クラス
-	std::unique_ptr<CMotion> m_pMotion;					// 敵のモーションの制御クラスのポインタ
 	std::shared_ptr<CVelocity> m_pMove;					// 移動クラスの生成
-	std::vector<CModel*> m_apModel;						// モデルクラスへのポインタ
 	std::unique_ptr<CEnemyMovement> m_pMovement;		// 敵の移動制御クラス
 	CObserver<int>* m_pObserver;								// オブザーバークラスへのポインタ
 	CMeshOrbit* m_pOrbit;								// 軌跡
@@ -135,7 +130,6 @@ private:
 	D3DXVECTOR3 m_posOld;								// 前回の位置
 	D3DXVECTOR3 m_Size;									// 敵の全体の大きさ
 	int m_nParrySuccess;								// パリィの成功度(保存用)
-	int m_nNumModel;									// モデルの最大数
 };
 
 //***************************************************
@@ -146,13 +140,13 @@ class CEnemyMovement
 public:
 	CEnemyMovement();
 	~CEnemyMovement();
-	void Init(std::shared_ptr<CVelocity> enemyMove, std::shared_ptr<CCharacter3D> enemy);	
+	void Init(std::shared_ptr<CVelocity> enemyMove, CEnemy* pEnemy);
 	void BlowOff(const D3DXVECTOR3 attacker, const float blowOff, const float jump);		// 吹き飛び関数(戻り値はアタッカーまでの角度)
 	void MoveForWard(const float fSpeed);
 	void SetMoveDir(const float dir, const float fSpeed); // 移動方向の設定
 	void Jump(const float fHeight);
 private:
+	CEnemy* m_pEnemy;						// 敵クラスへのポインタ
 	std::shared_ptr<CVelocity> m_pMove;		// 敵の移動制御用変数
-	std::shared_ptr<CCharacter3D> m_pEnemy;	// キャラクター
 };
 #endif

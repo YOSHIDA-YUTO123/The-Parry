@@ -61,6 +61,7 @@ HRESULT CSound::Init(HWND hWnd)
 
 	// マスターボイスの生成
 	hr = m_pXAudio2->CreateMasteringVoice(&m_pMasteringVoice);
+
 	if (FAILED(hr))
 	{
 		MessageBox(hWnd, "マスターボイスの生成に失敗！", "警告！", MB_ICONWARNING);
@@ -266,6 +267,7 @@ void CSound::StopSound(SOUND_LABEL label)
 		// オーディオバッファの削除
 		m_apSourceVoice[label]->FlushSourceBuffers();
 	}
+	//m_apSourceVoice[label]->SetFrequencyRatio()
 }
 //===============================================
 // セグメント停止(すべて)

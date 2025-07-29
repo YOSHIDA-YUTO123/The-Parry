@@ -16,10 +16,7 @@
 //***************************************************
 #include"main.h"
 #include"character3D.h"
-#include "Collision.h"
 #include<vector>
-#include"math.h"
-#include"model.h"
 #include<memory>
 
 //***************************************************
@@ -44,15 +41,19 @@ class CMeshOrbit;
 class CMeshField;
 class CGameCamera;
 class CColliderAABB;
+class CVelocity;
+class CRotation;
+class CModel;
 
 //***************************************************
 // プレイヤークラスの定義
 //***************************************************
-class CPlayer : public CObject
+class CPlayer : public CCharacter3D
 {
 public:
 
-	static constexpr int MAX_LIFE = 10;		// HP
+	static constexpr int MAX_LIFE = 10;				// HP
+	static constexpr float MAX_STAMINA = 100.0f;	// スタミナ
 
 	// モーションの種類
 	enum TYPE
@@ -71,51 +72,6 @@ public:
 		TYPE_STANCE,
 		TYPE_MAX
 	};
-
-	CPlayer(int nPriority = 4);
-	~CPlayer();
-
-	static CPlayer* Create(const D3DXVECTOR3 pos = Const::VEC3_NULL, const D3DXVECTOR3 rot = Const::VEC3_NULL);
-	void Load(void); // モーションのロード
-
-	virtual HRESULT Init(void) override;
-	virtual void Uninit(void) override;
-	virtual void Update(void) override;
-	virtual void Draw(void) override;
-
-	virtual CPlayerMovement* GetMovement(void) { return nullptr; } // 移動制御クラスの取得(派生したプレイヤーが持っている移動制御の取得)
-
-	// ゲッター
-	D3DXVECTOR3 GetPos(void) const { return m_pCharacter3D->GetPosition(); }
-	D3DXVECTOR3 GetModelPos(const int nIdx) { return math::GetPositionFromMatrix(m_apModel[nIdx]->GetMatrixWorld()); }
-	D3DXVECTOR3 GetRotaition(void) const { return m_pCharacter3D->GetRotation()->GetDest(); }
-
-	void SetPosition(const D3DXVECTOR3 pos) { m_pCharacter3D->SetPosition(pos); }
-
-	CMotion* GetMotion(void) { return m_pMotion.get(); } // モーションの取得
-
-	void ChangeState(std::shared_ptr<CPlayerState> pNewState);
-	void SetHitStop(const int nTime) { m_pCharacter3D->SetHitStop(nTime); }
-	void UpdateMotion(void); // モーションの更新
-	void UpdateAvoid(void);	 // 回避の更新処理
-
-protected:
-	CCharacter3D* GetCharacter(void) { return m_pCharacter3D.get(); }
-private:
-	std::unique_ptr<CStateMachine> m_pMachine;		// 状態の制御クラス
-	std::unique_ptr<CMotion> m_pMotion;				// モーションのクラスへのポインタ
-	std::unique_ptr<CCharacter3D> m_pCharacter3D;	// キャラクタークラス
-	std::vector<CModel*> m_apModel;					// モデルクラスのポインタ
-	int m_nNumModel;								// モデルの最大数
-};
-
-//***************************************************
-// プレイヤークラスの定義(ゲーム中)
-//***************************************************
-class CPlayerGame : public CPlayer
-{
-public:
-	static constexpr float MAX_STAMINA = 100.0f;	// スタミナ
 
 	// パリィの成功度
 	enum PARRY
@@ -136,17 +92,24 @@ public:
 		OBSERVER_MAX
 	};
 
-	CPlayerGame();
-	~CPlayerGame();
+	CPlayer(int nPriority = 4);
+	~CPlayer();
 
-	HRESULT Init(void) override;
-	void Uninit(void) override;
-	void Update(void) override;
-	void Draw(void) override;
+	static CPlayer* Create(const D3DXVECTOR3 pos = Const::VEC3_NULL, const D3DXVECTOR3 rot = Const::VEC3_NULL);
+	void Load(void); // モーションのロード
 
-	static CPlayerGame* Create(const D3DXVECTOR3 pos = Const::VEC3_NULL, const D3DXVECTOR3 rot = Const::VEC3_NULL);
+	virtual HRESULT Init(void) override;
+	virtual void Uninit(void) override;
+	virtual void Update(void) override;
+	virtual void Draw(void) override;
 
-	// ゲッター
+	void SetPosition(const D3DXVECTOR3 pos) { CCharacter3D::SetPosition(pos); }
+
+	void ChangeState(std::shared_ptr<CPlayerState> pNewState);
+	void SetHitStop(const int nTime) { CCharacter3D::SetHitStop(nTime); }
+	void UpdateAvoid(void);	 // 回避の更新処理
+
+		// ゲッター
 	CColliderSphere* GetSphereCollider(void) { return m_pSphere.get(); }
 	CColliderAABB* GetAABB(void) { return m_pAABB.get(); }
 	CPlayerMovement* GetMovement(void) { return m_pMovement.get(); }
@@ -165,31 +128,32 @@ public:
 	void DeleteOrbit(void);							  // 軌跡のリセット
 	void SetStance(void);							  // 構えモーションの設定
 	void SetStamina(const float fStamina);
+
 private:
-	void CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos, CCharacter3D* pCharacter, CMotion* pMotion); // インパクトの当たり判定
+	void CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos, CMotion* pMotion); // インパクトの当たり判定
 	bool IsMove(CMotion* pMotion);		// 移動できるか判定
 	bool IsStance(CMotion* pMotion);	// 構えをだせるか判定
 	bool IsAvoid(CMotion* pMotion);		// 回避を出せるか判定
-	void Notify(void);
+	void Notify(void);					// オブザーバーへの通知処理
 	void UpdateParry(void);
-	void SetMoveAngle(CGameCamera*pCamera, CInputKeyboard* pKeyboard, CInputJoypad* pJoypad, CCharacter3D* pCaracter);
+	void SetMoveAngle(CGameCamera* pCamera, CInputKeyboard* pKeyboard, CInputJoypad* pJoypad);
 	void UpdateCollider(D3DXVECTOR3 pos);
 	void UpdateStamina(void);
 
+	std::unique_ptr<CStateMachine> m_pMachine;		// 状態の制御クラス
 	std::unique_ptr<CPlayerMovement> m_pMovement;	// 移動処理
 	std::unique_ptr<CColliderFOV> m_pFOV;			// 視界の判定
 	std::unique_ptr<CColliderSphere> m_pSphere;		// 円のコライダー
 	std::unique_ptr<CVelocity> m_pMove;				// 移動量
 	std::unique_ptr<CColliderAABB> m_pAABB;			// コライダーAABB
 	CMeshOrbit* m_pOrbit;							// 軌跡の処理
-	CObserver<int>* m_pHpObserver;						// HPオブザーバークラスへのポインタ
-	CObserver<float>* m_pStaminaObserver;					// スタミナオブザーバークラスへのポインタ
+	CObserver<int>* m_pHpObserver;					// HPオブザーバークラスへのポインタ
+	CObserver<float>* m_pStaminaObserver;			// スタミナオブザーバークラスへのポインタ
 	D3DXVECTOR3 m_posOld;							// 前回の位置
+	float m_fStamina;								// スタミナ
 	int m_nParryTime;								// パリィの有効時間
 	int m_nParryCounter;							// パリィのカウンター
-
-	float m_fStamina;								// スタミナ
-	int m_nAttackCounter;							// 攻撃の有効時間	
+	int m_nAttackCounter;							// 攻撃の有効時間
 	bool m_bJump;									// ジャンプできるかどうか
 	bool m_bDash;									// 走ってるかどうか
 };
@@ -208,7 +172,7 @@ public:
 	bool MoveKeyboard(CInputKeyboard* pKeyboard, const float fSpeed, float* pRotDest);
 	bool MoveJoypad(CInputJoypad* pJoypad, const float fSpeed, float* pRotDest);
 	void MoveForward(const float fSpeed);
-	void Set(const D3DXVECTOR3 move) { m_pMove->Set(move); }
+	void Set(const D3DXVECTOR3 move);
 private:
 	CRotation* m_pRot;	// 向き
 	CVelocity* m_pMove;		// 移動量

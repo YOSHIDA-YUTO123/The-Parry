@@ -14,12 +14,13 @@
 //***************************************************
 // インクルードファイル
 //***************************************************
-#include "player.h"
+#include "character3D.h"
+#include<memory>
 
 //***************************************************
 // タイトルのプレイヤークラスの定義
 //***************************************************
-class CTitlePlayer : public CPlayer
+class CTitlePlayer : public CCharacter3D
 {
 public:
 	CTitlePlayer();
@@ -31,8 +32,6 @@ public:
 	void Uninit(void) override;
 	void Update(void) override;
 	void Draw(void) override;
-
-	virtual CPlayerMovement* GetMovement(void) { return nullptr; } // 
 private:
 };
 

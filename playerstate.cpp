@@ -28,7 +28,6 @@ CPlayerState::CPlayerState(ID Id)
 {
 	m_ID = Id;
 	m_pPlayer = nullptr;
-	m_pCharacter = nullptr;
 }
 
 //===================================================
@@ -36,15 +35,15 @@ CPlayerState::CPlayerState(ID Id)
 //===================================================
 CPlayerState::~CPlayerState()
 {
+
 }
 
 //===================================================
 // オーナーの設定
 //===================================================
-void CPlayerState::SetOwner(CPlayer* pPlayer,CCharacter3D *pCaracter)
+void CPlayerState::SetOwner(CPlayer* pPlayer)
 {
 	m_pPlayer = pPlayer;
-	m_pCharacter = pCaracter;
 }
 
 //===================================================
@@ -109,10 +108,13 @@ CPlayerDamage::~CPlayerDamage()
 //===================================================
 void CPlayerDamage::Init(void)
 {
-	// モーションの取得
-	CMotion* pMotion = m_pPlayer->GetMotion();
+	// プレイヤーの取得
+	auto pPlayer = GetPlayer();
 
-	m_pCharacter->Hit(m_nDamage);
+	// モーションの取得
+	CMotion* pMotion = pPlayer->GetMotion();
+
+	pPlayer->Hit(m_nDamage);
 
 	if (pMotion != nullptr)
 	{
@@ -126,15 +128,18 @@ void CPlayerDamage::Init(void)
 //==================================================
 void CPlayerDamage::Update(void)
 {
+	// プレイヤーの取得
+	auto pPlayer = GetPlayer();
+
 	// モーションの取得
-	CMotion* pMotion = m_pPlayer->GetMotion();
+	CMotion* pMotion = pPlayer->GetMotion();
 
 	if (pMotion->GetType() == MOTION::TYPE_DAMAGE)
 	{
 		// モーションが終わったら
 		if (pMotion != nullptr && pMotion->FinishMotion())
 		{
-			m_pPlayer->ChangeState(make_shared<CPlayerDownNeutral>());
+			pPlayer->ChangeState(make_shared<CPlayerDownNeutral>());
 		}
 	}
 }
@@ -158,8 +163,11 @@ CPlayerDownNeutral::~CPlayerDownNeutral()
 //===================================================
 void CPlayerDownNeutral::Init(void)
 {
+	// プレイヤーの取得
+	auto pPlayer = GetPlayer();
+
 	// モーションの取得
-	CMotion* pMotion = m_pPlayer->GetMotion();
+	CMotion* pMotion = pPlayer->GetMotion();
 
 	if (pMotion != nullptr)
 	{
@@ -196,8 +204,11 @@ CPlayerAvoid::~CPlayerAvoid()
 //===================================================
 void CPlayerAvoid::Init(void)
 {
+	// プレイヤーの取得
+	auto pPlayer = GetPlayer();
+
 	// モーションの取得
-	CMotion* pMotion = m_pPlayer->GetMotion();
+	CMotion* pMotion = pPlayer->GetMotion();
 
 	if (pMotion != nullptr)
 	{
@@ -211,11 +222,14 @@ void CPlayerAvoid::Init(void)
 //===================================================
 void CPlayerAvoid::Update(void)
 {
+	// プレイヤーの取得
+	auto pPlayer = GetPlayer();
+
 	// モーションの取得
-	CMotion* pMotion = m_pPlayer->GetMotion();
+	CMotion* pMotion = pPlayer->GetMotion();
 
 	// 移動制御の取得
-	auto pMoveMent = m_pPlayer->GetMovement();
+	auto pMoveMent = pPlayer->GetMovement();
 
 	// モーションがあるなら
 	if (pMotion != nullptr)
@@ -230,9 +244,9 @@ void CPlayerAvoid::Update(void)
 		// モーションが終わったら
 		if (pMotion->FinishMotion())
 		{
-			m_pPlayer->ChangeState(make_shared<CPlayerNormal>());
+			pPlayer->ChangeState(make_shared<CPlayerNormal>());
 
-			pMotion->SetMotion(m_pPlayer->TYPE_NEUTRAL, true, 5);
+			pMotion->SetMotion(pPlayer->TYPE_NEUTRAL, true, 5);
 
 			return;
 		}
@@ -259,8 +273,11 @@ CPlayerRoundKick::~CPlayerRoundKick()
 //===================================================
 void CPlayerRoundKick::Init(void)
 {
+	// プレイヤーの取得
+	auto pPlayer = GetPlayer();
+
 	// モーションの取得
-	CMotion* pMotion = m_pPlayer->GetMotion();
+	CMotion* pMotion = pPlayer->GetMotion();
 
 	if (pMotion != nullptr)
 	{
@@ -274,32 +291,35 @@ void CPlayerRoundKick::Init(void)
 //===================================================
 void CPlayerRoundKick::Update(void)
 {
+	// プレイヤーの取得
+	auto pPlayer = GetPlayer();
+
 	// モーションの取得
-	CMotion* pMotion = m_pPlayer->GetMotion();
+	CMotion* pMotion = pPlayer->GetMotion();
 
 	// モーションがあるなら
 	if (pMotion != nullptr)
 	{
 		// 位置の取得
-		D3DXVECTOR3 pos = m_pPlayer->GetPos();
+		D3DXVECTOR3 pos = pPlayer->GetPosition();
 
-		if (pMotion->IsEventFrame(1, 10, m_pPlayer->TYPE_ROUNDKICK))
+		if (pMotion->IsEventFrame(1, 10, pPlayer->TYPE_ROUNDKICK))
 		{
 			// 向いている方向に進む
-			m_pPlayer->GetMovement()->MoveForward(10.0f);
+			pPlayer->GetMovement()->MoveForward(10.0f);
 		}
 
-		if (pMotion->IsEventFrame(15, 15, m_pPlayer->TYPE_ROUNDKICK))
+		if (pMotion->IsEventFrame(15, 15, pPlayer->TYPE_ROUNDKICK))
 		{
 			// 移動量の設定
-			m_pPlayer->GetMovement()->Set(D3DXVECTOR3(0.0f, 18.0f, 0.0f));
+			pPlayer->GetMovement()->Set(D3DXVECTOR3(0.0f, 18.0f, 0.0f));
 
 			// サークルの生成
 			auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f), pos, 0.0f, 20.0f);
 			pCircle->SetCircle(0.0f, 10.0f, 60, true);
 		}
 
-		if (pMotion->IsEventFrame(15, 17, m_pPlayer->TYPE_ROUNDKICK))
+		if (pMotion->IsEventFrame(15, 17, pPlayer->TYPE_ROUNDKICK))
 		{
 			// エフェクトの生成
 			auto pEffect = CMoveSmoke::Create(D3DXVECTOR3(pos.x, pos.y + 50.0f, pos.z), 100.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
@@ -311,7 +331,7 @@ void CPlayerRoundKick::Update(void)
 		// モーションが終わったら
 		if (pMotion->FinishMotion())
 		{
-			m_pPlayer->ChangeState(make_shared<CPlayerNormal>());
+			pPlayer->ChangeState(make_shared<CPlayerNormal>());
 		}
 	}
 }
@@ -342,11 +362,14 @@ void CPlayerDash::Init(void)
 //===================================================
 void CPlayerDash::Update(void)
 {
+	// プレイヤーの取得
+	auto pPlayer = GetPlayer();
+
 	// モーションの取得
-	CMotion* pMotion = m_pPlayer->GetMotion();
+	CMotion* pMotion = pPlayer->GetMotion();
 
 	// 向きの取得
-	D3DXVECTOR3 rot = m_pCharacter->GetRotation()->Get();
+	D3DXVECTOR3 rot = pPlayer->GetRotaition()->Get();
 
 	// プレイヤーの後ろ方向を設定
 	float fMoveX = sinf(rot.y) * 2.0f;
@@ -358,7 +381,7 @@ void CPlayerDash::Update(void)
 		if (pMotion->IsEventFrame(10, 10, CPlayer::TYPE_DASH))
 		{
 			// 位置の取得
-			D3DXVECTOR3 pos = m_pPlayer->GetModelPos(11);
+			D3DXVECTOR3 pos = pPlayer->GetModelPos(11);
 
 			// エフェクトの生成
 			auto pEffect = CMoveSmoke::Create(D3DXVECTOR3(pos.x,pos.y,pos.z), 100.0f, WHITE);
@@ -370,7 +393,7 @@ void CPlayerDash::Update(void)
 		else if (pMotion->IsEventFrame(30, 30, CPlayer::TYPE_DASH))
 		{
 			// 位置の取得
-			D3DXVECTOR3 pos = m_pPlayer->GetModelPos(14);
+			D3DXVECTOR3 pos = pPlayer->GetModelPos(14);
 
 			// エフェクトの生成
 			auto pEffect = CMoveSmoke::Create(D3DXVECTOR3(pos.x, pos.y, pos.z), 100.0f, WHITE);
@@ -401,8 +424,11 @@ CPlayerJump::~CPlayerJump()
 //===================================================
 void CPlayerJump::Init(void)
 {
+	// プレイヤーの取得
+	auto pPlayer = GetPlayer();
+
 	// モーションの取得
-	CMotion* pMotion = m_pPlayer->GetMotion();
+	CMotion* pMotion = pPlayer->GetMotion();
 
 	if (pMotion != nullptr)
 	{
@@ -439,8 +465,11 @@ CPlayerLanding::~CPlayerLanding()
 //===================================================
 void CPlayerLanding::Init(void)
 {
+	// プレイヤーの取得
+	auto pPlayer = GetPlayer();
+
 	// モーションの取得
-	CMotion* pMotion = m_pPlayer->GetMotion();
+	CMotion* pMotion = pPlayer->GetMotion();
 
 	if (pMotion != nullptr)
 	{
@@ -449,7 +478,7 @@ void CPlayerLanding::Init(void)
 	}
 
 	// 位置の取得
-	D3DXVECTOR3 pos = m_pPlayer->GetPos();
+	D3DXVECTOR3 pos = pPlayer->GetPosition();
 
 	// サークルを生成
 	auto pCircle = CMeshCircle::Create(D3DCOLOR_RGBA(220, 220, 220, 200), D3DXVECTOR3(pos.x, pos.y + 3.0f, pos.z), 0.0f, 50.0f, 32);
@@ -463,15 +492,18 @@ void CPlayerLanding::Init(void)
 //===================================================
 void CPlayerLanding::Update(void)
 {
+	// プレイヤーの取得
+	auto pPlayer = GetPlayer();
+
 	// モーションの取得
-	CMotion* pMotion = m_pPlayer->GetMotion();
+	CMotion* pMotion = pPlayer->GetMotion();
 
 	if (pMotion != nullptr)
 	{
 		// モーションが終わったら
 		if (pMotion->IsFinishEndBlend())
 		{
-			m_pPlayer->ChangeState(make_shared<CPlayerNormal>());
+			pPlayer->ChangeState(make_shared<CPlayerNormal>());
 		}
 	}
 }

@@ -14,23 +14,27 @@
 //***************************************************
 // インクルードファイル
 //***************************************************
-#include"main.h"
-#include"transform.h"
+#include"object.h"
+#include<memory>
+#include<vector>
 
 //***************************************************
 // 前方宣言
 //***************************************************
 class CShadowS;
+class CRotation;
+class CMotion;
+class CModel;
 
 //***************************************************
 // キャラクター3Dクラスの定義
 //***************************************************
-class CCharacter3D
+class CCharacter3D : public CObject
 {
 public:
 
 	// 状態の種類
-	typedef enum
+	enum STATE
 	{
 		STATE_NORMAL = 0,
 		STATE_MOVE,
@@ -38,21 +42,29 @@ public:
 		STATE_DAMAGE,
 		STATE_DEATH,
 		STATE_MAX
-	}STATE;
+	};
 
 	CCharacter3D();
 	~CCharacter3D();
 
-	HRESULT Init(void);
-	void Uninit(void);
-	void Update(void);
-	void Draw(void);
+	virtual HRESULT Init(void) override;
+	virtual void Uninit(void) override;
+	virtual void Update(void) override;
+	virtual void Draw(void) override;
+	void LoadMotion(const char *pFileName, const int nNumMotion);
 
 	// ゲッター
 	D3DXVECTOR3 GetPosition(void) const { return m_pos; }
-	CRotation* GetRotation(void) const { return m_pRot; }
+	CRotation* GetRotaition(void) const { return m_pRot; }
 	STATE GetState(void) { return m_state; }
 	float GetSpeed(void) { return m_fSpeed; }
+	CMotion* GetMotion(void) { return m_pMotion.get(); } // モーションの取得
+	D3DXVECTOR3 GetModelPos(const int nIdx);
+	D3DXVECTOR3 GetModelRot(const int nIdx);
+	D3DXVECTOR3 GetModelSize(const int nIdx);
+
+	int GetLife(void) const { return m_nLife; }
+	bool GetAlive(void);		// 生きているか
 
 	// セッター
 	void SetPosition(const D3DXVECTOR3 pos) { m_pos = pos; }
@@ -60,11 +72,12 @@ public:
 	void SetState(const STATE state,const int nTime);
 	void DeleteShadow(void);	// 影の消去
 	bool Hit(int nDamage);		// ヒット時の処理
-	bool GetAlive(void);		// 生きているか
 	bool HitStop(void);			// ヒットストップしてるかどうか
 	void SetHitStop(const int nTime) { m_nHitStopTime = nTime; } // ヒットストップの設定
-	int GetLife(void) const { return m_nLife; }
+	void UpdateMotion(void);
 private:
+	std::unique_ptr<CMotion> m_pMotion;				// モーションのクラスへのポインタ
+	std::vector<CModel*> m_apModel;					// モデルクラスのポインタ
 	CShadowS* m_pShadowS;		// 影(ステンシル)
 	D3DXVECTOR3 m_pos;			// 位置
 	D3DXVECTOR3 m_ShadowScal;	// 影の大きさ
@@ -72,6 +85,7 @@ private:
 	STATE m_state;				// 状態
 	D3DXMATRIX m_mtxWorld;		// ワールドマトリックス
 	float m_fSpeed;				// 足の速さ
+	int m_nNumModel;			// モデルの最大数
 	int m_nCounterState;		// 状態のカウンター
 	int m_nLife;				// 寿命
 	int m_nHitStopTime;			// ヒットストップの時間

@@ -26,21 +26,78 @@ public:
 	// メニューの種類
 	enum MENU
 	{
-		MENU_NONE = 0,
-		MENU_START,
+		MENU_START = 0,
 		MENU_QUIT,
 		MENU_MAX
 	};
 
-	CTitleMenu();
-	~CTitleMenu();
+	CTitleMenu(const MENU menu);
+	virtual ~CTitleMenu();
+
+	static CTitleMenu* Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size,const MENU menu);
+
+	virtual HRESULT Init(void) override;
+	virtual void Uninit(void) override;
+	virtual void Update(void) override;
+	virtual void Draw(void) override;
+protected:
+	MENU GetMenu(void) const { return m_Menu; }
+private:
+	MENU m_Menu; // タイトルのメニュー
+};
+
+//***************************************************
+// タイトルメニュー(スタート)のクラスの定義
+//***************************************************
+class CTitleStart : public CTitleMenu
+{
+public:
+	CTitleStart();
+	~CTitleStart();
 
 	HRESULT Init(void) override;
 	void Uninit(void) override;
 	void Update(void) override;
 	void Draw(void) override;
-
 private:
+};
+
+//***************************************************
+// タイトルメニュー(やめる)のクラスの定義
+//***************************************************
+class CTitleQuit : public CTitleMenu
+{
+public:
+	CTitleQuit();
+	~CTitleQuit();
+
+	HRESULT Init(void) override;
+	void Uninit(void) override;
+	void Update(void) override;
+	void Draw(void) override;
+private:
+};
+
+//***************************************************
+// タイトルメニューのマネージャークラスの定義
+//***************************************************
+class CTitleMenuManager : public CObject2D
+{
+public:
+	~CTitleMenuManager();
+
+	static void Create(void);
+	static CTitleMenuManager* GetInstance(void) { return m_pInstance; }
+
+	HRESULT Init(void) override;
+	void Uninit(void) override;
+	void Update(void) override;
+	void Draw(void) override;
+	CTitleMenu::MENU GetMenu(void) const { return m_Menu; }
+private:
+	CTitleMenuManager();
+	static CTitleMenuManager* m_pInstance; // 自分のインスタンス
+	CTitleMenu::MENU m_Menu; // タイトルのメニュー
 };
 
 #endif
