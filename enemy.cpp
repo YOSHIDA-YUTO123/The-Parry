@@ -134,7 +134,7 @@ HRESULT CEnemy::Init(void)
 	m_pAABB = CColliderAABB::Create(CenterPos, m_posOld, Size);
 
 	// カプセルコライダーの生成
-	m_pCapsule = CColliderCapsule::Create(pos, D3DXVECTOR3(pos.x, pos.y + 100.0f, pos.z), 100.0f);
+	m_pCapsule = CColliderCapsule::Create(pos, D3DXVECTOR3(pos.x, pos.y + Size.y, pos.z), 60.0f);
 
 	// 移動制御クラスの生成
 	m_pMovement = make_unique<CEnemyMovement>();
@@ -400,7 +400,7 @@ void CEnemy::Update(void)
 	if (m_pMachine != nullptr)
 	{
 		// 状態の更新処理
-		//m_pMachine->Update();
+		m_pMachine->Update();
 	}
 
 	// オブザーバーへの通知処理
@@ -1100,7 +1100,7 @@ void CEnemy::UpdateCollider(const D3DXVECTOR3 pos)
 		// データの取得
 		auto dataCapsule = m_pCapsule->GetData();
 
-		D3DXVECTOR3 headpos = GetModelPos(1);
+		D3DXVECTOR3 headpos = GetModelPos(2);
 
 		dataCapsule.EndPos = headpos;
 

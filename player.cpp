@@ -129,7 +129,7 @@ HRESULT CPlayer::Init(void)
 	m_pAABB = CColliderAABB::Create(pos, m_posOld, Size);
 
 	// カプセルコライダーの生成
-	m_Capsule = CColliderCapsule::Create(pos, D3DXVECTOR3(pos.x, pos.y + Size.y, pos.z), 100.0f);
+	m_Capsule = CColliderCapsule::Create(pos, D3DXVECTOR3(pos.x, pos.y + Size.y, pos.z), 60.0f);
 
 	// スタミナを設定
 	m_fStamina = MAX_STAMINA;

@@ -134,10 +134,7 @@ public:
 	
 private:
 	CCollisionCapsule();
-	float ClosestPtSegmentSegment(D3DXVECTOR3 p1, D3DXVECTOR3 q1, D3DXVECTOR3 p2, D3DXVECTOR3 q2, float& s, float& t, D3DXVECTOR3& c1, D3DXVECTOR3& c2);
-
-	float GetLineDistance(const D3DXVECTOR3 StartPos, const D3DXVECTOR3 EndPos, const D3DXVECTOR3 Point);
-	bool Calc2LineNearestDistAndPos(D3DXVECTOR3* pStart1, D3DXVECTOR3* pVec1, D3DXVECTOR3* pStart2, D3DXVECTOR3* pVec2, float* pOutdist, D3DXVECTOR3* pOutNearPos1, D3DXVECTOR3* pOutNearPos2);
+	float ClosestPtSegmentSegment(D3DXVECTOR3 Start1, D3DXVECTOR3 End1, D3DXVECTOR3 Start2, D3DXVECTOR3 End2, float* pParam1, float* pParam2, D3DXVECTOR3* c1osestPos1, D3DXVECTOR3* c1osestPos2);
 	static std::unique_ptr< CCollisionCapsule> m_pCapsule;
 };
 //************************************************
