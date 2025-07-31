@@ -60,7 +60,7 @@ constexpr float AVOID_STAMINA = 15.0f;		// 回避に使用するスタミナ
 //===================================================
 // コンストラクタ
 //===================================================
-CPlayer::CPlayer(int nPriority)
+CPlayer::CPlayer()
 {
 	m_pMachine = nullptr;				// ステートマシーン
 	m_pMovement = nullptr;
@@ -98,7 +98,10 @@ HRESULT CPlayer::Init(void)
 	CCharacter3D::Init();
 
 	// キャラクターの設定処理
-	CCharacter3D::SetCharacter(MAX_LIFE, 6.0f,D3DXVECTOR3(3.0f,1.0f,3.5f));
+	CCharacter3D::SetCharacter(MAX_LIFE, 6.0f,D3DXVECTOR3(3.0f,1.0f,3.5f),D3DXVECTOR3(50.0f, 200.0f, 50.0f));
+
+	// 大きさの取得
+	D3DXVECTOR3 Size = CCharacter3D::GetSize();
 
 	// 状態制御の生成
 	m_pMachine = make_unique<CStateMachine>();
@@ -122,10 +125,11 @@ HRESULT CPlayer::Init(void)
 
 	m_pMovement->Init(m_pMove.get(), GetRotaition());
 
-	D3DXVECTOR3 Size = { 50.0f,200.0f,50.0f };
-
 	// コライダーの生成
 	m_pAABB = CColliderAABB::Create(pos, m_posOld, Size);
+
+	// カプセルコライダーの生成
+	m_Capsule = CColliderCapsule::Create(pos, D3DXVECTOR3(pos.x, pos.y + Size.y, pos.z), 100.0f);
 
 	// スタミナを設定
 	m_fStamina = MAX_STAMINA;
@@ -158,6 +162,7 @@ void CPlayer::Uninit(void)
 	m_pMovement = nullptr;
 	m_pOrbit = nullptr;
 	m_pAABB = nullptr;
+	m_Capsule = nullptr;
 
 	// キャラクターの破棄
 	CCharacter3D::Uninit();
@@ -215,18 +220,10 @@ void CPlayer::Update(void)
 		return;
 	}
 
-#ifdef _DEBUG
-
-	// デバッグ表示
-	CDebugProc::Print("カメラの回転 X = %.2f Y = %.2f\n", pCamera->GetRotaition().x, pCamera->GetRotaition().y);
-
-#endif // _DEBUG
-
 	// 速さ
 	float fSpeed = m_bDash ? CCharacter3D::GetSpeed() : 1.5f;
 
 	float fAngleDest = 0.0f;
-
 
 	// 移動できるなら
 	if (IsMove(pMotion) && bAlive)
@@ -356,8 +353,15 @@ void CPlayer::Update(void)
 		Orbit(32, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
 	}
 
+	// コライダーを更新する
+	UpdateCollider(pos);
+
 	// 障害物との当たり判定
-	CollisionObstacle(&pos);
+	if (CollisionObstacle(&pos))
+	{
+		// コライダーを更新する
+		UpdateCollider(pos);
+	}
 
 	// インパクトの当たり判定
 	CollisionImpact(pMesh, &pos, pMotion);
@@ -395,7 +399,7 @@ void CPlayer::Update(void)
 	}
 
 	// 回避ボタンを押したかつ生きているなら
-	if ((pMouse->OnMouseTriggerDown(1) || pJoypad->GetTrigger(pJoypad->JOYKEY_B)) && bAlive)
+	if ((pKeyboard->GetTrigger(DIK_F) || pJoypad->GetTrigger(pJoypad->JOYKEY_B)) && bAlive)
 	{
 		// 回避できるなら
 		if (IsAvoid(pMotion))
@@ -410,10 +414,6 @@ void CPlayer::Update(void)
 			ChangeState(make_shared<CPlayerAvoid>(35.0f));
 		}
 	}
-
-#ifdef _DEBUG
-
-#endif // _DEBUG
 
 	// カウンター状態
 	if ((pMouse->OnMouseTriggerDown(0) || pJoypad->GetTriggerTrigger(pJoypad->JOYKEY_L2)))
@@ -451,7 +451,7 @@ void CPlayer::Update(void)
 	}
 
 	// 反撃ボタンを押したら
-	if (pKeyboard->GetTrigger(DIK_F) || pJoypad->GetTriggerTrigger(pJoypad->JOYKEY_R2))
+	if (pMouse->OnMouseTriggerDown(1) || pJoypad->GetTriggerTrigger(pJoypad->JOYKEY_R2))
 	{
 		// 反撃の受付時間いないだったら
 		if (m_nAttackCounter >= 0)
@@ -517,6 +517,13 @@ void CPlayer::Update(void)
 
 	// カメラの追従処理
 	pCamera->SetTracking(posVDest, posRDest, 0.1f, CGameCamera::TRACKOBJ_PLAYER);
+
+#ifdef _DEBUG
+
+	// デバッグ表示
+	CDebugProc::Print("カメラの回転 X = %.2f Y = %.2f\n", pCamera->GetRotaition().x, pCamera->GetRotaition().y);
+
+#endif // _DEBUG
 }
 
 //===================================================
@@ -887,6 +894,36 @@ void CPlayer::UpdateCollider(D3DXVECTOR3 pos)
 		// コライダーの更新処理
 		m_pAABB->UpdateData(D3DXVECTOR3(pos.x, pos.y + fSizeY, pos.z), D3DXVECTOR3(m_posOld.x, m_posOld.y + fSizeY, m_posOld.z));
 	}
+
+	if (m_Capsule != nullptr)
+	{
+		// 大きさの取得
+		D3DXVECTOR3 Size = CCharacter3D::GetSize();
+
+		// データの取得
+		auto dataCapsule = m_Capsule->GetData();
+
+		D3DXVECTOR3 headpos = GetModelPos(2);
+
+		dataCapsule.EndPos = headpos;
+
+		// データの更新
+		dataCapsule.StartPos = pos;
+#ifdef _DEBUG
+
+		auto p = CEffect3D::Create(dataCapsule.StartPos, 10.0f, WHITE);
+		p->Set(10, VEC3_NULL);
+
+		p = CEffect3D::Create(dataCapsule.EndPos, 10.0f, WHITE);
+		p->Set(10, VEC3_NULL);
+#endif
+		// データの更新処理
+		m_Capsule->UpdateData(dataCapsule);
+
+	}
+
+	// 位置の設定
+	SetPosition(pos);
 }
 
 //===================================================
@@ -935,6 +972,33 @@ int CPlayer::SuccessParry(void)
 }
 
 //===================================================
+// 矩形の判定
+//===================================================
+bool CPlayer::CollisionAABB(CColliderAABB* pAABB)
+{
+	// AABBの取得
+	auto pCollision = CCollisionAABB::GetInstance();
+
+	// インスタンスがないなら処理しない
+	if (pCollision == nullptr) return false;
+
+	// 押し出し位置
+	D3DXVECTOR3 pushPos = VEC3_NULL;
+
+	if (pCollision->Collision(m_pAABB.get(), pAABB,&pushPos))
+	{
+		// 位置の取得
+		CCharacter3D::SetPosition(pushPos);
+
+		// コライダーの更新
+		UpdateCollider(pushPos);
+
+		return true;
+	}
+	return false;
+}
+
+//===================================================
 // 吹き飛び処理
 //===================================================
 void CPlayer::BlowOff(const D3DXVECTOR3 attacker, const float blowOff, const float jump)
@@ -960,6 +1024,51 @@ void CPlayer::BlowOff(const D3DXVECTOR3 attacker, const float blowOff, const flo
 	move.z = cosf(fAngle) * blowOff;
 
 	m_pMove->Set(move);
+}
+
+//===================================================
+// カプセルの当たり判定
+//===================================================
+bool CPlayer::CollisionCapsule(CColliderCapsule* pCapsule, const D3DXVECTOR3 pos)
+{
+	// 当たり判定の取得
+	auto pCollision = CCollisionCapsule::GetInstance();
+
+	D3DXVECTOR3 nearPlayerPos,nearPos2;
+
+	if (pCollision->Collision(m_Capsule.get(), pCapsule,&nearPlayerPos,&nearPos2))
+	{
+		//m_pMove->Set(VEC3_NULL);
+		D3DXVECTOR3 Size = GetSize();
+
+		D3DXVECTOR3 dir = nearPos2 - nearPlayerPos;
+		float fDistance = D3DXVec3Length(&dir);
+
+		D3DXVec3Normalize(&dir, &dir);
+
+		float fRadius = m_Capsule->GetData().fRadius + pCapsule->GetData().fRadius;
+
+		float fDepth = fRadius - fDistance;
+
+		fDepth = Clamp(fDepth, 0.0f, fDepth);
+
+		D3DXVECTOR3 playerPos = GetPosition();
+
+		UpdateCollider(playerPos - dir * fDepth);
+
+		auto p = CEffect3D::Create(nearPlayerPos, 50.0f, D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
+
+		p->Set(10, VEC3_NULL);
+
+		p = CEffect3D::Create(nearPos2, 50.0f, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+
+		p->Set(10, VEC3_NULL);
+
+
+		return true;
+	}
+
+	return false;
 }
 
 //===================================================
@@ -1019,10 +1128,7 @@ bool CPlayer::CollisionObstacle(D3DXVECTOR3* pPos)
 	{
 		// 障害物の取得
 		CObstacle* pObstacle = pObstacleManager->GetObstacle(nCnt);
-	
-		// コライダーを更新する
-		UpdateCollider(*pPos);
-	
+		
 		// 当たっていたら
 		if (pObstacle != nullptr && pObstacle->Collision(m_pAABB.get(), pPos))
 		{

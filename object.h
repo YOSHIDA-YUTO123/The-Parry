@@ -56,7 +56,7 @@ public:
 	void SetType(const TYPE type) { m_type = type; }
 	TYPE GetType(void) const { return m_type; }
 protected:
-	void Release(void);
+	void Release(void);							 // 死亡フラグを立てる
 private:
 	void Destroy(CObject* pObject);
 	static int m_nNumAll[Const::NUM_PRIORITY];	 // オブジェクトの総数

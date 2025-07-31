@@ -64,7 +64,6 @@ CEnemy::CEnemy()
 	D3DXMatrixIdentity(&m_weponMatrix);
 	m_pOrbit = nullptr;
 	m_posOld = VEC3_NULL;
-	m_Size = VEC3_NULL;
 }
 
 //===================================================
@@ -86,8 +85,8 @@ CEnemy* CEnemy::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 
 	if (pEnemy == nullptr) return nullptr;
 
-	pEnemy->Init();
 	pEnemy->SetPosition(pos);
+	pEnemy->Init();
 	pEnemy->GetRotaition()->Set(rot);
 
 	return pEnemy;
@@ -112,7 +111,10 @@ HRESULT CEnemy::Init(void)
 	m_pMove = make_unique<CVelocity>();
 
 	// キャラクターの設定処理
-	CCharacter3D::SetCharacter(MAX_LIFE, 12.0f,D3DXVECTOR3(5.0f, 1.0f, 5.0f));
+	CCharacter3D::SetCharacter(MAX_LIFE, 12.0f,D3DXVECTOR3(5.0f, 1.0f, 5.0f),D3DXVECTOR3(100.0f, 400.0f, 100.0f));
+
+	// 大きさの取得
+	D3DXVECTOR3 Size = CCharacter3D::GetSize();
 
 	// 位置の取得処理
 	D3DXVECTOR3 pos = CCharacter3D::GetPosition();
@@ -123,16 +125,16 @@ HRESULT CEnemy::Init(void)
 	// 中心を求める
 	D3DXVECTOR3 CenterPos = VEC3_NULL;
 
-	// TODO : 大きさ(ファイル読み込みしたい)
-	m_Size = { 100.0f,400.0f,100.0f };
-
 	// 中心座標を設定
 	CenterPos.x = pos.x;
-	CenterPos.y = pos.y + m_Size.y * 0.5f;
+	CenterPos.y = pos.y + Size.y * 0.5f;
 	CenterPos.z = pos.z;
 
 	// 矩形判定AABBの生成
-	m_pAABB = CColliderAABB::Create(CenterPos, m_posOld, m_Size);
+	m_pAABB = CColliderAABB::Create(CenterPos, m_posOld, Size);
+
+	// カプセルコライダーの生成
+	m_pCapsule = CColliderCapsule::Create(pos, D3DXVECTOR3(pos.x, pos.y + 100.0f, pos.z), 100.0f);
 
 	// 移動制御クラスの生成
 	m_pMovement = make_unique<CEnemyMovement>();
@@ -150,6 +152,7 @@ void CEnemy::Uninit(void)
 	// nullにする
 	m_pOrbit = nullptr;
 	m_pAABB = nullptr;
+	m_pCapsule = nullptr;
 
 	// オブザーバーの破棄
 	if (m_pObserver != nullptr)
@@ -249,7 +252,6 @@ void CEnemy::Update(void)
 		Uninit();
 		return;
 	}
-
 #endif // _DEBUG
 
 	// モーションの制御クラスの取得
@@ -285,10 +287,23 @@ void CEnemy::Update(void)
 		CCharacter3D::SetPosition(pos);
 	}
 
+	// カプセルの判定
+	auto pCapsule = CCollisionCapsule::GetInstance();
+
+	UpdateCollider(pos);
+
 	// 障害物との当たり判定
 	if (CollisionObstacle(&pos))
 	{
 
+	}
+
+	// コライダーの更新
+	UpdateCollider(pos);
+
+	if (pPlayer->CollisionCapsule(m_pCapsule.get(),pos))
+	{
+		int a = 0;
 	}
 
 	// シリンダーの取得
@@ -385,7 +400,7 @@ void CEnemy::Update(void)
 	if (m_pMachine != nullptr)
 	{
 		// 状態の更新処理
-		m_pMachine->Update();
+		//m_pMachine->Update();
 	}
 
 	// オブザーバーへの通知処理
@@ -400,6 +415,9 @@ void CEnemy::Update(void)
 		ChangeState(make_shared<CEnemyDeath>());
 	}
 	
+	// コライダーの更新
+	UpdateCollider(pos);
+
 	// 位置の設定処理
 	CCharacter3D::SetPosition(pos);
 
@@ -840,16 +858,8 @@ bool CEnemy::CollisionObstacle(D3DXVECTOR3 *pPos)
 		// 障害物の取得
 		CObstacle* pObstacle = pObstacleManager->GetObstacle(nCnt);
 
-		// 中心を求める
-		D3DXVECTOR3 CenterPos = VEC3_NULL;
-
-		// 中心座標を設定
-		CenterPos.x = pPos->x;
-		CenterPos.y = pPos->y + m_Size.y * 0.5f;
-		CenterPos.z = pPos->z;
-
-		// データの更新処理
-		m_pAABB->UpdateData(CenterPos, D3DXVECTOR3(m_posOld.x, m_posOld.y + m_Size.y * 0.5f, m_posOld.z));
+		// コライダーの更新
+		UpdateCollider(*pPos);
 
 		// 当たっていたら
 		if (pObstacle != nullptr && pObstacle->Collision(m_pAABB.get(), pPos))
@@ -1061,6 +1071,55 @@ void CEnemy::Notify(void)
 		// HPの変化を通知する
 		m_pObserver->OnNotify(nLife);
 	}
+}
+
+//===================================================
+// コライダーの更新処理
+//===================================================
+void CEnemy::UpdateCollider(const D3DXVECTOR3 pos)
+{
+	// 大きさの取得
+	D3DXVECTOR3 Size = CCharacter3D::GetSize();
+
+	if (m_pAABB != nullptr)
+	{
+		// 中心を求める
+		D3DXVECTOR3 CenterPos = VEC3_NULL;
+
+		// 中心座標を設定
+		CenterPos.x = pos.x;
+		CenterPos.y = pos.y + Size.y * 0.5f;
+		CenterPos.z = pos.z;
+
+		// データの更新処理
+		m_pAABB->UpdateData(CenterPos, D3DXVECTOR3(m_posOld.x, m_posOld.y + Size.y * 0.5f, m_posOld.z));
+	}
+
+	if (m_pCapsule != nullptr)
+	{
+		// データの取得
+		auto dataCapsule = m_pCapsule->GetData();
+
+		D3DXVECTOR3 headpos = GetModelPos(1);
+
+		dataCapsule.EndPos = headpos;
+
+		// データの更新
+		dataCapsule.StartPos = pos;
+
+#ifdef _DEBUG
+		auto p = CEffect3D::Create(dataCapsule.StartPos, 10.0f, WHITE);
+		p->Set(10, VEC3_NULL);
+
+		p = CEffect3D::Create(dataCapsule.EndPos, 10.0f, WHITE);
+		p->Set(10, VEC3_NULL);
+#endif // _DEBUG
+
+		// データの更新処理
+		m_pCapsule->UpdateData(dataCapsule);
+	}
+
+	SetPosition(pos);
 }
 
 //===================================================

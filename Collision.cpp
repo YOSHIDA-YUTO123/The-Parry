@@ -22,10 +22,10 @@ constexpr float HALF_VALUE = 0.5f; // 半分
 //************************************************
 // 静的メンバ変数宣言
 //************************************************
-unique_ptr<CCollisionAABB> CCollisionAABB::m_pAABB = nullptr;		// 当たり判定AABB
-unique_ptr<CCollisionSphere> CCollisionSphere::m_pSphere = nullptr; // 当たり判定Sphere
-unique_ptr<CCollisionFOV> CCollisionFOV::m_pFOV = nullptr;			// 当たり判定視界
-
+unique_ptr<CCollisionAABB> CCollisionAABB::m_pAABB = nullptr;			// 当たり判定AABB
+unique_ptr<CCollisionSphere> CCollisionSphere::m_pSphere = nullptr;		// 当たり判定Sphere
+unique_ptr<CCollisionFOV> CCollisionFOV::m_pFOV = nullptr;				// 当たり判定視界
+unique_ptr<CCollisionCapsule> CCollisionCapsule::m_pCapsule = nullptr;  // 当たり判定カプセル
 //================================================
 // コンストラクタ
 //================================================
@@ -159,8 +159,8 @@ bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox,
 			{
 				// めり込んだ分戻す
 				pushPos->x += posMin.x - tPosMax.x - 0.5f;
-				return true;
 			}
+			return true;
 		}
 		// 右から左にめり込んだ
 		else if (tPosOldMin.x > posMax.x &&
@@ -178,8 +178,8 @@ bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox,
 			{
 				// めり込んだ分戻す
 				pushPos->x += posMax.x - tPosMin.x + 0.5f;
-				return true;
 			}
+			return true;
 		}
 	}
 
@@ -202,8 +202,8 @@ bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox,
 			{
 				// めり込んだ分戻す
 				pushPos->z += posMin.z - tPosMax.z - 0.5f;
-				return true;
 			}
+			return true;
 		}
 		else if (tPosOldMin.z > posMax.z &&
 			tPosMin.z < posMax.z)
@@ -219,8 +219,8 @@ bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox,
 			{
 				// めり込んだ分戻す
 				pushPos->z += posMax.z - tPosMin.z + 0.5f;
-				return true;
 			}
+			return true;
 		}
 	}
 	//if (posOldMin.y <= tPosOldMax.y && posOldMax.y >= tPosOldMin.y)
@@ -443,6 +443,8 @@ void CCollisionManager::CreateAll(void)
 
 	// 視界判定の生成
 	CCollisionFOV::Create();
+
+	CCollisionCapsule::Create();
 }
 
 //================================================
@@ -451,4 +453,294 @@ void CCollisionManager::CreateAll(void)
 void CCollisionManager::Uninit(void)
 {
 
+}
+
+//================================================
+// カプセルコライダーの当たり判定
+//================================================
+bool CCollisionCapsule::Collision(CColliderCapsule* myCapsule, CColliderCapsule* otherCapsule,D3DXVECTOR3 *NearPos1, D3DXVECTOR3* NearPos2)
+{
+	// カプセルコライダーのデータ構造体を使用
+	using Data = CColliderCapsule::Data;
+
+	// 自分のデータの取得
+	Data myData = myCapsule->GetData();
+
+	// 相手のデータの取得
+	Data otherData = otherCapsule->GetData();
+
+	float fRadius = myData.fRadius + otherData.fRadius;
+
+	D3DXVECTOR3 Vec1 = myData.EndPos - myData.StartPos;
+	D3DXVECTOR3 Vec2 = otherData.EndPos - otherData.StartPos;
+
+	float fDistance = 0.0f;
+	float s, t;
+	D3DXVECTOR3 closetPos1, closetPos2;
+
+	fDistance = ClosestPtSegmentSegment(
+		myData.StartPos,
+		myData.EndPos,
+		otherData.StartPos,
+		otherData.EndPos,
+		s,
+		t,
+		closetPos1,
+		closetPos2);
+
+	fDistance = sqrtf(fDistance);
+
+	//D3DXVECTOR3 Near1, Near2;
+
+	//if (!Calc2LineNearestDistAndPos(
+	//	&myData.StartPos,
+	//	&Vec1,
+	//	&otherData.StartPos,
+	//	&Vec2,
+	//	&fDistance,
+	//	&Near1,
+	//	&Near2))
+	//{
+	//	//D3DXVECTOR3 distance = myData.StartPos - otherData.StartPos;
+	//	//fDistance = D3DXVec3Length(&distance);
+	//}
+
+	if (NearPos1 != nullptr)
+	{
+		*NearPos1 = closetPos1;
+	}
+	if (NearPos2 != nullptr)
+	{
+		*NearPos2 = closetPos2;
+	}
+
+	if (fDistance <= fRadius)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+//================================================
+// コンストラクタ
+//================================================
+CCollisionCapsule::CCollisionCapsule() : CCollision(TYPE::TYPE_CAPSULE)
+{
+
+}
+
+//================================================
+// 線分の線分の距離
+//================================================
+float CCollisionCapsule::ClosestPtSegmentSegment(D3DXVECTOR3 p1, D3DXVECTOR3 q1, D3DXVECTOR3 p2, D3DXVECTOR3 q2, float& s, float& t, D3DXVECTOR3& c1, D3DXVECTOR3& c2)
+{
+	D3DXVECTOR3 dir1 = q1 - p1; // 線分S1のベクトル
+	D3DXVECTOR3 dir2 = q2 - p2; // 線分S2のベクトル
+	D3DXVECTOR3 r = p1 - p2;
+
+	float a = D3DXVec3Dot(&dir1, &dir1); // 線分S1の方向ベクトル
+	float e = D3DXVec3Dot(&dir2, &dir2); // 線分S2の方向ベクトル
+	
+	float f = D3DXVec3Dot(&dir2, &r);
+
+	const float EPSILON = 1e-6f;
+
+	// 片方あるいは両方の線分が点に対して縮退しているかどうかチェック
+	if (a <= EPSILON && e <= EPSILON)
+	{
+		// 両方の線分が点に縮退
+		s = t = 0.0f;
+		c1 = p1;
+		c2 = p2;
+
+		D3DXVECTOR3 diff = c1 - c2;
+		
+		return D3DXVec3Dot(&diff, &diff);
+	}
+
+	if (a <= EPSILON)
+	{
+		// 最初の線分が点に縮退
+		s = 0.0f;
+		t = f / e; // s = o >= t = (b*s + f) / e = f / e
+		t = Clamp(t, 0.0f, 1.0f);
+	}
+	else
+	{
+		float c = D3DXVec3Dot(&dir1, &r);
+		if (e <= EPSILON)
+		{
+			// 2番目の線分が点に縮退
+			t = 0.0f;
+			s = Clamp(-c / a, 0.0f, 1.0f); // t = 0 >= s = (b * t - c) / a = -c / a
+		}
+		else
+		{
+			float b = D3DXVec3Dot(&dir1, &dir2);
+			float denom = a * e - b * b; // 常に非負
+
+			// 線分が平行ではない場合、L1上のL2に対する最近接点を計算、そして線分1に対してクランプ。そうでない場合は任意のsを選択
+			if (denom != 0.0f)
+			{
+				s = Clamp((b * f - c * e) / denom, 0.0f, 1.0f);
+			}
+			else
+			{
+				s = 0.0f;
+			}
+			// L2上のS1(s)に対する最近接点を以下を用いて計算
+			// t = dot((P1 + D1 * s) - P2,P2) / dot(D2,D2) = (b * s + f) / e
+			t = (b * s + f) / e;
+			// tが[0,1]の中にあれば終了。そうなればｔをクランプ、ｓをｔの新しい値に対して以下を用いて計算
+			// s = Dot((P2 + D2 * t) - P1,D1) / Dot(D1,D1) = (t * b - c) / a
+			// そしてsを[0,1]に対してクランプ
+			if (t < 0.0f)
+			{
+				t = 0.0f;
+				s = Clamp(-c / a, 0.0f, 1.0f);
+			}
+			else if (t > 1.0f)
+			{
+				t = 1.0f;
+				s = Clamp((b - c) / a, 0.0f, 1.0f);
+			}
+		}
+	}
+
+	c1 = p1 + dir1 * s;
+	c2 = p2 + dir2 * t;
+
+	D3DXVECTOR3 diff = c1 - c2;
+	float fDistance = D3DXVec3Dot(&diff, &diff);
+	return fDistance;
+}
+
+//================================================
+// 線との距離の取得
+//================================================
+float CCollisionCapsule::GetLineDistance(const D3DXVECTOR3 StartPos, const D3DXVECTOR3 EndPos, const D3DXVECTOR3 Point)
+{
+	// ベクトルの長さを1とした時のスタートから終点までの長さ
+	float fDot = 0.0f;
+
+	D3DXVECTOR3 MyLine = StartPos - EndPos;
+
+	float Linedot = D3DXVec3Dot(&MyLine, &MyLine);
+
+	D3DXVECTOR3 mp;
+
+	if (Linedot > 0.0f)
+	{
+		D3DXVECTOR3 sp = Point - EndPos;
+
+		fDot = D3DXVec3Dot(&MyLine, &sp) / Linedot;
+
+		// 直線の外だったら(始点より)
+		if (fDot < 0.0f)
+		{
+			mp = StartPos;
+		}
+		else if (fDot > 0.0f)
+		{
+			mp = EndPos;
+		}
+		else
+		{
+			mp = EndPos + MyLine * fDot;
+		}
+	}
+	else
+	{
+		mp = StartPos;
+	}
+
+	float fDistance = GetDistance(Point - mp);
+
+	return fDistance;
+}
+
+//================================================
+// 線分と線分の最近点を求める
+//================================================
+bool CCollisionCapsule::Calc2LineNearestDistAndPos(D3DXVECTOR3* pStart1, D3DXVECTOR3* pVec1, D3DXVECTOR3* pStart2, D3DXVECTOR3* pVec2, float* pOutdist, D3DXVECTOR3* pOutNearPos1, D3DXVECTOR3* pOutNearPos2)
+{
+
+	//D3DXVECTOR3 start1 = *pStart1; // 任意の直線上の位置1
+	//D3DXVECTOR3 start2 = *pStart2; // 任意の直線上の位置2
+	//D3DXVECTOR3 vec1 = *pVec1;	   // 直線1のベクトル
+	//D3DXVECTOR3 vec2 = *pVec2;	   // 直線2のベクトル
+
+	//D3DXVECTOR3 dir1, dir2;
+	//D3DXVec3Normalize(&dir1, &vec1);
+	//D3DXVec3Normalize(&dir2, &vec2);
+
+	//float length1 = D3DXVec3Length(&vec1);
+	//float length2 = D3DXVec3Length(&vec2);
+
+	//D3DXVECTOR3 r = start1 - start2;
+
+	//float fDot1 = D3DXVec3Dot(&vec1, &vec1);
+	//float fDot2 = D3DXVec3Dot(&vec1, &vec2);
+	//float fDot3 = D3DXVec3Dot(&vec2, &vec2);
+	//float fDot4 = D3DXVec3Dot(&vec1, &r);
+	//float fDot5 = D3DXVec3Dot(&vec2, &r);
+
+	//float denom = fDot1 * fDot3 - fDot2 * fDot2;
+
+	//float s = 0.0f, t = 0.0f;
+
+	//if (denom != 0.0f)
+	//{
+	//	s = (fDot2 * fDot5 - fDot3 * fDot4) / denom;
+	//	t = (fDot1 * fDot5 - fDot2 * fDot4) / denom;
+
+	//	s = Clamp(s, 0.0f, 1.0f);
+	//	t = Clamp(t, 0.0f, 1.0f);
+	//}
+	//else
+	//{
+	//	D3DXVECTOR3 distance = start1 - start2;
+	//	*pOutdist = D3DXVec3Length(&distance);
+
+	//	return false;
+	//}
+
+	//D3DXVECTOR3 Q1 = start1 + dir1 * (s * length1);
+	//D3DXVECTOR3 Q2 = start2 + dir2 * (t * length2);
+
+	//if (pOutdist != nullptr)
+	//{
+	//	D3DXVECTOR3 dist = Q1 - Q2;
+	//	*pOutdist = D3DXVec3Length(&dist);
+	//}
+	//if (pOutNearPos1 != nullptr)
+	//{
+	//	*pOutNearPos1 = Q1;
+	//}
+	//if (pOutNearPos2 != nullptr)
+	//{
+	//	*pOutNearPos2 = Q2;
+	//}
+
+	return true;
+}
+
+//================================================
+// デストラクタ
+//================================================
+CCollisionCapsule::~CCollisionCapsule()
+{
+}
+
+//================================================
+// 生成処理
+//================================================
+void CCollisionCapsule::Create(void)
+{
+	if (m_pCapsule == nullptr)
+	{
+		// 自分の生成
+		m_pCapsule.reset(new CCollisionCapsule);
+	}
 }

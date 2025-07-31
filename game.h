@@ -16,6 +16,7 @@
 //***************************************************
 #include"main.h"
 #include "scene.h"
+#include<memory>
 
 //***************************************************
 // 前方宣言
@@ -63,6 +64,7 @@ public:
 	static CPlayer* GetPlayer(void) { return m_pPlayer; }
 	static CMeshCylinder* GetCylinder(void){ return m_pCylinder; }
 	static CGameCamera* GetCamera(void) { return m_pCamera; }
+	static STATE GetState(void) { return m_state; }
 private:
 	static STATE m_state;				// ゲームの状態
 	static CMeshField* m_pMeshField;	// メッシュフィールドへのポインタ
@@ -72,6 +74,28 @@ private:
 	CPauseManager* m_pPauseManager;		// ポーズマネージャークラスへのポインタ
 	static RESULTTYPE m_ResultType;		// リザルトの種類
 	int m_nCounterState;				// 状態のカウンター
+};
+
+//***************************************************
+// ゲームのマネージャークラスの定義
+//***************************************************
+class CGameManager
+{
+public:
+	~CGameManager();
+
+	void Init(void);
+	void Uninit(void);
+	void Update(void);
+
+	static void Create(void);
+	static CGameManager* GetInstance(void) { return m_pInstance.get(); }
+	static int GetTime(void) { return m_nGameTime; }
+private:
+	CGameManager();
+	static std::unique_ptr<CGameManager> m_pInstance; // 自分のインスタンス
+	int m_nCounter;					  // カウンター
+	static int m_nGameTime;			  // ゲームの経過時間
 };
 
 #endif

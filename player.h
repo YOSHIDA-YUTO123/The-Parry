@@ -34,8 +34,7 @@ class CPlayerState;
 class CShadowS;
 class CPlayerMovement;
 
-template <class T>
-class CObserver;
+template <class T> class CObserver;
 
 class CMeshOrbit;
 class CMeshField;
@@ -44,6 +43,7 @@ class CColliderAABB;
 class CVelocity;
 class CRotation;
 class CModel;
+class CColliderCapsule;
 
 //***************************************************
 // プレイヤークラスの定義
@@ -92,16 +92,16 @@ public:
 		OBSERVER_MAX
 	};
 
-	CPlayer(int nPriority = 4);
+	CPlayer();
 	~CPlayer();
 
 	static CPlayer* Create(const D3DXVECTOR3 pos = Const::VEC3_NULL, const D3DXVECTOR3 rot = Const::VEC3_NULL);
 	void Load(void); // モーションのロード
 
-	virtual HRESULT Init(void) override;
-	virtual void Uninit(void) override;
-	virtual void Update(void) override;
-	virtual void Draw(void) override;
+	HRESULT Init(void) override;
+	void Uninit(void) override;
+	void Update(void) override;
+	void Draw(void) override;
 
 	void SetPosition(const D3DXVECTOR3 pos) { CCharacter3D::SetPosition(pos); }
 
@@ -109,7 +109,7 @@ public:
 	void SetHitStop(const int nTime) { CCharacter3D::SetHitStop(nTime); }
 	void UpdateAvoid(void);	 // 回避の更新処理
 
-		// ゲッター
+	// ゲッター
 	CColliderSphere* GetSphereCollider(void) { return m_pSphere.get(); }
 	CColliderAABB* GetAABB(void) { return m_pAABB.get(); }
 	CPlayerMovement* GetMovement(void) { return m_pMovement.get(); }
@@ -129,6 +129,8 @@ public:
 	void SetStance(void);							  // 構えモーションの設定
 	void SetStamina(const float fStamina);
 
+	bool CollisionAABB(CColliderAABB* pAABB);
+	bool CollisionCapsule(CColliderCapsule* pCapsule, const D3DXVECTOR3 pos);
 private:
 	void CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos, CMotion* pMotion); // インパクトの当たり判定
 	bool IsMove(CMotion* pMotion);		// 移動できるか判定
@@ -144,6 +146,7 @@ private:
 	std::unique_ptr<CPlayerMovement> m_pMovement;	// 移動処理
 	std::unique_ptr<CColliderFOV> m_pFOV;			// 視界の判定
 	std::unique_ptr<CColliderSphere> m_pSphere;		// 円のコライダー
+	std::unique_ptr<CColliderCapsule> m_Capsule;	// カプセルコライダー
 	std::unique_ptr<CVelocity> m_pMove;				// 移動量
 	std::unique_ptr<CColliderAABB> m_pAABB;			// コライダーAABB
 	CMeshOrbit* m_pOrbit;							// 軌跡の処理

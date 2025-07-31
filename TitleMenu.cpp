@@ -296,7 +296,6 @@ void CTitleQuit::Update(void)
 			PostQuitMessage(0);
 		}
 	}
-
 }
 
 //===================================================

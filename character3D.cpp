@@ -25,6 +25,7 @@ using namespace Const; // 名前空間Constを使用
 //===================================================
 CCharacter3D::CCharacter3D() : CObject(4)
 {
+	m_Size = VEC3_NULL;
 	m_nNumModel = NULL;
 	m_pMotion = nullptr;
 	m_pos = VEC3_NULL;
@@ -235,11 +236,12 @@ D3DXVECTOR3 CCharacter3D::GetModelSize(const int nIdx)
 //===================================================
 // キャラクターの設定処理
 //===================================================
-void CCharacter3D::SetCharacter(const int nLife, const float fSpeed, const D3DXVECTOR3 ShadowScal)
+void CCharacter3D::SetCharacter(const int nLife, const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size)
 {
 	m_nLife = nLife;
 	m_fSpeed = fSpeed;
 	m_ShadowScal = ShadowScal;
+	m_Size = Size;
 }
 
 //===================================================

@@ -17,6 +17,8 @@
 #include "objectX.h"
 #include"ResultCamera.h"
 #include "ResultMenu.h"
+#include "game.h"
+#include "timer.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -41,6 +43,21 @@ CResultWin::~CResultWin()
 //===================================================
 HRESULT CResultWin::Init(void)
 {
+	// ゲームマネージャーの取得
+	auto pGameManager = CGameManager::GetInstance();
+
+	// ゲームの時間の取得
+	const int nTime = pGameManager->GetTime();
+
+	// タイマーの生成
+	CTime::Create(D3DXVECTOR3(540.0f, 360.0f, 0.0f), 100.0f, 50.0f, nTime, true);
+
+	if (pGameManager != nullptr)
+	{
+		// 破棄
+		pGameManager->Uninit();
+	}
+
 	// リザルトのカメラの生成
 	m_pCamera = make_unique<CResultCamera>();
 	m_pCamera->Init();

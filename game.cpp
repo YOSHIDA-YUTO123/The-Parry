@@ -34,12 +34,14 @@ using namespace std; // 名前空間stdを使用
 //***************************************************
 // 静的メンバ変数宣言
 //***************************************************
-CMeshField* CGame::m_pMeshField = nullptr;		// メッシュフィールドへのポインタ
-CPlayer* CGame::m_pPlayer = nullptr;		// プレイヤーへのポインタ
-CMeshCylinder* CGame::m_pCylinder = nullptr;	// メッシュシリンダーへのポインタ
-CGame::STATE CGame::m_state = STATE_NORMAL;     // ゲームの状態
-CGameCamera* CGame::m_pCamera = nullptr;		// ゲームカメラクラスへのポインタ
+CMeshField* CGame::m_pMeshField = nullptr;					   // メッシュフィールドへのポインタ
+CPlayer* CGame::m_pPlayer = nullptr;						   // プレイヤーへのポインタ
+CMeshCylinder* CGame::m_pCylinder = nullptr;				   // メッシュシリンダーへのポインタ
+CGame::STATE CGame::m_state = STATE_NORMAL;					   // ゲームの状態
+CGameCamera* CGame::m_pCamera = nullptr;					   // ゲームカメラクラスへのポインタ
 CGame::RESULTTYPE CGame::m_ResultType = CGame::RESULTTYPE_WIN; // リザルトの種類
+unique_ptr<CGameManager> CGameManager::m_pInstance = nullptr;			   // 自分のインスタンス
+int CGameManager::m_nGameTime = 0;							   // ゲームの経過時間
 
 //===================================================
 // コンストラクタ
@@ -63,6 +65,9 @@ CGame::~CGame()
 //===================================================
 HRESULT CGame::Init(void)
 {
+	// ゲームマネージャーの生成
+	CGameManager::Create();
+
 	// ゲームのカメラの生成
 	m_pCamera = new CGameCamera;
 	m_pCamera->Init();
@@ -209,6 +214,15 @@ void CGame::Uninit(void)
 //===================================================
 void CGame::Update(void)
 {
+	// ゲームマネージャーの取得
+	auto pGameManager = CGameManager::GetInstance();
+
+	if (pGameManager != nullptr)
+	{
+		// 更新処理
+		pGameManager->Update();
+	}
+
 	// カメラの更新
 	if (m_pCamera != nullptr)
 	{
@@ -287,4 +301,77 @@ void CGame::Draw(void)
 	}
 
 	CDebugProc::Print("ワイヤーフレーム : [ F6 ]\n");
+}
+
+//===================================================
+// コンストラクタ
+//===================================================
+CGameManager::CGameManager()
+{
+	m_nCounter = NULL;
+}
+
+//===================================================
+// デストラクタ
+//===================================================
+CGameManager::~CGameManager()
+{
+	m_nGameTime = 0;
+}
+
+//===================================================
+// 生成処理
+//===================================================
+void CGameManager::Create(void)
+{
+	// 自分が生成されていなかったら
+	if (m_pInstance == nullptr)
+	{
+		// 自分の生成
+		m_pInstance.reset(new CGameManager);
+		m_pInstance->Init();
+	}
+}
+
+//===================================================
+// 初期化処理
+//===================================================
+void CGameManager::Init(void)
+{
+	m_nGameTime = 0;
+}
+
+//===================================================
+// 終了処理
+//===================================================
+void CGameManager::Uninit(void)
+{
+	if (m_pInstance != nullptr)
+	{
+		// 破棄
+		m_pInstance.reset();
+	}
+}
+
+//===================================================
+// 更新処理
+//===================================================
+void CGameManager::Update(void)
+{
+	// ゲームが終了状態じゃないなら
+	if (CGame::GetState() != CGame::STATE_END)
+	{
+		// カウンターを加算
+		m_nCounter++;
+
+		// 一秒経過したら
+		if (m_nCounter >= FRAME)
+		{
+			// カウンターをリセット
+			m_nCounter = 0;
+
+			// タイマーを加算
+			m_nGameTime++;
+		}
+	}
 }

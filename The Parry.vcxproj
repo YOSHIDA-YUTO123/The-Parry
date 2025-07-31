@@ -163,6 +163,7 @@
     <ClCompile Include="overlay.cpp" />
     <ClCompile Include="ResultCamera.cpp" />
     <ClCompile Include="ResultMenu.cpp" />
+    <ClCompile Include="timer.cpp" />
     <ClCompile Include="TitleCamera.cpp" />
     <ClCompile Include="TitleLogo.cpp" />
     <ClCompile Include="TitleMenu.cpp" />
@@ -244,6 +245,7 @@
     <ClInclude Include="overlay.h" />
     <ClInclude Include="ResultCamera.h" />
     <ClInclude Include="ResultMenu.h" />
+    <ClInclude Include="timer.h" />
     <ClInclude Include="TitleCamera.h" />
     <ClInclude Include="TitleLogo.h" />
     <ClInclude Include="TitleMenu.h" />

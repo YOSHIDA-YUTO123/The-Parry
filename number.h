@@ -28,19 +28,19 @@ public:
 	CNumber();
 	~CNumber();
 
-	HRESULT Init(const int nPosX, const int nPosY, const D3DXVECTOR3 pos, const float fWidth, const float fHeight);
+	HRESULT Init(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size);
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
-	void SetSize(const float fWIdth, const float fHeight) { m_pSize->Set(fWIdth, fHeight); }
+	void SetSize(const D3DXVECTOR2 Size) { m_Size = Size; }
 	void SetPos(const D3DXVECTOR3 pos);
 	void SetUV(const int nNum);
 	void SetColor(const D3DXCOLOR col);
 	void SetTextureID(const char* pFileName);
 private:
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuffer;	// 頂点へのポインタ
-	CPosition* m_pPos;						// 位置のクラスへのポインタ
-	CSize2D *m_pSize;						// 大きさ
+	D3DXVECTOR3 m_pos;						// 位置
+	D3DXVECTOR2 m_Size;						// 大きさ
 	int m_nTextureIdx;						// テクスチャのインデックス
 };
 #endif

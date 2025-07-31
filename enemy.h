@@ -39,6 +39,7 @@ class CPlayer;
 
 template <class T>
 class CObserver;
+class CColliderCapsule;
 
 //***************************************************
 // 敵クラスの定義
@@ -118,17 +119,17 @@ private:
 	void CollisionPlayer(CMotion* pPlayerMotion, CPlayer* pPlayer);
 	void SetParent(const int nCnt);
 	void Notify(void);									// オブザーバーへの通知処理
-
+	void UpdateCollider(const D3DXVECTOR3 pos);			// コライダーの更新
+	std::unique_ptr<CColliderCapsule> m_pCapsule;		// カプセルコライダー
 	std::unique_ptr<CColliderAABB> m_pAABB;				// AABBのコライダー
 	std::unique_ptr<CStateMachine> m_pMachine;			// 状態マシーン
 	std::unique_ptr<CColliderSphere> m_pSphere;			// 円の当たり判定クラス
 	std::shared_ptr<CVelocity> m_pMove;					// 移動クラスの生成
 	std::unique_ptr<CEnemyMovement> m_pMovement;		// 敵の移動制御クラス
-	CObserver<int>* m_pObserver;								// オブザーバークラスへのポインタ
+	CObserver<int>* m_pObserver;						// オブザーバークラスへのポインタ
 	CMeshOrbit* m_pOrbit;								// 軌跡
 	D3DXMATRIX m_weponMatrix;							// 武器のワールドマトリックス
 	D3DXVECTOR3 m_posOld;								// 前回の位置
-	D3DXVECTOR3 m_Size;									// 敵の全体の大きさ
 	int m_nParrySuccess;								// パリィの成功度(保存用)
 };
 

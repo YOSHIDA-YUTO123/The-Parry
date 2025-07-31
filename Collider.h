@@ -95,4 +95,28 @@ private:
 	Data m_Data; // データ
 };
 
+//************************************************
+// カプセルコライダークラスの定義
+//************************************************
+class CColliderCapsule : public CCollider
+{
+public:
+
+	// 当たり判定のデータ
+	struct Data
+	{
+		D3DXVECTOR3 StartPos; // 始点
+		D3DXVECTOR3 EndPos;	// 終点
+		float fRadius;		// 半径
+	};
+
+	CColliderCapsule();
+	~CColliderCapsule();
+	static std::unique_ptr<CColliderCapsule> Create(const D3DXVECTOR3 StartPos, const D3DXVECTOR3 EndPos, const float fRadius);
+	static CColliderCapsule CreateCollider(const D3DXVECTOR3 StartPos, const D3DXVECTOR3 EndPos, const float fRadius);
+	Data GetData(void) const { return m_Data; }
+	void UpdateData(const Data data);
+private:
+	Data m_Data; // データ
+};
 #endif

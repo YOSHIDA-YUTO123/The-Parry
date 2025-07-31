@@ -25,6 +25,7 @@ class CColliderAABB;
 class CCollider;
 class CColliderSphere;
 class CColliderFOV;
+class CColliderCapsule;
 
 //************************************************
 // 当たり判定のクラスの定義
@@ -38,6 +39,7 @@ public:
 		TYPE_AABB = 0,
 		TYPE_SPHERE,
 		TYPE_FOV,
+		TYPE_CAPSULE,
 		TYPE_MAX
 	}TYPE;
 
@@ -118,6 +120,26 @@ private:
 	static std::unique_ptr<CCollisionFOV> m_pFOV; // 自分のインスタンス
 };
 
+//************************************************
+// 当たり判定(カプセル)クラス
+//************************************************
+class CCollisionCapsule : public CCollision
+{
+public:
+	~CCollisionCapsule();
+	static void Create(void);
+	static CCollisionCapsule* GetInstance(void) { return m_pCapsule.get(); }
+
+	bool Collision(CColliderCapsule* myCapsule, CColliderCapsule* otherCapsule, D3DXVECTOR3* NearPos1 = nullptr, D3DXVECTOR3* NearPos2 = nullptr);
+	
+private:
+	CCollisionCapsule();
+	float ClosestPtSegmentSegment(D3DXVECTOR3 p1, D3DXVECTOR3 q1, D3DXVECTOR3 p2, D3DXVECTOR3 q2, float& s, float& t, D3DXVECTOR3& c1, D3DXVECTOR3& c2);
+
+	float GetLineDistance(const D3DXVECTOR3 StartPos, const D3DXVECTOR3 EndPos, const D3DXVECTOR3 Point);
+	bool Calc2LineNearestDistAndPos(D3DXVECTOR3* pStart1, D3DXVECTOR3* pVec1, D3DXVECTOR3* pStart2, D3DXVECTOR3* pVec2, float* pOutdist, D3DXVECTOR3* pOutNearPos1, D3DXVECTOR3* pOutNearPos2);
+	static std::unique_ptr< CCollisionCapsule> m_pCapsule;
+};
 //************************************************
 // 当たり判定のマネージャークラスの定義
 //************************************************

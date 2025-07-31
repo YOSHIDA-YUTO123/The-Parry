@@ -55,7 +55,7 @@ HRESULT CScore::Init(void)
 			m_apNumber[nCnt] = new CNumber;
 
 			// ‰Šú‰»ˆ—
-			m_apNumber[nCnt]->Init(9, 1, D3DXVECTOR3(m_pos.x - (offPosX * nCnt), m_pos.y, 0.0f), fWidth, m_fHeight);
+			m_apNumber[nCnt]->Init(D3DXVECTOR3(m_pos.x - (offPosX * nCnt), m_pos.y, 0.0f), D3DXVECTOR2(fWidth, m_fHeight));
 			m_apNumber[nCnt]->SetTextureID("data/TEXTURE/number005.png");
 		}
 	}
@@ -81,7 +81,8 @@ void CScore::Uninit(void)
 		}
 	}
 
-	Release();
+	// ©•ª©g‚Ì”jŠü
+	CObject::Release();
 }
 
 //=================================================

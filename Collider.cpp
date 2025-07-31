@@ -10,9 +10,11 @@
 //************************************************
 #include "Collider.h"
 #include"object.h"
+#include"math.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std;   // 名前空間stdを処理使用
+using namespace math;  // 名前空間mathを処理使用
 
 //================================================
 // コンストラクタ
@@ -230,4 +232,58 @@ unique_ptr<CColliderFOV> CColliderFOV::Create(const D3DXVECTOR3 pos, const float
 	pFOV->m_Data.fNowAngle = fAngle;
 
 	return pFOV;
+}
+
+//================================================
+// コンストラクタ
+//================================================
+CColliderCapsule::CColliderCapsule()
+{
+	ZeroMemory(&m_Data, sizeof(m_Data));
+}
+
+//================================================
+// デストラクタ
+//================================================
+CColliderCapsule::~CColliderCapsule()
+{
+}
+
+//================================================
+// 生成処理
+//================================================
+unique_ptr<CColliderCapsule> CColliderCapsule::Create(const D3DXVECTOR3 StartPos, const D3DXVECTOR3 EndPos, const float fRadius)
+{
+	// カプセルの生成
+	auto pCapsule = make_unique<CColliderCapsule>();
+
+	// 設定処理
+	pCapsule->m_Data.StartPos = StartPos;
+	pCapsule->m_Data.EndPos = EndPos;
+	pCapsule->m_Data.fRadius = fRadius;
+
+	return pCapsule;
+}
+
+//================================================
+// コライダーの作成処理
+//================================================
+CColliderCapsule CColliderCapsule::CreateCollider(const D3DXVECTOR3 StartPos, const D3DXVECTOR3 EndPos, const float fRadius)
+{
+	CColliderCapsule capsule = {};
+
+	// 設定処理
+	capsule.m_Data.StartPos = StartPos;
+	capsule.m_Data.EndPos = EndPos;
+	capsule.m_Data.fRadius = fRadius;
+
+	return capsule;
+}
+
+//================================================
+// コライダーの更新
+//================================================
+void CColliderCapsule::UpdateData(const Data data)
+{
+	m_Data = data;
 }

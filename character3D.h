@@ -63,20 +63,22 @@ public:
 
 	// ゲッター
 	D3DXVECTOR3 GetPosition(void) const { return m_pos; }
+	D3DXVECTOR3 GetSize(void) const { return m_Size; }
 	CRotation* GetRotaition(void) const { return m_pRot; }
 	STATE GetState(void) { return m_state; }
-	float GetSpeed(void) { return m_fSpeed; }
 	CMotion* GetMotion(void) { return m_pMotion.get(); } // モーションの取得
+	float GetSpeed(void) { return m_fSpeed; }
+	int GetLife(void) const { return m_nLife; }
 	D3DXVECTOR3 GetModelPos(const int nIdx);
 	D3DXVECTOR3 GetModelRot(const int nIdx);
 	D3DXVECTOR3 GetModelSize(const int nIdx);
 
-	int GetLife(void) const { return m_nLife; }
-	bool GetAlive(void);		// 生きているか
-
 	// セッター
 	void SetPosition(const D3DXVECTOR3 pos) { m_pos = pos; }
-	void SetCharacter(const int nLife, const float fSpeed,const D3DXVECTOR3 ShadowScal);
+	void SetCharacter(const int nLife, const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size);
+
+	bool GetAlive(void);		// 生きているか
+
 	void SetState(const STATE state,const int nTime);
 	void DeleteShadow(void);	// 影の消去
 	bool Hit(int nDamage);		// ヒット時の処理
@@ -84,19 +86,20 @@ public:
 	void SetHitStop(const int nTime) { m_nHitStopTime = nTime; } // ヒットストップの設定
 	void UpdateMotion(void);
 private:
-	std::unique_ptr<CMotion> m_pMotion;				// モーションのクラスへのポインタ
-	std::vector<CModel*> m_apModel;					// モデルクラスのポインタ
-	CShadowS* m_pShadowS;		// 影(ステンシル)
-	D3DXVECTOR3 m_pos;			// 位置
-	D3DXVECTOR3 m_ShadowScal;	// 影の大きさ
-	CRotation *m_pRot;			// 向きクラスへのポインタ
-	STATE m_state;				// 状態
-	D3DXMATRIX m_mtxWorld;		// ワールドマトリックス
-	float m_fSpeed;				// 足の速さ
-	int m_nNumModel;			// モデルの最大数
-	int m_nCounterState;		// 状態のカウンター
-	int m_nLife;				// 寿命
-	int m_nHitStopTime;			// ヒットストップの時間
+	std::unique_ptr<CMotion> m_pMotion;		// モーションのクラスへのポインタ
+	std::vector<CModel*> m_apModel;			// モデルクラスのポインタ
+	CShadowS* m_pShadowS;					// 影(ステンシル)
+	CRotation* m_pRot;						// 向きクラスへのポインタ
+	STATE m_state;							// 状態
+	D3DXVECTOR3 m_pos;						// 位置
+	D3DXVECTOR3 m_ShadowScal;				// 影の大きさ
+	D3DXVECTOR3 m_Size;						// 大きさ
+	D3DXMATRIX m_mtxWorld;					// ワールドマトリックス
+	float m_fSpeed;							// 足の速さ
+	int m_nNumModel;						// モデルの最大数
+	int m_nCounterState;					// 状態のカウンター
+	int m_nLife;							// 寿命
+	int m_nHitStopTime;						// ヒットストップの時間
 };
 
 #endif

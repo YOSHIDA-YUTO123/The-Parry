@@ -26,8 +26,8 @@ using namespace Const;							// 名前空間Constを使用する
 CNumber::CNumber()
 {
 	m_pVtxBuffer = NULL;
-	m_pPos = nullptr;
-	m_pSize = nullptr;
+	m_pos = VEC3_NULL;
+	m_Size = VEC2_NULL;
 	m_nTextureIdx = NULL;
 }
 
@@ -41,7 +41,7 @@ CNumber::~CNumber()
 //================================================
 // 初期化処理
 //================================================
-HRESULT CNumber::Init(const int nPosX,const int nPosY,const D3DXVECTOR3 pos,const float fWidth,const float fHeight)
+HRESULT CNumber::Init(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size)
 {
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
@@ -57,13 +57,9 @@ HRESULT CNumber::Init(const int nPosX,const int nPosY,const D3DXVECTOR3 pos,cons
 		return E_FAIL;
 	}
 
-	// 位置、大きさの設定
-	m_pPos = new CPosition;
-	m_pSize = new CSize2D;
-
 	// 位置と大きさの設定
-	m_pPos->Set(pos);
-	m_pSize->Set(fWidth, fHeight);
+	m_pos = pos;
+	m_Size =  Size;
 
 	// 頂点情報のポインタ
 	VERTEX_2D* pVtx;
@@ -72,10 +68,10 @@ HRESULT CNumber::Init(const int nPosX,const int nPosY,const D3DXVECTOR3 pos,cons
 	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 
 	// 頂点座標の設定
-	pVtx[0].pos = D3DXVECTOR3(pos.x - fWidth, pos.y - fHeight, 0.0f);
-	pVtx[1].pos = D3DXVECTOR3(pos.x + fWidth, pos.y - fHeight, 0.0f);
-	pVtx[2].pos = D3DXVECTOR3(pos.x - fWidth, pos.y + fHeight, 0.0f);
-	pVtx[3].pos = D3DXVECTOR3(pos.x + fWidth, pos.y + fHeight, 0.0f);
+	pVtx[0].pos = D3DXVECTOR3(pos.x - Size.x, pos.y - Size.y, 0.0f);
+	pVtx[1].pos = D3DXVECTOR3(pos.x + Size.x, pos.y - Size.y, 0.0f);
+	pVtx[2].pos = D3DXVECTOR3(pos.x - Size.x, pos.y + Size.y, 0.0f);
+	pVtx[3].pos = D3DXVECTOR3(pos.x + Size.x, pos.y + Size.y, 0.0f);
 
 	// rhwの設定
 	pVtx[0].rhw = 1.0f;
@@ -91,9 +87,9 @@ HRESULT CNumber::Init(const int nPosX,const int nPosY,const D3DXVECTOR3 pos,cons
 
 	// テクスチャ座標の設定
 	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
-	pVtx[1].tex = D3DXVECTOR2(1.0f / nPosX, 0.0f);
-	pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f / nPosY);
-	pVtx[3].tex = D3DXVECTOR2(1.0f / nPosX, 1.0f / nPosY);
+	pVtx[1].tex = D3DXVECTOR2(1.0f / 9.0f, 0.0f);
+	pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);
+	pVtx[3].tex = D3DXVECTOR2(1.0f / 9.0f, 1.0f);
 
 	// 頂点バッファのアンロック
 	m_pVtxBuffer->Unlock();
@@ -111,20 +107,6 @@ void CNumber::Uninit(void)
 	{
 		m_pVtxBuffer->Release();
 		m_pVtxBuffer = NULL;
-	}
-
-	// 位置の破棄
-	if (m_pPos != nullptr)
-	{
-		delete m_pPos;
-		m_pPos = nullptr;
-	}
-
-	// 大きさの破棄
-	if (m_pSize != nullptr)
-	{
-		delete m_pSize;
-		m_pSize = nullptr;
 	}
 }
 
@@ -169,9 +151,9 @@ void CNumber::SetPos(const D3DXVECTOR3 pos)
 	VERTEX_2D* pVtx;
 	
 	// 位置の設定
-	m_pPos->Set(pos);
+	m_pos = pos;
 
-	D3DXVECTOR2 Size = m_pSize->Get();
+	D3DXVECTOR2 Size = m_Size;
 
 	// 頂点バッファのロック
 	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);

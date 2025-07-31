@@ -339,6 +339,9 @@
     <ClCompile Include="ResultMenu.cpp">
       <Filter>ソース ファイル\object2D</Filter>
     </ClCompile>
+    <ClCompile Include="timer.cpp">
+      <Filter>ソース ファイル\number</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="testword.h">
@@ -562,6 +565,9 @@
     </ClInclude>
     <ClInclude Include="ResultMenu.h">
       <Filter>ヘッダー ファイル\object2D</Filter>
+    </ClInclude>
+    <ClInclude Include="timer.h">
+      <Filter>ヘッダー ファイル\number</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
