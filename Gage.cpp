@@ -223,7 +223,7 @@ void CTemporaryGage::Uninit(void)
 void CTemporaryGage::Update(void)
 {
 	// –Ú“I‚Ì’·‚³‚É‹ß‚Ã‚¯‚é
-	m_fLength += (m_fDestLength - m_fLength) * 0.1f;
+	m_fLength += (m_fDestLength - m_fLength) * 0.05f;
 
 	// ‘å‚«‚³
 	D3DXVECTOR2 Size = CObject2D::GetSize();

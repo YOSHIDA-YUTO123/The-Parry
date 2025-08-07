@@ -321,10 +321,13 @@ void CRenderer::Uninit(void)
 //===================================================
 void CRenderer::Update(void)
 {
+#ifdef _DEBUG
+
 	if (CManager::GetInputKeyboard()->GetTrigger(DIK_H))
 	{
 		m_bEffect = m_bEffect ? false : true;
 	}
+#endif // _DEBUG
 
 	// すべてのオブジェクトの更新処理
 	CObject::UpdateAll();
@@ -422,6 +425,9 @@ void CRenderer::Draw(const int fps)
 				(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL),
 				D3DCOLOR_RGBA(0, 0, 0, 255), 1.0f, 0);
 
+			// 現在のZバッファのをもとに戻す
+			m_pD3DDevice->SetDepthStencilSurface(pZBuffer);
+
 			// ビューポートをもとに戻す
 			m_pD3DDevice->SetViewport(&viepowtDef);
 
@@ -469,8 +475,6 @@ void CRenderer::Draw(const int fps)
 
 	//バックバッファとフロントバッファの入れ替え
 	m_pD3DDevice->Present(NULL, NULL, NULL, NULL);
-
-
 }
 
 //===================================================
@@ -542,4 +546,56 @@ void CRenderer::onWireFrame()
 void CRenderer::offWireFrame()
 {
 	m_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+}
+
+//===================================================
+// ブラーのオン
+//===================================================
+void CRenderer::onEffect(const float fLevel)
+{
+	// 頂点情報のポインタ
+	VERTEX_2D* pVtx;
+
+	// 頂点バッファのロック
+	m_pVtxBuffMT->Lock(0, 0, (void**)&pVtx, 0);
+
+	for (int nCnt = 0; nCnt < NUM_TEXTUREMT; nCnt++)
+	{
+		D3DXVECTOR2 pos = D3DXVECTOR2(640.0f, 360.0f);
+
+		float width = SCREEN_WIDTH * 0.5f;
+		float height = SCREEN_HEIGHT * 0.5f;
+
+		// 頂点座標の設定
+		pVtx[0].pos = D3DXVECTOR3(pos.x - width, pos.y - height, 0.0f);
+		pVtx[1].pos = D3DXVECTOR3(pos.x + width, pos.y - height, 0.0f);
+		pVtx[2].pos = D3DXVECTOR3(pos.x - width, pos.y + height, 0.0f);
+		pVtx[3].pos = D3DXVECTOR3(pos.x + width, pos.y + height, 0.0f);
+
+		// rhwの設定
+		pVtx[0].rhw = 1.0f;
+		pVtx[1].rhw = 1.0f;
+		pVtx[2].rhw = 1.0f;
+		pVtx[3].rhw = 1.0f;
+
+		float fA = (nCnt == 0) ? 1.0f : fLevel;
+
+		// 頂点カラーの設定
+		pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, fA);
+		pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, fA);
+		pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, fA);
+		pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, fA);
+
+		// テクスチャ座標の設定
+		pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
+		pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);
+		pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);
+		pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);
+
+		pVtx += 4;
+	}
+	// 頂点バッファのアンロック
+	m_pVtxBuffMT->Unlock();
+
+	m_bEffect = true;
 }

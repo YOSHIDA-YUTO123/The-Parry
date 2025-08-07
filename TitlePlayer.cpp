@@ -11,6 +11,11 @@
 #include "TitlePlayer.h"
 #include"transform.h"
 #include"player.h"
+#include "TitleMenu.h"
+#include"playerstate.h"
+#include"motion.h"
+
+using namespace std; // 名前空間stdを使用
 
 //===================================================
 // コンストラクタ
@@ -52,10 +57,17 @@ CTitlePlayer* CTitlePlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 HRESULT CTitlePlayer::Init(void)
 {
 	// キャラクタークラスへのポインタ
-	CCharacter3D::LoadMotion("data/MOTION/motionPlayer.txt", TYPE_MAX);
+	CCharacter3D::LoadMotion("data/MOTION/motionTitlePlayer.txt", MOTIONTYPE_MAX);
 
 	// 初期化処理
 	CCharacter3D::Init();
+
+	// 移動量の生成
+	m_pMove = make_shared<CVelocity>();
+
+	// 移動制御の生成
+	m_pMoveMent = make_unique<CPlayerMovement>();
+	m_pMoveMent->Init(m_pMove.get(), GetRotaition());
 
 	return S_OK;
 }
@@ -65,6 +77,9 @@ HRESULT CTitlePlayer::Init(void)
 //===================================================
 void CTitlePlayer::Uninit(void)
 {
+	m_pMove = nullptr;
+	m_pMoveMent = nullptr;
+
 	// 終了処理
 	CCharacter3D::Uninit();
 }
@@ -74,11 +89,34 @@ void CTitlePlayer::Uninit(void)
 //===================================================
 void CTitlePlayer::Update(void)
 {
+	// 位置の取得
+	D3DXVECTOR3 pos = CCharacter3D::GetPosition();
+
+	m_pMove->SetInertia3D(0.25f);
+	pos += m_pMove->Get();
+
+	// タイトルのマネージャーの取得
+	auto pTitleMenuManager = CTitleMenuManager::GetInstance();
+
+	// スタートボタンを押したら
+	if (pTitleMenuManager != nullptr && pTitleMenuManager->CheckStart())
+	{
+		// モーションの取得
+		CMotion* pMotion = CCharacter3D::GetMotion();
+
+		pMotion->SetMotion(MOTIONTYPE_DASH, true, 5);
+
+		m_pMoveMent->MoveForward(10.0f);
+	}
+
 	// モーションの更新処理
 	CCharacter3D::UpdateMotion();
 
 	// 更新処理
 	CCharacter3D::Update();
+
+	// 位置の設定
+	CCharacter3D::SetPosition(pos);
 }
 
 //===================================================

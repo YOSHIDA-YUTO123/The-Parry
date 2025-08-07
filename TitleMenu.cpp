@@ -71,6 +71,7 @@ CTitleMenu* CTitleMenu::Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size,con
 	pMenu->SetPosition(pos);
 	pMenu->SetSize(Size.x, Size.y);
 	pMenu->SetVtx(WHITE);
+	pMenu->m_BaseSize = Size;
 
 	return pMenu;
 }
@@ -109,19 +110,36 @@ void CTitleMenu::Update(void)
 	// 取得できなかったら処理しない
 	if (pTitleManager == nullptr) return;
 
+	// 大きさの取得
+	D3DXVECTOR2 Size = CObject2D::GetSize();
+
+	// 位置の取得
+	D3DXVECTOR3 pos = CObject2D::GetPosition();
+
 	// 種類が同じだったら
 	if (m_Menu == pTitleManager->GetMenu())
 	{
-		// 位置の取得
-		D3DXVECTOR3 pos = CObject2D::GetPosition();
+		D3DXVECTOR2 destSize = m_BaseSize * 1.3f; // 拡大する
 
-		// 大きさの取得
-		D3DXVECTOR2 Size = CObject2D::GetSize();
+		Size += (destSize - Size) * 0.1f;
+
+		// 大きさの設定
+		CObject2D::SetSize(Size);
 
 		// 位置の設定
 		pTitleManager->SetPosition(D3DXVECTOR3(pos.x - Size.x * 1.5f, pos.y, pos.z));
-		pTitleManager->UpdateVertex(); // 頂点座標の更新
 	}
+	else
+	{
+		Size += (m_BaseSize - Size) * 0.1f;
+
+		// 大きさの設定
+		CObject2D::SetSize(Size);
+	}
+
+	// 頂点座標の更新
+	pTitleManager->UpdateVertex(); 
+	CObject2D::UpdateVertex();
 }
 
 //===================================================
@@ -199,12 +217,16 @@ void CTitleStart::Update(void)
 	// 選択中のメニュー
 	MENU selectMenu = pTitleManager->GetMenu();
 
+	// フェードの取得
+	CFade* pFade = CManager::GetFade();
+
 	// 選択されているメニューと自分のメニューが同じだったら
-	if (myMenu == selectMenu)
+	if (myMenu == selectMenu && pFade != nullptr && pFade->GetState() == CFade::FADE_NONE)
 	{
 		if (pKeyboard->GetTrigger(DIK_RETURN) || pJoypad->GetTrigger(pJoypad->JOYKEY_A))
 		{
-			CFade* pFade = CManager::GetFade();
+			// スタートを押した
+			pTitleManager->SetStart(true);
 
 			// 新しいモードの設定
 			pFade->SetFade(make_unique<CGame>());
@@ -313,6 +335,7 @@ void CTitleQuit::Draw(void)
 CTitleMenuManager::CTitleMenuManager()
 {
 	m_Menu = CTitleMenu::MENU_START;
+	m_bStart = false;
 }
 
 //===================================================

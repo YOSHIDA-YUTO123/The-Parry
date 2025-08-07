@@ -40,7 +40,8 @@ public:
 
 	void onWireFrame();
 	void offWireFrame();
-
+	void onEffect(const float fLevel); // ブラーのオン
+	void offEffect(void) { m_bEffect = false; }
 private:
 	LPDIRECT3DTEXTURE9 m_pTextureMT[NUM_TEXTUREMT];		// レンダリングターゲット用テクスチャ
 	LPDIRECT3DSURFACE9 m_pRenderMT[NUM_TEXTUREMT];			// レンダリングターゲット用インターフェース

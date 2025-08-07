@@ -12,6 +12,7 @@
 #include "player.h"
 #include "manager.h"
 #include"math.h"
+#include"renderer.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace math; // 名前空間mathを使用
@@ -21,6 +22,7 @@ using namespace math; // 名前空間mathを使用
 //================================================
 CMeshCylinder::CMeshCylinder(int nPriority) : CMesh(nPriority)
 {
+	m_Type = TYPE_WALL;
 	m_CenterPos = VEC3_NULL;
 	m_fRadius = NULL;
 }
@@ -106,8 +108,30 @@ void CMeshCylinder::Update(void)
 //================================================
 void CMeshCylinder::Draw(void)
 {
-	// 描画処理
-	CMesh::Draw();
+	switch (m_Type)
+	{
+	case TYPE_WALL:
+		// 設定処理
+		CMesh::SetMatrix();
+		break;
+	case TYPE_VIEW:
+
+#ifdef _DEBUG
+
+		// ワイヤーフレームオン
+		CManager::GetRenderer()->onWireFrame();
+
+		// 描画処理
+		CMesh::Draw();
+
+		// ワイヤーフレームオフ
+		CManager::GetRenderer()->offWireFrame();
+#endif // _DEBUG
+
+		break;
+	default:
+		break;
+	}
 }
 
 //================================================
@@ -134,7 +158,7 @@ void CMeshCylinder::SetCylinder(const int nSegH, const int nSegV, const float fR
 			posWk.z = cosf(fAngle) * fRadius;
 
 			// 頂点バッファの設定
-			SetVtxBuffer(posWk, nCntVtx, D3DXVECTOR2((fTexPosX * nCntX), (fTexPosY * nCntZ)),VEC3_NULL,D3DXCOLOR(1.0f,1.0f,1.0f,0.0f));
+			SetVtxBuffer(posWk, nCntVtx, D3DXVECTOR2((fTexPosX * nCntX), (fTexPosY * nCntZ)),VEC3_NULL,D3DXCOLOR(1.0f,0.0f,0.0f,1.0f));
 
 			// 法線の正規化
 			D3DXVECTOR3 nor = NormalizeNormal(nCntVtx);

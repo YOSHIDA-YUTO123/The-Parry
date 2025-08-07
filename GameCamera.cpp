@@ -29,6 +29,8 @@ using namespace Const; // 名前空間Constを使用
 //===================================================
 CGameCamera::CGameCamera()
 {
+	m_nShakeRange = NULL;
+	m_nShakeTime = NULL;
 	m_state = STATE_NONE;
 	m_Oldstate = STATE_NONE;
 	m_nZoomTime = NULL;
@@ -96,18 +98,11 @@ void CGameCamera::Update(void)
 	// ズームの処理
 	ZoomIn();
 
-	// カメラの状態がズームじゃないなら
-	if (m_state != STATE_ZOOMIN)
-	{
-		// 距離の取得
-		float fDistance = CCamera::GetDistance();
-
-		// 距離をもとに戻す
-		fDistance += (m_fDistanceBase - fDistance) * 0.1f;
-
-		// 距離の設定
-		CCamera::SetDistance(fDistance);
-	}
+	// 距離のリセット
+	ResetDistance();
+	
+	// カメラのお揺れの更新
+	UpdateShake();
 
 	// 更新処理
 	CCamera::Update();
@@ -142,6 +137,34 @@ void CGameCamera::SetTracking(const D3DXVECTOR3 posVDest, const D3DXVECTOR3 posR
 }
 
 //===================================================
+// 状態の設定
+//===================================================
+void CGameCamera::SetState(const STATE state)
+{
+	m_Oldstate = m_state; // 前回の状態を保存
+	m_state = state;
+}
+
+//===================================================
+// 状態のリセット
+//===================================================
+void CGameCamera::ResetState(void)
+{
+	// 前の状態を設定
+	m_state = m_Oldstate;
+
+	// レンダラーの取得
+	auto pRenderer = CManager::GetRenderer();
+
+	if (pRenderer != nullptr)
+	{
+		// ブラーの解除
+		pRenderer->offEffect();
+	}
+
+}
+
+//===================================================
 // ロックオンの設定処理
 //===================================================
 void CGameCamera::Rockon(D3DXVECTOR3 playerPos, D3DXVECTOR3 enemyPos)
@@ -171,9 +194,6 @@ void CGameCamera::Rockon(D3DXVECTOR3 playerPos, D3DXVECTOR3 enemyPos)
 
 	// 向きの設定
 	CCamera::SetRot(rot);
-
-	// y座標は考慮しない
-	dir.y = 0.0f;
 
 	// 方向ベクトルにする
 	D3DXVec3Normalize(&dir, &dir);
@@ -253,4 +273,60 @@ void CGameCamera::ZoomIn(void)
 			ResetState();
 		}
 	}
+}
+
+//===================================================
+// 揺れの設定処理
+//===================================================
+void CGameCamera::SetShake(const int nShakeTime, const int nRange)
+{
+	m_nShakeTime = nShakeTime;
+	m_nShakeRange = nRange;
+}
+
+//===================================================
+// ズームインの更新処理
+//===================================================
+void CGameCamera::ResetDistance(void)
+{
+	// カメラの状態がズームじゃないなら
+	if (m_state != STATE_ZOOMIN)
+	{
+		// 距離の取得
+		float fDistance = CCamera::GetDistance();
+
+		// 距離をもとに戻す
+		fDistance += (m_fDistanceBase - fDistance) * 0.1f;
+
+		// 距離の設定
+		CCamera::SetDistance(fDistance);
+	}
+}
+
+//===================================================
+// カメラの揺れの更新
+//===================================================
+void CGameCamera::UpdateShake(void)
+{
+	if (m_nShakeTime <= 0) return;
+
+	m_nShakeTime--;
+
+	// 注視点
+	D3DXVECTOR3 posR = CCamera::GetPosR();
+
+	D3DXVECTOR3 posRWk = posR;
+
+	// 揺れの最大
+	int nRangeMax = m_nShakeRange * 2;
+	float fRangeMin = static_cast<float>(m_nShakeRange);
+
+	posRWk.x = posR.x + static_cast<float>(rand() % nRangeMax) - fRangeMin;
+	posRWk.z = posR.z + static_cast<float>(rand() % nRangeMax) - fRangeMin;
+
+	// 注視点の設定
+	CCamera::SetPosR(posRWk);
+
+	CCamera::UpdatePositionV();
+	CCamera::UpdatePositionR();
 }

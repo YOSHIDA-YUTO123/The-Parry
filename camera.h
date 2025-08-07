@@ -51,6 +51,7 @@ protected:
 	float GetDistance(void) const { return m_fDistance; }
 
 	// セッター
+	void SetPosR(const D3DXVECTOR3 posR) { m_posR = posR; }
 	void SetDestPosV(const D3DXVECTOR3 destpos) { m_posVDest = destpos; }
 	void SetDestPosR(const D3DXVECTOR3 destpos) { m_posRDest = destpos; }
 	void SetDistance(const float fDistance) { m_fDistance = fDistance; }

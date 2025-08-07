@@ -108,11 +108,12 @@ public:
 		D3DXVECTOR3 StartPos; // 始点
 		D3DXVECTOR3 EndPos;	// 終点
 		float fRadius;		// 半径
+		int nID;			// 自分の番号
 	};
 
 	CColliderCapsule();
 	~CColliderCapsule();
-	static std::unique_ptr<CColliderCapsule> Create(const D3DXVECTOR3 StartPos, const D3DXVECTOR3 EndPos, const float fRadius);
+	static std::unique_ptr<CColliderCapsule> Create(const D3DXVECTOR3 StartPos, const D3DXVECTOR3 EndPos, const float fRadius,const int nID);
 	static CColliderCapsule CreateCollider(const D3DXVECTOR3 StartPos, const D3DXVECTOR3 EndPos, const float fRadius);
 	Data GetData(void) const { return m_Data; }
 	void UpdateData(const Data data);

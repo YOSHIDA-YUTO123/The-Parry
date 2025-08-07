@@ -25,10 +25,11 @@ public:
 	// カメラの状態の種類
 	typedef enum
 	{
-		STATE_NONE = 0,
-		STATE_TRACKING,
-		STATE_ROCKON,
-		STATE_ZOOMIN,
+		STATE_NONE = 0, // 何もなし
+		STATE_TRACKING,	// 追従
+		STATE_ROCKON,	// ロックオン
+		STATE_ZOOMIN,	// ズーム
+		STATE_SHAKE,	// カメラの揺れ
 		STATE_MAX
 	}STATE;
 
@@ -52,11 +53,14 @@ public:
 
 	STATE GetState(void) const { return m_state; }
 	void SetTracking(const TRACKOBJ obj) { m_TrackObj = obj; }
-	void SetState(const STATE state) { m_state = state; }
-	void ResetState(void) { m_state = m_Oldstate; }
+	void SetState(const STATE state);
+	void ResetState(void);
 	void Rockon(D3DXVECTOR3 playerPos, D3DXVECTOR3 enemyPos);
 	void ZoomIn(void);
+	void SetShake(const int nShakeTime, const int nRange);
 private:
+	void ResetDistance(void);	// 距離のリセット
+	void UpdateShake(void);		// カメラの揺れの更新
 	STATE m_state;				// カメラの状態
 	STATE m_Oldstate;			// 前の状態
 
@@ -64,7 +68,9 @@ private:
 	float m_fDistanceBase;		// 保存用の距離
 	float m_fDistanceZoom;		// ズームする距離
 	float m_fZoomAngleBase;		// ズームの角度の基準
+	int m_nShakeRange;			// 揺れの幅
 	int m_nZoomTime;			// ズームの時間
+	int m_nShakeTime;			// 振れの時間
 };
 
 #endif

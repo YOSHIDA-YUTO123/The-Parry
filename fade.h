@@ -42,6 +42,7 @@ public:
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
+	FADE GetState(void) const { return  m_Fade; }
 private:
 	CFade();
 	FADE m_Fade;							// フェード

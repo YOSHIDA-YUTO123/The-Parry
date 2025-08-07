@@ -42,8 +42,10 @@ public:
 	virtual void Draw(void) override;
 protected:
 	MENU GetMenu(void) const { return m_Menu; }
+	D3DXVECTOR2 GetBaseSize(void) const { return m_BaseSize; }
 private:
 	MENU m_Menu; // タイトルのメニュー
+	D3DXVECTOR2 m_BaseSize; // 基準の大きさ
 };
 
 //***************************************************
@@ -94,9 +96,12 @@ public:
 	void Update(void) override;
 	void Draw(void) override;
 	CTitleMenu::MENU GetMenu(void) const { return m_Menu; }
+	bool CheckStart(void) const { return m_bStart; }
+	void SetStart(bool bStart) { m_bStart = bStart; }
 private:
 	CTitleMenuManager();
 	static CTitleMenuManager* m_pInstance; // 自分のインスタンス
+	bool m_bStart; // スタートを押したかどうか
 	CTitleMenu::MENU m_Menu; // タイトルのメニュー
 };
 

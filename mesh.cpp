@@ -286,6 +286,35 @@ void CMesh::SetSegment(const int nSegH, const int nSegV)
 }
 
 //================================================
+// マトリックスの設定
+//================================================
+void CMesh::SetMatrix(void)
+{
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+	// テクスチャクラスの取得
+	CTextureManager* pTexture = CManager::GetTexture();
+
+	//計算用のマトリックス
+	D3DXMATRIX mtxRot, mtxTrans;
+
+	//ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&m_mtxWorld);
+
+	//向きを反映
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
+
+	//位置を反映
+	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
+	//ワールドマトリックスの設定
+	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+}
+
+//================================================
 // 頂点座標の取得
 //================================================
 D3DXVECTOR3 CMesh::GetVtxPos(const int nIdx)

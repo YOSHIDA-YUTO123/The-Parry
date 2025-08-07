@@ -134,7 +134,7 @@ HRESULT CEnemy::Init(void)
 	m_pAABB = CColliderAABB::Create(CenterPos, m_posOld, Size);
 
 	// カプセルコライダーの生成
-	m_pCapsule = CColliderCapsule::Create(pos, D3DXVECTOR3(pos.x, pos.y + Size.y, pos.z), 60.0f);
+	m_pCapsule = CColliderCapsule::Create(pos, D3DXVECTOR3(pos.x, pos.y + Size.y, pos.z), 60.0f,0);
 
 	// 移動制御クラスの生成
 	m_pMovement = make_unique<CEnemyMovement>();
@@ -152,8 +152,14 @@ void CEnemy::Uninit(void)
 	// nullにする
 	m_pOrbit = nullptr;
 	m_pAABB = nullptr;
+
+	// 要素のクリア
 	m_pCapsule = nullptr;
 
+	//for (const auto& pCapsule : m_apCapsule)
+	//{
+	//	pCapsule.
+	//}
 	// オブザーバーの破棄
 	if (m_pObserver != nullptr)
 	{
@@ -203,6 +209,9 @@ void CEnemy::Update(void)
 	// キーボードの取得
 	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
 
+	CDebugProc::Print("************************************\n");
+	CDebugProc::Print("*             敵の操作             *\n");
+	CDebugProc::Print("************************************\n");
 	CDebugProc::Print("ボスの攻撃(スマッシュ) [ 1 ]\n");
 	CDebugProc::Print("ボスの攻撃(衝撃波) [ 2 ]\n");
 	CDebugProc::Print("ボスの攻撃(方向→ダッシュ→回転) [ 3 ]\n");
@@ -252,6 +261,25 @@ void CEnemy::Update(void)
 		Uninit();
 		return;
 	}
+
+	static CMeshCylinder* pC = nullptr;
+
+	if (pKeyboard->GetTrigger(DIK_T))
+	{
+		pCamera->SetShake(120, 20);
+		//pCamera->SetState(pCamera->STATE_SHAKE);
+
+		float fRadius = m_pCapsule->GetData().fRadius;
+		float fHeight = GetDistance(m_pCapsule->GetData().EndPos - m_pCapsule->GetData().StartPos);
+		pC = CMeshCylinder::Create(pos, 16, 1, fRadius, fHeight);
+		pC->Set(pC->TYPE_VIEW);
+	}
+
+	if (pC != nullptr)
+	{
+		pC->SetPosition(pos);
+	}
+
 #endif // _DEBUG
 
 	// モーションの制御クラスの取得
@@ -287,11 +315,6 @@ void CEnemy::Update(void)
 		CCharacter3D::SetPosition(pos);
 	}
 
-	// カプセルの判定
-	auto pCapsule = CCollisionCapsule::GetInstance();
-
-	UpdateCollider(pos);
-
 	// 障害物との当たり判定
 	if (CollisionObstacle(&pos))
 	{
@@ -301,11 +324,9 @@ void CEnemy::Update(void)
 	// コライダーの更新
 	UpdateCollider(pos);
 
-	if (pPlayer->CollisionCapsule(m_pCapsule.get(),pos))
-	{
-		int a = 0;
-	}
-
+	// プレイヤーとの当たり判定
+	pPlayer->CollisionCapsule(m_pCapsule.get());
+	
 	// シリンダーの取得
 	CMeshCylinder* pCylinder = CGame::GetCylinder();
 
@@ -1095,30 +1116,21 @@ void CEnemy::UpdateCollider(const D3DXVECTOR3 pos)
 		m_pAABB->UpdateData(CenterPos, D3DXVECTOR3(m_posOld.x, m_posOld.y + Size.y * 0.5f, m_posOld.z));
 	}
 
+	// 全身の更新
 	if (m_pCapsule != nullptr)
 	{
 		// データの取得
 		auto dataCapsule = m_pCapsule->GetData();
 
-		D3DXVECTOR3 headpos = GetModelPos(2);
-
-		dataCapsule.EndPos = headpos;
+		dataCapsule.EndPos = D3DXVECTOR3(pos.x,pos.y + Size.y,pos.z);
 
 		// データの更新
 		dataCapsule.StartPos = pos;
 
-#ifdef _DEBUG
-		auto p = CEffect3D::Create(dataCapsule.StartPos, 10.0f, WHITE);
-		p->Set(10, VEC3_NULL);
-
-		p = CEffect3D::Create(dataCapsule.EndPos, 10.0f, WHITE);
-		p->Set(10, VEC3_NULL);
-#endif // _DEBUG
-
 		// データの更新処理
 		m_pCapsule->UpdateData(dataCapsule);
 	}
-
+	
 	SetPosition(pos);
 }
 

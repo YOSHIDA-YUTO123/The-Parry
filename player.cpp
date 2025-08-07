@@ -129,7 +129,7 @@ HRESULT CPlayer::Init(void)
 	m_pAABB = CColliderAABB::Create(pos, m_posOld, Size);
 
 	// カプセルコライダーの生成
-	m_Capsule = CColliderCapsule::Create(pos, D3DXVECTOR3(pos.x, pos.y + Size.y, pos.z), 60.0f);
+	m_Capsule = CColliderCapsule::Create(pos, D3DXVECTOR3(pos.x, pos.y + Size.y, pos.z), 60.0f,0);
 
 	// スタミナを設定
 	m_fStamina = MAX_STAMINA;
@@ -444,10 +444,13 @@ void CPlayer::Update(void)
 	}
 
 	// ズームインだったら解除
-	if (pMotion->GetBlendType() != TYPE_PARRY && pCamera->GetState() == CGameCamera::STATE_ZOOMIN)
+	if (pMotion->GetBlendType() != TYPE_PARRY)
 	{
-		// カメラのズーム解除
-		pCamera->ResetState();
+		if (pCamera->GetState() == CGameCamera::STATE_ZOOMIN)
+		{
+			// カメラのズーム解除
+			pCamera->ResetState();
+		}
 	}
 
 	// 反撃ボタンを押したら
@@ -522,6 +525,24 @@ void CPlayer::Update(void)
 
 	// デバッグ表示
 	CDebugProc::Print("カメラの回転 X = %.2f Y = %.2f\n", pCamera->GetRotaition().x, pCamera->GetRotaition().y);
+
+	static CMeshCylinder* pC = nullptr;
+
+	if (pKeyboard->GetTrigger(DIK_T))
+	{
+		pCamera->SetShake(120,20);
+		//pCamera->SetState(pCamera->STATE_SHAKE);
+
+		float fRadius = m_Capsule->GetData().fRadius;
+		fHeight = GetDistance(m_Capsule->GetData().EndPos - m_Capsule->GetData().StartPos);
+		pC = CMeshCylinder::Create(pos, 16, 1, fRadius, fHeight);
+		pC->Set(pC->TYPE_VIEW);
+	}
+
+	if (pC != nullptr)
+	{
+		pC->SetPosition(pos);
+	}
 
 #endif // _DEBUG
 }
@@ -909,14 +930,7 @@ void CPlayer::UpdateCollider(D3DXVECTOR3 pos)
 
 		// データの更新
 		dataCapsule.StartPos = pos;
-#ifdef _DEBUG
 
-		auto p = CEffect3D::Create(dataCapsule.StartPos, 10.0f, WHITE);
-		p->Set(10, VEC3_NULL);
-
-		p = CEffect3D::Create(dataCapsule.EndPos, 10.0f, WHITE);
-		p->Set(10, VEC3_NULL);
-#endif
 		// データの更新処理
 		m_Capsule->UpdateData(dataCapsule);
 
@@ -1029,41 +1043,36 @@ void CPlayer::BlowOff(const D3DXVECTOR3 attacker, const float blowOff, const flo
 //===================================================
 // カプセルの当たり判定
 //===================================================
-bool CPlayer::CollisionCapsule(CColliderCapsule* pCapsule, const D3DXVECTOR3 pos)
+bool CPlayer::CollisionCapsule(CColliderCapsule* pCapsule)
 {
 	// 当たり判定の取得
 	auto pCollision = CCollisionCapsule::GetInstance();
 
-	D3DXVECTOR3 nearPlayerPos,nearPos2;
+	D3DXVECTOR3 nearPlayerPos,nearPos2; // 最近接点1,プレイヤー,最近接点2
 
+	// カプセルとカプセルが当たったら
 	if (pCollision->Collision(m_Capsule.get(), pCapsule,&nearPlayerPos,&nearPos2))
 	{
-		//m_pMove->Set(VEC3_NULL);
-		D3DXVECTOR3 Size = GetSize();
-
+		// 敵の方向を求める
 		D3DXVECTOR3 dir = nearPos2 - nearPlayerPos;
+
+		// 距離を求める
 		float fDistance = D3DXVec3Length(&dir);
 
+		// 方向ベクトルを正規化
 		D3DXVec3Normalize(&dir, &dir);
 
+		// 二つの半径を足す
 		float fRadius = m_Capsule->GetData().fRadius + pCapsule->GetData().fRadius;
 
+		// どのくらい埋まったか
 		float fDepth = fRadius - fDistance;
 
-		fDepth = Clamp(fDepth, 0.0f, fDepth);
-
+		// プレイヤーの位置の取得
 		D3DXVECTOR3 playerPos = GetPosition();
 
+		// コライダーの更新 + 埋まった分を戻す
 		UpdateCollider(playerPos - dir * fDepth);
-
-		auto p = CEffect3D::Create(nearPlayerPos, 50.0f, D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-
-		p->Set(10, VEC3_NULL);
-
-		p = CEffect3D::Create(nearPos2, 50.0f, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-
-		p->Set(10, VEC3_NULL);
-
 
 		return true;
 	}
@@ -1186,11 +1195,22 @@ void CPlayer::SetStance(void)
 	// カメラの取得
 	CGameCamera* pCamera = CGame::GetCamera();
 
+	pCamera->SetShake(20, 2);
+
 	// ズームインの処理
 	pCamera->SetZoomIn(60, rot.y + D3DX_PI);
 
 	// モーションの取得
 	auto pMotion = GetMotion();
+
+	// レンダラーの取得
+	auto pRenderer = CManager::GetRenderer();
+
+	if (pRenderer != nullptr)
+	{
+		// ブラーの設定
+		pRenderer->onEffect(0.8f);
+	}
 
 	if (pMotion != nullptr)
 	{
@@ -1200,6 +1220,30 @@ void CPlayer::SetStance(void)
 		// モーションを更新してポーズを設定
 		CPlayer::UpdateMotion();
 	}
+
+	// 右手の位置
+	D3DXVECTOR3 playerHandR = CCharacter3D::GetModelPos(8);
+
+	// パーティクルの生成
+	auto pParticle = CParticle3DNormal::Create(playerHandR, 15.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+
+	// パーティクルの設定処理
+	pParticle->SetParticle(15.0f, 120, 60, 1, 314);
+	pParticle->SetParam(CEffect3D::TYPE_HIT);
+
+	// パーティクルの生成
+	pParticle = CParticle3DNormal::Create(playerHandR, 15.0f, D3DCOLOR_RGBA(147, 112, 219,255));
+
+	// パーティクルの設定処理
+	pParticle->SetParticle(15.0f, 120, 300, 1, 314);
+	pParticle->SetParam(CEffect3D::TYPE_NORAML);
+
+	// パーティクルの生成
+	pParticle = CParticle3DNormal::Create(playerHandR, 15.0f, D3DCOLOR_RGBA(255, 165, 10, 255));
+
+	// パーティクルの設定処理
+	pParticle->SetParticle(15.0f, 120, 300, 1, 314);
+	pParticle->SetParam(CEffect3D::TYPE_NORAML);
 }
 
 //===================================================

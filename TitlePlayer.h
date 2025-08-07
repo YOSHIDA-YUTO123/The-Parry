@@ -29,6 +29,14 @@ class CPlayerMovement;
 class CTitlePlayer : public CCharacter3D
 {
 public:
+
+	enum MOTIONTYPE
+	{
+		MOTIONTYPE_NEUTRAL = 0,
+		MOTIONTYPE_DASH,
+		MOTIONTYPE_MAX
+	};
+
 	CTitlePlayer();
 	~CTitlePlayer();
 

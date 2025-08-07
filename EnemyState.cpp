@@ -323,16 +323,6 @@ void CEnemyAttackSmash::Update(void)
 			// 成功度
 			int nSuccess = pPlayer->SuccessParry();
 
-			// 右手の位置
-			D3DXVECTOR3 playerHandR = pPlayer->GetModelPos(8);
-
-			// パーティクルの生成
-			auto pParticle = CParticle3DNormal::Create(playerHandR, 25.0f, D3DXCOLOR(1.0f,0.4f,0.4f, 1.0f));
-
-			// パーティクルの設定処理
-			pParticle->SetParticle(15.0f, 120, 150, 1,314);
-			pParticle->SetParam(CEffect3D::TYPE_HIT);
-
 			// ヒットストップ
 			m_pEnemy->SetHitStop(20);
 
@@ -705,13 +695,6 @@ void CEnemySpin::Update(void)
 			// 右手の位置
 			D3DXVECTOR3 playerHandR = pPlayer->GetModelPos(8);
 
-			// パーティクルの生成
-			auto pParticle = CParticle3DNormal::Create(playerHandR, 25.0f, D3DXCOLOR(1.0f, 0.4f, 0.4f, 1.0f));
-
-			// パーティクルの設定処理
-			pParticle->SetParticle(15.0f, 120, 150, 1,314);
-			pParticle->SetParam(CEffect3D::TYPE_HIT);
-
 			// ヒットストップ
 			m_pEnemy->SetHitStop(25);
 
@@ -919,10 +902,22 @@ void CEnemyHit::Update(void)
 	// モーションクラスの取得
 	CMotion* pMotion = m_pEnemy->GetMotion();
 
-	if (pMotion != nullptr && pMotion->FinishMotion())
+	if (pMotion != nullptr )
 	{
-		m_pEnemy->ChangeState(make_shared<CEnemyBackStep>());
+		if (pMotion->IsEventFrame(1,50,MOTION::MOTION_HIT))
+		{
+			// 後ろに進む
+			m_pEnemy->GetMovement()->SetMoveDir(0.0f, 5.0f);
+		}
+
+		// モーションが終わったら
+		if (pMotion->FinishMotion())
+		{
+			// 状態の変更
+			m_pEnemy->ChangeState(make_shared<CEnemyBackStep>());
+		}
 	}
+
 }
 
 //===================================================
@@ -1232,16 +1227,6 @@ void CEnemySwing::Update(void)
 
 				int nSuccess = pPlayer->SuccessParry();
 
-				// 右手の位置
-				D3DXVECTOR3 playerHandR = pPlayer->GetModelPos(8);
-
-				// パーティクルの生成
-				auto pParticle = CParticle3DNormal::Create(playerHandR, 25.0f, D3DXCOLOR(1.0f, 0.4f, 0.4f, 1.0f));
-
-				// パーティクルの設定処理
-				pParticle->SetParticle(15.0f, 120, 150, 1,314);
-				pParticle->SetParam(CEffect3D::TYPE_HIT);
-
 				m_pEnemy->SetHitStop(25);
 
 				pPlayer->SetHitStop(25);
@@ -1365,7 +1350,7 @@ void CEnemyJumpAttack::Update(void)
 		}
 
 		// 構え中だったら
-		if (pMotion->IsEventFrame(1, 30, MOTION::MOTION_JUMPATTACK))
+		if (pMotion->IsEventFrame(1, 40, MOTION::MOTION_JUMPATTACK))
 		{
 			// プレイヤーの方向を見る
 			m_pEnemy->AngleToPlayer();
@@ -1384,8 +1369,11 @@ void CEnemyJumpAttack::Update(void)
 			// 軌跡の設定
 			m_pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f));
 
+			// 武器のモデルの取得
+			D3DXVECTOR3 weponPos = m_pEnemy->GetModelPos(15);
+
 			// プレイヤーまでの差分を求める
-			D3DXVECTOR3 Diff = pPlayer->GetPosition() - pos;
+			D3DXVECTOR3 Diff = pPlayer->GetPosition() - weponPos;
 
 			// 距離を求める
 			float dir = GetDistance(Diff);
@@ -1447,13 +1435,6 @@ void CEnemyJumpAttack::CollisionPlayer(CPlayer* pPlayer, CMotion* pMotion)
 
 			// 右手の位置
 			D3DXVECTOR3 playerHandR = pPlayer->GetModelPos(8);
-
-			// パーティクルの生成
-			auto pParticle = CParticle3DNormal::Create(playerHandR, 25.0f, D3DXCOLOR(1.0f, 0.4f, 0.4f, 1.0f));
-
-			// パーティクルの設定処理
-			pParticle->SetParticle(15.0f, 120, 150, 1,314);
-			pParticle->SetParam(CEffect3D::TYPE_HIT);
 
 			// ヒットストップ
 			m_pEnemy->SetHitStop(25);

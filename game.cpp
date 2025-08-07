@@ -91,6 +91,7 @@ HRESULT CGame::Init(void)
 
 	// シリンダーの生成
 	m_pCylinder = CMeshCylinder::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 32, 1, 1900.0f, 1900.0f);
+	m_pCylinder->Set(CMeshCylinder::TYPE_WALL);
 
 	// プレイヤーの生成
 	m_pPlayer = CPlayer::Create(D3DXVECTOR3(1.0f, 0.0f, -1500.0f));

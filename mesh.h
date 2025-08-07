@@ -46,6 +46,7 @@ public:
 	void SetTextureID(const char* pTextureName = NULL);
 	void SetVtxElement(const int vertex,const int polygon,const int index);
 	void SetSegment(const int nSegH, const int nSegV);
+	void SetMatrix(void);
 
 	D3DXVECTOR3 GetVtxPos(const int nIdx);
 	int GetIndex(const int nIdx);

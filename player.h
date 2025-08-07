@@ -130,7 +130,7 @@ public:
 	void SetStamina(const float fStamina);
 
 	bool CollisionAABB(CColliderAABB* pAABB);
-	bool CollisionCapsule(CColliderCapsule* pCapsule, const D3DXVECTOR3 pos);
+	bool CollisionCapsule(CColliderCapsule* pCapsule);
 private:
 	void CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos, CMotion* pMotion); // インパクトの当たり判定
 	bool IsMove(CMotion* pMotion);		// 移動できるか判定

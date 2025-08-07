@@ -403,11 +403,12 @@ void CCamera::LerpPos(const D3DXVECTOR3 posRDest, const D3DXVECTOR3 posVDest, co
 	m_posVDest.z = posVDest.z;
 
 	// 目的の注視点に近づける
-	m_posR.x += ((m_posRDest.x - m_posR.x) * fCoef);
-	m_posR.y += ((m_posRDest.y - m_posR.y) * fCoef);
-	m_posR.z += ((m_posRDest.z - m_posR.z) * fCoef);
+	m_posR.x += (m_posRDest.x - m_posR.x) * fCoef;
+	m_posR.y += (m_posRDest.y - m_posR.y) * fCoef;
+	m_posR.z += (m_posRDest.z - m_posR.z) * fCoef;
 
 	// 目的の視点に近づける
-	m_posV.x += ((m_posVDest.x - m_posV.x) * fCoef);
-	m_posV.z += ((m_posVDest.z - m_posV.z) * fCoef);
+	m_posV.x += (m_posVDest.x - m_posV.x) * fCoef;
+	m_posV.y += (m_posVDest.y - m_posV.y) * fCoef;
+	m_posV.z += (m_posVDest.z - m_posV.z) * fCoef;
 }

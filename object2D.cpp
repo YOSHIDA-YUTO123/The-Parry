@@ -247,6 +247,9 @@ void CObject2D::UpdateVertex(void)
 	D3DXVECTOR3 pos = m_pos;
 	D3DXVECTOR3 rot = m_rot;
 
+	m_Length = sqrtf((m_Size.x * m_Size.x) + (m_Size.y * m_Size.y));
+	m_fAngle = atan2f(m_Size.x, m_Size.y);
+
 	// í∏ì_ç¿ïWÇÃê›íË
 	pVtx[0].pos.x = pos.x + sinf(rot.z - (D3DX_PI - m_fAngle)) * m_Length;
 	pVtx[0].pos.y = pos.y + cosf(rot.z - (D3DX_PI - m_fAngle)) * m_Length;

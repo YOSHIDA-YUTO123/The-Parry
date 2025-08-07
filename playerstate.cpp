@@ -16,6 +16,7 @@
 #include "game.h"
 #include "meshfield.h"
 #include "MoveSmoke.h"
+#include"GameCamera.h"
 
 using MOTION = CPlayer::TYPE; // プレイヤーの列挙型の使用
 using namespace std;		  // 名前空間stdの使用
@@ -113,6 +114,12 @@ void CPlayerDamage::Init(void)
 
 	// モーションの取得
 	CMotion* pMotion = pPlayer->GetMotion();
+
+	// カメラの取得
+	CGameCamera* pGameCamera = CGame::GetCamera();
+
+	// カメラの揺れ
+	pGameCamera->SetShake(20, 40);
 
 	pPlayer->Hit(m_nDamage);
 

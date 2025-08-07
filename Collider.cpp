@@ -252,7 +252,7 @@ CColliderCapsule::~CColliderCapsule()
 //================================================
 // ê∂ê¨èàóù
 //================================================
-unique_ptr<CColliderCapsule> CColliderCapsule::Create(const D3DXVECTOR3 StartPos, const D3DXVECTOR3 EndPos, const float fRadius)
+unique_ptr<CColliderCapsule> CColliderCapsule::Create(const D3DXVECTOR3 StartPos, const D3DXVECTOR3 EndPos, const float fRadius, const int nID)
 {
 	// ÉJÉvÉZÉãÇÃê∂ê¨
 	auto pCapsule = make_unique<CColliderCapsule>();
@@ -261,7 +261,7 @@ unique_ptr<CColliderCapsule> CColliderCapsule::Create(const D3DXVECTOR3 StartPos
 	pCapsule->m_Data.StartPos = StartPos;
 	pCapsule->m_Data.EndPos = EndPos;
 	pCapsule->m_Data.fRadius = fRadius;
-
+	pCapsule->m_Data.nID = nID;
 	return pCapsule;
 }
 
