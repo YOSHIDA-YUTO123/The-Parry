@@ -27,6 +27,7 @@
 #include "pause.h"
 #include"GameCamera.h"
 #include"light.h"
+#include "RevengeGage.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -91,14 +92,23 @@ HRESULT CGame::Init(void)
 
 	// シリンダーの生成
 	m_pCylinder = CMeshCylinder::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 32, 1, 1900.0f, 1900.0f);
+
 	m_pCylinder->Set(CMeshCylinder::TYPE_WALL);
 
 	// プレイヤーの生成
 	m_pPlayer = CPlayer::Create(D3DXVECTOR3(1.0f, 0.0f, -1500.0f));
 
-	// ゲージのフレームの生成
-	auto gageFrame = CGageFrame::Create(D3DXVECTOR3(220.0f, 36.0f, 0.0f), D3DXVECTOR2(200.0f, 25.0f),CGageFrame::TYPE_HP_PLAYER);
+	// 反撃UIの生成
+	auto pRevenge = CRevengeUI::Create(D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXVECTOR2(50.0f, 50.0f), CPlayer::MAX_REVENGE);
 
+	// 反撃オブザーバーの生成
+	auto pRevengeOb = new CRevengeUIObserver(pRevenge);
+
+	// オブザーバーの設定
+	m_pPlayer->SetRevengeObserver(pRevengeOb);
+
+	// ゲージのフレームの生成
+	auto gageFrame = CGageFrame::Create(D3DXVECTOR3(256.0f, 36.0f, 0.0f), D3DXVECTOR2(161.0f, 25.0f),CGageFrame::TYPE_HP_PLAYER);
 
 	// 生成できていたら
 	if (gageFrame != nullptr)
@@ -131,7 +141,7 @@ HRESULT CGame::Init(void)
 	}
 
 	// HPゲージの生成
-	auto pGage = CHpGage::Create(D3DXVECTOR3(109.0f, 36.0f, 0.0f), D3DXVECTOR2(302.0f, 14.0f), D3DXCOLOR(0.0f,1.0f,0.0f,1.0f),D3DXCOLOR(1.0f,0.0f,0.0f,1.0f), CPlayer::MAX_LIFE,true);
+	auto pGage = CHpGage::Create(D3DXVECTOR3(108.0f, 36.0f, 0.0f), D3DXVECTOR2(302.0f, 14.0f), D3DXCOLOR(0.0f,1.0f,0.0f,1.0f),D3DXCOLOR(1.0f,0.0f,0.0f,1.0f), CPlayer::MAX_LIFE,true);
 
 	// Hpゲージのオブザーバーの設定
 	CHpObserver *observer = new CHpObserver(pGage);

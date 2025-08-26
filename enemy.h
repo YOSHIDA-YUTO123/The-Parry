@@ -81,6 +81,7 @@ public:
 		RESULT_PARRY,	  // パリィされた
 		RESULT_AVOID,	  // 回避された
 		RESULT_HIT,		  // 攻撃が当たった
+		RESULT_SPREVENGE, // 絶対反撃モード	  
 		RESULT_MAX
 	}RESULT;
 

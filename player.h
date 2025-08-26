@@ -54,43 +54,66 @@ public:
 
 	static constexpr int MAX_LIFE = 10;				// HP
 	static constexpr float MAX_STAMINA = 100.0f;	// スタミナ
+	static constexpr float MAX_REVENGE = 100.0f;	// 反撃ゲージの最大
 
 	// モーションの種類
-	enum TYPE
+	typedef enum
 	{
-		TYPE_NEUTRAL = 0,
-		TYPE_MOVE,
-		TYPE_PARRY,
-		TYPE_JUMP,
-		TYPE_LANDING,
-		TYPE_DASH,
-		TYPE_DAMAGE,
-		TYPE_PUNCH,
-		TYPE_DOWN_NEUTRAL,
-		TYPE_AVOID,
-		TYPE_ROUNDKICK,
-		TYPE_STANCE,
-		TYPE_MAX
-	};
+		MOTIONTYPE_NEUTRAL = 0,
+		MOTIONTYPE_MOVE,
+		MOTIONTYPE_PARRY,
+		MOTIONTYPE_JUMP,
+		MOTIONTYPE_LANDING,
+		MOTIONTYPE_DASH,
+		MOTIONTYPE_DAMAGE,
+		MOTIONTYPE_PUNCH,
+		MOTIONTYPE_DOWN_NEUTRAL,
+		MOTIONTYPE_AVOID,
+		MOTIONTYPE_ROUNDKICK,
+		MOTIONTYPE_STANCE,
+		MOTIONTYPE_REVENGE,
+		MOTIONTYPE_MAX
+	}MOTIONTYPE;
 
 	// パリィの成功度
-	enum PARRY
+	typedef enum 
 	{
 		PARRY_MISS = 0,
 		PARRY_WEAK,
 		PARRY_NORMAL,
 		PARRY_PARFECT,
 		PARRY_MAX
-	};
+	}PARRY;
 
 	// オブザーバーの種類
-	enum OBSERVER
+	typedef enum
 	{
 		OBSERVER_HP = 0,
 		OBSERVER_STAMINA,
 		OBSERVER_SPECAL,
 		OBSERVER_MAX
-	};
+	}OBSERVER;
+
+	// モデルの種類
+	typedef enum
+	{
+		MODEL_WAIST = 0,
+		MODEL_CHEST,
+		MODEL_HEAD,
+		MODEL_ARMUR,
+		MODEL_ARMFR,
+		MODEL_HAND,
+		MODEL_ARMUL,
+		MODEL_ARMFL,
+		MODEL_HANDL,
+		MODEL_LEGUR,
+		MODEL_LEGDR,
+		MODEL_FOOTR,
+		MODEL_LEGUL,
+		MODEL_LEGDL,
+		MODEL_FOOTL,
+		MODEL_MAX
+	}MODEL;
 
 	CPlayer();
 	~CPlayer();
@@ -117,6 +140,7 @@ public:
 	// セッター
 	void SetHpObserver(CObserver<int>* pObserver) { m_pHpObserver = pObserver; }
 	void SetStaminaObserver(CObserver<float>* pObserver) { m_pStaminaObserver = pObserver; }
+	void SetRevengeObserver(CObserver<float>* pObserver) { m_pRevengeObserver = pObserver; }
 
 	int SuccessParry(void);
 
@@ -131,6 +155,7 @@ public:
 
 	bool CollisionAABB(CColliderAABB* pAABB);
 	bool CollisionCapsule(CColliderCapsule* pCapsule);
+	void SetRevengeEffect(void); // 絶対反撃のエフェクトの設定
 private:
 	void CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos, CMotion* pMotion); // インパクトの当たり判定
 	bool IsMove(CMotion* pMotion);		// 移動できるか判定
@@ -152,8 +177,10 @@ private:
 	CMeshOrbit* m_pOrbit;							// 軌跡の処理
 	CObserver<int>* m_pHpObserver;					// HPオブザーバークラスへのポインタ
 	CObserver<float>* m_pStaminaObserver;			// スタミナオブザーバークラスへのポインタ
+	CObserver<float>* m_pRevengeObserver;			// 反撃オブザーバークラスへのポインタ
 	D3DXVECTOR3 m_posOld;							// 前回の位置
 	float m_fStamina;								// スタミナ
+	float m_fRevengeValue;							// 反撃ゲージ量
 	int m_nParryTime;								// パリィの有効時間
 	int m_nParryCounter;							// パリィのカウンター
 	int m_nAttackCounter;							// 攻撃の有効時間

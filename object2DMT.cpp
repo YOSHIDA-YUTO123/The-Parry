@@ -126,8 +126,8 @@ HRESULT CObject2DMT::Init(void)
 	// テクスチャ座標の設定
 	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
 	pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);
-	pVtx[2].tex = D3DXVECTOR2(0.0f, 0.0f);
-	pVtx[3].tex = D3DXVECTOR2(1.0f, 0.0f);
+	pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);
+	pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);
 
 	// テクスチャ座標の設定
 	pVtx[0].texMT = D3DXVECTOR2(0.0f, 0.0f);
@@ -220,11 +220,6 @@ void CObject2DMT::Draw(void)
 	pDevice->SetTextureStageState(1, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 	pDevice->SetTextureStageState(1, D3DTSS_COLORARG2, D3DTA_CURRENT);
 
-	// テクスチャステージステートの設定
-	pDevice->SetTextureStageState(1, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-	pDevice->SetTextureStageState(1, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-	pDevice->SetTextureStageState(1, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
-
 	//頂点バッファをデータストリームに設定
 	pDevice->SetStreamSource(0, m_pVtxBuffer, 0, sizeof(VERTEX_2D_MULT));
 
@@ -268,4 +263,36 @@ void CObject2DMT::SetTextureID(const char* pTexture1, const char* pTexture2)
 
 	// IDの登録
 	m_nTextureIdx[1] = pTexture->Register(pTexture2);
+}
+
+//===================================================
+// テクスチャ座標の設定
+//===================================================
+void CObject2DMT::SetTexture(const D3DXVECTOR2 tex0, const D3DXVECTOR2 tex1, const D3DXVECTOR2 tex2, const D3DXVECTOR2 tex3, const int nCnt)
+{
+	// 頂点情報のポインタ
+	VERTEX_2D_MULT* pVtx;
+
+	// 頂点バッファのロック
+	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+
+	if (nCnt == 0)
+	{
+		// テクスチャ座標の設定
+		pVtx[0].tex = tex0;
+		pVtx[1].tex = tex1;
+		pVtx[2].tex = tex2;
+		pVtx[3].tex = tex3;
+	}
+	else
+	{
+		// テクスチャ座標の設定
+		pVtx[0].texMT = tex0;
+		pVtx[1].texMT = tex1;
+		pVtx[2].texMT = tex2;
+		pVtx[3].texMT = tex3;
+	}
+
+	// 頂点バッファのアンロック
+	m_pVtxBuffer->Unlock();
 }

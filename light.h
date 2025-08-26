@@ -18,11 +18,6 @@
 #include<vector>
 
 //***************************************************
-// マクロ定義
-//***************************************************
-#define MAX_LIGHT (8) // ライトの最大数
-
-//***************************************************
 // ライトのクラスの定義
 //***************************************************
 class CLight
@@ -38,7 +33,10 @@ public:
 	void SetLight(void);
 
 	D3DXVECTOR3 GetDir(void) const { return m_aLightInfo[0].aLight.Direction; }
+	void DeleteLight(void); // ディレクションライト以外を消去
 private:
+
+	static constexpr int MAX_LIGHT = 8; // ライトの最大数
 
 	// ライトの情報
 	struct LightInfo
@@ -47,7 +45,6 @@ private:
 		bool bUse;			// 使用状態
 	};
 
-	int m_nNumAll;						 // ライトの総数
-	std::vector<LightInfo> m_aLightInfo; // ライトの構造体
+	LightInfo m_aLightInfo[MAX_LIGHT]; // ライトの構造体
 };
 #endif

@@ -134,9 +134,8 @@ void CZoneParticle3D::Update(void)
 		if (info.nTime > 0)
 		{
 			// エフェクトの生成
-			auto pEffect = CEffect3D::Create(pos, fRandomRadius, col);
+			auto pEffect = CEffect3D::Create(pos, fRandomRadius, col,CEffect3D::TYPE_NORAML);
 			pEffect->Set(nRandomLife, move);
-			pEffect->SetTextureID("data/TEXTURE/effect/effect000.jpg");
 		}
 	}
 

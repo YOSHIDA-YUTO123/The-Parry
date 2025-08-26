@@ -32,8 +32,8 @@ constexpr float ROCKON_HEIGHT = 200.0f;	// ロックオンの時のカメラの高さ
 //===================================================
 CCamera::CCamera()
 {
-	memset(m_mtxView, NULL, sizeof(D3DXMATRIX));
-	memset(m_mtxProjection, NULL, sizeof(D3DXMATRIX));
+	D3DXMatrixIdentity(&m_mtxView);
+	D3DXMatrixIdentity(&m_mtxProjection);
 	m_posR = VEC3_NULL;
 	m_posV = VEC3_NULL;
 	m_rot = VEC3_NULL;

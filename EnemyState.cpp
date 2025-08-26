@@ -41,7 +41,7 @@ constexpr int START_IMPACT = 55;				// インパクト攻撃の開始確率
 constexpr int SPIN_TIME = 60;					// 回転モーションの時間
 constexpr int ABSSPIN_TIME = 30;				// 絶対回転する時間
 constexpr float JUMPATTACK_MOVE_FRAME = 25.0f;	// ジャンプ攻撃の移動フレーム
-constexpr int INIT_NEXT_ACTION = 999;			// 絶対に被らない数値
+constexpr int INIT_NEXT_ACTION = 999;			// 次のアクションに移行する数値(初期化)
 constexpr int MAX_AWAYPOS_X = 1300;				// 最大の離れる位置X
 constexpr int MAX_AWAYPOS_Z = 1300;				// 最大の離れる位置Z
 constexpr float AWAY_TIME = 24.0f;				// ジャンプする時間
@@ -349,7 +349,7 @@ void CEnemyAttackSmash::Update(void)
 			pPlayer->BlowOff(pos, 10.0f, 10.0f);
 
 			// プレイヤーのモーションの設定
-			pPlayerMotion->SetMotion(pPlayer->TYPE_DAMAGE, true, 2);
+			pPlayerMotion->SetMotion(pPlayer->MOTIONTYPE_DAMAGE, true, 2);
 
 			// プレイヤー状態の変更
 			pPlayer->ChangeState(make_shared<CPlayerDamage>(2));
@@ -733,7 +733,7 @@ void CEnemySpin::Update(void)
 	int nTime = m_nMaxTime - ABSSPIN_TIME;
 
 	// プレイヤーがダメージを受けて絶対回転する時間が終わったら
-	if (pPlayerMotion->GetBlendType() == pPlayer->TYPE_DAMAGE && nTime >= m_nTime)
+	if (pPlayerMotion->GetBlendType() == pPlayer->MOTIONTYPE_DAMAGE && nTime >= m_nTime)
 	{
 		if (pMotion->FinishMotion())
 		{
@@ -1041,8 +1041,8 @@ void CEnemyGuard::Init(void)
 	// ボスまでの角度を取得
 	float fAngle = GetTargetAngle(pos, PlayerPos);
 
-	// 吹き飛ばす
-	m_pEnemy->GetMovement()->BlowOff(PlayerPos,100.0f, 0.0f);
+	//// 吹き飛ばす
+	//m_pEnemy->GetMovement()->BlowOff(PlayerPos,100.0f, 0.0f);
 
 	// 向きの設定
 	pPlayer->SetAngle(fAngle + D3DX_PI);
@@ -1251,7 +1251,7 @@ void CEnemySwing::Update(void)
 				pPlayer->BlowOff(pos, 10.0f, 10.0f);
 
 				// プレイヤーのモーションの設定
-				pPlayerMotion->SetMotion(pPlayer->TYPE_DAMAGE, true, 2);
+				pPlayerMotion->SetMotion(pPlayer->MOTIONTYPE_DAMAGE, true, 2);
 
 				// プレイヤー状態の変更
 				pPlayer->ChangeState(make_shared<CPlayerDamage>(2));

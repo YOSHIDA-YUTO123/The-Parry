@@ -53,7 +53,7 @@ public:
 	CEffect3D(int nPriority = 4);
 	~CEffect3D();
 
-	static CEffect3D* Create(const D3DXVECTOR3 pos, const float fRadius, const D3DXCOLOR col);
+	static CEffect3D* Create(const D3DXVECTOR3 pos, const float fRadius, const D3DXCOLOR col, const TYPE type);
 	void Set(const int nLife, const D3DXVECTOR3 move);
 
 	virtual HRESULT Init(void) override;
@@ -67,6 +67,7 @@ protected:
 	Data GetData(void) const { return m_Data; }
 	void SetData(const Data data) { m_Data = data; }
 private:
+	TYPE m_type; // エフェクトの種類
 	Data m_Data; // エフェクトのデータ
 };
 

@@ -184,6 +184,56 @@ void CObjectBillboard::Draw(void)
 }
 
 //===================================================
+// マトリックスの設定処理
+//===================================================
+void CObjectBillboard::SetMatrix(const D3DXMATRIX mtxRot, const D3DXMATRIX mtxTrans)
+{
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+	// ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&m_mtxWorld);
+
+	m_mtxWorld = mtxRot;
+
+	// 位置の反映
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
+	// ワールドマトリックスの設定
+	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+}
+
+//===================================================
+// 描画の設定処理
+//===================================================
+void CObjectBillboard::SetUpDraw(void)
+{
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+	// テクスチャクラスの取得
+	CTextureManager* pTexture = CManager::GetTexture();
+
+	// ライトを無効にする
+	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+
+	// 頂点バッファをデータストリームに設定
+	pDevice->SetStreamSource(0, m_pVtxBuffer, 0, sizeof(VERTEX_3D));
+
+	// 頂点フォーマットの設定
+	pDevice->SetFVF(FVF_VERTEX_3D);
+
+	//テクスチャの設定
+	pDevice->SetTexture(0, pTexture->GetAdress(m_nTextureIdx));
+
+	// ポリゴンの描画
+	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+	
+	// ライトを有効にする
+	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+}
+
+//===================================================
 // 頂点の色の設定
 //===================================================
 void CObjectBillboard::SetColor(const D3DXCOLOR col)

@@ -150,7 +150,7 @@ void CObject2D::SetVtx(const D3DXCOLOR col)
 //===================================================
 // オブジェクト2Dの生成処理
 //===================================================
-CObject2D* CObject2D::Create(const float fWidth, const float fHeight, const D3DXVECTOR3 pos)
+CObject2D* CObject2D::Create(const float fWidth, const float fHeight, const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 {
 	CObject2D* pObject2D = nullptr;
 
@@ -160,6 +160,7 @@ CObject2D* CObject2D::Create(const float fWidth, const float fHeight, const D3DX
 	if (pObject2D == nullptr) return nullptr;
 
 	pObject2D->Init();
+	pObject2D->m_rot = rot;
 	pObject2D->m_pos = pos;
 	pObject2D->m_Size = { fWidth,fHeight };
 	pObject2D->SetSize(fWidth, fHeight);

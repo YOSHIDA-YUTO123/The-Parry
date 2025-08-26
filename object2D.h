@@ -27,7 +27,7 @@ public:
 	CObject2D(int nPriority = 7);
 	~CObject2D();
 
-	static CObject2D* Create(const float fWidth, const float fHeight, const D3DXVECTOR3 pos);
+	static CObject2D* Create(const float fWidth, const float fHeight, const D3DXVECTOR3 pos,const D3DXVECTOR3 rot = Const::VEC3_NULL);
 
 	virtual HRESULT Init(void) override;
 	virtual void Uninit(void) override;
@@ -38,7 +38,8 @@ public:
 	D3DXVECTOR2 GetSize(void) const { return m_Size; }
 
 	void SetPosition(const D3DXVECTOR3 pos) { m_pos = pos; }
-	
+	void SetRotaition(const D3DXVECTOR3 rot) { m_rot = rot; }
+
 	void SetVtx(const D3DXCOLOR col);
 	void SetSize(const D3DXVECTOR2 Size) { m_Size = Size; }
 	void SetSize(const float fWidth, const float fHeight);

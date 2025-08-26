@@ -103,10 +103,10 @@ HRESULT CNumber::Init(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size)
 void CNumber::Uninit(void)
 {
 	// 頂点バッファの破棄
-	if (m_pVtxBuffer != NULL)
+	if (m_pVtxBuffer != nullptr)
 	{
 		m_pVtxBuffer->Release();
-		m_pVtxBuffer = NULL;
+		m_pVtxBuffer = nullptr;
 	}
 }
 

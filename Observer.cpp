@@ -10,6 +10,7 @@
 //***************************************************
 #include "Observer.h"
 #include"Gage.h"
+#include"RevengeGage.h"
 
 //===================================================
 // コンストラクタ
@@ -56,11 +57,38 @@ CStaminaObserver::~CStaminaObserver()
 //===================================================
 // スタミナゲージの通知処理
 //===================================================
-void CStaminaObserver::OnNotify(const float nValue)
+void CStaminaObserver::OnNotify(const float fValue)
 {
 	if (m_pStaminaGage != nullptr)
 	{
 		// スタミナの設定
-		m_pStaminaGage->Set(nValue);
+		m_pStaminaGage->Set(fValue);
+	}
+}
+
+//===================================================
+// コンストラクタ
+//===================================================
+CRevengeUIObserver::CRevengeUIObserver(CRevengeUI* pRevenge)
+{
+	m_pRevengeValue = pRevenge;
+}
+
+//===================================================
+// デストラクタ
+//===================================================
+CRevengeUIObserver::~CRevengeUIObserver()
+{
+}
+
+//===================================================
+// 通知処理
+//===================================================
+void CRevengeUIObserver::OnNotify(const float fValue)
+{
+	if (m_pRevengeValue != nullptr)
+	{
+		// スタミナの設定
+		m_pRevengeValue->Set(fValue);
 	}
 }

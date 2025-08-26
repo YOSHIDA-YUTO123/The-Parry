@@ -21,6 +21,7 @@
 //***************************************************
 class CHpGage;
 class CStaminaGage;
+class CRevengeUI;
 
 //***************************************************
 // オブザーバークラスの定義
@@ -44,7 +45,7 @@ public:
 	~CHpObserver();
 	void OnNotify(const int nValue) override;
 private:
-	CHpGage* m_pHpGage;
+	CHpGage* m_pHpGage; // HPゲージへのポインタ
 };
 
 //***************************************************
@@ -55,9 +56,22 @@ class CStaminaObserver : public CObserver<float>
 public:
 	CStaminaObserver(CStaminaGage* pStaminaGage);
 	~CStaminaObserver();
-	void OnNotify(const float nValue) override;
+	void OnNotify(const float fValue) override;
 private:
-	CStaminaGage* m_pStaminaGage;
+	CStaminaGage* m_pStaminaGage; // スタミナゲージへのポインタ
+};
+
+//***************************************************
+// 反撃オブザーバークラスの定義
+//***************************************************
+class CRevengeUIObserver : public CObserver<float>
+{
+public:
+	CRevengeUIObserver(CRevengeUI* pRevenge);
+	~CRevengeUIObserver();
+	void OnNotify(const float fValue) override;
+private:
+	CRevengeUI* m_pRevengeValue; // 反撃クラスへのポインタ
 };
 
 #endif

@@ -1050,8 +1050,13 @@ CEnemy::RESULT CEnemy::AttackResult(CPlayer* pPlayer)
 	// プレイヤーのモーションの取得
 	int playerMotionType = pPlayerMotion->GetBlendType();
 
+	if (CollisionWepon() && playerMotionType == pPlayer->MOTIONTYPE_REVENGE)
+	{
+		// パリィした
+		return RESULT_SPREVENGE;
+	}
 	// 武器が当たったら
-	if (CollisionWepon() && playerMotionType != pPlayer->TYPE_PARRY)
+	else if (CollisionWepon() && playerMotionType != pPlayer->MOTIONTYPE_PARRY)
 	{
 		// パリィできるか判定
 		const bool bParry = pPlayer->IsParry(pos);
@@ -1063,7 +1068,7 @@ CEnemy::RESULT CEnemy::AttackResult(CPlayer* pPlayer)
 			return RESULT_PARRY;
 		}
 		// 回避だったら
-		else if (playerMotionType == pPlayer->TYPE_AVOID)
+		else if (playerMotionType == pPlayer->MOTIONTYPE_AVOID)
 		{
 			// 回避した
 			return RESULT_AVOID;
@@ -1146,7 +1151,7 @@ void CEnemy::CollisionPlayer(CMotion *pPlayerMotion,CPlayer *pPlayer)
 	D3DXVECTOR3 PlayerPos = pPlayer->GetPosition();
 
 	// パリィモーションの蹴りになったら
-	if (pPlayerMotion->IsEventFrame(38, 38, pPlayer->TYPE_ROUNDKICK) && IsDamageMotion() == false)
+	if (pPlayerMotion->IsEventFrame(38, 38, pPlayer->MOTIONTYPE_ROUNDKICK) && IsDamageMotion() == false)
 	{
 		// プレイヤーの右足の位置
 		D3DXVECTOR3 playerFootR = pPlayer->GetModelPos(11);
@@ -1167,7 +1172,7 @@ void CEnemy::CollisionPlayer(CMotion *pPlayerMotion,CPlayer *pPlayer)
 	}
 
 	// パリィモーションの蹴りになったら
-	if (pPlayerMotion->IsEventFrame(13, 13, pPlayer->TYPE_PUNCH) && IsDamageMotion() == false)
+	if (pPlayerMotion->IsEventFrame(13, 13, pPlayer->MOTIONTYPE_PUNCH) && IsDamageMotion() == false)
 	{
 		// プレイヤーの右手の位置
 		D3DXVECTOR3 playerHandR = pPlayer->GetModelPos(5);

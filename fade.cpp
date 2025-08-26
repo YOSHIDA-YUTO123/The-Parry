@@ -228,7 +228,7 @@ void CFade::Draw(void)
 
 	// テクスチャがない
 	pDevice->SetTexture(0, NULL);
-	
+
 	// プレイヤーの描画
 	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2); // プリミティブの種類	
 }

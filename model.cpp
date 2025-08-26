@@ -177,6 +177,10 @@ void CModel::Draw(void)
 
 	for (int nCntMat = 0; nCntMat < (int)dwNumMat; nCntMat++)
 	{
+		//pMat[nCntMat].MatD3D.Diffuse.r = 1.0f;
+		//pMat[nCntMat].MatD3D.Diffuse.g = 0.39f;
+		//pMat[nCntMat].MatD3D.Diffuse.b = 0.1f;
+
 		//ƒ}ƒeƒŠƒAƒ‹‚ÌÝ’è
 		pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
 

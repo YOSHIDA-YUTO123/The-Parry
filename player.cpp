@@ -41,6 +41,9 @@
 #include "ZoneParticle.h"
 #include "overlay.h"
 #include"math.h"
+#include "ParticleSpark.h"
+#include"light.h"
+
 
 using namespace math; // 名前空間mathを使用
 using namespace std;  // 名前空間をstdを使用する
@@ -62,6 +65,7 @@ constexpr float AVOID_STAMINA = 15.0f;		// 回避に使用するスタミナ
 //===================================================
 CPlayer::CPlayer()
 {
+	m_fRevengeValue = NULL;
 	m_pMachine = nullptr;				// ステートマシーン
 	m_pMovement = nullptr;
 	m_pFOV = nullptr;
@@ -74,6 +78,7 @@ CPlayer::CPlayer()
 	m_bDash = false;
 	m_pHpObserver = nullptr;
 	m_pStaminaObserver = nullptr;
+	m_pRevengeObserver = nullptr;
 	m_pOrbit = nullptr;
 	m_nAttackCounter = NULL;
 	m_fStamina = NULL;
@@ -92,7 +97,7 @@ CPlayer::~CPlayer()
 HRESULT CPlayer::Init(void)
 {
 	// モーションのロード処理
-	LoadMotion("data/MOTION/motionPlayer.txt", TYPE_MAX);
+	LoadMotion("data/MOTION/motionPlayer.txt", MOTIONTYPE_MAX);
 
 	// キャラクターの初期化処理
 	CCharacter3D::Init();
@@ -154,6 +159,12 @@ void CPlayer::Uninit(void)
 	{
 		delete m_pStaminaObserver;
 		m_pStaminaObserver = nullptr;
+	}
+	// 反撃オブザーバーの破棄
+	if (m_pRevengeObserver != nullptr)
+	{
+		delete m_pRevengeObserver;
+		m_pRevengeObserver = nullptr;
 	}
 
 	m_pFOV = nullptr;
@@ -241,10 +252,10 @@ void CPlayer::Update(void)
 			CCharacter3D::GetRotaition()->SetDest(D3DXVECTOR3(0.0f, fAngleDest, 0.0f));
 
 			// ダッシュモーションか歩きモーションかを判定
-			int isDashMotion = (m_bDash ? TYPE_DASH : TYPE_MOVE);
+			int isDashMotion = (m_bDash ? MOTIONTYPE_DASH : MOTIONTYPE_MOVE);
 
 			// ジャンプかjumpじゃないかを判定
-			int motiontype = m_bJump ? isDashMotion : TYPE_JUMP;
+			int motiontype = m_bJump ? isDashMotion : MOTIONTYPE_JUMP;
 
 			// フレームを設定
 			const int nFrame = m_bDash ? 5 : 10;
@@ -256,7 +267,7 @@ void CPlayer::Update(void)
 			CCharacter3D::SetState(STATE::STATE_MOVE, 1);
 
 			// ダッシュ状態だったら
-			if (motiontype == TYPE::TYPE_DASH)
+			if (motiontype == MOTIONTYPE_DASH)
 			{
 				// 状態の変更
 				ChangeState(make_shared<CPlayerDash>());
@@ -273,9 +284,9 @@ void CPlayer::Update(void)
 			int motiontype = pMotion->GetBlendType();
 
 			// 移動状態だったら
-			if (motiontype == TYPE_MOVE || motiontype == TYPE_DASH && pMotion != nullptr)
+			if (motiontype == MOTIONTYPE_MOVE || motiontype == MOTIONTYPE_DASH && pMotion != nullptr)
 			{
-				pMotion->SetMotion(TYPE_NEUTRAL, true, 15);
+				pMotion->SetMotion(MOTIONTYPE_NEUTRAL, true, 15);
 
 				// 状態の変更
 				ChangeState(make_shared<CPlayerNormal>());
@@ -293,6 +304,7 @@ void CPlayer::Update(void)
 		m_bDash = false;
 	}
 
+	// 位置の取得
 	D3DXVECTOR3 pos = CCharacter3D::GetPosition();
 
 	// 移動量の減衰
@@ -322,7 +334,7 @@ void CPlayer::Update(void)
 		m_bJump = true;
 
 		// モーションがジャンプだったら
-		if (pMotion->GetBlendType() == TYPE_JUMP)
+		if (pMotion->GetBlendType() == MOTIONTYPE_JUMP)
 		{
 			// 着地状態に派生
 			ChangeState(make_shared<CPlayerLanding>());
@@ -342,12 +354,12 @@ void CPlayer::Update(void)
 		// ここに処理があれば書く
 	}
 
-	if (pMotion->IsEventFrame(24, 24, TYPE_ROUNDKICK))
+	if (pMotion->IsEventFrame(24, 24, MOTIONTYPE_ROUNDKICK))
 	{
 		// 軌跡のリセット
 		DeleteOrbit();
 	}
-	else if (pMotion->IsEventFrame(25, 35, TYPE_ROUNDKICK))
+	else if (pMotion->IsEventFrame(25, 35, MOTIONTYPE_ROUNDKICK))
 	{
 		// 軌跡の設定
 		Orbit(32, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
@@ -383,23 +395,23 @@ void CPlayer::Update(void)
 		pCamera->SetState(state);
 	}
 
-	// ジャンプできるなら
-	if ((pKeyboard->GetTrigger(DIK_SPACE) == true || pJoypad->GetTrigger(pJoypad->JOYKEY_A) == true) && m_bJump == true)
-	{
-		// 生きてるなら
-		if (bAlive)
-		{
-			// ジャンプ状態に移行する
-			ChangeState(make_shared<CPlayerJump>());
+	//// ジャンプできるなら
+	//if ((pKeyboard->GetTrigger(DIK_SPACE) == true || pJoypad->GetTrigger(pJoypad->JOYKEY_A) == true) && m_bJump == true)
+	//{
+	//	// 生きてるなら
+	//	if (bAlive)
+	//	{
+	//		// ジャンプ状態に移行する
+	//		ChangeState(make_shared<CPlayerJump>());
 
-			// 移動量を上方向に設定
-			m_pMove->Jump(JUMP_HEIGHT);
-			m_bJump = false;
-		}
-	}
+	//		// 移動量を上方向に設定
+	//		m_pMove->Jump(JUMP_HEIGHT);
+	//		m_bJump = false;
+	//	}
+	//}
 
 	// 回避ボタンを押したかつ生きているなら
-	if ((pKeyboard->GetTrigger(DIK_F) || pJoypad->GetTrigger(pJoypad->JOYKEY_B)) && bAlive)
+	if ((pKeyboard->GetTrigger(DIK_SPACE) || pJoypad->GetTrigger(pJoypad->JOYKEY_B)) && bAlive)
 	{
 		// 回避できるなら
 		if (IsAvoid(pMotion))
@@ -425,26 +437,35 @@ void CPlayer::Update(void)
 			//auto pOverlay = COverlay::Create(D3DXVECTOR3(640.0f, 360.0f, 0.0f), D3DXVECTOR2(640.0f, 360.0f), 120);
 			//pOverlay->SetTextureID("data/TEXTURE/overlay/overlay.png");
 
-			pMotion->SetMotion(TYPE_STANCE, true, 5);
+			pMotion->SetMotion(MOTIONTYPE_STANCE, true, 5);
 
 			// パリィの時間
 			m_nParryTime = PARRY_TIME;
 			m_nParryCounter = 0;
 
 			CCharacter3D::SetState(STATE_ACTION, PARRY_TIME);
+
+			//// 左手の位置
+			//D3DXVECTOR3 playerHandL = CCharacter3D::GetModelPos(8);
+
+			//auto pEffect = CEffect3D::Create(playerHandL, 100.0f, D3DCOLOR_RGBA(255, 215, 0, 255), CEffect3D::TYPE_HIT);
+			//pEffect->Set(60, VEC3_NULL);
 		}
 	}
 
-	if (pMotion->IsEventFrame(13, 13, TYPE_STANCE))
+	if (pMotion->IsEventFrame(13, 13, MOTIONTYPE_STANCE))
 	{
-		D3DXVECTOR3 handRpos = GetModelPos(8);
-		auto pParticle = CZoneParticle3D::Create(handRpos, 10, D3DCOLOR_RGBA(200, 200, 200, 255));
-		pParticle->SetParticle(3.0f, 60, 20, PARRY_TIME, 314);
-		pParticle->SetZone(handRpos, 500);
+		//D3DXVECTOR3 handRpos = GetModelPos(8);
+		//auto pParticle = CParticle3DNormal::Create(handRpos, 10.0f, WHITE);
+		//pParticle->SetParticle(10.0f, 60, 1, 1, 120);
+
+		//auto pParticle = CZoneParticle3D::Create(handRpos, 10, D3DCOLOR_RGBA(200, 200, 200, 255));
+		//pParticle->SetParticle(3.0f, 60, 20, PARRY_TIME, 314);
+		//pParticle->SetZone(handRpos, 500);
 	}
 
 	// ズームインだったら解除
-	if (pMotion->GetBlendType() != TYPE_PARRY)
+	if (pMotion->GetBlendType() != MOTIONTYPE_PARRY)
 	{
 		if (pCamera->GetState() == CGameCamera::STATE_ZOOMIN)
 		{
@@ -493,6 +514,20 @@ void CPlayer::Update(void)
 		m_pMachine->Update();
 	}
 
+	// 反撃ゲージが最大を超えたら
+	if (m_fRevengeValue >= MAX_REVENGE)
+	{
+		m_fRevengeValue = MAX_REVENGE;
+
+		if (pKeyboard->GetTrigger(DIK_Q))
+		{
+			// 状態の遷移
+			ChangeState(make_shared<CPlayerRevenge>());
+
+			m_fRevengeValue = 0.0f;
+		}
+	}
+
 	// コライダーの更新
 	UpdateCollider(pos);
 
@@ -539,11 +574,22 @@ void CPlayer::Update(void)
 		pC->Set(pC->TYPE_VIEW);
 	}
 
+	if (pKeyboard->GetTrigger(DIK_Y))
+	{
+		// パーティクルの生成
+		auto pParticle = CParticleSpark::Create(GetModelPos(2), D3DXVECTOR2(3.0f,20.0f), D3DXCOLOR(1.0f, 0.2f, 0.2f, 1.0f));
+
+		pParticle->SetParticle(10.0f, 60, 50, 1, 180);
+	}
 	if (pC != nullptr)
 	{
 		pC->SetPosition(pos);
 	}
 
+	if (pKeyboard->GetPress(DIK_9))
+	{
+		m_fRevengeValue += 1.0f;
+	}
 #endif // _DEBUG
 }
 
@@ -602,9 +648,14 @@ void CPlayer::Draw(void)
 		D3DCOLOR_RGBA(0, 255, 255, 255), 1.0f, 0);
 #endif
 
+	//D3DXVECTOR3 headpos = GetModelPos(2);
+
+	//CManager::GetLight()->SetPoint(headpos,500.0f,D3DXCOLOR(1.0f,0.39f,0.0f,1.0f), D3DXCOLOR(1.0f, 0.39f, 0.0f, 1.0f));
+
 	// キャラクターの描画
 	CCharacter3D::Draw();
 
+	//CManager::GetLight()->DeleteLight();
 #if 0
 
 	// レンダーターゲットをもとに戻す
@@ -968,16 +1019,22 @@ int CPlayer::SuccessParry(void)
 	// パーフェクトだったら
 	if (m_nParryCounter >= 0 && m_nParryCounter <= 3)
 	{
+		m_fRevengeValue += 10;
+
 		// 完璧
 		return PARRY_PARFECT;
 	}
 	else if (m_nParryCounter > 3 && m_nParryCounter <= 10)
 	{
+		m_fRevengeValue += 5;
+
 		// 普通
 		return PARRY_NORMAL;
 	}
 	else if (m_nParryCounter > 10 && m_nParryCounter <= m_nParryTime)
 	{
+		m_fRevengeValue += 3;
+
 		// 弱い
 		return PARRY_WEAK;
 	}
@@ -1100,8 +1157,8 @@ bool CPlayer::IsParry(const D3DXVECTOR3 pos)
 	// 視界内かつ状態が攻撃の時
 	if (CCharacter3D::GetState() == CCharacter3D::STATE_ACTION &&
 		pCollision->Collision(pos, m_pFOV.get()) &&
-		pMotion->GetBlendType() != TYPE_PARRY&&
-		pMotion->GetBlendType() != TYPE_DAMAGE)
+		pMotion->GetBlendType() != MOTIONTYPE_PARRY&&
+		pMotion->GetBlendType() != MOTIONTYPE_DAMAGE)
 	{
 		return true;
 	}
@@ -1173,6 +1230,65 @@ void CPlayer::Orbit(const int nSegH, const D3DXCOLOR col)
 }
 
 //===================================================
+// 絶対反撃のエフェクトの設定
+//===================================================
+void CPlayer::SetRevengeEffect(void)
+{
+	// カメラの取得
+	CGameCamera* pCamera = CGame::GetCamera();
+
+	// カメラの揺れ
+	pCamera->SetShake(40, 30);
+
+	// 左足の位置
+	D3DXVECTOR3 FootL = GetModelPos(MODEL_FOOTL);
+
+	// フィールドの波の設定
+	CMeshFieldWave::Config config = { FootL,250.0f,380.0f,280.0f,12.0f,0.01f,120 };
+
+	// メッシュフィールドの取得処理
+	CMeshField* pMeshField = CGame::GetField();
+
+	if (pMeshField != nullptr)
+	{
+		// 地面に波を発生させる
+		pMeshField->SetWave(config);
+	}
+
+	// メッシュサークルの生成
+	auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 0.5f, 0.5f, 1.0f), FootL, 0.0f, 35.0f);
+
+	// サークルの設定処理
+	pCircle->SetCircle(0.0f, 50.0f, 60, true);
+
+	const int NUM_RUBBLE = 16;
+
+	// 瓦礫の数分出す
+	for (int nCnt = 0; nCnt < NUM_RUBBLE; nCnt++)
+	{
+		// 分割に応じた方向を求める
+		float fAngle = (D3DX_PI * 2.0f) / NUM_RUBBLE * nCnt;
+
+		// 吹っ飛び量を選出
+		float dir = rand() % 15 + 5.0f;
+		float Jump = rand() % 15 + 25.0f;
+
+		// 方向に応じた吹っ飛び量を計算
+		float fMoveX = sinf(fAngle) * dir;
+		float fMoveZ = cosf(fAngle) * dir;
+
+		// 寿命を選出
+		int nLife = rand() % 120 + 60;
+
+		// 種類を選出
+		int nType = rand() % CRubble::TYPE_MAX;
+
+		// 瓦礫を生成
+		CRubble::Create(FootL, D3DXVECTOR3(fMoveX, Jump, fMoveZ), nLife, nType);
+	}
+}
+
+//===================================================
 // 剣の軌跡の削除
 //===================================================
 void CPlayer::DeleteOrbit(void)
@@ -1215,35 +1331,31 @@ void CPlayer::SetStance(void)
 	if (pMotion != nullptr)
 	{
 		// モーションの再生
-		pMotion->SetMotion(TYPE_PARRY, false, 0);
+		pMotion->SetMotion(MOTIONTYPE_PARRY, false, 0);
 
 		// モーションを更新してポーズを設定
 		CPlayer::UpdateMotion();
 	}
 
-	// 右手の位置
-	D3DXVECTOR3 playerHandR = CCharacter3D::GetModelPos(8);
+	// 左手の位置
+	D3DXVECTOR3 playerHandL = CCharacter3D::GetModelPos(8);
+	
+	auto pEffect = CEffect3D::Create(playerHandL, 100.0f, D3DCOLOR_RGBA(255, 215, 0, 255),CEffect3D::TYPE_HIT);
+	pEffect->Set(60, VEC3_NULL);
 
 	// パーティクルの生成
-	auto pParticle = CParticle3DNormal::Create(playerHandR, 15.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-
-	// パーティクルの設定処理
-	pParticle->SetParticle(15.0f, 120, 60, 1, 314);
-	pParticle->SetParam(CEffect3D::TYPE_HIT);
-
-	// パーティクルの生成
-	pParticle = CParticle3DNormal::Create(playerHandR, 15.0f, D3DCOLOR_RGBA(147, 112, 219,255));
-
-	// パーティクルの設定処理
-	pParticle->SetParticle(15.0f, 120, 300, 1, 314);
-	pParticle->SetParam(CEffect3D::TYPE_NORAML);
+	CParticleSpark* pSpark = CParticleSpark::Create(playerHandL, D3DXVECTOR2(3.0f, 40.0f), D3DCOLOR_RGBA(255, 127, 80,255));
+	pSpark->SetParticle(15.0f, 60, 150, 1, -180);
+	
+	pSpark = CParticleSpark::Create(playerHandL, D3DXVECTOR2(3.0f, 40.0f), D3DCOLOR_RGBA(106, 90, 205, 255));
+	pSpark->SetParticle(15.0f, 60, 150, 1, -180);
 
 	// パーティクルの生成
-	pParticle = CParticle3DNormal::Create(playerHandR, 15.0f, D3DCOLOR_RGBA(255, 165, 10, 255));
+	CParticle3DNormal *pNormal = CParticle3DNormal::Create(playerHandL, 35.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
 	// パーティクルの設定処理
-	pParticle->SetParticle(15.0f, 120, 300, 1, 314);
-	pParticle->SetParam(CEffect3D::TYPE_NORAML);
+	pNormal->SetParticle(15.0f, 120, 60, 1, 314);
+	pNormal->SetParam(CEffect3D::TYPE_HIT);
 }
 
 //===================================================
@@ -1285,7 +1397,7 @@ void CPlayer::CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos, CMotion
 		D3DXVECTOR3 playerHandR = GetModelPos(5);
 
 		// モーションをダメージにする
-		pMotion->SetMotion(TYPE_PUNCH, true, 2);
+		pMotion->SetMotion(MOTIONTYPE_PUNCH, true, 2);
 
 		// パーティクルの生成
 		auto pParticle = CParticle3DNormal::Create(playerHandR, 20.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
@@ -1303,7 +1415,7 @@ void CPlayer::CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos, CMotion
 		pMeshField->ResetImpact(dir, CMeshFieldImpact::OBJ_PLAYER, playerHandR, D3DXCOLOR(1.0f, 1.0f, 0.5f, 1.0f));
 	}
 	// インパクトの当たり判定
-	else if (bCollision && pMotion->GetBlendType() != TYPE_DAMAGE)
+	else if (bCollision && pMotion->GetBlendType() != MOTIONTYPE_DAMAGE)
 	{
 		// 吹き飛び処理
 		BlowOff(ImpactPos, 50.0f, 10.0f);
@@ -1322,22 +1434,22 @@ bool CPlayer::IsMove(CMotion *pMotion)
 	int motiontype = pMotion->GetBlendType();
 	
 	// ダメージ状態だったら移動できない
-	if (motiontype == TYPE_DAMAGE) return false;
+	if (motiontype == MOTIONTYPE_DAMAGE) return false;
 	
 	// 回避状態だったら移動できない
-	if (motiontype == TYPE_AVOID) return false;
+	if (motiontype == MOTIONTYPE_AVOID) return false;
 	
 	// カウンター状態だったら移動できない
-	if (pMotion->IsEventFrame(1, 40, TYPE_PARRY)) return false;
+	if (pMotion->IsEventFrame(1, 40, MOTIONTYPE_PARRY)) return false;
 	
 	// パリィだったら移動できない
-	if (motiontype == TYPE_PUNCH) return false;
+	if (motiontype == MOTIONTYPE_PUNCH) return false;
 	
 	// 反撃状態だったら移動できない
-	if (motiontype == TYPE_ROUNDKICK) return false;
+	if (motiontype == MOTIONTYPE_ROUNDKICK) return false;
 	
 	// 構え状態だったら移動できない
-	if (pMotion->IsEventFrame(1,35, TYPE_STANCE)) return false;
+	if (pMotion->IsEventFrame(1,35, MOTIONTYPE_STANCE)) return false;
 	
 	// 移動できる
 	return true;
@@ -1352,13 +1464,13 @@ bool CPlayer::IsStance(CMotion* pMotion)
 	int motiontype = pMotion->GetBlendType();
 	
 	// ダメージモーションだったら
-	if (motiontype == TYPE_DAMAGE) return false;
+	if (motiontype == MOTIONTYPE_DAMAGE) return false;
 		
 	// 構え状態だったら
-	if (motiontype == TYPE_STANCE) return false;
+	if (motiontype == MOTIONTYPE_STANCE) return false;
 	
 	// 回避状態だったら
-	if (motiontype == TYPE_AVOID) return false;
+	if (motiontype == MOTIONTYPE_AVOID) return false;
 	
 	return true;
 }
@@ -1372,16 +1484,16 @@ bool CPlayer::IsAvoid(CMotion* pMotion)
 	int motiontype = pMotion->GetBlendType();
 	
 	// 反撃受付時間は回避できない
-	if (pMotion->IsEventFrame(1, m_nParryTime, TYPE_STANCE)) return false;
+	if (pMotion->IsEventFrame(1, m_nParryTime, MOTIONTYPE_STANCE)) return false;
 	
 	// 反撃モーションの時一定時間回避できない
-	if (pMotion->IsEventFrame(1, 15, TYPE_PARRY)) return false;
+	if (pMotion->IsEventFrame(1, 15, MOTIONTYPE_PARRY)) return false;
 	
 	// 回避モーションの時回避できない
-	if (motiontype == TYPE_AVOID) return false;
+	if (motiontype == MOTIONTYPE_AVOID) return false;
 	
 	// ジャンプ中は回避できない
-	if (motiontype == TYPE_JUMP) return false;
+	if (motiontype == MOTIONTYPE_JUMP) return false;
 	
 	// スタミナが消費分無かったら
 	if (m_fStamina < AVOID_STAMINA) return false;
@@ -1408,6 +1520,13 @@ void CPlayer::Notify(void)
 		// スタミナの変化を通知する
 		m_pStaminaObserver->OnNotify(m_fStamina);
 	}
+
+	if (m_pRevengeObserver != nullptr)
+	{
+		// 反撃量の変化を通知する
+		m_pRevengeObserver->OnNotify(m_fRevengeValue);
+	}
+
 }
 
 //===================================================

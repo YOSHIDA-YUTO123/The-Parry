@@ -28,10 +28,12 @@ public:
 
 	static CObjectBillboard* Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 size, const char* pTextureName);
 
-	virtual HRESULT Init(void);
-	virtual void Uninit(void);
-	virtual void Update(void);
-	virtual void Draw(void);
+	virtual HRESULT Init(void) override;
+	virtual void Uninit(void) override;
+	virtual void Update(void) override;
+	virtual void Draw(void) override;
+	void SetMatrix(const D3DXMATRIX mtxRot, const D3DXMATRIX mtxTrans);
+	void SetUpDraw(void);
 
 	D3DXVECTOR3 GetPosition(void) const { return m_pos; }
 	D3DXVECTOR2 GetSize(void) const { return m_Size; }

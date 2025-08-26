@@ -209,29 +209,10 @@ void CParticle3DNormal::Update(void)
 		if (info.nTime > 0)
 		{
 			// エフェクトの生成
-			auto pEffect = CEffect3D::Create(pos,fRadius,col);
+			auto pEffect = CEffect3D::Create(pos,fRadius,col,m_type);
 
 			// エフェクトの設定処理
 			pEffect->Set(nLife, moveWk);
-
-			// 種類の遷移
-			switch (m_type)
-			{
-			case CEffect3D::TYPE_NORAML:
-				// IDの設定
-				pEffect->SetTextureID("data/TEXTURE/effect/effect000.jpg");
-				break;
-			case CEffect3D::TYPE_HIT:
-				// IDの設定
-				pEffect->SetTextureID("data/TEXTURE/effect/star_A.jpg");
-				break;
-			case CEffect3D::TYPE_FIRE:
-				// IDの設定
-				pEffect->SetTextureID("data/TEXTURE/effect/smoke.jpg");
-				break;
-			default:
-				break;
-			}
 		}
 	}
 	

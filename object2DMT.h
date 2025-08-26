@@ -24,7 +24,7 @@ class CObject2DMT : public CObject
 public:
 
 	CObject2DMT();
-	~CObject2DMT();
+	virtual ~CObject2DMT();
 
 	static CObject2DMT* Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size);
 
@@ -45,7 +45,7 @@ public:
 	void SetSize(const D3DXVECTOR2 Size) { m_Size = Size; }
 	void SetColor(const D3DXCOLOR col) { m_col = col; }
 	void SetTextureID(const char* pTexture1, const char* pTexture2);
-
+	void SetTexture(const D3DXVECTOR2 tex0, const D3DXVECTOR2 tex1, const D3DXVECTOR2 tex2, const D3DXVECTOR2 tex3, const int nCnt);
 private:
 
 	static constexpr int MAX_TEXTURE = 2; // テクスチャの最大数

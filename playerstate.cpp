@@ -17,8 +17,9 @@
 #include "meshfield.h"
 #include "MoveSmoke.h"
 #include"GameCamera.h"
+#include "manager.h"
 
-using MOTION = CPlayer::TYPE; // プレイヤーの列挙型の使用
+using MOTION = CPlayer::MOTIONTYPE; // プレイヤーの列挙型の使用
 using namespace std;		  // 名前空間stdの使用
 using namespace Const;		  // 名前空間Constの使用
 
@@ -126,7 +127,7 @@ void CPlayerDamage::Init(void)
 	if (pMotion != nullptr)
 	{
 		// モーションの再生
-		pMotion->SetMotion(MOTION::TYPE_DAMAGE, true, 2);
+		pMotion->SetMotion(MOTION::MOTIONTYPE_DAMAGE, true, 2);
 	}
 }
 
@@ -141,7 +142,7 @@ void CPlayerDamage::Update(void)
 	// モーションの取得
 	CMotion* pMotion = pPlayer->GetMotion();
 
-	if (pMotion->GetType() == MOTION::TYPE_DAMAGE)
+	if (pMotion->GetType() == MOTION::MOTIONTYPE_DAMAGE)
 	{
 		// モーションが終わったら
 		if (pMotion != nullptr && pMotion->FinishMotion())
@@ -179,7 +180,7 @@ void CPlayerDownNeutral::Init(void)
 	if (pMotion != nullptr)
 	{
 		// モーションの再生
-		pMotion->SetMotion(MOTION::TYPE_DOWN_NEUTRAL, false, 5);
+		pMotion->SetMotion(MOTION::MOTIONTYPE_DOWN_NEUTRAL, false, 5);
 	}
 }
 
@@ -220,7 +221,7 @@ void CPlayerAvoid::Init(void)
 	if (pMotion != nullptr)
 	{
 		// モーションの再生
-		pMotion->SetMotion(MOTION::TYPE_AVOID, false, 5);
+		pMotion->SetMotion(MOTION::MOTIONTYPE_AVOID, false, 5);
 	}
 }
 
@@ -242,7 +243,7 @@ void CPlayerAvoid::Update(void)
 	if (pMotion != nullptr)
 	{
 		// 移動クラスの取得
-		if (pMoveMent != nullptr && pMotion->IsEventFrame(1,15,CPlayer::TYPE_AVOID))
+		if (pMoveMent != nullptr && pMotion->IsEventFrame(1,15,CPlayer::MOTIONTYPE_AVOID))
 		{
 			// 向いている方向に進む処理
 			pMoveMent->MoveForward(m_fSpeed);
@@ -289,7 +290,7 @@ void CPlayerRoundKick::Init(void)
 	if (pMotion != nullptr)
 	{
 		// モーションの再生
-		pMotion->SetMotion(MOTION::TYPE_ROUNDKICK,true, 2);
+		pMotion->SetMotion(MOTION::MOTIONTYPE_ROUNDKICK,true, 2);
 	}
 }
 
@@ -310,13 +311,13 @@ void CPlayerRoundKick::Update(void)
 		// 位置の取得
 		D3DXVECTOR3 pos = pPlayer->GetPosition();
 
-		if (pMotion->IsEventFrame(1, 10, pPlayer->TYPE_ROUNDKICK))
+		if (pMotion->IsEventFrame(1, 10, pPlayer->MOTIONTYPE_ROUNDKICK))
 		{
 			// 向いている方向に進む
 			pPlayer->GetMovement()->MoveForward(10.0f);
 		}
 
-		if (pMotion->IsEventFrame(15, 15, pPlayer->TYPE_ROUNDKICK))
+		if (pMotion->IsEventFrame(15, 15, pPlayer->MOTIONTYPE_ROUNDKICK))
 		{
 			// 移動量の設定
 			pPlayer->GetMovement()->Set(D3DXVECTOR3(0.0f, 18.0f, 0.0f));
@@ -326,7 +327,7 @@ void CPlayerRoundKick::Update(void)
 			pCircle->SetCircle(0.0f, 10.0f, 60, true);
 		}
 
-		if (pMotion->IsEventFrame(15, 17, pPlayer->TYPE_ROUNDKICK))
+		if (pMotion->IsEventFrame(15, 17, pPlayer->MOTIONTYPE_ROUNDKICK))
 		{
 			// エフェクトの生成
 			auto pEffect = CMoveSmoke::Create(D3DXVECTOR3(pos.x, pos.y + 50.0f, pos.z), 100.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
@@ -385,7 +386,7 @@ void CPlayerDash::Update(void)
 	if (pMotion != nullptr)
 	{
 		// 10フレーム目になったら
-		if (pMotion->IsEventFrame(10, 10, CPlayer::TYPE_DASH))
+		if (pMotion->IsEventFrame(10, 10, CPlayer::MOTIONTYPE_DASH))
 		{
 			// 位置の取得
 			D3DXVECTOR3 pos = pPlayer->GetModelPos(11);
@@ -397,7 +398,7 @@ void CPlayerDash::Update(void)
 			pEffect->SetEffect(60, D3DXVECTOR3(fMoveX, 0.0f, fMoveZ));
 		}
 		// 30フレーム目になったら
-		else if (pMotion->IsEventFrame(30, 30, CPlayer::TYPE_DASH))
+		else if (pMotion->IsEventFrame(30, 30, CPlayer::MOTIONTYPE_DASH))
 		{
 			// 位置の取得
 			D3DXVECTOR3 pos = pPlayer->GetModelPos(14);
@@ -440,7 +441,7 @@ void CPlayerJump::Init(void)
 	if (pMotion != nullptr)
 	{
 		// モーションの再生
-		pMotion->SetMotion(MOTION::TYPE_JUMP, true, 2);
+		pMotion->SetMotion(MOTION::MOTIONTYPE_JUMP, true, 2);
 	}
 }
 
@@ -481,7 +482,7 @@ void CPlayerLanding::Init(void)
 	if (pMotion != nullptr)
 	{
 		// 着地モーションの再生
-		pMotion->SetMotion(MOTION::TYPE_LANDING, true, 5);
+		pMotion->SetMotion(MOTION::MOTIONTYPE_LANDING, true, 5);
 	}
 
 	// 位置の取得
@@ -507,6 +508,66 @@ void CPlayerLanding::Update(void)
 
 	if (pMotion != nullptr)
 	{
+		// モーションが終わったら
+		if (pMotion->IsFinishEndBlend())
+		{
+			pPlayer->ChangeState(make_shared<CPlayerNormal>());
+		}
+	}
+}
+
+//===================================================
+// コンストラクタ(絶対反撃)
+//===================================================
+CPlayerRevenge::CPlayerRevenge() : CPlayerState(ID_REVENGE)
+{
+
+}
+
+//===================================================
+// デストラクタ(絶対反撃)
+//===================================================
+CPlayerRevenge::~CPlayerRevenge()
+{
+}
+
+//===================================================
+// 初期化処理
+//===================================================
+void CPlayerRevenge::Init(void)
+{
+	// プレイヤーの取得
+	auto pPlayer = GetPlayer();
+
+	// モーションの取得
+	CMotion* pMotion = pPlayer->GetMotion();
+
+	if (pMotion != nullptr)
+	{
+		// 着地モーションの再生
+		pMotion->SetMotion(MOTION::MOTIONTYPE_REVENGE, true, 5);
+	}
+}
+
+//===================================================
+// 更新処理
+//===================================================
+void CPlayerRevenge::Update(void)
+{
+	// プレイヤーの取得
+	auto pPlayer = GetPlayer();
+
+	// モーションの取得
+	CMotion* pMotion = pPlayer->GetMotion();
+
+	if (pMotion != nullptr)
+	{
+		if (pMotion->IsEventFrame(34, 34, MOTION::MOTIONTYPE_REVENGE))
+		{
+			// 演出処理
+			pPlayer->SetRevengeEffect();
+		}
+
 		// モーションが終わったら
 		if (pMotion->IsFinishEndBlend())
 		{

@@ -45,20 +45,24 @@ HRESULT CEffect3D::Init(void)
 		return E_FAIL;
 	}
 
-	//// í—Ş‚Ì‘JˆÚ
-	//switch (m_Data.type)
-	//{
-	//case TYPE_NORAML:
-	//	// ID‚Ìİ’è
-	//	CObjectBillboard::SetTextureID("data/TEXTURE/effect/effect000.jpg");
-	//	break;
-	//case TYPE_HIT:
-	//	// ID‚Ìİ’è
-	//	CObjectBillboard::SetTextureID("data/TEXTURE/effect/star_A.jpg");
-	//	break;
-	//default:
-	//	break;
-	//}
+	// í—Ş‚Ì‘JˆÚ
+	switch (m_type)
+	{
+	case CEffect3D::TYPE_NORAML:
+		// ID‚Ìİ’è
+		CEffect3D::SetTextureID("data/TEXTURE/effect/effect000.jpg");
+		break;
+	case CEffect3D::TYPE_HIT:
+		// ID‚Ìİ’è
+		CEffect3D::SetTextureID("data/TEXTURE/effect/star_A.jpg");
+		break;
+	case CEffect3D::TYPE_FIRE:
+		// ID‚Ìİ’è
+		CEffect3D::SetTextureID("data/TEXTURE/effect/smoke.jpg");
+		break;
+	default:
+		break;
+	}
 
 	// ˆÚ“®ƒNƒ‰ƒX‚Ì¶¬
 	m_Data.pMove = make_unique<CVelocity>();
@@ -182,7 +186,7 @@ HRESULT CEffect3D::SetUp(const D3DXVECTOR3 pos, const float fRadius, const D3DXC
 //===================================================
 // ¶¬ˆ—
 //===================================================
-CEffect3D* CEffect3D::Create(const D3DXVECTOR3 pos, const float fRadius, const D3DXCOLOR col)
+CEffect3D* CEffect3D::Create(const D3DXVECTOR3 pos, const float fRadius, const D3DXCOLOR col, const TYPE type)
 {
 	CEffect3D* pEffect = nullptr;
 
@@ -191,6 +195,7 @@ CEffect3D* CEffect3D::Create(const D3DXVECTOR3 pos, const float fRadius, const D
 
 	if (pEffect == nullptr) return nullptr;
 
+	pEffect->m_type = type;
 	pEffect->SetPosition(pos);
 	pEffect->SetSize(D3DXVECTOR2(fRadius, fRadius));
 	pEffect->Init();

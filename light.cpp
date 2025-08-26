@@ -17,8 +17,7 @@
 //===================================================
 CLight::CLight()
 {
-	m_nNumAll = -1;
-	//ZeroMemory(m_aLightInfo, sizeof(m_aLightInfo));
+	ZeroMemory(m_aLightInfo, sizeof(m_aLightInfo));
 }
 
 //===================================================
@@ -42,13 +41,9 @@ HRESULT CLight::Init(void)
 		// ライトを無効化
 		pDevice->LightEnable(nCnt, FALSE);
 	}
-	// 要素のクリア
-	m_aLightInfo.clear();
 
-	m_nNumAll = 0;
-
-	//// 値のクリア
-	//ZeroMemory(m_aLightInfo, sizeof(m_aLightInfo));
+	// 値のクリア
+	ZeroMemory(m_aLightInfo, sizeof(m_aLightInfo));
 
 	return S_OK;
 }
@@ -80,34 +75,40 @@ void CLight::SetDirectional(const D3DXCOLOR Diffuse,const D3DXVECTOR3 dir,const 
 	// ライトの情報
 	LightInfo info = {};
 
-	info.aLight.Type = D3DLIGHT_DIRECTIONAL;
-	info.aLight.Diffuse = Diffuse;
+	for (int nCnt = 0; nCnt < MAX_LIGHT; nCnt++)
+	{
+		// 使われていないなら
+		if (m_aLightInfo[nCnt].bUse == false)
+		{
+			info.aLight.Type = D3DLIGHT_DIRECTIONAL;
+			info.aLight.Diffuse = Diffuse;
 
-	// ライトの方向ベクトル
-	D3DXVECTOR3 Direction = dir;
+			// ライトの方向ベクトル
+			D3DXVECTOR3 Direction = dir;
 
-	// 正規化する
-	D3DXVec3Normalize(&Direction, &Direction);
+			// 正規化する
+			D3DXVec3Normalize(&Direction, &Direction);
 
-	// 方向ベクトルの代入
-	info.aLight.Direction = Direction;
+			// 方向ベクトルの代入
+			info.aLight.Direction = Direction;
 
-	// 位置の設定
-	info.aLight.Position = pos;
+			// 位置の設定
+			info.aLight.Position = pos;
 
-	info.bUse = true;
+			info.bUse = true;
 
-	// ライトの設定
-	pDevice->SetLight(m_nNumAll, &info.aLight);
+			// ライトの設定
+			pDevice->SetLight(nCnt, &info.aLight);
 
-	// ライトを有効化
-	pDevice->LightEnable(m_nNumAll, TRUE);
+			// ライトを有効化
+			pDevice->LightEnable(nCnt, TRUE);
 
-	// ライトの情報の設定
-	m_aLightInfo.push_back(info);
+			// 情報を設定
+			m_aLightInfo[nCnt] = info;
 
-	// 総数を加算
-	m_nNumAll++;
+			break;
+		}
+	}
 }
 
 //===================================================
@@ -121,32 +122,41 @@ void CLight::SetPoint(const D3DXVECTOR3 pos, const float fRange, const D3DXCOLOR
 	// ライトの情報
 	LightInfo info = {};
 
-	info.aLight.Type = D3DLIGHT_POINT;
+	for (int nCnt = 0; nCnt < MAX_LIGHT; nCnt++)
+	{
+		// 使われていないなら
+		if (m_aLightInfo[nCnt].bUse == false)
+		{
+			info.aLight.Type = D3DLIGHT_POINT;
+			info.aLight.Diffuse = Diffuse;
 
-	// ライトの位置
-	info.aLight.Position = pos;
+			// ライトの位置
+			info.aLight.Position = pos;
 
-	info.aLight.Diffuse = Diffuse;
+			info.aLight.Diffuse = Diffuse;
 
-	info.aLight.Ambient = Ambient;
+			info.aLight.Ambient = Ambient;
 
-	info.aLight.Specular = Diffuse;
-	info.aLight.Attenuation0 = 0.0f;
-	info.aLight.Attenuation1 = 0.002f;
-	info.aLight.Attenuation2 = 0.00f;
-	info.aLight.Range = fRange;
+			info.aLight.Specular = Diffuse;
+			info.aLight.Attenuation0 = 0.0f;
+			info.aLight.Attenuation1 = 0.002f;
+			info.aLight.Attenuation2 = 0.00f;
+			info.aLight.Range = fRange;
 
-	// ライトの設定
-	pDevice->SetLight(m_nNumAll, &info.aLight);
+			// ライトの設定
+			pDevice->SetLight(nCnt, &info.aLight);
 
-	// ライトを有効化
-	pDevice->LightEnable(m_nNumAll, TRUE);
+			// ライトを有効化
+			pDevice->LightEnable(nCnt, TRUE);
 
-	// ライトの情報の設定
-	m_aLightInfo.push_back(info);
+			// ライトの情報の設定
+			m_aLightInfo[nCnt] = info;
 
-	// 総数を加算
-	m_nNumAll++;
+			break;
+		}
+	}
+
+
 }
 
 //===================================================
@@ -154,7 +164,7 @@ void CLight::SetPoint(const D3DXVECTOR3 pos, const float fRange, const D3DXCOLOR
 //===================================================
 void CLight::SetLight(void)
 {
-	for (int nCnt = 0; nCnt < m_nNumAll; nCnt++)
+	for (int nCnt = 0; nCnt < MAX_LIGHT; nCnt++)
 	{
 		// デバイスの取得
 		LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
@@ -164,5 +174,25 @@ void CLight::SetLight(void)
 
 		// ライトを有効化
 		pDevice->LightEnable(nCnt, TRUE);
+	}
+}
+
+//===================================================
+// ディレクションライト以外の消去
+//===================================================
+void CLight::DeleteLight(void)
+{
+	// ライトの最大数分調べる
+	for (int nCnt = 0; nCnt < MAX_LIGHT; nCnt++)
+	{
+		// ライトが使われているかつディレクションライト以外だったら
+		if (m_aLightInfo[nCnt].bUse == true && m_aLightInfo[nCnt].aLight.Type != D3DLIGHT_DIRECTIONAL)
+		{
+			// デバイスの取得
+			LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+			// ライトを有効化
+			pDevice->LightEnable(nCnt, FALSE);
+		}
 	}
 }
