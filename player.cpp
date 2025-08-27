@@ -82,6 +82,7 @@ CPlayer::CPlayer()
 	m_pOrbit = nullptr;
 	m_nAttackCounter = NULL;
 	m_fStamina = NULL;
+	m_bGravity = true;
 }
 
 //===================================================
@@ -378,8 +379,11 @@ void CPlayer::Update(void)
 	// インパクトの当たり判定
 	CollisionImpact(pMesh, &pos, pMotion);
 
-	// 重力を加算
-	m_pMove->Gravity(-MAX_GRABITY);
+	if (m_bGravity)
+	{
+		// 重力を加算
+		m_pMove->Gravity(-MAX_GRABITY);
+	}
 
 	// ロックオン
 	if (pKeyboard->GetTrigger(DIK_R) || pJoypad->GetTrigger(pJoypad->JOYKEY_RIGHT_THUMB))
@@ -704,10 +708,11 @@ CPlayer* CPlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 
 	if (pPlayer == nullptr) return nullptr;
 
+	// 初期化処理
 	pPlayer->Init();
 
-	// 初期化処理
 	pPlayer->SetPosition(pos);
+	pPlayer->GetRotaition()->SetDest(rot);
 	pPlayer->GetRotaition()->Set(rot);
 
 	return pPlayer;
@@ -1248,7 +1253,7 @@ void CPlayer::SetRevengeEffect(void)
 
 	// メッシュフィールドの取得処理
 	CMeshField* pMeshField = CGame::GetField();
-
+	
 	if (pMeshField != nullptr)
 	{
 		// 地面に波を発生させる

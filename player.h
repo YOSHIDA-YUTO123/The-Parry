@@ -72,6 +72,7 @@ public:
 		MOTIONTYPE_ROUNDKICK,
 		MOTIONTYPE_STANCE,
 		MOTIONTYPE_REVENGE,
+		MOTIONTYPE_REVENGEATTACK,
 		MOTIONTYPE_MAX
 	}MOTIONTYPE;
 
@@ -156,6 +157,7 @@ public:
 	bool CollisionAABB(CColliderAABB* pAABB);
 	bool CollisionCapsule(CColliderCapsule* pCapsule);
 	void SetRevengeEffect(void); // 絶対反撃のエフェクトの設定
+	void EnableGravity(const bool bEnable) { m_bGravity = bEnable; } // 重力の判定の設定
 private:
 	void CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos, CMotion* pMotion); // インパクトの当たり判定
 	bool IsMove(CMotion* pMotion);		// 移動できるか判定
@@ -184,6 +186,7 @@ private:
 	int m_nParryTime;								// パリィの有効時間
 	int m_nParryCounter;							// パリィのカウンター
 	int m_nAttackCounter;							// 攻撃の有効時間
+	bool m_bGravity;								// 重力をつけるかどうか
 	bool m_bJump;									// ジャンプできるかどうか
 	bool m_bDash;									// 走ってるかどうか
 };

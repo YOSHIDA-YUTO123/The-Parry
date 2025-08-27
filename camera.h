@@ -52,10 +52,10 @@ protected:
 
 	// セッター
 	void SetPosR(const D3DXVECTOR3 posR) { m_posR = posR; }
+	void SetPosV(const D3DXVECTOR3 posV) { m_posV = posV; }
 	void SetDestPosV(const D3DXVECTOR3 destpos) { m_posVDest = destpos; }
 	void SetDestPosR(const D3DXVECTOR3 destpos) { m_posRDest = destpos; }
 	void SetDistance(const float fDistance) { m_fDistance = fDistance; }
-
 	void UpdatePositionV(void);			// 視点の更新処理
 	void UpdatePositionR(void);			// 注視点の更新処理
 	void LerpPos(const D3DXVECTOR3 posRDest, const D3DXVECTOR3 posVDest, const float fCoef);	// 位置を目的の位置に近づける

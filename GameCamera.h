@@ -69,8 +69,8 @@ private:
 	float m_fDistanceZoom;		// ズームする距離
 	float m_fZoomAngleBase;		// ズームの角度の基準
 	int m_nShakeRange;			// 揺れの幅
-	int m_nZoomTime;			// ズームの時間
 	int m_nShakeTime;			// 振れの時間
+	int m_nZoomTime;			// ズームの時間
 };
 
 #endif

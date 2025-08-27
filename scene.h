@@ -27,9 +27,11 @@ public:
 	// モードの種類
 	typedef enum
 	{
-		MODE_TITLE = 0,					// タイトル画面
-		MODE_GAME,						// ゲーム画面
-		MODE_RESULT,					// リザルト画面
+		MODE_TITLE = 0,	// タイトル画面
+		MODE_TUTORIAL,	// チュートリアル画面
+		MODE_OPENING,	// 入場ムービー
+		MODE_GAME,		// ゲーム画面
+		MODE_RESULT,	// リザルト画面
 		MODE_MAX
 	}MODE;
 

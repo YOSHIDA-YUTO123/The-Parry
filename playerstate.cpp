@@ -9,19 +9,19 @@
 // インクルードファイル
 //***************************************************
 #include "playerstate.h"
-#include"player.h"
-#include"motion.h"
+#include "player.h"
+#include "motion.h"
 #include "debugproc.h"
 #include "impact.h"
 #include "game.h"
 #include "meshfield.h"
 #include "MoveSmoke.h"
-#include"GameCamera.h"
+#include "GameCamera.h"
 #include "manager.h"
 
 using MOTION = CPlayer::MOTIONTYPE; // プレイヤーの列挙型の使用
-using namespace std;		  // 名前空間stdの使用
-using namespace Const;		  // 名前空間Constの使用
+using namespace std;				// 名前空間stdの使用
+using namespace Const;				// 名前空間Constの使用
 
 //===================================================
 // コンストラクタ
@@ -568,6 +568,81 @@ void CPlayerRevenge::Update(void)
 			pPlayer->SetRevengeEffect();
 		}
 
+		// モーションが終わったら
+		if (pMotion->IsFinishEndBlend())
+		{
+			pPlayer->ChangeState(make_shared<CPlayerNormal>());
+		}
+	}
+}
+
+//===================================================
+// コンストラクタ(絶対反撃中)
+//===================================================
+CPlayerRevengeAttack::CPlayerRevengeAttack() : CPlayerState(ID_REVENGEATTACK)
+{
+}
+
+//===================================================
+// デストラクタ(絶対反撃中)
+//===================================================
+CPlayerRevengeAttack::~CPlayerRevengeAttack()
+{
+	// プレイヤーの取得
+	auto pPlayer = GetPlayer();
+
+	pPlayer->EnableGravity(true);
+}
+
+//===================================================
+// 初期化処理(絶対反撃中)
+//===================================================
+void CPlayerRevengeAttack::Init(void)
+{
+	// プレイヤーの取得
+	auto pPlayer = GetPlayer();
+
+	// モーションの取得
+	CMotion* pMotion = pPlayer->GetMotion();
+
+	if (pMotion != nullptr)
+	{
+		// 着地モーションの再生
+		pMotion->SetMotion(MOTION::MOTIONTYPE_REVENGEATTACK, true, 5);
+	}
+}
+
+//===================================================
+// 更新処理(絶対反撃中)
+//===================================================
+void CPlayerRevengeAttack::Update(void)
+{
+	// プレイヤーの取得
+	auto pPlayer = GetPlayer();
+
+	// モーションの取得
+	CMotion* pMotion = pPlayer->GetMotion();
+
+	if (pMotion != nullptr)
+	{
+		if (pMotion->IsEventFrame(105, 105, CPlayer::MOTIONTYPE_REVENGEATTACK))
+		{
+			// 少し前に進む
+			pPlayer->GetMovement()->Set(D3DXVECTOR3(0.0f, 10.0f, 0.0f));
+			pPlayer->GetMovement()->MoveForward(50.0f);
+
+			// 重力を無効化
+			pPlayer->EnableGravity(false);
+		}
+
+		// 120f目から終わりまで
+		if (pMotion->IsEventFrame(120, 331, CPlayer::MOTIONTYPE_REVENGEATTACK))
+		{
+			// 重力を有効化
+			pPlayer->EnableGravity(true);
+
+			pPlayer->GetMovement()->Set(VEC3_NULL);
+		}
 		// モーションが終わったら
 		if (pMotion->IsFinishEndBlend())
 		{

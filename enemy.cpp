@@ -101,7 +101,7 @@ HRESULT CEnemy::Init(void)
 	CCharacter3D::Init();
 
 	// モーションロード処理
-	LoadMotion("data/MOTION/motionEnemy000.txt", MOTION_MAX);
+	CCharacter3D::LoadMotion("data/MOTION/motionEnemy000.txt", MOTIONTYPE_MAX);
 
 	m_pMachine = make_unique<CStateMachine>();
 
@@ -307,7 +307,7 @@ void CEnemy::Update(void)
 	{
 		pos.y = fHeight;
 
-		if (pMotion->GetBlendType() == MOTION_JUMP)
+		if (pMotion->GetBlendType() == MOTIONTYPE_JUMP)
 		{
 			// 着地状態にする
 			ChangeState(make_shared<CEnemyLanding>());
@@ -349,7 +349,7 @@ void CEnemy::Update(void)
 		ChangeState(make_shared<CEnemyDamageL>(5));
 
 		// モーションの設定
-		pMotion->SetMotion(MOTION_DAMAGEL, true, 2);
+		pMotion->SetMotion(MOTIONTYPE_DAMAGEL, true, 2);
 	}
 	
 	// プレイヤーとの当たり判定
@@ -363,7 +363,7 @@ void CEnemy::Update(void)
 	D3DXVECTOR3 chestpos = GetModelPos(2);
 
 	// 敵の攻撃のカウンターの目安の表示
-	if (pMotion->IsEventFrame(50, 50, MOTION_SMASH))
+	if (pMotion->IsEventFrame(50, 50, MOTIONTYPE_SMASH))
 	{
 		// パーティクルの生成
 		auto pParticle = CParticle3DNormal::Create(chestpos, 100.0f, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
@@ -371,7 +371,7 @@ void CEnemy::Update(void)
 		// パーティクルの設定
 		pParticle->SetParticle(15.0f, 240, 50, 1,314);
 	}
-	else if (pMotion->IsEventFrame(50, 50, MOTION_IMPACT))
+	else if (pMotion->IsEventFrame(50, 50, MOTIONTYPE_IMPACT))
 	{
 		// ウェーブの生成
 		auto pWave = CMeshWave::Create(pos, 50.0f, 50.0f, WHITE);
@@ -379,7 +379,7 @@ void CEnemy::Update(void)
 		// ウェーブの設定処理
 		pWave->SetWave(30,50.0f);
 	}
-	else if (pMotion->IsEventFrame(20, 20, MOTION::MOTION_SWING))
+	else if (pMotion->IsEventFrame(20, 20, MOTIONTYPE_SWING))
 	{
 		// パーティクルの生成
 		auto pParticle = CParticle3DNormal::Create(chestpos, 100.0f, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
@@ -389,14 +389,14 @@ void CEnemy::Update(void)
 	}
 
 	// 攻撃モーションのたたきつけになったら
-	if (pMotion->IsEventFrame(72,72, MOTION_SMASH))
+	if (pMotion->IsEventFrame(72,72, MOTIONTYPE_SMASH))
 	{
 		// 瓦礫の設定処理
 		SetRubble();
 	}
 
 	// 衝撃波の生成
-	if (pMotion->IsEventFrame(102, 102, MOTION_IMPACT))
+	if (pMotion->IsEventFrame(102, 102, MOTIONTYPE_IMPACT))
 	{
 		// プレイヤーまでの方向
 		D3DXVECTOR3 dir = PlayerPos - WeponPos;
@@ -427,7 +427,7 @@ void CEnemy::Update(void)
 	// オブザーバーへの通知処理
 	Notify();
 
-	if (CCharacter3D::GetAlive() == false && pMotion->GetBlendType() != MOTION_DEATH && pMotion->GetBlendType() != MOTION_DOWN)
+	if (CCharacter3D::GetAlive() == false && pMotion->GetBlendType() != MOTIONTYPE_DEATH && pMotion->GetBlendType() != MOTIONTYPE_DOWN)
 	{
 		// 敵を追従する
 		pCamera->SetTracking(CGameCamera::TRACKOBJ_ENEMY);
@@ -633,8 +633,8 @@ bool CEnemy::IsDamageMotion(void)
 	int motionType = pMotion->GetBlendType();
 
 	// ダメージモーションだったら
-	if (motionType == MOTION_DAMAGEL ||
-		motionType == MOTION_DAMAGES)
+	if (motionType == MOTIONTYPE_DAMAGEL ||
+		motionType == MOTIONTYPE_DAMAGES)
 	{
 		return true;
 	}
@@ -895,7 +895,7 @@ bool CEnemy::CollisionObstacle(D3DXVECTOR3 *pPos)
 			CCharacter3D::GetRotaition()->SetDest(D3DXVECTOR3(0.0f, fAngle, 0.0f));
 
 			// 死亡状態じゃないなら
-			if (pMotion->GetBlendType() != MOTION_DEATH)
+			if (pMotion->GetBlendType() != MOTIONTYPE_DEATH)
 			{
 				// ダメージ状態にする
 				ChangeState(make_shared<CEnemyDamageL>(10, true));
@@ -1001,7 +1001,7 @@ void CEnemy::MoveSmoke(void)
 	if (pMotion != nullptr)
 	{
 		// 17フレーム目になったら
-		if (pMotion->IsEventFrame(17, 17, MOTION::MOTION_MOVE))
+		if (pMotion->IsEventFrame(17, 17, MOTIONTYPE_MOVE))
 		{
 			// 位置の取得
 			D3DXVECTOR3 pos = GetModelPos(11);
@@ -1013,7 +1013,7 @@ void CEnemy::MoveSmoke(void)
 			pEffect->SetEffect(60, D3DXVECTOR3(fMoveX, 0.0f, fMoveZ));
 		}
 		// 40フレーム目になったら
-		if (pMotion->IsEventFrame(40, 40, MOTION::MOTION_MOVE))
+		if (pMotion->IsEventFrame(40, 40, MOTIONTYPE_MOVE))
 		{
 			// 位置の取得
 			D3DXVECTOR3 pos = GetModelPos(14);

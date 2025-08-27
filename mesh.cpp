@@ -293,9 +293,6 @@ void CMesh::SetMatrix(void)
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
-	// テクスチャクラスの取得
-	CTextureManager* pTexture = CManager::GetTexture();
-
 	//計算用のマトリックス
 	D3DXMATRIX mtxRot, mtxTrans;
 

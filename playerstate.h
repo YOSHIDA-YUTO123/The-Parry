@@ -44,6 +44,7 @@ public:
 		ID_ROUNDKICK,
 		ID_DASH,
 		ID_REVENGE,
+		ID_REVENGEATTACK,
 		ID_MAX
 	};
 
@@ -191,4 +192,18 @@ public:
 	void Update(void) override;
 private:
 };
+
+//***************************************************
+// プレイヤーの状態(RevengeAttack)の定義
+//***************************************************
+class CPlayerRevengeAttack : public CPlayerState
+{
+public:
+	CPlayerRevengeAttack();
+	~CPlayerRevengeAttack();
+	void Init(void) override;
+	void Update(void) override;
+private:
+};
+
 #endif

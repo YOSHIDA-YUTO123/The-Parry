@@ -354,6 +354,18 @@
     <ClCompile Include="ParticleTornado.cpp">
       <Filter>ソース ファイル\objectBillboard\particle</Filter>
     </ClCompile>
+    <ClCompile Include="opening.cpp">
+      <Filter>ソース ファイル\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="OpningEnemy.cpp">
+      <Filter>ソース ファイル\model</Filter>
+    </ClCompile>
+    <ClCompile Include="OpeningCamera.cpp">
+      <Filter>ソース ファイル\system\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="FadeEffect.cpp">
+      <Filter>ソース ファイル\object2D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="testword.h">
@@ -592,6 +604,18 @@
     </ClInclude>
     <ClInclude Include="ParticleTornado.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="opening.h">
+      <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="OpningEnemy.h">
+      <Filter>ヘッダー ファイル\model</Filter>
+    </ClInclude>
+    <ClInclude Include="OpeningCamera.h">
+      <Filter>ヘッダー ファイル\system\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="FadeEffect.h">
+      <Filter>ヘッダー ファイル\object2D</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

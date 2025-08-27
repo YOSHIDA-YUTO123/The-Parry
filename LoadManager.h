@@ -21,8 +21,6 @@
 #include<sstream>
 #include<vector>
 
-using namespace std; // 名前空間stdを使用
-
 //***************************************************
 // ロードのマネージャークラスの定義
 //***************************************************
@@ -31,8 +29,8 @@ class CLoadManager
 public:
 	CLoadManager();
 	~CLoadManager();
-	istringstream SetInputvalue(string input); // = から先の数値を取り出す処理
-	string GetString(string input);	   // std::stringから文字列を取り出す処理
+	std::istringstream SetInputvalue(std::string input); // = から先の数値を取り出す処理
+	std::string GetString(std::string input);	   // std::stringから文字列を取り出す処理
 private:
 };
 

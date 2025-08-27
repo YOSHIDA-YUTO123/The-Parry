@@ -1,0 +1,139 @@
+//===================================================
+//
+// オープニングシーン [opening.cpp]
+// Author:YUTO YOSHIDA
+//
+//===================================================
+
+//***************************************************
+// インクルードファイル
+//***************************************************
+#include "opening.h"
+#include"manager.h"
+#include"input.h"
+#include "OpningEnemy.h"
+#include "OpeningCamera.h"
+#include "meshfield.h"
+#include "objectX.h"
+#include"light.h"
+#include"debugproc.h"
+#include "FadeEffect.h"
+#include "dome.h"
+
+using namespace Const; // 名前空間Constの使用
+
+//***************************************************
+// 静的メンバ変数宣言
+//***************************************************
+CFadeEffect* COpening::m_pFadeEffect = nullptr;				// フェードエフェクトへのポインタ
+COpening::STATE COpening::m_state = COpening::STATE_NORMAL;	// オープニングの状態
+COpeningCamera* COpening::m_pCamera;						// カメラのポインタ
+CMeshField* COpening::m_pMeshField = nullptr;				// メッシュフィールドへのポインタ
+
+//===================================================
+// コンストラクタ
+//===================================================
+COpening::COpening() : CScene(MODE_OPENING)
+{
+}
+
+//===================================================
+// デストラクタ
+//===================================================
+COpening::~COpening()
+{
+
+}
+
+//===================================================
+// 初期化処理
+//===================================================
+HRESULT COpening::Init(void)
+{
+	// ゲームのカメラの生成
+	m_pCamera = new COpeningCamera;
+	m_pCamera->Init();
+
+	// ライトの取得
+	CLight* pLight = CManager::GetLight();
+	pLight->Init();
+
+	// ポイントライトの設定処理
+	pLight->SetPoint(D3DXVECTOR3(-200.0f, 300.0f, 0.0f), 1000.0f, D3DCOLOR_RGBA(255, 255, 255, 255), D3DCOLOR_RGBA(255, 255, 255, 255));
+
+	// ドームの生成
+	CMeshDome::Create(VEC3_NULL, 10, 10, 60000.0f, 20000.0f);
+
+	// ドームの生成
+	CMeshDome::Create(VEC3_NULL, 10, 10, 60000.0f, -20000.0f);
+
+	// フェードの生成
+	m_pFadeEffect = CFadeEffect::Create(CFadeEffect::FADE_NONE);
+
+	// フィールドの設定
+	m_pMeshField = CMeshField::Create(VEC3_NULL, 48, 48, D3DXVECTOR2(5500.0f, 5500.0f));
+
+	// アリーナの生成
+	CObjectX::Create(VEC3_NULL, "data/MODEL/field/arena.x", VEC3_NULL);
+
+	// フィールドの設定
+	CMeshField::Create(D3DXVECTOR3(5500.0f, 0.0f, 0.0f), 48, 48, D3DXVECTOR2(5500.0f, 5500.0f));
+
+	// アリーナの生成
+	CObjectX::Create(D3DXVECTOR3(5500.0f,0.0f,0.0f), "data/MODEL/field/TitleArena.x", D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+	//// トーチの生成
+	//CObjectX::Create(D3DXVECTOR3(250.0f, 150.0f, 165.0f), "data/MODEL/obj/torch.x", D3DXVECTOR3(-D3DX_PI * 0.15f, 0.0f, 0.0f));
+
+	//// トーチの生成
+	//CObjectX::Create(D3DXVECTOR3(250.0f, 150.0f, -165.0f), "data/MODEL/obj/torch.x", D3DXVECTOR3(D3DX_PI * 0.15f, 0.0f, 0.0f));
+
+	return S_OK;
+}
+
+//===================================================
+// 終了処理
+//===================================================
+void COpening::Uninit(void)
+{
+	if (m_pCamera != nullptr)
+	{
+		m_pCamera->Uninit();
+		delete m_pCamera;
+		m_pCamera = nullptr;
+	}
+}
+
+//===================================================
+// 更新処理
+//===================================================
+void COpening::Update(void)
+{
+	if (m_pCamera != nullptr)
+	{
+		m_pCamera->Update();
+	}
+}
+
+//===================================================
+// 描画処理
+//===================================================
+void COpening::Draw(void)
+{
+#ifdef _DEBUG
+	// カメラの位置
+	D3DXVECTOR3 cameraposV = m_pCamera->GetPosV();
+	D3DXVECTOR3 cameraposR = m_pCamera->GetPosR();
+	D3DXVECTOR3 camerarot = m_pCamera->GetRotaition();
+
+	// デバッグ情報
+	CDebugProc::Print("視点の座標 : [ %.2f ] [ %.2f ] [ %.2f ] \n", cameraposV.x, cameraposV.y, cameraposV.z);
+	CDebugProc::Print("注視点の座標 : [ %.2f ] [ %.2f ] [ %.2f ] \n", cameraposR.x, cameraposR.y, cameraposR.z);
+	CDebugProc::Print("カメラの向き : [ %.2f ] [ %.2f ] [ %.2f ] \n", camerarot.x, camerarot.y, camerarot.z);
+#endif // _DEBUG
+
+	if (m_pCamera != nullptr)
+	{
+		m_pCamera->SetCamera();
+	}
+}

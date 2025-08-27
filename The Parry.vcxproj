@@ -160,7 +160,11 @@
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="EffectSpark.cpp" />
+    <ClCompile Include="FadeEffect.cpp" />
     <ClCompile Include="GameCamera.cpp" />
+    <ClCompile Include="opening.cpp" />
+    <ClCompile Include="OpeningCamera.cpp" />
+    <ClCompile Include="OpningEnemy.cpp" />
     <ClCompile Include="overlay.cpp" />
     <ClCompile Include="ParticleSpark.cpp" />
     <ClCompile Include="ParticleTornado.cpp" />
@@ -246,7 +250,11 @@
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="EffectSpark.h" />
+    <ClInclude Include="FadeEffect.h" />
     <ClInclude Include="GameCamera.h" />
+    <ClInclude Include="opening.h" />
+    <ClInclude Include="OpeningCamera.h" />
+    <ClInclude Include="OpningEnemy.h" />
     <ClInclude Include="overlay.h" />
     <ClInclude Include="ParticleSpark.h" />
     <ClInclude Include="ParticleTornado.h" />

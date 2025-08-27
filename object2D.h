@@ -25,7 +25,7 @@ class CObject2D : public CObject
 public:
 
 	CObject2D(int nPriority = 7);
-	~CObject2D();
+	virtual ~CObject2D();
 
 	static CObject2D* Create(const float fWidth, const float fHeight, const D3DXVECTOR3 pos,const D3DXVECTOR3 rot = Const::VEC3_NULL);
 

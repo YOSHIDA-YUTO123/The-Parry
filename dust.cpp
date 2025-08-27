@@ -13,6 +13,7 @@
 #include "manager.h"
 #include"math.h"
 #include "game.h"
+#include"opening.h"
 
 using namespace Const; // 名前空間Constを使用
 
@@ -129,7 +130,23 @@ void CRubble::Uninit(void)
 //===================================================
 void CRubble::Update(void)
 {
-	CMeshField* pMesh = CGame::GetField();
+	// 現在のモードの取得
+	CScene::MODE mode = CManager::GetMode();
+
+	// フィールドの取得
+	CMeshField* pMesh = nullptr;
+
+	switch (mode)
+	{
+	case CScene::MODE_GAME:
+		pMesh = CGame::GetField();
+		break;
+	case CScene::MODE_OPENING:
+		pMesh = COpening::GetField();
+		break;
+	default:
+		break;
+	}
 
 	//// 更新処理
 	//m_pObjectX->Update();

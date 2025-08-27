@@ -19,7 +19,8 @@
 #include "impact.h"
 #include"Collider.h"
 
-using namespace Const;							// 名前空間Constを使用する
+using namespace Const;		// 名前空間Constを使用する
+using namespace std;		// 名前空間stdを使用する
 
 // 匿名の名前空間を使用
 namespace

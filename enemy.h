@@ -53,26 +53,28 @@ public:
 	// モーションの種類
 	typedef enum
 	{
-		MOTION_NEUTRAL = 0, // ニュートラル
-		MOTION_MOVE,		// 移動
-		MOTION_SMASH,		// 振り下ろし攻撃
-		MOTION_JUMP,		// ジャンプ
-		MOTION_LANDING,		// 着地
-		MOTION_DAMAGEL,		// 大ダメージ
-		MOTION_IMPACT,		// 衝撃波攻撃
-		MOTION_ROAR,		// 叫び
-		MOTION_DASH,		// 走り
-		MOTION_SPIN,		// 回転攻撃
-		MOTION_HIT,			// カウンターが当たった時
-		MOTION_DAMAGES,		// 小ダメージ
-		MOTION_GUARD,		// ガード
-		MOTION_STEP,		// ステップ
-		MOTION_SWING,		// スイング攻撃
-		MOTION_JUMPATTACK,  // ジャンプ攻撃
-		MOTION_DEATH,		// 死亡
-		MOTION_DOWN,		// ダウン
-		MOTION_MAX
-	}MOTION;
+		MOTIONTYPE_NEUTRAL = 0, // ニュートラル
+		MOTIONTYPE_MOVE,		// 移動
+		MOTIONTYPE_SMASH,		// 振り下ろし攻撃
+		MOTIONTYPE_JUMP,		// ジャンプ
+		MOTIONTYPE_LANDING,		// 着地
+		MOTIONTYPE_DAMAGEL,		// 大ダメージ
+		MOTIONTYPE_IMPACT,		// 衝撃波攻撃
+		MOTIONTYPE_ROAR,		// 叫び
+		MOTIONTYPE_DASH,		// 走り
+		MOTIONTYPE_SPIN,		// 回転攻撃
+		MOTIONTYPE_HIT,			// カウンターが当たった時
+		MOTIONTYPE_DAMAGES,		// 小ダメージ
+		MOTIONTYPE_GUARD,		// ガード
+		MOTIONTYPE_STEP,		// ステップ
+		MOTIONTYPE_SWING,		// スイング攻撃
+		MOTIONTYPE_JUMPATTACK,  // ジャンプ攻撃
+		MOTIONTYPE_DEATH,		// 死亡
+		MOTIONTYPE_DOWN,		// ダウン
+		MOTIONTYPE_SUPER_HIT,	// 特大ヒット
+		MOTIONTYPE_COMBODAMAGE, // 連続ダメージ
+		MOTIONTYPE_MAX
+	}MOTIONTYPE;
 
 	// 攻撃の結果
 	typedef enum

@@ -15,6 +15,8 @@
 #include"fade.h"
 #include "game.h"
 #include<memory>
+//#include"game.h"
+#include"opening.h"
 
 using namespace math;  // 名前空間mathを使用
 using namespace Const; // 名前空間Constを使用
@@ -229,7 +231,7 @@ void CTitleStart::Update(void)
 			pTitleManager->SetStart(true);
 
 			// 新しいモードの設定
-			pFade->SetFade(make_unique<CGame>());
+			pFade->SetFade(make_unique<COpening>());
 		}
 	}
 }

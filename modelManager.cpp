@@ -19,7 +19,8 @@
 //**********************************************
 int CModelManager::m_nNumAll = 0;	// モデルの総数
 
-using namespace Const;							// 名前空間Constを使用する
+using namespace Const;		// 名前空間Constを使用する
+using namespace std;		// 名前空間stdを使用する
 
 //==============================================
 // コンストラクタ

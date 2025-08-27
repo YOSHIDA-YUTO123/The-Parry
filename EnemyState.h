@@ -54,6 +54,8 @@ public:
 		ID_DEATH,		// 死亡
 		ID_DOWN,		// ダウン(死亡)
 		ID_AWAY,		// 距離を取る
+		ID_SUPER_HIT,	// 特大ヒット
+		ID_COMBO_DAMAGE, // 連続ダメージ
 		ID_MAX
 	};
 
@@ -65,8 +67,9 @@ public:
 	virtual int GetID(void) const { return m_ID; }
 	void SetOwner(CEnemy* pEnemy) { m_pEnemy = pEnemy; }
 protected:
-	CEnemy* m_pEnemy; // 敵クラスへのポインタ
+	CEnemy* GetEnemy(void) { return m_pEnemy; }
 private:
+	CEnemy* m_pEnemy; // 敵クラスへのポインタ
 	ID m_ID; // IDの取得
 };
 
@@ -329,6 +332,32 @@ public:
 	void Update(void) override;
 private:
 	D3DXVECTOR3 m_pos; // 移動先
+};
+
+//***************************************************
+// 敵の状態(SuperHit)クラスの定義
+//***************************************************
+class CEnemySuperHit : public CEnemyState
+{
+public:
+	CEnemySuperHit();
+	~CEnemySuperHit();
+	void Init(void) override;
+	void Update(void) override;
+private:
+};
+
+//***************************************************
+// 敵の状態(Consecutive_Damage)クラスの定義
+//***************************************************
+class CEnemyComboDamage : public CEnemyState
+{
+public:
+	CEnemyComboDamage();
+	~CEnemyComboDamage();
+	void Init(void) override;
+	void Update(void) override;
+private:
 };
 
 #endif
