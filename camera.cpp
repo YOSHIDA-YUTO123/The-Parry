@@ -129,7 +129,7 @@ void CCamera::Update(void)
 	// シリンダーの当たり判定
 	if (pCylinder != nullptr)
 	{
-		//pCylinder->Collision(&m_posV);
+		pCylinder->Collision(&m_posV);
 	}
 
 	// 角度の正規化
