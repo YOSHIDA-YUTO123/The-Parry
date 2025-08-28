@@ -36,6 +36,8 @@ COpeningCamera::COpeningCamera()
 	m_bReset = false;
 	m_move = VEC3_NULL;
 	m_bFlash = false;
+	m_fCounter = NULL;
+	m_fMoveShakeSpeed = NULL;
 }
 
 //===================================================
@@ -63,6 +65,8 @@ HRESULT COpeningCamera::Init(void)
 
 	// カメラのキーのロード
 	Load();
+
+	m_fMoveShakeSpeed = 0.2f;
 
 	return S_OK;
 }
@@ -159,6 +163,9 @@ void COpeningCamera::Update(void)
 		// キーの更新処理
 		UpdateKey(&posR);
 	}
+
+	// 移動時の揺れの更新
+	UpdateMoveShake(&posV);
 
 	// 位置の設定
 	CCamera::SetPosV(posV);
@@ -340,4 +347,21 @@ void COpeningCamera::UpdateShake(void)
 
 	// 注視点の設定
 	CCamera::SetPosR(posRWk);
+}
+
+//===================================================
+// 移動状態時のカメラの揺れの更新
+//===================================================
+void COpeningCamera::UpdateMoveShake(D3DXVECTOR3 *pPosV)
+{
+	// 状態が移動じゃないなら処理しない
+	if (m_state != STATE_MOVE) return;
+
+	// 時間を加算
+	m_fCounter += m_fMoveShakeSpeed;
+
+	// 今の位置
+	float fPosVNow = pPosV->y;
+
+	pPosV->y = fPosVNow + sinf(m_fCounter) * 2.0f;
 }

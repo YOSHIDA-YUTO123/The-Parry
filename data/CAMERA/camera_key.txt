@@ -22,12 +22,12 @@ CAMERASET
 
 	KEY_SET ---- [ 3 ] ----
 		FRAME = 120		# フレーム
-		POS = -1500.0 0.0 0.0 # 位置
+		POS = -1500.0 200.0 0.0 # 位置
 	END_KEYSET
 
 	KEY_SET ---- [ 4 ] ----
 		FRAME = 120		# フレーム
-		POS = -1550.0 0.0 0.0 # 位置
+		POS = -1550.0 200.0 0.0 # 位置
 	END_KEYSET
 
 END_CAMERASET

@@ -18,6 +18,7 @@
 #include "game.h"
 #include "title.h"
 #include "background.h"
+#include"opening.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -326,21 +327,12 @@ void CPauseRetry::Update(void)
 		CObject2D::SetColor(D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
 
 		// ENTERキーが押されたら
-		if (pKeyboard->GetTrigger(DIK_RETURN))
+		if (pKeyboard->GetTrigger(DIK_RETURN) || pJoyPad->GetTrigger(pJoyPad->JOYKEY_A))
 		{
 			// フェードの取得
 			CFade* pFade = CManager::GetFade();
 
-			pFade->SetFade(make_unique<CGame>());
-		}
-
-		// Aボタンが押されたら
-		if (pJoyPad->GetTrigger(pJoyPad->JOYKEY_A))
-		{
-			// フェードの取得
-			CFade* pFade = CManager::GetFade();
-
-			pFade->SetFade(make_unique<CGame>());
+			pFade->SetFade(make_unique<COpening>());
 		}
 	}
 	else
