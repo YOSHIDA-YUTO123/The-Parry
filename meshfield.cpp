@@ -103,8 +103,8 @@ HRESULT CMeshField::Init(void)
 		return E_FAIL;
 	}
 
-	// メッシュフィールドのロード
-	Load();
+	// テクスチャのIDの設定
+	CMesh::SetTextureID("data/TEXTURE/field/field.jpg");
 
 	return S_OK;
 }
@@ -266,8 +266,8 @@ void CMeshField::SetMeshField(const int nSegH, const int nSegV, const D3DXVECTOR
 {
 	int nCntVtx = 0;
 
-	float fTexPosX = 1.0f + 1.0f / nSegH;
-	float fTexPosY = 1.0f + 1.0f / nSegV;
+	float fTexPosX = 1.0f / nSegH;
+	float fTexPosY = 1.0f / nSegV;
 
 	D3DXVECTOR3 posWk;
 
@@ -732,58 +732,58 @@ void CMeshField::SetImpact(CMeshFieldImpact::Config config)
 	}
 }
 
-//================================================
-// メッシュフィールドのロード
-//================================================
-void CMeshField::Load(void)
-{
-	fstream file("data/system.ini"); // ファイルを開く
-	string line; // ファイルの文字列読み取り用
-	string input; // 値を代入する
-
-	// ファイルを開けたら
-	if (file.is_open())
-	{
-		// ロードのマネージャの生成
-		CLoadManager* pLoadManager = new CLoadManager;
-
-		// 最後じゃないなら
-		while (getline(file, line))
-		{
-			// プレイヤーのモーションファイルを読み取ったら
-			if (line.find("FIELD_TEXTURE") != string::npos)
-			{
-				size_t equal_pos = line.find("="); // =の位置
-
-				// [=] から先を求める
-				input = line.substr(equal_pos + 1);
-
-				// ファイルの名前を取得
-				string file_name = pLoadManager->GetString(input);
-
-				// ファイルの名前を代入
-				const char* FILE_NAME = file_name.c_str();
-
-				// テクスチャのIDの設定
-				CMesh::SetTextureID(FILE_NAME);
-			}
-		}
-
-		// ロードのマネージャーの破棄
-		if (pLoadManager != nullptr)
-		{
-			delete pLoadManager;
-			pLoadManager = nullptr;
-		}
-		// ファイルを閉じる
-		file.close();
-	}
-	else
-	{
-		MessageBox(NULL, "system.iniが開けません", "ファイルが存在しません。", MB_OK | MB_ICONWARNING);
-		return;
-	}
-}
+////================================================
+//// メッシュフィールドのロード
+////================================================
+//void CMeshField::Load(void)
+//{
+//	fstream file("data/system.ini"); // ファイルを開く
+//	string line; // ファイルの文字列読み取り用
+//	string input; // 値を代入する
+//
+//	// ファイルを開けたら
+//	if (file.is_open())
+//	{
+//		// ロードのマネージャの生成
+//		CLoadManager* pLoadManager = new CLoadManager;
+//
+//		// 最後じゃないなら
+//		while (getline(file, line))
+//		{
+//			// プレイヤーのモーションファイルを読み取ったら
+//			if (line.find("FIELD_TEXTURE") != string::npos)
+//			{
+//				size_t equal_pos = line.find("="); // =の位置
+//
+//				// [=] から先を求める
+//				input = line.substr(equal_pos + 1);
+//
+//				// ファイルの名前を取得
+//				string file_name = pLoadManager->GetString(input);
+//
+//				// ファイルの名前を代入
+//				const char* FILE_NAME = file_name.c_str();
+//
+//				// テクスチャのIDの設定
+//				CMesh::SetTextureID(FILE_NAME);
+//			}
+//		}
+//
+//		// ロードのマネージャーの破棄
+//		if (pLoadManager != nullptr)
+//		{
+//			delete pLoadManager;
+//			pLoadManager = nullptr;
+//		}
+//		// ファイルを閉じる
+//		file.close();
+//	}
+//	else
+//	{
+//		MessageBox(NULL, "system.iniが開けません", "ファイルが存在しません。", MB_OK | MB_ICONWARNING);
+//		return;
+//	}
+//}
 
 //================================================
 // コンストラクタ

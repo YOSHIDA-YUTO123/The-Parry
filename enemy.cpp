@@ -111,7 +111,7 @@ HRESULT CEnemy::Init(void)
 	m_pMove = make_unique<CVelocity>();
 
 	// キャラクターの設定処理
-	CCharacter3D::SetCharacter(MAX_LIFE, 12.0f,D3DXVECTOR3(5.0f, 1.0f, 5.0f),D3DXVECTOR3(100.0f, 400.0f, 100.0f));
+	CCharacter3D::SetCharacter(MAX_LIFE, 12.0f,D3DXVECTOR3(10.0f, 1.0f, 10.0f),D3DXVECTOR3(100.0f, 400.0f, 100.0f));
 
 	// 大きさの取得
 	D3DXVECTOR3 Size = CCharacter3D::GetSize();

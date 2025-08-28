@@ -104,7 +104,7 @@ HRESULT CPlayer::Init(void)
 	CCharacter3D::Init();
 
 	// キャラクターの設定処理
-	CCharacter3D::SetCharacter(MAX_LIFE, 6.0f,D3DXVECTOR3(3.0f,1.0f,3.5f),D3DXVECTOR3(50.0f, 200.0f, 50.0f));
+	CCharacter3D::SetCharacter(MAX_LIFE, 6.0f,D3DXVECTOR3(4.0f,1.0f,4.0f),D3DXVECTOR3(50.0f, 200.0f, 50.0f));
 
 	// 大きさの取得
 	D3DXVECTOR3 Size = CCharacter3D::GetSize();

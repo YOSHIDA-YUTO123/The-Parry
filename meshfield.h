@@ -150,7 +150,7 @@ public:
 	void SetWave(CMeshFieldWave::Config config);
 	void SetImpact(CMeshFieldImpact::Config config);
 private:
-	void Load(void);
+	//void Load(void);
 
 	std::vector<CMeshFieldWave*> m_apWave;	 // フィールドの波クラスへのポインタ
 	CMeshFieldImpact* m_apImpact;			 // フィールドのインパクトクラスへのポインタ

@@ -49,7 +49,6 @@ CShadowS* CShadowS::Create(const D3DXVECTOR3 pos, D3DXVECTOR3* pScal)
 
 	pShadowS->SetPosition(pos);
 	pShadowS->m_pScal = pScal;
-	pShadowS->GetRotaition()->Set(D3DXVECTOR3(0.0f, 0.0f, D3DX_PI * 0.25f));
 	return pShadowS;
 }
 

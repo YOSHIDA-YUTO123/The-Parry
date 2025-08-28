@@ -74,6 +74,9 @@ HRESULT COpeningEnemy::Init(void)
 	// モーションロード処理
 	CCharacter3D::LoadMotion("data/MOTION/motionEnemy000.txt", CEnemy::MOTIONTYPE_MAX);
 
+	// キャラクターの設定処理
+	CCharacter3D::SetCharacter(-1, 0.0f, D3DXVECTOR3(10.0f, 1.0f, 10.0f), D3DXVECTOR3(100.0f, 400.0f, 100.0f));
+
 	// モーションの取得
 	CMotion* pMotion = CCharacter3D::GetMotion();
 
@@ -168,33 +171,37 @@ void COpeningEnemy::Update(void)
 	// 着地モーションが終わったら
 	if (pMotion->GetType() == CEnemy::MOTIONTYPE_LANDING && pMotion->IsEndMotion())
 	{
+		// 叫びモーションに以降
+		pMotion->SetMotion(CEnemy::MOTIONTYPE_ROAR, true, 5);
+	}
+
+	// 叫びの63f目になったら
+	if (pMotion->IsEventFrame(63,63,CEnemy::MOTIONTYPE_ROAR))
+	{
 		// カメラの揺れの設定
-		pCamera->SetShake(120, 30);
+		pCamera->SetShake(180, 30);
 
 		// レンダラーの取得
-		CRenderer* pRenderer = CManager::GetRenderer();
+		//CRenderer* pRenderer = CManager::GetRenderer();
 
-		if (pRenderer != nullptr)
-		{
-			// ブラーをオン
-			pRenderer->onEffect(0.9f);
-		}
-
-		// 叫びモーションに以降
-		pMotion->SetMotion(CEnemy::MOTIONTYPE_ROAR,true,5);
+		//if (pRenderer != nullptr)
+		//{
+		//	 ブラーをオン
+		//	pRenderer->onEffect(0.9f);
+		//}
 	}
 
 	// 叫びが終わったら
 	if (pMotion->GetType() == CEnemy::MOTIONTYPE_ROAR && pMotion->IsEndMotion())
 	{
-		// レンダラーの取得
-		CRenderer* pRenderer = CManager::GetRenderer();
+		//// レンダラーの取得
+		//CRenderer* pRenderer = CManager::GetRenderer();
 
-		if (pRenderer != nullptr)
-		{
-			// ブラーをオン
-			pRenderer->offEffect();
-		}
+		//if (pRenderer != nullptr)
+		//{
+		//	// ブラーをオン
+		//	pRenderer->offEffect();
+		//}
 
 		pCamera->SetMove(D3DXVECTOR3(0.0f, 0.0f, 3.0f));
 	}

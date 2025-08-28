@@ -82,7 +82,7 @@ HRESULT CGame::Init(void)
 	pLight->SetDirectional(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, -0.56f, -0.74f), D3DXVECTOR3(0.0f, 100.0f, 0.0f));
 
 	// フィールドの設定
-	m_pMeshField = CMeshField::Create(VEC3_NULL, 48, 48, D3DXVECTOR2(5500.0f, 5500.0f));
+	m_pMeshField = CMeshField::Create(VEC3_NULL, 48, 48, D3DXVECTOR2(3500.0f, 3500.0f));
 
 	// ドームの生成
 	CMeshDome::Create(VEC3_NULL, 10, 10, 60000.0f, 20000.0f);
@@ -91,12 +91,12 @@ HRESULT CGame::Init(void)
 	CMeshDome::Create(VEC3_NULL, 10, 10, 60000.0f, -20000.0f);
 
 	// シリンダーの生成
-	m_pCylinder = CMeshCylinder::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 32, 1, 1900.0f, 1900.0f);
+	m_pCylinder = CMeshCylinder::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 32, 1, 1500.0f, 1500.0f);
 
 	m_pCylinder->Set(CMeshCylinder::TYPE_WALL);
 
 	// プレイヤーの生成
-	m_pPlayer = CPlayer::Create(D3DXVECTOR3(1.0f, 0.0f, -1500.0f),D3DXVECTOR3(0.0f,D3DX_PI,0.0f));
+	m_pPlayer = CPlayer::Create(D3DXVECTOR3(1.0f, 0.0f, -1200.0f),D3DXVECTOR3(0.0f,D3DX_PI,0.0f));
 
 	// 反撃UIの生成
 	auto pRevenge = CRevengeUI::Create(D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXVECTOR2(50.0f, 50.0f), CPlayer::MAX_REVENGE);
@@ -178,13 +178,13 @@ HRESULT CGame::Init(void)
 	int face = CCollisionAABB::FACE_LEFT;
 
 	// スパイクトラップ
-	CSpikeTrap::Create(D3DXVECTOR3(1840.0f, 0.0f, 0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f) ,face);
+	CSpikeTrap::Create(D3DXVECTOR3(1540.0f, 0.0f, 0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f) ,face);
 
 	// 面の設定
 	face = CCollisionAABB::FACE_RIGHT;
 
 	// スパイクトラップ
-	CSpikeTrap::Create(D3DXVECTOR3(-1840.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f,D3DX_PI, 0.0f), face);
+	CSpikeTrap::Create(D3DXVECTOR3(-1540.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f,D3DX_PI, 0.0f), face);
 
 	// ポーズマネージャーの生成
 	CPauseManager::Create();

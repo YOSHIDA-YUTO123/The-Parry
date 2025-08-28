@@ -125,11 +125,11 @@ void COpeningCamera::Update(void)
 			pLight->SetDirectional(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, -0.56f, 0.74f), D3DXVECTOR3(0.0f, 100.0f, 0.0f));
 			pLight->SetDirectional(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, -0.56f, -0.74f), D3DXVECTOR3(0.0f, 100.0f, 0.0f));
 
-			posV = D3DXVECTOR3(0.0f, 200.0f, -1800.0f);
+			posV = D3DXVECTOR3(0.0f, 200.0f, -1500.0f);
 			posR = VEC3_NULL;
 
 			// 敵の生成
-			COpeningEnemy::Create(D3DXVECTOR3(0.0f, 2000.0f, -500.0f), 0.0f);
+			COpeningEnemy::Create(D3DXVECTOR3(0.0f, 2000.0f, -100.0f), 0.0f);
 
 			// 移動量の設定
 			m_move = D3DXVECTOR3(0.0f, 0.0f, 3.0f);
@@ -139,7 +139,7 @@ void COpeningCamera::Update(void)
 	// リセットしたら
 	if (m_bReset)
 	{
-		if (posV.z >= -1500.0f && !m_bDestPos)
+		if (posV.z >= -1200.0f && !m_bDestPos)
 		{
 			// 目的の位置に到達した
 			m_bDestPos = true;

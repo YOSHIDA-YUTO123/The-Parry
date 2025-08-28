@@ -19,8 +19,11 @@
 #include"debugproc.h"
 #include "FadeEffect.h"
 #include "dome.h"
+#include"fade.h"
+#include"game.h"
 
 using namespace Const; // 名前空間Constの使用
+using namespace std;   // 名前空間stdの使用
 
 //***************************************************
 // 静的メンバ変数宣言
@@ -71,13 +74,13 @@ HRESULT COpening::Init(void)
 	m_pFadeEffect = CFadeEffect::Create(CFadeEffect::FADE_NONE);
 
 	// フィールドの設定
-	m_pMeshField = CMeshField::Create(VEC3_NULL, 48, 48, D3DXVECTOR2(5500.0f, 5500.0f));
+	m_pMeshField = CMeshField::Create(VEC3_NULL, 48, 48, D3DXVECTOR2(3500.0f, 3500.0f));
 
 	// アリーナの生成
 	CObjectX::Create(VEC3_NULL, "data/MODEL/field/arena.x", VEC3_NULL);
 
 	// フィールドの設定
-	CMeshField::Create(D3DXVECTOR3(5500.0f, 0.0f, 0.0f), 48, 48, D3DXVECTOR2(5500.0f, 5500.0f));
+	CMeshField::Create(D3DXVECTOR3(5500.0f, 0.0f, 0.0f), 48, 48, D3DXVECTOR2(1000.0f, 1000.0f));
 
 	// アリーナの生成
 	CObjectX::Create(D3DXVECTOR3(5500.0f,0.0f,0.0f), "data/MODEL/field/TitleArena.x", D3DXVECTOR3(0.0f, 0.0f, 0.0f));
@@ -109,6 +112,17 @@ void COpening::Uninit(void)
 //===================================================
 void COpening::Update(void)
 {
+	// キーボードの取得
+	auto pKeyboard = CManager::GetInputKeyboard();
+
+	// フェードの取得
+	CFade* pFade = CManager::GetFade();
+
+	if (pKeyboard->GetTrigger(DIK_RETURN))
+	{
+		// ゲームシーンへ以降
+		pFade->SetFade(make_unique<CGame>());
+	}
 	if (m_pCamera != nullptr)
 	{
 		m_pCamera->Update();
