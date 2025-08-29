@@ -55,18 +55,20 @@ public:
 	int GetPriority(void) const { return m_nPriority; }
 	void SetType(const TYPE type) { m_type = type; }
 	TYPE GetType(void) const { return m_type; }
+	bool GetDeath(void) const { return m_bDeath; }	// 死亡フラグの取得
+
 protected:
-	void Release(void);							 // 死亡フラグを立てる
+	void Release(void);								// 死亡フラグを立てる
 private:
 	void Destroy(CObject* pObject);
-	static int m_nNumAll[Const::NUM_PRIORITY];	 // オブジェクトの総数
-	static CObject* m_pTop[Const::NUM_PRIORITY]; // 先頭オブジェクトへのポインタ
-	static CObject* m_pCur[Const::NUM_PRIORITY]; // 最後尾オブジェクトへのポインタ
-	CObject* m_pPrev;							 // 前のオブジェクトへのポインタ
-	CObject* m_pNext;							 // 次のオブジェクトへのポインタ
-	TYPE m_type;								 // オブジェクトの種類
-	int m_nPriority;							 // 優先順位
-	bool m_bDeath;								 // 死亡フラグ
+	static int m_nNumAll[Const::NUM_PRIORITY];		// オブジェクトの総数
+	static CObject* m_pTop[Const::NUM_PRIORITY];	// 先頭オブジェクトへのポインタ
+	static CObject* m_pCur[Const::NUM_PRIORITY];	// 最後尾オブジェクトへのポインタ
+	CObject* m_pPrev;								// 前のオブジェクトへのポインタ
+	CObject* m_pNext;								// 次のオブジェクトへのポインタ
+	TYPE m_type;									// オブジェクトの種類
+	int m_nPriority;								// 優先順位
+	bool m_bDeath;									// 死亡フラグ
 };
 
 #endif

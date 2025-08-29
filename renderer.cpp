@@ -166,7 +166,6 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindow)
 		TRUE,
 		&m_pZBuffMT,
 		NULL);
-	
 
 	// 現在のレンダリングターゲットを取得(保存)
 	m_pD3DDevice->GetRenderTarget(0, &pRenderDef);

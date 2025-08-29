@@ -30,14 +30,14 @@ class CObjectX : public CObject
 {
 public:
 	CObjectX(int nPriority = 2);
-	~CObjectX();
+	virtual ~CObjectX();
 
 	static CObjectX* Create(const D3DXVECTOR3 pos, const char* pModelName,const D3DXVECTOR3 rot);
 
-	HRESULT Init(void) override;
-	void Uninit(void) override;
-	void Update(void) override;
-	void Draw(void) override;
+	virtual HRESULT Init(void) override;
+	virtual void Uninit(void) override;
+	virtual void Update(void) override;
+	virtual void Draw(void) override;
 	void Draw(const float Diffuse); // “§–¾“x‚ğ•ÏX‚Å‚«‚é•`‰æˆ—
 	void DrawShadow(void);
 	void SetUpMatrix(const D3DXVECTOR3 Scal = D3DXVECTOR3(1.0f,1.0f,1.0f));

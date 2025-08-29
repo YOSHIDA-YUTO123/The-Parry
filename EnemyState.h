@@ -34,28 +34,31 @@ public:
 	// IDの種類
 	enum ID
 	{
-		ID_BASE = 0,	// 無し
-		ID_IDLE,		// なにもしない状態
-		ID_MOVE,		// 移動
-		ID_BACKSTEP,	// バックステップ
-		ID_LANDING,		// 着地
-		ID_SMASH,		// 振り下ろし攻撃
-		ID_IMPACT,		// 衝撃波攻撃
-		ID_DAMAGEL,		// 大ダメージ
-		ID_ROAR,		// 叫び
-		ID_DASH,		// 走り
-		ID_SPIN,		// 回転攻撃
-		ID_HIT,			// カウンターがヒットした時
-		ID_DAMAGES,		// 小ダメージ
-		ID_GUARD,		// ガード
-		ID_STEP,		// ステップ
-		ID_SWING,		// スイング攻撃
-		ID_JUMPATTACK,	// ジャンプ攻撃
-		ID_DEATH,		// 死亡
-		ID_DOWN,		// ダウン(死亡)
-		ID_AWAY,		// 距離を取る
-		ID_SUPER_HIT,	// 特大ヒット
+		ID_BASE = 0,	 // 無し
+		ID_IDLE,		 // なにもしない状態
+		ID_MOVE,		 // 移動
+		ID_BACKSTEP,	 // バックステップ
+		ID_LANDING,		 // 着地
+		ID_SMASH,		 // 振り下ろし攻撃
+		ID_IMPACT,		 // 衝撃波攻撃
+		ID_DAMAGEL,		 // 大ダメージ
+		ID_ROAR,		 // 叫び
+		ID_DASH,		 // 走り
+		ID_SPIN,		 // 回転攻撃
+		ID_HIT,			 // カウンターがヒットした時
+		ID_DAMAGES,		 // 小ダメージ
+		ID_GUARD,		 // ガード
+		ID_STEP,		 // ステップ
+		ID_SWING,		 // スイング攻撃
+		ID_JUMPATTACK,	 // ジャンプ攻撃
+		ID_DEATH,		 // 死亡
+		ID_DOWN,		 // ダウン(死亡)
+		ID_AWAY,		 // 距離を取る
+		ID_SUPER_HIT,	 // 特大ヒット
 		ID_COMBO_DAMAGE, // 連続ダメージ
+		ID_RIGHT_MOVE,	 // 横歩き(右)
+		ID_LEFT_MOVE,	 // 横歩き(左)
+		ID_RUSH,		 // 突進攻撃
 		ID_MAX
 	};
 
@@ -97,6 +100,10 @@ public:
 	~CEnemyMove();
 	void Update(void) override;
 private:
+	static constexpr float SIDE_MOVE_DISTANCE = 1000.0f;	// 横歩きしてくる距離
+	static constexpr float ACTION_DISTANCE = 250.0f;		// 攻撃してくる距離
+
+	void ElectinMove(CEnemy* pEnemy); // 移動のランダム選出
 	int m_nNextStateCount;  // 次のステートに移るカウンター
 };
 
@@ -358,6 +365,53 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 private:
+};
+
+//***************************************************
+// 敵の状態(RIghtMove)クラスの定義
+//***************************************************
+class CEnemyRightMove : public CEnemyState
+{
+public:
+	CEnemyRightMove();
+	~CEnemyRightMove();
+	void Init(void) override;
+	void Update(void) override;
+private:
+	static constexpr int MOVE_TIME = 180; // 移動時間
+	static constexpr float ACTION_DISTANCE = 750.0f; // 攻撃してくる距離
+	int m_nTime; // 横移動の時間
+};
+
+//***************************************************
+// 敵の状態(LeftMove)クラスの定義
+//***************************************************
+class CEnemyLeftMove : public CEnemyState
+{
+public:
+	CEnemyLeftMove();
+	~CEnemyLeftMove();
+	void Init(void) override;
+	void Update(void) override;
+private:
+	static constexpr int MOVE_TIME = 180; // 移動時間
+	static constexpr float ACTION_DISTANCE = 750.0f; // 攻撃してくる距離
+	int m_nTime; // 横移動の時間
+};
+
+//***************************************************
+// 敵の状態(Rush)クラスの定義
+//***************************************************
+class CEnemyRush : public CEnemyState
+{
+public:
+	CEnemyRush();
+	~CEnemyRush();
+	void Init(void) override;
+	void Update(void) override;
+private:
+	static constexpr int MAX_TIME = 360; // 最大の時間
+	int m_nEndTime;						 // 終了する時間
 };
 
 #endif

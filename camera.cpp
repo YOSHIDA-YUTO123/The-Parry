@@ -126,10 +126,21 @@ void CCamera::Update(void)
 		}
 	}
 
+	// ポーズマネージャーの取得
+	auto pPause = CPauseManager::GetInstance();
+
 	// シリンダーの当たり判定
 	if (pCylinder != nullptr)
 	{
+#ifdef _DEBUG
+		// ポーズ状態じゃないなら
+		if (pPause != nullptr && !pPause->GetPause())
+		{
+			pCylinder->Collision(&m_posV);
+		}
+#else
 		pCylinder->Collision(&m_posV);
+#endif // _DEBUG
 	}
 
 	// 角度の正規化

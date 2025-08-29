@@ -172,7 +172,7 @@ void COpeningEnemy::Update(void)
 	if (pMotion->GetType() == CEnemy::MOTIONTYPE_LANDING && pMotion->IsEndMotion())
 	{
 		// ‹©‚Ñƒ‚[ƒVƒ‡ƒ“‚ÉˆÈ~
-		pMotion->SetMotion(CEnemy::MOTIONTYPE_ROAR, true, 5);
+		pMotion->SetMotion(CEnemy::MOTIONTYPE_ROAR, true, 15);
 	}
 
 	// ‹©‚Ñ‚Ì63f–Ú‚É‚È‚Á‚½‚ç

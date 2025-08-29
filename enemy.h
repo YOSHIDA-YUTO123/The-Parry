@@ -73,6 +73,9 @@ public:
 		MOTIONTYPE_DOWN,		// ダウン
 		MOTIONTYPE_SUPER_HIT,	// 特大ヒット
 		MOTIONTYPE_COMBODAMAGE, // 連続ダメージ
+		MOTIONTYPE_RIGHTMOVE,	// 横歩き(右)
+		MOTIONTYPE_LEFTMOVE,	// 横歩き(左)
+		MOTIONTYPE_RUSH,		// 突進攻撃
 		MOTIONTYPE_MAX
 	}MOTIONTYPE;
 
@@ -86,6 +89,29 @@ public:
 		RESULT_SPREVENGE, // 絶対反撃モード	  
 		RESULT_MAX
 	}RESULT;
+
+	// モデルの種類
+	typedef enum
+	{
+		MODEL_NONE = -1, // モデル無し
+		MODEL_WAIST,	 // 腰
+		MODEL_CHEST,	 // 胸
+		MODEL_HEAD,		 // 頭
+		MODEL_ARMUR,	 // 右上腕
+		MODEL_ARMFR,	 // 右前腕
+		MODEL_HANDR,	 // 右手
+		MODEL_ARMUL,	 // 左上腕
+		MODEL_ARMFL,	 // 左前腕
+		MODEL_HANDL,	 // 左手
+		MODEL_LEGUR,	 // 右太もも
+		MODEL_LEGDR,	 // 右すね
+		MODEL_FOOTR,	 // 右足
+		MODEL_LEGUL,	 // 左太もも
+		MODEL_LEGDL,	 // 左すね
+		MODEL_FOOTL,	 // 左足
+		MODEL_WEPON,	 // 武器
+		MODEL_MAX
+	}MODEL;
 
 	CEnemy();
 	~CEnemy();
@@ -117,7 +143,8 @@ public:
 	void Hit(const int nDamage);
 	void MoveSmoke(void);
 	void SetAngle(const float fAngle);
-	RESULT AttackResult(CPlayer* pPlayer);					// 攻撃の結果
+	RESULT WeponAttackResult(CPlayer* pPlayer);						// 武器攻撃の結果
+	RESULT AttackResult(CPlayer* pPlayer,const MODEL model);		// 攻撃の結果
 private:
 	void CollisionPlayer(CMotion* pPlayerMotion, CPlayer* pPlayer);
 	void SetParent(const int nCnt);

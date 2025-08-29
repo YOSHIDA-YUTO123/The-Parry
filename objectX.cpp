@@ -61,8 +61,11 @@ CObjectX* CObjectX::Create(const D3DXVECTOR3 pos, const char* pModelName,const D
 //===================================================
 HRESULT CObjectX::Init(void)
 {
-	// 位置、向きの生成
-	m_pRot = new CRotation;
+	if (m_pRot == nullptr)
+	{
+		// 位置、向きの生成
+		m_pRot = new CRotation;
+	}
 
 	return S_OK;
 }

@@ -98,21 +98,21 @@ public:
 	// モデルの種類
 	typedef enum
 	{
-		MODEL_WAIST = 0,
-		MODEL_CHEST,
-		MODEL_HEAD,
-		MODEL_ARMUR,
-		MODEL_ARMFR,
-		MODEL_HAND,
-		MODEL_ARMUL,
-		MODEL_ARMFL,
-		MODEL_HANDL,
-		MODEL_LEGUR,
-		MODEL_LEGDR,
-		MODEL_FOOTR,
-		MODEL_LEGUL,
-		MODEL_LEGDL,
-		MODEL_FOOTL,
+		MODEL_WAIST = 0, // 腰
+		MODEL_CHEST,	 // 胸
+		MODEL_HEAD,		 // 頭
+		MODEL_ARMUR,	 // 右上腕
+		MODEL_ARMFR,	 // 右前腕
+		MODEL_HANDR,	 // 右手
+		MODEL_ARMUL,	 // 左上腕
+		MODEL_ARMFL,	 // 左前腕
+		MODEL_HANDL,	 // 左手
+		MODEL_LEGUR,	 // 右太もも
+		MODEL_LEGDR,	 // 右すね
+		MODEL_FOOTR,	 // 右足
+		MODEL_LEGUL,	 // 左太もも
+		MODEL_LEGDL,	 // 左すね
+		MODEL_FOOTL,	 // 左足
 		MODEL_MAX
 	}MODEL;
 
@@ -151,7 +151,7 @@ public:
 	bool CollisionObstacle(D3DXVECTOR3* pPos);
 	void Orbit(const int nSegH, const D3DXCOLOR col); // 軌跡の処理
 	void DeleteOrbit(void);							  // 軌跡のリセット
-	void SetStance(void);							  // 構えモーションの設定
+	void SetStance(const D3DXVECTOR3 enemyPos);		  // 構えモーションの設定
 	void SetStamina(const float fStamina);
 
 	bool CollisionAABB(CColliderAABB* pAABB);

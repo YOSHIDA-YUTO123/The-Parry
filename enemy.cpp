@@ -111,7 +111,7 @@ HRESULT CEnemy::Init(void)
 	m_pMove = make_unique<CVelocity>();
 
 	// キャラクターの設定処理
-	CCharacter3D::SetCharacter(MAX_LIFE, 12.0f,D3DXVECTOR3(10.0f, 1.0f, 10.0f),D3DXVECTOR3(100.0f, 400.0f, 100.0f));
+	CCharacter3D::SetCharacter(MAX_LIFE, 4.0f,D3DXVECTOR3(10.0f, 1.0f, 10.0f),D3DXVECTOR3(100.0f, 400.0f, 100.0f));
 
 	// 大きさの取得
 	D3DXVECTOR3 Size = CCharacter3D::GetSize();
@@ -209,6 +209,10 @@ void CEnemy::Update(void)
 	// キーボードの取得
 	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
 
+	// プレイヤーと敵の距離を求める
+	float distance = GetDistance(pos - PlayerPos);
+
+	CDebugProc::Print("敵との距離 = [ %.2f ]\n", distance);
 	CDebugProc::Print("************************************\n");
 	CDebugProc::Print("*             敵の操作             *\n");
 	CDebugProc::Print("************************************\n");
@@ -252,6 +256,14 @@ void CEnemy::Update(void)
 	if (pKeyboard->GetTrigger(DIK_F5))
 	{
 		Hit(MAX_LIFE - 1);
+	}
+	if (pKeyboard->GetTrigger(DIK_7))
+	{
+		ChangeState(make_shared<CEnemyRightMove>());
+	}
+	if (pKeyboard->GetTrigger(DIK_8))
+	{
+		ChangeState(make_shared<CEnemyLeftMove>());
 	}
 
 	if (pKeyboard->GetTrigger(DIK_F1))
@@ -985,47 +997,46 @@ void CEnemy::Hit(const int nDamage)
 //===================================================
 void CEnemy::MoveSmoke(void)
 {
-	// モーションの取得
-	auto pMotion = CCharacter3D::GetMotion();
+	//// モーションの取得
+	//auto pMotion = CCharacter3D::GetMotion();
 
-	// モーションがないなら処理しない
-	if (pMotion == nullptr) return;
+	//// モーションがないなら処理しない
+	//if (pMotion == nullptr) return;
 
-	// 向きの取得
-	D3DXVECTOR3 rot = CCharacter3D::GetRotaition()->Get();
+	//// 向きの取得
+	//D3DXVECTOR3 rot = CCharacter3D::GetRotaition()->Get();
 
-	// プレイヤーの後ろ方向を設定
-	float fMoveX = sinf(rot.y) * 2.0f;
-	float fMoveZ = cosf(rot.y) * 2.0f;
+	//// プレイヤーの後ろ方向を設定
+	//float fMoveX = sinf(rot.y) * 2.0f;
+	//float fMoveZ = cosf(rot.y) * 2.0f;
 
-	if (pMotion != nullptr)
-	{
-		// 17フレーム目になったら
-		if (pMotion->IsEventFrame(17, 17, MOTIONTYPE_MOVE))
-		{
-			// 位置の取得
-			D3DXVECTOR3 pos = GetModelPos(11);
+	//if (pMotion != nullptr)
+	//{
+	//	// 17フレーム目になったら
+	//	if (pMotion->IsEventFrame(17, 17, MOTIONTYPE_MOVE))
+	//	{
+	//		// 位置の取得
+	//		D3DXVECTOR3 pos = GetModelPos(11);
 
-			// エフェクトの生成
-			auto pEffect = CMoveSmoke::Create(D3DXVECTOR3(pos.x, pos.y, pos.z), 100.0f, WHITE);
+	//		// エフェクトの生成
+	//		auto pEffect = CMoveSmoke::Create(D3DXVECTOR3(pos.x, pos.y, pos.z), 100.0f, WHITE);
 
-			// エフェクトの設定処理
-			pEffect->SetEffect(60, D3DXVECTOR3(fMoveX, 0.0f, fMoveZ));
-		}
-		// 40フレーム目になったら
-		if (pMotion->IsEventFrame(40, 40, MOTIONTYPE_MOVE))
-		{
-			// 位置の取得
-			D3DXVECTOR3 pos = GetModelPos(14);
+	//		// エフェクトの設定処理
+	//		pEffect->SetEffect(60, D3DXVECTOR3(fMoveX, 0.0f, fMoveZ));
+	//	}
+	//	// 40フレーム目になったら
+	//	if (pMotion->IsEventFrame(40, 40, MOTIONTYPE_MOVE))
+	//	{
+	//		// 位置の取得
+	//		D3DXVECTOR3 pos = GetModelPos(14);
 
-			// エフェクトの生成
-			auto pEffect = CMoveSmoke::Create(D3DXVECTOR3(pos.x, pos.y, pos.z), 100.0f, WHITE);
+	//		// エフェクトの生成
+	//		auto pEffect = CMoveSmoke::Create(D3DXVECTOR3(pos.x, pos.y, pos.z), 100.0f, WHITE);
 
-			// エフェクトの設定処理
-			pEffect->SetEffect(60, D3DXVECTOR3(fMoveX, 0.0f, fMoveZ));
-		}
-
-	}
+	//		// エフェクトの設定処理
+	//		pEffect->SetEffect(60, D3DXVECTOR3(fMoveX, 0.0f, fMoveZ));
+	//	}
+	//}
 }
 
 //===================================================
@@ -1037,9 +1048,9 @@ void CEnemy::SetAngle(const float fAngle)
 }
 
 //===================================================
-// 攻撃の結果を返す
+// 武器攻撃の結果を返す
 //===================================================
-CEnemy::RESULT CEnemy::AttackResult(CPlayer* pPlayer)
+CEnemy::RESULT CEnemy::WeponAttackResult(CPlayer* pPlayer)
 {
 	// 位置の取得
 	D3DXVECTOR3 pos = GetPosition();
@@ -1080,6 +1091,16 @@ CEnemy::RESULT CEnemy::AttackResult(CPlayer* pPlayer)
 			return RESULT_HIT;
 		}
 	}
+
+	return RESULT_NONE;
+}
+
+//===================================================
+// 攻撃の結果を返す
+//===================================================
+CEnemy::RESULT CEnemy::AttackResult(CPlayer* pPlayer, const MODEL model)
+{
+
 
 	return RESULT_NONE;
 }

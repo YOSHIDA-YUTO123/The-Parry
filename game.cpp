@@ -28,6 +28,7 @@
 #include"GameCamera.h"
 #include"light.h"
 #include "RevengeGage.h"
+#include "block.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -186,6 +187,9 @@ HRESULT CGame::Init(void)
 	// スパイクトラップ
 	CSpikeTrap::Create(D3DXVECTOR3(-1540.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f,D3DX_PI, 0.0f), face);
 
+	// モデルの読み込み
+	CBlock::Create(D3DXVECTOR3(520.0f, 1510.0f, 2976.0f), "dust/dust003.x");
+
 	// ポーズマネージャーの生成
 	CPauseManager::Create();
 
@@ -292,12 +296,16 @@ void CGame::Update(void)
 //===================================================
 void CGame::Draw(void)
 {
-	// カメラの設定
-	if (m_pCamera != nullptr)
-	{
-		// カメラの設定
-		m_pCamera->SetCamera();
-	}
+#ifdef _DEBUG
+	// カメラの位置
+	D3DXVECTOR3 cameraposV = m_pCamera->GetPosV();
+	D3DXVECTOR3 cameraposR = m_pCamera->GetPosR();
+	D3DXVECTOR3 camerarot = m_pCamera->GetRotaition();
+
+	// デバッグ情報
+	CDebugProc::Print("視点の座標 : [ %.2f ] [ %.2f ] [ %.2f ] \n", cameraposV.x, cameraposV.y, cameraposV.z);
+	CDebugProc::Print("注視点の座標 : [ %.2f ] [ %.2f ] [ %.2f ] \n", cameraposR.x, cameraposR.y, cameraposR.z);
+	CDebugProc::Print("カメラの向き : [ %.2f ] [ %.2f ] [ %.2f ] \n", camerarot.x, camerarot.y, camerarot.z);
 
 	CDebugProc::Print("デバッグ 非表示      : [ F2 ]\n");
 
@@ -312,6 +320,15 @@ void CGame::Draw(void)
 	}
 
 	CDebugProc::Print("ワイヤーフレーム : [ F6 ]\n");
+
+#endif // _DEBUG
+
+	// カメラの設定
+	if (m_pCamera != nullptr)
+	{
+		// カメラの設定
+		m_pCamera->SetCamera();
+	}
 }
 
 //===================================================

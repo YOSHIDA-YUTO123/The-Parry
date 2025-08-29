@@ -153,6 +153,8 @@
   <ItemGroup>
     <ClCompile Include="background.cpp" />
     <ClCompile Include="billboard.cpp" />
+    <ClCompile Include="block.cpp" />
+    <ClCompile Include="BlockManager.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="billboardAnim.cpp" />
     <ClCompile Include="character2D.cpp" />
@@ -243,6 +245,8 @@
   <ItemGroup>
     <ClInclude Include="background.h" />
     <ClInclude Include="billboard.h" />
+    <ClInclude Include="block.h" />
+    <ClInclude Include="BlockManager.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="billboardAnim.h" />
     <ClInclude Include="character2D.h" />

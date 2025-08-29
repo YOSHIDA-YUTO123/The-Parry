@@ -1308,13 +1308,22 @@ void CPlayer::DeleteOrbit(void)
 //===================================================
 // 構えの設定
 //===================================================
-void CPlayer::SetStance(void)
+void CPlayer::SetStance(const D3DXVECTOR3 enemyPos)
 {
 	// 向きの取得
 	D3DXVECTOR3 rot = CCharacter3D::GetRotaition()->Get();
 
 	// カメラの取得
 	CGameCamera* pCamera = CGame::GetCamera();
+
+	// プレイヤーの位置の取得
+	D3DXVECTOR3 playerPos = CCharacter3D::GetPosition();
+
+	// 角度を求める
+	float fAngle = GetTargetAngle(playerPos, enemyPos);
+
+	// 角度を設定
+	SetAngle(fAngle);
 
 	pCamera->SetShake(20, 2);
 
