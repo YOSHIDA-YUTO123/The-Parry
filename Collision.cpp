@@ -511,6 +511,53 @@ bool CCollisionCapsule::Collision(CColliderCapsule* myCapsule, CColliderCapsule*
 }
 
 //================================================
+// 円との当たり判定
+//================================================
+bool CCollisionCapsule::CollisionSphere(CColliderCapsule* pCapsule, CColliderSphere* pSphere)
+{
+	// カプセルコライダーのデータ構造体を使用
+	using CapsuleData = CColliderCapsule::Data;
+
+	// 自分のデータの取得
+	CapsuleData Capsule = pCapsule->GetData();
+
+	// 円の位置の取得
+	D3DXVECTOR3 spherePos = pSphere->GetPos();
+
+	// 円の半径の取得
+	float fSphereRadius = pSphere->GetRadius();
+
+	float param1, param2; // パラメーター1,2
+
+	D3DXVECTOR3 closestPos1, closestPos2; // 最近接点1,2
+
+	// 線分と円の距離を求める
+	float fDistance = ClosestPtSegmentSegment(
+		Capsule.StartPos,
+		Capsule.EndPos,
+		spherePos,
+		spherePos,
+		&param1,
+		&param2,
+		&closestPos1,
+		&closestPos2);
+
+	// 距離を求める
+	fDistance = sqrtf(fDistance);
+
+	// 二つの円の半径を渡す
+	float fRadius = Capsule.fRadius + fSphereRadius;
+
+	// 距離が半径以下だったら当たっている
+	if (fDistance <= fRadius)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+//================================================
 // コンストラクタ
 //================================================
 CCollisionCapsule::CCollisionCapsule() : CCollision(TYPE::TYPE_CAPSULE)

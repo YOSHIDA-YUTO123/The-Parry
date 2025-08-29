@@ -44,6 +44,7 @@ constexpr float SHADOW_ALEVEL = 0.7f;			// 影のアルファ値
 constexpr float SHADOW_MAX_HEIGHT = 500.0f;		// 影が見える最大の高さ
 constexpr float SHADOW_SIZE = 150.0f;			// 影の大きさ
 constexpr float ROCKON_HEIGHT = 100.0f;			// ロックオン時の見る場所
+constexpr float INERTIA = 0.25f;				// 慣性
 constexpr int NUM_RUBBLE = 16;					// 瓦礫を出す数
 constexpr int NUM_MATRIX = 8;					// 武器につけるマトリックスの数
 constexpr int NEXT_ACTION_TIME = 300;			// 次の行動の抽選までの時間
@@ -64,6 +65,7 @@ CEnemy::CEnemy()
 	D3DXMatrixIdentity(&m_weponMatrix);
 	m_pOrbit = nullptr;
 	m_posOld = VEC3_NULL;
+	m_fInertia = INERTIA;
 }
 
 //===================================================
@@ -259,11 +261,7 @@ void CEnemy::Update(void)
 	}
 	if (pKeyboard->GetTrigger(DIK_7))
 	{
-		ChangeState(make_shared<CEnemyRightMove>());
-	}
-	if (pKeyboard->GetTrigger(DIK_8))
-	{
-		ChangeState(make_shared<CEnemyLeftMove>());
+		ChangeState(make_shared<CEnemyRush>());
 	}
 
 	if (pKeyboard->GetTrigger(DIK_F1))
@@ -298,7 +296,7 @@ void CEnemy::Update(void)
 	CMotion* pPlayerMotion = pPlayer->GetMotion();
 
 	// 移動量の減衰
-	m_pMove->SetInertia3D(0.25f);
+	m_pMove->SetInertia3D(m_fInertia);
 
 	// 移動量の取得
 	D3DXVECTOR3 move = m_pMove->Get();
@@ -1061,47 +1059,111 @@ CEnemy::RESULT CEnemy::WeponAttackResult(CPlayer* pPlayer)
 	// プレイヤーのモーションの取得
 	int playerMotionType = pPlayerMotion->GetBlendType();
 
-	if (CollisionWepon() && playerMotionType == pPlayer->MOTIONTYPE_REVENGE)
-	{
-		// パリィした
-		return RESULT_SPREVENGE;
-	}
 	// 武器が当たったら
-	else if (CollisionWepon() && playerMotionType != pPlayer->MOTIONTYPE_PARRY)
+	if (CollisionWepon())
 	{
-		// パリィできるか判定
-		const bool bParry = pPlayer->IsParry(pos);
-
-		// パリィできた
-		if (bParry)
+		if (playerMotionType == pPlayer->MOTIONTYPE_REVENGE)
 		{
 			// パリィした
-			return RESULT_PARRY;
+			return RESULT_SPREVENGE;
 		}
-		// 回避だったら
-		else if (playerMotionType == pPlayer->MOTIONTYPE_AVOID)
+		else if (playerMotionType != pPlayer->MOTIONTYPE_PARRY)
 		{
-			// 回避した
-			return RESULT_AVOID;
-		}
-		// カウンター失敗した
-		else if (bParry == false)
-		{
-			// 当たった
-			return RESULT_HIT;
+			// パリィできるか判定
+			const bool bParry = pPlayer->IsParry(pos);
+
+			// パリィできた
+			if (bParry)
+			{
+				// パリィした
+				return RESULT_PARRY;
+			}
+			// 回避だったら
+			else if (playerMotionType == pPlayer->MOTIONTYPE_AVOID || pPlayerMotion->GetType() == pPlayer->MOTIONTYPE_AVOID)
+			{
+				// 回避した
+				return RESULT_AVOID;
+			}
+			// カウンター失敗した
+			else if (bParry == false)
+			{
+				// 当たった
+				return RESULT_HIT;
+			}
 		}
 	}
-
 	return RESULT_NONE;
 }
 
 //===================================================
 // 攻撃の結果を返す
 //===================================================
-CEnemy::RESULT CEnemy::AttackResult(CPlayer* pPlayer, const MODEL model)
+CEnemy::RESULT CEnemy::AttackResult(CPlayer* pPlayer, const MODEL model,const float fRadius)
 {
+	// カプセルの当たり判定の取得
+	auto pCollisionCapsule = CCollisionCapsule::GetInstance();
 
+	// 取得できなかったら処理しない
+	if (pCollisionCapsule == nullptr) return RESULT_NONE;
+	
+	D3DXVECTOR3 pos = VEC3_NULL;
 
+	if (model != MODEL_NONE)
+	{
+		// モデルの位置の取得
+		pos = CCharacter3D::GetModelPos(model);
+	}
+	else
+	{
+		// 位置の取得
+		pos = CCharacter3D::GetPosition();
+	}
+
+	// 円のコライダーの生成
+	auto SphereCollider = CColliderSphere::CreateCollider(pos, fRadius);
+
+	// プレイヤーのコライダーの取得
+	auto pPlayerCapsule = pPlayer->GetCapsuleCollider();
+
+	// 円とカプセルの判定
+	if (pCollisionCapsule->CollisionSphere(pPlayerCapsule, &SphereCollider))
+	{
+		// プレイヤーのモーションの取得
+		CMotion* pPlayerMotion = pPlayer->GetMotion();
+
+		// プレイヤーのモーションの取得
+		int playerMotionType = pPlayerMotion->GetBlendType();
+
+		if (playerMotionType == pPlayer->MOTIONTYPE_REVENGE)
+		{
+			// パリィした
+			return RESULT_SPREVENGE;
+		}
+		else if (playerMotionType != pPlayer->MOTIONTYPE_PARRY)
+		{
+			// パリィできるか判定
+			const bool bParry = pPlayer->IsParry(pos);
+
+			// パリィできた
+			if (bParry)
+			{
+				// パリィした
+				return RESULT_PARRY;
+			}
+			// 回避だったら
+			else if (playerMotionType == pPlayer->MOTIONTYPE_AVOID || pPlayerMotion->GetType() == pPlayer->MOTIONTYPE_AVOID)
+			{
+				// 回避した
+				return RESULT_AVOID;
+			}
+			// カウンター失敗した
+			else if (bParry == false)
+			{
+				// 当たった
+				return RESULT_HIT;
+			}
+		}
+	}
 	return RESULT_NONE;
 }
 

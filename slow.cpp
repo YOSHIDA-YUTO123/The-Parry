@@ -50,11 +50,14 @@ void CSlow::Update(void)
 //===================================================
 void CSlow::Start(const int nTime, const float fLevel)
 {
-	m_nCount = nTime;
-	m_nTime = nTime;
-	m_fLevel = fLevel;
-	m_fMaxLevel = fLevel;
-	m_bSlow = true;
+	if (m_nCount <= 0)
+	{
+		m_nCount = nTime;
+		m_nTime = nTime;
+		m_fLevel = fLevel;
+		m_fMaxLevel = fLevel;
+		m_bSlow = true;
+	}
 }
 
 //===================================================

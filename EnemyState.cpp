@@ -25,6 +25,7 @@
 #include "result.h"
 #include"fade.h"
 #include "debugproc.h"
+#include "transform.h"
 
 //***************************************************
 // 名前空間
@@ -2214,6 +2215,14 @@ CEnemyRush::CEnemyRush() : CEnemyState(ID_RUSH)
 //===================================================
 CEnemyRush::~CEnemyRush()
 {
+	// 敵の取得
+	CEnemy* pEnemy = CEnemyState::GetEnemy();
+
+	// 敵が使われていないなら処理しない
+	if (pEnemy == nullptr) return;
+
+	// もとに戻しておく
+	pEnemy->SetInertia(0.25f);
 }
 
 //===================================================
@@ -2258,11 +2267,37 @@ void CEnemyRush::Update(void)
 	// モーションクラスの取得
 	CMotion* pMotion = pEnemy->GetMotion();
 
+	// プレイヤーの方向を向く
+	pEnemy->AngleToPlayer();
+
+	// プレイヤーの方向に向かう
+	pEnemy->ChasePlayer(0.5f, 10.0f);
+
+	m_nEndTime--;
+
+	// 終了したら
+	if (m_nEndTime <= 0)
+	{
+		// 状態変更
+		pEnemy->ChangeState(make_shared<CEnemyEndRush>(0.05f));
+
+		return;
+	}
+
 	// モーションがあるなら
 	if (pMotion != nullptr)
 	{
+		//if (pMotion->IsEventFrame(10, 10, CEnemy::MOTIONTYPE_RUSH) || 
+		//	//pMotion->IsEventFrame(10, 10, CEnemy::MOTIONTYPE_RUSH) ||
+		//	//pMotion->IsEventFrame(20, 20, CEnemy::MOTIONTYPE_RUSH) ||
+		//	pMotion->IsEventFrame(30, 30, CEnemy::MOTIONTYPE_RUSH))
+		//{
+		//	// サークルの設定処理
+		//	SetCircle(pEnemy);
+		//}
+
 		// 攻撃の結果を取得
-		CEnemy::RESULT result = pEnemy->WeponAttackResult(pPlayer);
+		CEnemy::RESULT result = pEnemy->AttackResult(pPlayer,CEnemy::MODEL_WAIST,250.0f);
 
 		// 位置の取得
 		D3DXVECTOR3 pos = pEnemy->GetPosition();
@@ -2294,24 +2329,106 @@ void CEnemyRush::Update(void)
 			CSlow* pSlow = CManager::GetSlow();
 
 			pSlow->Start(60, 4);
+
+			// 状態変更
+			pEnemy->ChangeState(make_shared<CEnemyEndRush>(0.02f));
 		}
 		// 攻撃があたった
 		else if (result == CEnemy::RESULT_HIT)
 		{
+			// 状態変更
+			pEnemy->ChangeState(make_shared<CEnemyEndRush>(0.05f));
+
 			// 吹き飛び処理
 			pPlayer->BlowOff(pos, 100.0f, 10.0f);
 
 			// プレイヤー状態の変更
 			pPlayer->ChangeState(make_shared<CPlayerDamage>(2));
 		}
+	}
+}
 
-		m_nEndTime--;
+//===================================================
+// サークルの設定処理
+//===================================================
+void CEnemyRush::SetCircle(CEnemy* pEnemy)
+{
+	// 向きの取得
+	D3DXVECTOR3 rot = pEnemy->GetRotaition()->Get();
 
-		// 終了したら
-		if (m_nEndTime <= 0)
+	// モデルの位置を取得
+	D3DXVECTOR3 modelpos = pEnemy->GetModelPos(CEnemy::MODEL_CHEST);
+
+	// サークルの生成
+	auto pCircle = CMeshCircle::Create(WHITE, modelpos, 0.0f, 50.0f);
+	pCircle->SetCircle(10.0f, 10.0f, 60, false, D3DXVECTOR3(D3DX_PI * 0.5f, rot.y, 0.0f));
+}
+
+//===================================================
+// コンストラクタ(突進攻撃終了)
+//===================================================
+CEnemyEndRush::CEnemyEndRush(const float fInertia) : CEnemyState(ID_ENDRUSH)
+{
+	m_fInertia = fInertia;
+}
+
+//===================================================
+// デストラクタ(突進攻撃終了)
+//===================================================
+CEnemyEndRush::~CEnemyEndRush()
+{
+}
+
+//===================================================
+// 初期化処理(突進攻撃終了)
+//===================================================
+void CEnemyEndRush::Init(void)
+{
+	// 敵の取得
+	CEnemy* pEnemy = CEnemyState::GetEnemy();
+
+	// 敵が使われていないなら処理しない
+	if (pEnemy == nullptr) return;
+
+	// モーションクラスの取得
+	CMotion* pMotion = pEnemy->GetMotion();
+
+	// モーションがあるなら
+	if (pMotion != nullptr)
+	{
+		// モーションの再生
+		pMotion->SetMotion(CEnemy::MOTIONTYPE_END_RUSH, true, 10);
+	}
+}
+
+//===================================================
+// 更新処理処理(突進攻撃終了)
+//===================================================
+void CEnemyEndRush::Update(void)
+{
+	// 敵の取得
+	CEnemy* pEnemy = CEnemyState::GetEnemy();
+
+	// 敵が使われていないなら処理しない
+	if (pEnemy == nullptr) return;
+
+	// モーションクラスの取得
+	CMotion* pMotion = pEnemy->GetMotion();
+
+	// モーションがあるなら
+	if (pMotion != nullptr)
+	{
+		// 慣性の設定
+		pEnemy->SetInertia(m_fInertia);
+
+		// モーションが終わったら
+		if (pMotion->IsFinishEndBlend())
 		{
-			// 状態変更
-			pEnemy->ChangeState(make_shared<CEnemyIdle>(2));
+			// 慣性の設定をもとに戻す
+			pEnemy->SetInertia(0.25f);
+
+			// 状態の遷移
+			pEnemy->ChangeState(make_shared<CEnemyIdle>(5));
 		}
 	}
 }

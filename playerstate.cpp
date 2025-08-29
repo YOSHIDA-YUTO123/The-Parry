@@ -218,6 +218,14 @@ void CPlayerAvoid::Init(void)
 	// モーションの取得
 	CMotion* pMotion = pPlayer->GetMotion();
 
+	// 移動制御の取得
+	auto pMoveMent = pPlayer->GetMovement();
+
+	if (pMoveMent != nullptr)
+	{
+		// 移動量の設定
+		pMoveMent->Set(D3DXVECTOR3(0.0f, 10.0f, 0.0f));
+	}
 	if (pMotion != nullptr)
 	{
 		// モーションの再生
@@ -243,7 +251,7 @@ void CPlayerAvoid::Update(void)
 	if (pMotion != nullptr)
 	{
 		// 移動クラスの取得
-		if (pMoveMent != nullptr && pMotion->IsEventFrame(1,15,CPlayer::MOTIONTYPE_AVOID))
+		if (pMoveMent != nullptr && pMotion->IsEventFrame(1,20,CPlayer::MOTIONTYPE_AVOID))
 		{
 			// 向いている方向に進む処理
 			pMoveMent->MoveForward(m_fSpeed);

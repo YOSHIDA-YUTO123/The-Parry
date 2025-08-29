@@ -137,6 +137,7 @@ public:
 	CColliderSphere* GetSphereCollider(void) { return m_pSphere.get(); }
 	CColliderAABB* GetAABB(void) { return m_pAABB.get(); }
 	CPlayerMovement* GetMovement(void) { return m_pMovement.get(); }
+	CColliderCapsule* GetCapsuleCollider(void) { return m_Capsule.get(); }
 
 	// セッター
 	void SetHpObserver(CObserver<int>* pObserver) { m_pHpObserver = pObserver; }

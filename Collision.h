@@ -131,7 +131,7 @@ public:
 	static CCollisionCapsule* GetInstance(void) { return m_pCapsule.get(); }
 
 	bool Collision(CColliderCapsule* myCapsule, CColliderCapsule* otherCapsule, D3DXVECTOR3* NearPos1 = nullptr, D3DXVECTOR3* NearPos2 = nullptr);
-	
+	bool CollisionSphere(CColliderCapsule* pCapsule, CColliderSphere* pSphere);
 private:
 	CCollisionCapsule();
 	float ClosestPtSegmentSegment(D3DXVECTOR3 Start1, D3DXVECTOR3 End1, D3DXVECTOR3 Start2, D3DXVECTOR3 End2, float* pParam1, float* pParam2, D3DXVECTOR3* c1osestPos1, D3DXVECTOR3* c1osestPos2);

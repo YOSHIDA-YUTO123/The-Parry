@@ -59,6 +59,7 @@ public:
 		ID_RIGHT_MOVE,	 // 横歩き(右)
 		ID_LEFT_MOVE,	 // 横歩き(左)
 		ID_RUSH,		 // 突進攻撃
+		ID_ENDRUSH,		 // 突進攻撃終了
 		ID_MAX
 	};
 
@@ -410,8 +411,23 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 private:
+	void SetCircle(CEnemy* pEnemy);
 	static constexpr int MAX_TIME = 360; // 最大の時間
 	int m_nEndTime;						 // 終了する時間
+};
+
+//***************************************************
+// 敵の状態(EndRush)クラスの定義
+//***************************************************
+class CEnemyEndRush : public CEnemyState
+{
+public:
+	CEnemyEndRush(const float fInertia);
+	~CEnemyEndRush();
+	void Init(void) override;
+	void Update(void) override;
+private:
+	float m_fInertia; // 慣性
 };
 
 #endif

@@ -80,7 +80,7 @@ HRESULT COpening::Init(void)
 	CObjectX::Create(VEC3_NULL, "data/MODEL/field/arena.x", VEC3_NULL);
 
 	// フィールドの設定
-	CMeshField::Create(D3DXVECTOR3(5500.0f, 0.0f, 0.0f), 48, 48, D3DXVECTOR2(1000.0f, 1000.0f));
+	CMeshField::Create(D3DXVECTOR3(5500.0f, 0.0f, 0.0f), 48, 48, D3DXVECTOR2(1500.0f, 1500.0f));
 
 	// アリーナの生成
 	CObjectX::Create(D3DXVECTOR3(5500.0f,0.0f,0.0f), "data/MODEL/field/TitleArena.x", D3DXVECTOR3(0.0f, 0.0f, 0.0f));
