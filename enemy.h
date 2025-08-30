@@ -40,6 +40,7 @@ class CPlayer;
 template <class T>
 class CObserver;
 class CColliderCapsule;
+class CColliderFOV;
 
 //***************************************************
 // 敵クラスの定義
@@ -77,6 +78,7 @@ public:
 		MOTIONTYPE_LEFTMOVE,	// 横歩き(左)
 		MOTIONTYPE_RUSH,		// 突進攻撃
 		MOTIONTYPE_END_RUSH,	// 突進攻撃終了
+		MOTIONTYPE_BACKKICK,	// 後ろ下痢
 		MOTIONTYPE_MAX
 	}MOTIONTYPE;
 
@@ -144,6 +146,8 @@ public:
 	void Hit(const int nDamage);
 	void MoveSmoke(void);
 	void SetAngle(const float fAngle);
+	bool CollisionFOV(const D3DXVECTOR3 pos);
+	bool CollisionFOV(const D3DXVECTOR3 pos, const float fLeftAngle, const float fRightAngle);
 
 	// 武器攻撃の結果
 	RESULT WeponAttackResult(CPlayer* pPlayer);
@@ -164,6 +168,7 @@ private:
 	std::unique_ptr<CColliderSphere> m_pSphere;		// 円の当たり判定クラス
 	std::shared_ptr<CVelocity> m_pMove;				// 移動クラスの生成
 	std::unique_ptr<CEnemyMovement> m_pMovement;	// 敵の移動制御クラス
+	std::unique_ptr<CColliderFOV> m_pFOV;			// 視界の判定
 	CObserver<int>* m_pObserver;					// オブザーバークラスへのポインタ
 	CMeshOrbit* m_pOrbit;							// 軌跡
 	D3DXMATRIX m_weponMatrix;						// 武器のワールドマトリックス

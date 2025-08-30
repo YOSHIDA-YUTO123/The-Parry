@@ -221,7 +221,7 @@ CColliderFOV::~CColliderFOV()
 //================================================
 unique_ptr<CColliderFOV> CColliderFOV::Create(const D3DXVECTOR3 pos, const float fAngle, const float fAngleLeft, const float fAngleRight, const float fLength)
 {
-	// sphereの生成
+	// 視界の生成
 	unique_ptr<CColliderFOV> pFOV = make_unique<CColliderFOV>();
 
 	// 設定処理
@@ -232,6 +232,24 @@ unique_ptr<CColliderFOV> CColliderFOV::Create(const D3DXVECTOR3 pos, const float
 	pFOV->m_Data.fNowAngle = fAngle;
 
 	return pFOV;
+}
+
+//================================================
+// コライダーの生成
+//================================================
+CColliderFOV CColliderFOV::CreateCollider(const D3DXVECTOR3 pos, const float fAngle, const float fAngleLeft, const float fAngleRight, const float fLength)
+{
+	// 視界の
+	CColliderFOV FOV = {};
+
+	// 設定処理
+	FOV.m_pos = pos;
+	FOV.m_Data.fAngleLeft = fAngleLeft;
+	FOV.m_Data.fAngleRight = fAngleRight;
+	FOV.m_Data.fLength = fLength;
+	FOV.m_Data.fNowAngle = fAngle;
+
+	return FOV;
 }
 
 //================================================

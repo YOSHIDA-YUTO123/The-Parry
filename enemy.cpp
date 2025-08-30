@@ -138,6 +138,9 @@ HRESULT CEnemy::Init(void)
 	// カプセルコライダーの生成
 	m_pCapsule = CColliderCapsule::Create(pos, D3DXVECTOR3(pos.x, pos.y + Size.y, pos.z), 60.0f,0);
 
+	// 視界の生成
+	m_pFOV = CColliderFOV::Create(pos, 0.0f, D3DX_PI * 0.5f, -D3DX_PI * 0.5f, 1000.0f);
+
 	// 移動制御クラスの生成
 	m_pMovement = make_unique<CEnemyMovement>();
 
@@ -154,9 +157,8 @@ void CEnemy::Uninit(void)
 	// nullにする
 	m_pOrbit = nullptr;
 	m_pAABB = nullptr;
-
-	// 要素のクリア
 	m_pCapsule = nullptr;
+	m_pFOV = nullptr;
 
 	//for (const auto& pCapsule : m_apCapsule)
 	//{
@@ -1046,6 +1048,66 @@ void CEnemy::SetAngle(const float fAngle)
 }
 
 //===================================================
+// 視界の判定
+//===================================================
+bool CEnemy::CollisionFOV(const D3DXVECTOR3 pos)
+{
+	// 視界判定の取得
+	auto pCollision = CCollisionFOV::GetInstance();
+
+	// 視界内だったら
+	if (pCollision->Collision(pos, m_pFOV.get()))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+//===================================================
+// 視界の判定
+//===================================================
+bool CEnemy::CollisionFOV(const D3DXVECTOR3 pos, const float fLeftAngle, const float fRightAngle)
+{
+	// 視界判定の取得
+	auto pCollision = CCollisionFOV::GetInstance();
+
+	// 位置の取得
+	D3DXVECTOR3 myPos = CCharacter3D::GetPosition();
+
+	// 向きの取得
+	D3DXVECTOR3 Angle = CCharacter3D::GetRotaition()->Get();
+
+	// 視界の作成
+	auto ColliderFOV = CColliderFOV::CreateCollider(myPos, Angle.y, fLeftAngle, fRightAngle,1000.0f);
+	
+
+	D3DXVECTOR3 leftPos = D3DXVECTOR3
+	(myPos.x + sinf(fLeftAngle) * 550.0f,
+		myPos.y,
+	myPos.z + cosf(fLeftAngle) * 550.0f);
+
+	D3DXVECTOR3 RightPos = D3DXVECTOR3
+	(myPos.x + sinf(fRightAngle) * 550.0f,
+		myPos.y,
+	myPos.z + cosf(fRightAngle) * 550.0f);
+
+	auto pEffect = CEffect3D::Create(leftPos, 100.0f, WHITE, CEffect3D::TYPE_NORAML);
+	pEffect->Set(120, VEC3_NULL);
+
+	pEffect = CEffect3D::Create(RightPos, 100.0f, WHITE, CEffect3D::TYPE_NORAML);
+	pEffect->Set(120, VEC3_NULL);
+
+	// 視界内だったら
+	if (pCollision->Collision(pos, &ColliderFOV))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+//===================================================
 // 武器攻撃の結果を返す
 //===================================================
 CEnemy::RESULT CEnemy::WeponAttackResult(CPlayer* pPlayer)
@@ -1204,7 +1266,7 @@ void CEnemy::UpdateCollider(const D3DXVECTOR3 pos)
 		m_pAABB->UpdateData(CenterPos, D3DXVECTOR3(m_posOld.x, m_posOld.y + Size.y * 0.5f, m_posOld.z));
 	}
 
-	// 全身の更新
+	// カプセルの更新
 	if (m_pCapsule != nullptr)
 	{
 		// データの取得
@@ -1219,6 +1281,19 @@ void CEnemy::UpdateCollider(const D3DXVECTOR3 pos)
 		m_pCapsule->UpdateData(dataCapsule);
 	}
 	
+	// 視界の更新
+	if (m_pFOV != nullptr)
+	{
+		// 位置の設定
+		m_pFOV->SetPosition(pos);
+
+		// 向きの取得
+		D3DXVECTOR3 Angle = CCharacter3D::GetRotaition()->Get();
+
+		// データの更新処理
+		m_pFOV->UpdateData(Angle.y);
+	}
+
 	SetPosition(pos);
 }
 

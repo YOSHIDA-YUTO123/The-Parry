@@ -60,6 +60,7 @@ public:
 		ID_LEFT_MOVE,	 // 横歩き(左)
 		ID_RUSH,		 // 突進攻撃
 		ID_ENDRUSH,		 // 突進攻撃終了
+		ID_BACKKICK,	 // 後ろ蹴り
 		ID_MAX
 	};
 
@@ -428,6 +429,19 @@ public:
 	void Update(void) override;
 private:
 	float m_fInertia; // 慣性
+};
+
+//***************************************************
+// 敵の状態(BackKick)クラスの定義
+//***************************************************
+class CEnemyBackKick : public CEnemyState
+{
+public:
+	CEnemyBackKick();
+	~CEnemyBackKick();
+	void Init(void) override;
+	void Update(void) override;
+private:
 };
 
 #endif

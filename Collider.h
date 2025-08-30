@@ -89,6 +89,7 @@ public:
 	CColliderFOV();
 	~CColliderFOV();
 	static std::unique_ptr<CColliderFOV> Create(const D3DXVECTOR3 pos,const float fAngle, const float fAngleLeft, const float fAngleRight,const float fLength);
+	static CColliderFOV CreateCollider(const D3DXVECTOR3 pos, const float fAngle, const float fAngleLeft, const float fAngleRight, const float fLength);
 	Data GetData(void) const { return m_Data; }
 	void UpdateData(const float fNowAngle) { m_Data.fNowAngle = fNowAngle; }
 private:
