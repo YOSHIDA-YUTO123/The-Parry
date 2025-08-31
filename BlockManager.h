@@ -15,12 +15,14 @@
 // インクルードファイル
 //************************************************
 #include "object.h"
-#include<list>
+#include<vector>
+#include<memory>
 
 //************************************************
 // 前方宣言
 //************************************************
 class CBlock; 
+class CColliderAABB;
 
 //************************************************
 // ブロックのマネージャクラスの定義
@@ -28,15 +30,17 @@ class CBlock;
 class CBlockManager
 {
 public:
-	CBlockManager();
 	~CBlockManager();
 
-	void Delete(CBlock* pSelectBlock);
-	void Update(void);
+	static void Create(void);
+	static CBlockManager* GetInstance(void) { return m_pInstance.get(); }
 	void SetBlock(CBlock* pBlock);
+	bool Collision(CColliderAABB* pAABB, D3DXVECTOR3* pPushPos);
+	HRESULT Load(void);
 private:
-	CBlock* m_pSelectBlock;			  // 選択中のブロック
-	std::list<CBlock*> m_apBlockList; // ブロックのリスト
+	CBlockManager();
+	static std::unique_ptr<CBlockManager> m_pInstance; // 自分のインスタンス
+	std::vector<CBlock*> m_apBlockList; // ブロックのリスト
 };
 
 #endif

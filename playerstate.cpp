@@ -18,6 +18,7 @@
 #include "MoveSmoke.h"
 #include "GameCamera.h"
 #include "manager.h"
+#include "tutorial.h"
 
 using MOTION = CPlayer::MOTIONTYPE; // プレイヤーの列挙型の使用
 using namespace std;				// 名前空間stdの使用
@@ -116,11 +117,25 @@ void CPlayerDamage::Init(void)
 	// モーションの取得
 	CMotion* pMotion = pPlayer->GetMotion();
 
+	// モードの取得
+	CScene::MODE mode = CManager::GetMode();
+
 	// カメラの取得
-	CGameCamera* pGameCamera = CGame::GetCamera();
+	CGameCamera* pCamera = nullptr;
+
+	if (mode == CScene::MODE_GAME)
+	{
+		// カメラの取得
+		pCamera = CGame::GetCamera();
+	}
+	else if (mode == CScene::MODE_TUTORIAL)
+	{
+		// カメラの取得
+		pCamera = CTutorial::GetCamera();
+	}
 
 	// カメラの揺れ
-	pGameCamera->SetShake(20, 40);
+	pCamera->SetShake(20, 40);
 
 	pPlayer->Hit(m_nDamage);
 

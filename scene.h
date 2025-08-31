@@ -28,6 +28,7 @@ public:
 	typedef enum
 	{
 		MODE_TITLE = 0,	// タイトル画面
+		MODE_EDIT,		// 編集
 		MODE_TUTORIAL,	// チュートリアル画面
 		MODE_OPENING,	// 入場ムービー
 		MODE_GAME,		// ゲーム画面

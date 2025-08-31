@@ -24,6 +24,8 @@
 #include "debugproc.h"
 #include "TitleLogo.h"
 #include "TitleMenu.h"
+#include "edit.h"
+#include "tutorial.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std;   // 名前空間stdを使用
@@ -97,6 +99,15 @@ HRESULT CTitle::Init(void)
 //===================================================
 void CTitle::Uninit(void)
 {
+	// ライトの取得
+	CLight* pLight = CManager::GetLight();
+	
+	if (pLight != nullptr)
+	{
+		// 破棄
+		pLight->Uninit();
+	}
+
 	// カメラの破棄
 	if (m_pCamera != nullptr)
 	{
@@ -120,6 +131,19 @@ void CTitle::Update(void)
 	pParticle = CParticle3DNormal::Create(D3DXVECTOR3(250.0f, 175.0f, -150.0f), 10.0f, D3DCOLOR_RGBA(240, 122, 27, 255));
 	pParticle->SetParticle(2.0f, 60, 10, 1, 40);
 	pParticle->SetParam(CEffect3D::TYPE_FIRE);
+
+#ifdef _DEBUG
+	if(CManager::GetInputKeyboard()->GetTrigger(DIK_F1))
+	{
+		CManager::GetFade()->SetFade(make_unique<CEdit>());
+	}
+
+#endif // _DEBUG
+
+	if (CManager::GetInputKeyboard()->GetTrigger(DIK_F2))
+	{
+		CManager::GetFade()->SetFade(make_unique<CTutorial>());
+	}
 
 	// カメラの更新処理
 	if (m_pCamera != nullptr)

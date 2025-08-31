@@ -1,0 +1,82 @@
+//=======================================================
+//
+// チュートリアルのブロックの配置 [ tutorialStage.txt ]
+// Author : YUTO YOSHIDA
+//
+//=======================================================
+
+//=======================================================
+// 配置情報
+//=======================================================
+BLOCKSET
+	POS = 0.0 0.0 -1250.0 # 位置
+	FILE_NAME = wall000.x # 読み込むファイル名
+	REVERSE = 0			  # 反転するかどうか
+END_BLOCKSET
+
+BLOCKSET
+	POS = 1090.0 0.0 -1250.0 # 位置
+	FILE_NAME = wall000.x # 読み込むファイル名
+	REVERSE = 0			  # 反転するかどうか
+END_BLOCKSET
+
+BLOCKSET
+	POS = -1090.0 0.0 -1250.0 # 位置
+	FILE_NAME = wall000.x # 読み込むファイル名
+	REVERSE = 0			  # 反転するかどうか
+END_BLOCKSET
+
+BLOCKSET
+	POS = 0.0 0.0 1250.0 # 位置
+	FILE_NAME = wall000.x # 読み込むファイル名
+	REVERSE = 1			  # 反転するかどうか
+END_BLOCKSET
+
+BLOCKSET
+	POS = 1090 0.0 1250.0 # 位置
+	FILE_NAME = wall000.x # 読み込むファイル名
+	REVERSE = 1			  # 反転するかどうか
+END_BLOCKSET
+
+BLOCKSET
+	POS = -1090 0.0 1250.0 # 位置
+	FILE_NAME = wall000.x # 読み込むファイル名
+	REVERSE = 1			  # 反転するかどうか
+END_BLOCKSET
+
+BLOCKSET
+	POS = 1250.0 0.0 0.0 # 位置
+	FILE_NAME = wall001.x # 読み込むファイル名
+	REVERSE = 1			  # 反転するかどうか
+END_BLOCKSET
+
+BLOCKSET
+	POS = 1250.0 0.0 1090.0 # 位置
+	FILE_NAME = wall001.x # 読み込むファイル名
+	REVERSE = 1			  # 反転するかどうか
+END_BLOCKSET
+
+BLOCKSET
+	POS = 1250.0 0.0 -1090.0 # 位置
+	FILE_NAME = wall001.x # 読み込むファイル名
+	REVERSE = 1			  # 反転するかどうか
+END_BLOCKSET
+
+BLOCKSET
+	POS = -1250.0 0.0 0.0 # 位置
+	FILE_NAME = wall001.x # 読み込むファイル名
+	REVERSE = 0			  # 反転するかどうか
+END_BLOCKSET
+
+BLOCKSET
+	POS = -1250.0 0.0 1090.0 # 位置
+	FILE_NAME = wall001.x # 読み込むファイル名
+	REVERSE = 0			  # 反転するかどうか
+END_BLOCKSET
+
+BLOCKSET
+	POS = -1250.0 0.0 -1090.0 # 位置
+	FILE_NAME = wall001.x # 読み込むファイル名
+	REVERSE = 0			  # 反転するかどうか
+END_BLOCKSET
+

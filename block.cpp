@@ -10,12 +10,21 @@
 //***************************************************
 #include "block.h"
 #include<string>
+#include"Collider.h"
+#include"manager.h"
+#include"scene.h"
+#include "Collision.h"
+
+using namespace Const; // 名前空間Constを使用
+using namespace std;   // 名前空間stdを使用
 
 //===================================================
 // コンストラクタ
 //===================================================
 CBlock::CBlock()
 {
+	m_CenterPos = VEC3_NULL;
+	m_pAABB = nullptr;
 }
 
 //===================================================
@@ -32,6 +41,18 @@ CBlock* CBlock::Create(const D3DXVECTOR3 pos, const char* pModelFileName, const 
 {
 	CBlock* pBlock = new CBlock;
 
+	// 位置の設定
+	pBlock->SetPosition(pos);
+
+	// 省略用パス
+	std::string pPath = "data/MODEL/obj/";
+
+	// 文字列をつなげる
+	pPath += pModelFileName;
+
+	// モデルのロード
+	pBlock->LoadModel(pPath.c_str());
+
 	// 初期化処理
 	if (FAILED(pBlock->Init()))
 	{// 初期化に失敗したら
@@ -42,20 +63,8 @@ CBlock* CBlock::Create(const D3DXVECTOR3 pos, const char* pModelFileName, const 
 		return nullptr;
 	}
 
-	// 位置の設定
-	pBlock->SetPosition(pos);
-
 	// 向きの設定
 	pBlock->GetRotaition()->Set(rot);
-
-	// 省略用パス
-	std::string pPath = "data/MODEL/";
-	
-	// 文字列をつなげる
-	pPath += pModelFileName;
-
-	// モデルのロード
-	pBlock->LoadModel(pPath.c_str());
 
 	return pBlock;
 }
@@ -71,6 +80,17 @@ HRESULT CBlock::Init(void)
 		return E_FAIL;
 	}
 
+	if (m_pAABB == nullptr)
+	{
+		// 位置の取得
+		D3DXVECTOR3 pos = CObjectX::GetPosition();
+
+		// 大きさの取得
+		D3DXVECTOR3 Size = CObjectX::GetSize();
+
+		// AABBの生成
+		m_pAABB = CColliderAABB::Create(pos, pos, Size);
+	}
 	return S_OK;
 }
 
@@ -79,6 +99,8 @@ HRESULT CBlock::Init(void)
 //===================================================
 void CBlock::Uninit(void)
 {
+	m_pAABB = nullptr;
+
 	// 終了処理
 	CObjectX::Uninit();
 }
@@ -88,6 +110,28 @@ void CBlock::Uninit(void)
 //===================================================
 void CBlock::Update(void)
 {
+	//// モードの取得
+	//CScene::MODE mode = CManager::GetMode();
+		//if (mode == CScene::MODE_TUTORIAL)
+	//{
+
+	//}
+
+	// 位置の取得
+	D3DXVECTOR3 pos = CObjectX::GetPosition();
+
+	// 大きさの取得
+	D3DXVECTOR3 Size = CObjectX::GetSize();
+
+	// 中心座標の設定
+	m_CenterPos = pos;
+	m_CenterPos.y = pos.y + Size.y * 0.5f;
+
+	if (m_pAABB != nullptr)
+	{
+		// データの更新
+		m_pAABB->UpdateData(m_CenterPos, m_CenterPos);
+	}
 
 }
 
@@ -98,4 +142,29 @@ void CBlock::Draw(void)
 {
 	// 描画処理
 	CObjectX::Draw();
+}
+
+//===================================================
+// 当たり判定
+//===================================================
+bool CBlock::Collision(CColliderAABB* pAABB,D3DXVECTOR3 *pPushPos)
+{
+	// AABBの取得
+	auto pCollision = CCollisionAABB::GetInstance();
+
+	// 取得できなかったら処理しない
+	if (pCollision == nullptr) return false;
+
+	// nullだったら処理しない
+	if (m_pAABB == nullptr) return false;
+
+	// nullだったら処理しない
+	if (pAABB == nullptr) return false;
+
+	// 矩形の判定
+	if (pCollision->Collision(m_pAABB.get(), pAABB, pPushPos))
+	{
+		return true;
+	}
+	return false;
 }

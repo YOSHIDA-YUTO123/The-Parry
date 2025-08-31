@@ -170,7 +170,7 @@ void CMeshCircle::Update(void)
 		D3DXVECTOR3 pos = GetPosition();
 
 		// ’n–Ê‚Æ‚Ì“–‚½‚è”»’è
-		if (pMesh->Collision(posWk + pos, &fHeight) && m_bFiledCollision)
+		if (pMesh != nullptr && pMesh->Collision(posWk + pos, &fHeight) && m_bFiledCollision)
 		{
 			posWk.y = fHeight;
 		}
@@ -198,7 +198,7 @@ void CMeshCircle::Update(void)
 		D3DXVECTOR3 pos = GetPosition();
 
 		// ’n–Ê‚Æ‚Ì“–‚½‚è”»’è
-		if (pMesh->Collision(posWk + pos, &fHeight) && m_bFiledCollision)
+		if (pMesh != nullptr && pMesh->Collision(posWk + pos, &fHeight) && m_bFiledCollision)
 		{
 			posWk.y = fHeight;
 		}

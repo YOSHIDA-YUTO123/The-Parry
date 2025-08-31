@@ -43,6 +43,8 @@
 #include"math.h"
 #include "ParticleSpark.h"
 #include"light.h"
+#include "tutorial.h"
+#include "BlockManager.h"
 
 
 using namespace math; // 名前空間mathを使用
@@ -212,6 +214,9 @@ void CPlayer::Update(void)
 		CGame::SetResult(CGame::RESULTTYPE_LOSE);
 	}
 
+	// モードの取得
+	CScene::MODE mode = CManager::GetMode();
+
 	// キーボードの取得
 	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
 
@@ -222,10 +227,28 @@ void CPlayer::Update(void)
 	CInputMouse* pMouse = CManager::GetInputMouse();
 
 	// メッシュフィールドの取得
-	CMeshField* pMesh = CGame::GetField();
+	CMeshField* pMesh = nullptr;
 
 	// カメラの取得
-	CGameCamera* pCamera = CGame::GetCamera();
+	CGameCamera* pCamera = nullptr;
+
+	if (mode == CScene::MODE_GAME)
+	{
+		// カメラの取得
+		pCamera = CGame::GetCamera();
+
+		// メッシュフィールドの取得
+		pMesh = CGame::GetField();
+	}
+	else if (mode == CScene::MODE_TUTORIAL)
+	{
+		// カメラの取得
+		pCamera = CTutorial::GetCamera();
+
+		// メッシュフィールドの取得
+		pMesh = CTutorial::GetField();
+	}
+	
 
 	if (CCharacter3D::HitStop())
 	{
@@ -366,6 +389,9 @@ void CPlayer::Update(void)
 		Orbit(32, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
 	}
 
+	// ブロックの当たり判定
+	CollisionBlock(&pos);
+
 	// コライダーを更新する
 	UpdateCollider(pos);
 
@@ -375,6 +401,7 @@ void CPlayer::Update(void)
 		// コライダーを更新する
 		UpdateCollider(pos);
 	}
+
 
 	// インパクトの当たり判定
 	CollisionImpact(pMesh, &pos, pMotion);
@@ -748,8 +775,22 @@ bool CPlayerMovement::MoveKeyboard(CInputKeyboard* pKeyboard,const float fSpeed,
 {
 	bool bMove = false;
 
+	// モードの取得
+	CScene::MODE mode = CManager::GetMode();
+
 	// カメラの取得
-	CGameCamera* pCamera = CGame::GetCamera();
+	CGameCamera* pCamera = nullptr;
+
+	if (mode == CScene::MODE_GAME)
+	{
+		// カメラの取得
+		pCamera = CGame::GetCamera();
+	}
+	else if (mode == CScene::MODE_TUTORIAL)
+	{
+		// カメラの取得
+		pCamera = CTutorial::GetCamera();
+	}
 
 	// カメラの向き
 	D3DXVECTOR3 cameraRot = pCamera->GetRotaition();
@@ -869,8 +910,22 @@ bool CPlayerMovement::MoveJoypad(CInputJoypad* pJoypad, const float fSpeed, floa
 
 	pStick = pJoypad->GetJoyStickAngle();
 
+	// モードの取得
+	CScene::MODE mode = CManager::GetMode();
+
 	// カメラの取得
-	CGameCamera* pCamera = CGame::GetCamera();
+	CGameCamera* pCamera = nullptr;
+
+	if (mode == CScene::MODE_GAME)
+	{
+		// カメラの取得
+		pCamera = CGame::GetCamera();
+	}
+	else if (mode == CScene::MODE_TUTORIAL)
+	{
+		// カメラの取得
+		pCamera = CTutorial::GetCamera();
+	}
 
 	// カメラの向き
 	D3DXVECTOR3 cameraRot = pCamera->GetRotaition();
@@ -1239,8 +1294,31 @@ void CPlayer::Orbit(const int nSegH, const D3DXCOLOR col)
 //===================================================
 void CPlayer::SetRevengeEffect(void)
 {
+	// モードの取得
+	CScene::MODE mode = CManager::GetMode();
+
 	// カメラの取得
-	CGameCamera* pCamera = CGame::GetCamera();
+	CGameCamera* pCamera = nullptr;
+
+	// メッシュフィールドの取得処理
+	CMeshField* pMeshField = nullptr;
+
+	if (mode == CScene::MODE_GAME)
+	{
+		// カメラの取得
+		pCamera = CGame::GetCamera();
+
+		// メッシュフィールドの取得
+		pMeshField = CGame::GetField();
+	}
+	else if (mode == CScene::MODE_TUTORIAL)
+	{
+		// カメラの取得
+		pCamera = CTutorial::GetCamera();
+
+		// メッシュフィールドの取得
+		pMeshField = CTutorial::GetField();
+	}
 
 	// カメラの揺れ
 	pCamera->SetShake(40, 30);
@@ -1250,9 +1328,6 @@ void CPlayer::SetRevengeEffect(void)
 
 	// フィールドの波の設定
 	CMeshFieldWave::Config config = { FootL,250.0f,380.0f,280.0f,12.0f,0.01f,120 };
-
-	// メッシュフィールドの取得処理
-	CMeshField* pMeshField = CGame::GetField();
 	
 	if (pMeshField != nullptr)
 	{
@@ -1313,8 +1388,22 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos)
 	// 向きの取得
 	D3DXVECTOR3 rot = CCharacter3D::GetRotaition()->Get();
 
+	// モードの取得
+	CScene::MODE mode = CManager::GetMode();
+
 	// カメラの取得
-	CGameCamera* pCamera = CGame::GetCamera();
+	CGameCamera* pCamera = nullptr;
+
+	if (mode == CScene::MODE_GAME)
+	{
+		// カメラの取得
+		pCamera = CGame::GetCamera();
+	}
+	else if (mode == CScene::MODE_TUTORIAL)
+	{
+		// カメラの取得
+		pCamera = CTutorial::GetCamera();
+	}
 
 	// プレイヤーの位置の取得
 	D3DXVECTOR3 playerPos = CCharacter3D::GetPosition();
@@ -1437,6 +1526,35 @@ void CPlayer::CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos, CMotion
 		// モーションの設定
 		ChangeState(make_shared<CPlayerDamage>(5));
 	}
+}
+
+//===================================================
+// ブロックの当たり判定
+//===================================================
+bool CPlayer::CollisionBlock(D3DXVECTOR3 *pPos)
+{
+	// ブロックマネージャーの取得
+	auto pBlockManager = CBlockManager::GetInstance();
+
+	// 取得できなかったら処理しない
+	if (pBlockManager == nullptr) return false;
+
+	// nullだったら処理しない
+	if (m_pAABB == nullptr) return false;
+
+	// コライダーの更新
+	UpdateCollider(*pPos);
+
+	// ブロックの当たり判定
+	if (pBlockManager->Collision(m_pAABB.get(), pPos))
+	{
+		// コライダーの更新
+		UpdateCollider(*pPos);
+
+		return true;
+	}
+
+	return false;
 }
 
 //===================================================

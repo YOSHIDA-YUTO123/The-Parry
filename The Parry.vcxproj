@@ -161,6 +161,7 @@
     <ClCompile Include="character3D.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="edit.cpp" />
     <ClCompile Include="EffectSpark.cpp" />
     <ClCompile Include="FadeEffect.cpp" />
     <ClCompile Include="GameCamera.cpp" />
@@ -178,6 +179,7 @@
     <ClCompile Include="TitleLogo.cpp" />
     <ClCompile Include="TitleMenu.cpp" />
     <ClCompile Include="TitlePlayer.cpp" />
+    <ClCompile Include="tutorial.cpp" />
     <ClCompile Include="ZoneParticle.cpp" />
     <ClCompile Include="cylinder.cpp" />
     <ClCompile Include="debugproc.cpp" />
@@ -253,6 +255,7 @@
     <ClInclude Include="character3D.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="edit.h" />
     <ClInclude Include="EffectSpark.h" />
     <ClInclude Include="FadeEffect.h" />
     <ClInclude Include="GameCamera.h" />
@@ -270,6 +273,7 @@
     <ClInclude Include="TitleLogo.h" />
     <ClInclude Include="TitleMenu.h" />
     <ClInclude Include="TitlePlayer.h" />
+    <ClInclude Include="tutorial.h" />
     <ClInclude Include="ZoneParticle.h" />
     <ClInclude Include="cylinder.h" />
     <ClInclude Include="debugproc.h" />

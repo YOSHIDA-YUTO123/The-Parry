@@ -29,6 +29,7 @@
 #include"title.h"
 #include "fade.h"
 #include "pause.h"
+#include "BlockManager.h"
 
 using namespace Const;			// 名前空間Constを使用する
 using namespace std;			// 名前空間stdを使用する
@@ -106,6 +107,9 @@ HRESULT CManager::Init(HINSTANCE hInstance,HWND hWnd, BOOL bWindow)
 
 	// 当たり判定のマネージャーの生成
  	CCollisionManager::CreateAll();
+
+	// ブロックのマネージャーの生成
+	CBlockManager::Create();
 
 	// テクスチャの生成
 	m_pTexture = new CTextureManager;

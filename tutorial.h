@@ -1,6 +1,6 @@
 //===================================================
 //
-// ブロック [block.h]
+// チュートリアル [tutorial.h]
 // Author:YUTO YOSHIDA
 //
 //===================================================
@@ -8,40 +8,39 @@
 //***************************************************
 // 多重インクルード防止
 //***************************************************
-#ifndef _BLOCK_H_
-#define _BLOCK_H_
+#ifndef _TUTORIAL_H_
+#define _TUTORIAL_H_
 
 //***************************************************
 // インクルードファイル
 //***************************************************
-#include "objectX.h"
-#include <memory>
+#include "scene.h"
 
 //***************************************************
 // 前方宣言
 //***************************************************
-class CColliderAABB;
+class CGameCamera;
+class CMeshField;
 
 //***************************************************
-// ブロッククラスの定義
+// チュートリアルクラスの定義
 //***************************************************
-class CBlock : public CObjectX
+class CTutorial : public CScene
 {
 public:
-	CBlock();
-	~CBlock();
-
-	// "data/MODEL/"は省略
-	static CBlock* Create(const D3DXVECTOR3 pos,const char *pModelFileName, const D3DXVECTOR3 rot = Const::VEC3_NULL);
+	CTutorial();
+	~CTutorial();
 
 	HRESULT Init(void) override;
 	void Uninit(void) override;
 	void Update(void) override;
 	void Draw(void) override;
-	bool Collision(CColliderAABB* pAABB, D3DXVECTOR3* pPushPos);
+
+	static CGameCamera* GetCamera(void) { return m_pCamera; }
+	static CMeshField* GetField(void) { return m_pMeshField; }
 private:
-	D3DXVECTOR3 m_CenterPos; // 中心座標
-	std::unique_ptr<CColliderAABB> m_pAABB; // AABBのコライダー
+	static CGameCamera* m_pCamera;		// カメラへのポインタ
+	static CMeshField* m_pMeshField;	// メッシュフィールドへのポインタ
 };
 
 #endif

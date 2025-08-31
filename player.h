@@ -169,6 +169,7 @@ private:
 	void SetMoveAngle(CGameCamera* pCamera, CInputKeyboard* pKeyboard, CInputJoypad* pJoypad);
 	void UpdateCollider(D3DXVECTOR3 pos);
 	void UpdateStamina(void);
+	bool CollisionBlock(D3DXVECTOR3 *pPos);
 
 	std::unique_ptr<CStateMachine> m_pMachine;		// ó‘Ô‚Ì§ŒäƒNƒ‰ƒX
 	std::unique_ptr<CPlayerMovement> m_pMovement;	// ˆÚ“®ˆ—

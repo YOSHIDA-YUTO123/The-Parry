@@ -80,9 +80,6 @@ void CFadeEffect::Uninit(void)
 //===================================================
 void CFadeEffect::Update(void)
 {
-	// 頂点情報のポインタ
-	VERTEX_2D* pVtx;
-
 	if (m_Fade != FADE_NONE)
 	{
 		if (m_Fade == FADE_IN)

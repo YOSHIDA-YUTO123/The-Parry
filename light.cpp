@@ -53,7 +53,17 @@ HRESULT CLight::Init(void)
 //===================================================
 void CLight::Uninit(void)
 {
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
+	for (int nCnt = 0; nCnt < MAX_LIGHT; nCnt++)
+	{
+		// ライトを無効化
+		pDevice->LightEnable(nCnt, FALSE);
+	}
+
+	// 値のクリア
+	ZeroMemory(m_aLightInfo, sizeof(m_aLightInfo));
 }
 
 //===================================================
