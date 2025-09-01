@@ -153,6 +153,8 @@ void CLight::SetPoint(const D3DXVECTOR3 pos, const float fRange, const D3DXCOLOR
 			info.aLight.Attenuation2 = 0.00f;
 			info.aLight.Range = fRange;
 
+			info.bUse = true;
+
 			// ƒ‰ƒCƒg‚ÌÝ’è
 			pDevice->SetLight(nCnt, &info.aLight);
 

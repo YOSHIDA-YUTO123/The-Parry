@@ -12,7 +12,8 @@
 #include"block.h"
 #include"LoadManager.h"
 
-using namespace std; // 名前空間stdを使用
+using namespace std;	// 名前空間stdを使用
+using namespace Const;	// 名前空間Constを使用
 
 //************************************************
 // 静的メンバ変数宣言
@@ -35,10 +36,10 @@ HRESULT CBlockManager::Load(void)
 	fstream file("data/MODEL/tutorialStage.txt");
 	string line, input;
 
-	D3DXVECTOR3 pos; // 位置
-	string filepath; // ファイルパス
-	int nReverse;    // 反転するかどうか
-	float fAngle = 0.0f; // 向き
+	D3DXVECTOR3 pos;	// 位置
+	string filepath;	// ファイルパス
+	int nReverse;		// 反転するかどうか
+	D3DXVECTOR3 Angle = VEC3_NULL;	// 角度
 
 	// nullじゃなかったら
 	if (file.is_open())
@@ -85,18 +86,28 @@ HRESULT CBlockManager::Load(void)
 
 				if (nReverse == 0)
 				{
-					fAngle = 0.0f;
+					Angle.y = 0.0f;
 				}
 				else
 				{
 					// 反転
-					fAngle = D3DX_PI;
+					Angle.y = D3DX_PI;
 				}
+			}
+			if (line.find("ROT") != string::npos)
+			{
+				// 数値を読み込む準備
+				istringstream value_Input = pLoad->SetInputvalue(input);
+
+				// 数値を代入する
+				value_Input >> Angle.x;
+				value_Input >> Angle.y;
+				value_Input >> Angle.z;
 			}
 			if (line.find("END_BLOCKSET") != string::npos)
 			{
 				// ブロックの生成
-				CBlock *pBlock = CBlock::Create(pos, filepath.c_str(),D3DXVECTOR3(0.0f, fAngle,0.0f));
+				CBlock *pBlock = CBlock::Create(pos, filepath.c_str(), Angle);
 				m_apBlockList.push_back(pBlock);
 			}
 		}

@@ -140,6 +140,15 @@ bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox,
 	D3DXVECTOR3 tPosMin = TargetPos - (TargetSize * HALF_VALUE);
 	D3DXVECTOR3 tPosMax = TargetPos + (TargetSize * HALF_VALUE);
 
+	// Y‚Ì”ÍˆÍ‚É“ü‚Á‚Ä‚¢‚é‚©
+	const bool bCheckRangeY = posOldMin.y <= tPosOldMax.y && posOldMax.y >= tPosOldMin.y;
+
+	// ”ÍˆÍŠO‚¾‚Á‚½‚ç
+	if (!bCheckRangeY)
+	{
+		return false;
+	}
+
 	// Z‚Ì”ÍˆÍ“à‚É“ü‚Á‚Ä‚¢‚é
 	if (tPosMin.z < posMax.z && tPosMax.z > posMin.z)
 	{
@@ -223,9 +232,6 @@ bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox,
 			return true;
 		}
 	}
-	//if (posOldMin.y <= tPosOldMax.y && posOldMax.y >= tPosOldMin.y)
-	//{
-	//}
 
 	//if (pos.x - m_Size.x * HALF_VALUE <= otherPos.x + otherSize.x * HALF_VALUE
 	//	&& pos.x + m_Size.x * HALF_VALUE >= otherPos.x - otherSize.x * HALF_VALUE)

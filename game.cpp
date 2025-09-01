@@ -187,8 +187,8 @@ HRESULT CGame::Init(void)
 	// スパイクトラップ
 	CSpikeTrap::Create(D3DXVECTOR3(-1540.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f,D3DX_PI, 0.0f), face);
 
-	// モデルの読み込み
-	CBlock::Create(D3DXVECTOR3(520.0f, 1510.0f, 2976.0f), "dust/dust003.x");
+	//// モデルの読み込み
+	//CBlock::Create(D3DXVECTOR3(520.0f, 1510.0f, 2976.0f), "dust003.x");
 
 	// ポーズマネージャーの生成
 	CPauseManager::Create();

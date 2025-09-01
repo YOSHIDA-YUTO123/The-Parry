@@ -336,9 +336,12 @@ void CEnemy::Update(void)
 	// コライダーの更新
 	UpdateCollider(pos);
 
-	// プレイヤーとの当たり判定
-	pPlayer->CollisionCapsule(m_pCapsule.get());
-	
+	if (pPlayer != nullptr)
+	{
+		// プレイヤーとの当たり判定
+		pPlayer->CollisionCapsule(m_pCapsule.get());
+	}
+
 	// シリンダーの取得
 	CMeshCylinder* pCylinder = CGame::GetCylinder();
 
@@ -348,8 +351,11 @@ void CEnemy::Update(void)
 		pCylinder->Collision(&pos);
 	}
 	
-	// 重力の設定
-	m_pMove->Gravity(-MAX_GRABITY);
+	if (m_pMove != nullptr)
+	{
+		// 重力の設定
+		m_pMove->Gravity(-MAX_GRABITY);
+	}
 
 	// インパクトとの判定
 	const bool bCollision = pMesh->CollisionImpact(pos, 150.0f,CMeshFieldImpact::OBJ_ENEMY);
@@ -1081,23 +1087,6 @@ bool CEnemy::CollisionFOV(const D3DXVECTOR3 pos, const float fLeftAngle, const f
 	// 視界の作成
 	auto ColliderFOV = CColliderFOV::CreateCollider(myPos, Angle.y, fLeftAngle, fRightAngle,1000.0f);
 	
-
-	D3DXVECTOR3 leftPos = D3DXVECTOR3
-	(myPos.x + sinf(fLeftAngle) * 550.0f,
-		myPos.y,
-	myPos.z + cosf(fLeftAngle) * 550.0f);
-
-	D3DXVECTOR3 RightPos = D3DXVECTOR3
-	(myPos.x + sinf(fRightAngle) * 550.0f,
-		myPos.y,
-	myPos.z + cosf(fRightAngle) * 550.0f);
-
-	auto pEffect = CEffect3D::Create(leftPos, 100.0f, WHITE, CEffect3D::TYPE_NORAML);
-	pEffect->Set(120, VEC3_NULL);
-
-	pEffect = CEffect3D::Create(RightPos, 100.0f, WHITE, CEffect3D::TYPE_NORAML);
-	pEffect->Set(120, VEC3_NULL);
-
 	// 視界内だったら
 	if (pCollision->Collision(pos, &ColliderFOV))
 	{
