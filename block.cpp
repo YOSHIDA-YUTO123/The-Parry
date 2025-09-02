@@ -112,13 +112,6 @@ void CBlock::Uninit(void)
 //===================================================
 void CBlock::Update(void)
 {
-	//// ƒ‚[ƒh‚Ìæ“¾
-	//CScene::MODE mode = CManager::GetMode();
-		//if (mode == CScene::MODE_TUTORIAL)
-	//{
-
-	//}
-
 	// ˆÊ’u‚Ìæ“¾
 	D3DXVECTOR3 pos = CObjectX::GetPosition();
 

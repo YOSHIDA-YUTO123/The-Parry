@@ -35,6 +35,8 @@ public:
 	static void Create(void);
 	static CBlockManager* GetInstance(void) { return m_pInstance.get(); }
 	void SetBlock(CBlock* pBlock);
+	CBlock* GetBlock(const int nIdx);
+	int GetNumAll(void) const { return static_cast<int>(m_apBlockList.size()); }
 	bool Collision(CColliderAABB* pAABB, D3DXVECTOR3* pPushPos);
 	HRESULT Load(void);
 private:

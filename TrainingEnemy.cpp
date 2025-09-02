@@ -19,6 +19,7 @@
 #include"TrainingEnemyState.h"
 #include"manager.h"
 #include"renderer.h"
+#include "Collision.h"
 
 using namespace std;  // 名前空間stdを使用
 using namespace math; // 名前空間mathを使用
@@ -128,7 +129,7 @@ void CTrainingEnemy::Update(void)
 	D3DXVECTOR3 pos = CCharacter3D::GetPosition();
 	D3DXVECTOR3 headPos = CCharacter3D::GetModelPos(MODEL_HEAD);
 
-	if (m_pCapsule != nullptr)
+	if (m_pCapsule != nullptr && pMotion->GetBlendType() != MOTIONTYPE_DAMAGE)
 	{
 		// コライダーのデータの取得
 		CColliderCapsule::Data data = m_pCapsule->GetData();
@@ -142,6 +143,9 @@ void CTrainingEnemy::Update(void)
 
 		// 当たり判定
 		pPlayer->CollisionCapsule(m_pCapsule.get());
+
+		// 攻撃の判定処理
+		CollisionPlayerAttack();
 	}
 
 	if (m_pMachine != nullptr)
@@ -247,8 +251,112 @@ void CTrainingEnemy::ChangeState(std::shared_ptr<CTrainingEnemyState> pNewState)
 //================================================
 CTrainingEnemy::RESULT CTrainingEnemy::GetAttackResult(void)
 {
+	// 位置の取得
+	D3DXVECTOR3 pos = GetPosition();
 
-	return RESULT();
+	// プレイヤーの取得
+	CPlayer* pPlayer = CTutorial::GetPlayer();
+
+	// 取得できなかったら処理しない
+	if (pPlayer == nullptr) return RESULT_NONE;
+
+	// プレイヤーのモーションの取得
+	CMotion* pPlayerMotion = pPlayer->GetMotion();
+
+	// プレイヤーのモーションの取得
+	int playerMotionType = pPlayerMotion->GetBlendType();
+
+	// 武器が当たったら
+	if (CollisionPlayer())
+	{
+		if (playerMotionType == pPlayer->MOTIONTYPE_REVENGE)
+		{
+			// パリィした
+			return RESULT_SPREVENGE;
+		}
+		else if (playerMotionType != pPlayer->MOTIONTYPE_PARRY)
+		{
+			// パリィできるか判定
+			const bool bParry = pPlayer->IsParry(pos);
+
+			// パリィできた
+			if (bParry)
+			{
+				// パリィした
+				return RESULT_PARRY;
+			}
+			// 回避だったら
+			else if (playerMotionType == pPlayer->MOTIONTYPE_AVOID || pPlayerMotion->GetType() == pPlayer->MOTIONTYPE_AVOID)
+			{
+				// 回避した
+				return RESULT_AVOID;
+			}
+			// カウンター失敗した
+			else if (bParry == false)
+			{
+				// 当たった
+				return RESULT_HIT;
+			}
+		}
+	}
+
+	return RESULT_NONE;
+}
+
+//================================================
+// プレイヤーの攻撃の判定
+//================================================
+void CTrainingEnemy::CollisionPlayerAttack(void)
+{
+	// プレイヤーの取得
+	CPlayer* pPlayer = CTutorial::GetPlayer();
+
+	// 取得できなかったら処理しない
+	if (pPlayer == nullptr) return;
+
+	// プレイヤーのモーションの取得
+	CMotion* pPlayerMotion = pPlayer->GetMotion();
+
+	// パリィモーションの蹴りになったら
+	if (pPlayerMotion->IsEventFrame(38, 38, pPlayer->MOTIONTYPE_ROUNDKICK))
+	{
+		// プレイヤーの右足の位置
+		D3DXVECTOR3 playerFootR = pPlayer->GetModelPos(CPlayer::MODEL_FOOTR);
+
+		// 円の当たり判定の取得
+		CCollisionCapsule* pCapsule = CCollisionCapsule::GetInstance();
+
+		// 右手の円
+		CColliderSphere FootRSphere = CColliderSphere::CreateCollider(playerFootR, 250.0f);
+
+		// 手が当たったら
+		if (pCapsule != nullptr && pCapsule->CollisionSphere(m_pCapsule.get(), &FootRSphere))
+		{
+			// 状態の変更
+			ChangeState(make_shared<CTrainingEnemyDamage>());
+		}
+	}
+
+	//// パリィモーションの蹴りになったら
+	//if (pPlayerMotion->IsEventFrame(13, 13, pPlayer->MOTIONTYPE_PUNCH) && IsDamageMotion() == false)
+	//{
+	//	// プレイヤーの右手の位置
+	//	D3DXVECTOR3 playerHandR = pPlayer->GetModelPos(5);
+
+	//	// 円の当たり判定の取得
+	//	CCollisionSphere* pSphere = CCollisionSphere::GetInstance();
+
+	//	// 右手の円
+	//	CColliderSphere HandRSphere = CColliderSphere::CreateCollider(playerHandR, 80.0f);
+	//	CColliderSphere ChestSphere = CColliderSphere::CreateCollider(chestpos, 250.0f);
+
+	//	// 手が当たったら
+	//	if (pSphere != nullptr && pSphere->Collision(&ChestSphere, &HandRSphere))
+	//	{
+	//		// どの攻撃モーションがでるか判定
+	//		SelectDamageMotion(m_nParrySuccess, playerHandR);
+	//	}
+	//}
 }
 
 //================================================

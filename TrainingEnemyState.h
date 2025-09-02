@@ -33,6 +33,7 @@ public:
 		ID_BASE = 0,	 // 無し
 		ID_IDLE,		 // 通常状態
 		ID_ACTION,		 // 攻撃
+		ID_HIT,			 // 攻撃ヒット
 		ID_DAMAGE,		 // ダメージ
 		ID_MAX
 	}ID;
@@ -74,6 +75,34 @@ class CTrainingEnemyAction : public CTrainingEnemyState
 public:
 	CTrainingEnemyAction();
 	~CTrainingEnemyAction();
+
+	void Init(void) override;
+	void Update(void) override;
+private:
+};
+
+//*************************************************
+// 攻撃ヒット状態クラスの定義
+//*************************************************
+class CTrainingEnemyHit : public CTrainingEnemyState
+{
+public:
+	CTrainingEnemyHit();
+	~CTrainingEnemyHit();
+
+	void Init(void) override;
+	void Update(void) override;
+private:
+};
+
+//*************************************************
+// ダメージ状態クラスの定義
+//*************************************************
+class CTrainingEnemyDamage : public CTrainingEnemyState
+{
+public:
+	CTrainingEnemyDamage();
+	~CTrainingEnemyDamage();
 
 	void Init(void) override;
 	void Update(void) override;

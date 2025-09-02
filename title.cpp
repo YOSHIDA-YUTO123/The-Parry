@@ -143,12 +143,7 @@ void CTitle::Update(void)
 
 	if (CManager::GetInputKeyboard()->GetTrigger(DIK_F2))
 	{
-		// オープニングの生成
-		auto pOpning = make_unique<COpening>();
-
-		pOpning->EnableTutorial(true);
-
-		CManager::GetFade()->SetFade(std::move(pOpning));
+		CManager::GetFade()->SetFade(make_unique<CTutorial>(),D3DXCOLOR(1.0f,1.0f,1.0f,0.0f));
 	}
 
 	// カメラの更新処理

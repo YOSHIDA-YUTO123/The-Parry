@@ -343,7 +343,7 @@ void CPlayerRoundKick::Update(void)
 		if (pMotion->IsEventFrame(15, 15, pPlayer->MOTIONTYPE_ROUNDKICK))
 		{
 			// à⁄ìÆó ÇÃê›íË
-			pPlayer->GetMovement()->Set(D3DXVECTOR3(0.0f, 18.0f, 0.0f));
+			pPlayer->GetMovement()->Set(D3DXVECTOR3(0.0f, 14.0f, 0.0f));
 
 			// ÉTÅ[ÉNÉãÇÃê∂ê¨
 			auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f), pos, 0.0f, 20.0f);

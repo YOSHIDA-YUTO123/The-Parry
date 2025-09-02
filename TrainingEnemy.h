@@ -59,6 +59,8 @@ public:
 	{
 		MOTIONTYPE_NEUTRAL = 0,
 		MOTIONTYPE_ACTION,
+		MOTIONTYPE_HIT,
+		MOTIONTYPE_DAMAGE,
 		MOTIONTYPE_MAX
 	}MOTIONTYPE;
 
@@ -87,6 +89,7 @@ public:
 	bool CheckDistance(float fRange);
 	void ChangeState(std::shared_ptr<CTrainingEnemyState> pNewState);
 	RESULT GetAttackResult(void);
+	void CollisionPlayerAttack(void);
 private:
 	bool CollisionPlayer(void);
 	std::unique_ptr<CColliderCapsule> m_pCapsule; // カプセルコライダー

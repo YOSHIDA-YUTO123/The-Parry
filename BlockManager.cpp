@@ -108,6 +108,7 @@ HRESULT CBlockManager::Load(void)
 			{
 				// ブロックの生成
 				CBlock *pBlock = CBlock::Create(pos, filepath.c_str(), Angle);
+				pBlock->SetTextureMT("data/TEXTURE/effect/grid000.png");
 				m_apBlockList.push_back(pBlock);
 			}
 		}
@@ -153,6 +154,22 @@ void CBlockManager::SetBlock(CBlock* pBlock)
 {
 	// ブロックをリストに追加する
 	m_apBlockList.push_back(pBlock);
+}
+
+//================================================
+// ブロックの取得
+//================================================
+CBlock* CBlockManager::GetBlock(const int nIdx)
+{
+	// ブロックの総数
+	int nNumBlock = static_cast<int>(m_apBlockList.size());
+
+	if (nIdx < 0 || nIdx > nNumBlock - 1)
+	{
+		return nullptr;
+	}
+
+	return m_apBlockList[nIdx];
 }
 
 //================================================

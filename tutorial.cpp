@@ -22,6 +22,11 @@
 using namespace Const; // 名前空間Const
 
 //***************************************************
+// 定数宣言
+//***************************************************
+const D3DXVECTOR3 PLAYER_POS = { 0.0f,0.0f,1200.0f };
+
+//***************************************************
 // 静的メンバ変数宣言
 //***************************************************
 CGameCamera* CTutorial::m_pCamera = nullptr;	// カメラクラスへのポインタ
@@ -50,6 +55,7 @@ HRESULT CTutorial::Init(void)
 {
 	m_pCamera = new CGameCamera;
 	m_pCamera->Init();
+	m_pCamera->SetCamera(D3DXVECTOR3(0.0f, 250.0f, 350.0f), VEC3_NULL, D3DXVECTOR3(1.59f, -3.12f, 0.0f));
 
 	// ライトの取得
 	CLight* pLight = CManager::GetLight();
@@ -70,7 +76,7 @@ HRESULT CTutorial::Init(void)
 	m_pMeshField = CMeshField::Create(VEC3_NULL, 32, 32, D3DXVECTOR2(2500.0f, 2500.0f));
 
 	// プレイヤーの生成
-	m_pPlayer = CPlayer::Create(VEC3_NULL);
+	m_pPlayer = CPlayer::Create(PLAYER_POS);
 
 	// ブロックマネージャーの取得
 	auto pBlockManager = CBlockManager::GetInstance();
@@ -81,9 +87,8 @@ HRESULT CTutorial::Init(void)
 		// ロード
 		pBlockManager->Load();
 
-		// ブロックの生成
-		CBlock *pBlock = CBlock::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), "wooden_box.x");
-		pBlock->SetTextureMT("data/TEXTURE/effect/grid.png");
+		//// ブロックの生成
+		//CBlock *pBlock = CBlock::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), "wooden_box.x");
 	}
 
 	// 敵の生成
@@ -115,6 +120,28 @@ void CTutorial::Uninit(void)
 //===================================================
 void CTutorial::Update(void)
 {
+	auto pBlockManager = CBlockManager::GetInstance();
+
+	int nNumBlock = pBlockManager->GetNumAll();
+
+	static float fTime = 0.0f;
+	fTime += 15.0f;
+
+	for (int nCnt = 0; nCnt < nNumBlock; nCnt++)
+	{
+		// ブロックの取得
+		CBlock* pBlock = pBlockManager->GetBlock(nCnt);
+
+		D3DXVECTOR3 diff = pBlock->GetPosition() - PLAYER_POS;
+
+		// 距離
+		float fDistance = fabsf(D3DXVec3Length(&diff));
+
+		if (fDistance <= fTime)
+		{
+			pBlock->SetTextureMT("");
+		}
+	}
 	// パーティクルの生成
 	auto pParticle = CParticle3DNormal::Create(D3DXVECTOR3(-225.0f, 325.0f, -1115.0f), 15.0f, D3DCOLOR_RGBA(240, 122, 27, 255));
 	pParticle->SetParticle(2.0f, 100, 10, 1, 40);
