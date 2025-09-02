@@ -100,7 +100,7 @@ CPlayer::~CPlayer()
 HRESULT CPlayer::Init(void)
 {
 	// モーションのロード処理
-	LoadMotion("data/MOTION/motionPlayer.txt", MOTIONTYPE_MAX);
+	LoadMotion("motionPlayer.txt", MOTIONTYPE_MAX);
 
 	// キャラクターの初期化処理
 	CCharacter3D::Init();
@@ -736,7 +736,12 @@ CPlayer* CPlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 	if (pPlayer == nullptr) return nullptr;
 
 	// 初期化処理
-	pPlayer->Init();
+	if (FAILED(pPlayer->Init()))
+	{
+		pPlayer->Uninit();
+		pPlayer = nullptr;
+		return nullptr;
+	}
 
 	pPlayer->SetPosition(pos);
 	pPlayer->GetRotaition()->SetDest(rot);

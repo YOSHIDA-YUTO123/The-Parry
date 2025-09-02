@@ -27,6 +27,7 @@ CObjectX::CObjectX(int nPriority) : CObject(nPriority)
 	m_pRot = nullptr;
 	m_pTextureIdx = nullptr;
 	m_nModelIdx = -1;
+	m_nTextureMT = -1;
 }
 
 //===================================================
@@ -157,7 +158,7 @@ void CObjectX::Draw(void)
 
 	// メッシュの取得
 	LPD3DXMESH pMesh = pModel->GetMesh(m_nModelIdx);
-
+	
 	for (int nCntMat = 0; nCntMat < (int)dwNumMat; nCntMat++)
 	{
 		//マテリアルの設定
@@ -173,6 +174,18 @@ void CObjectX::Draw(void)
 			//テクスチャの設定
 			pDevice->SetTexture(0, NULL);
 		}
+
+		if (m_nTextureMT != -1)
+		{
+			//テクスチャの設定
+			pDevice->SetTexture(1, pTexture->GetAdress(m_nTextureMT));
+		}
+		else
+		{
+			//テクスチャの設定
+			pDevice->SetTexture(1, NULL);
+		}
+
 		//モデル(パーツ)の描画
 		pMesh->DrawSubset(nCntMat);
 	}
@@ -427,6 +440,21 @@ void CObjectX::SetUpDraw(void)
 
 	//保存していたマテリアルを元に戻す
 	pDevice->SetMaterial(&matDef);
+}
+
+//===================================================
+// マルチテクスチャのIDの設定
+//===================================================
+void CObjectX::SetTextureMT(const char* pTextureName)
+{
+	// テクスチャクラスの取得
+	CTextureManager* pTexture = CManager::GetTexture();
+
+	// 取得できなかったら処理しない
+	if (pTexture == nullptr) return;
+
+	// IDの取得
+	m_nTextureMT = pTexture->Register(pTextureName);
 }
 
 //===================================================

@@ -103,7 +103,7 @@ HRESULT CEnemy::Init(void)
 	CCharacter3D::Init();
 
 	// モーションロード処理
-	CCharacter3D::LoadMotion("data/MOTION/motionEnemy000.txt", MOTIONTYPE_MAX);
+	CCharacter3D::LoadMotion("motionEnemy000.txt", MOTIONTYPE_MAX);
 
 	m_pMachine = make_unique<CStateMachine>();
 

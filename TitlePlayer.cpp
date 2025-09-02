@@ -57,7 +57,7 @@ CTitlePlayer* CTitlePlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 HRESULT CTitlePlayer::Init(void)
 {
 	// キャラクタークラスへのポインタ
-	CCharacter3D::LoadMotion("data/MOTION/motionTitlePlayer.txt", MOTIONTYPE_MAX);
+	CCharacter3D::LoadMotion("motionTitlePlayer.txt", MOTIONTYPE_MAX);
 
 	// 初期化処理
 	CCharacter3D::Init();

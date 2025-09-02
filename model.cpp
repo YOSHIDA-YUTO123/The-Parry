@@ -16,7 +16,12 @@
 #include<stdio.h>
 #include"textureManager.h"
 
-using namespace Const;							// 名前空間Constを使用する
+using namespace Const;		   // 名前空間Constを使用する
+
+//===================================================
+// 定数宣言
+//===================================================
+constexpr int MAX_TEXTURE = 2; // テクスチャの最大数
 
 //===================================================
 // コンストラクタ
@@ -32,6 +37,7 @@ CModel::CModel()
 	m_nModelIdx = NULL;
 	m_pTextureIdx = nullptr;
 	m_Size = VEC3_NULL;
+	m_nTextureMTIdx = -1;
 }
 
 //===================================================
@@ -177,10 +183,6 @@ void CModel::Draw(void)
 
 	for (int nCntMat = 0; nCntMat < (int)dwNumMat; nCntMat++)
 	{
-		//pMat[nCntMat].MatD3D.Diffuse.r = 1.0f;
-		//pMat[nCntMat].MatD3D.Diffuse.g = 0.39f;
-		//pMat[nCntMat].MatD3D.Diffuse.b = 0.1f;
-
 		//マテリアルの設定
 		pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
 
@@ -200,6 +202,119 @@ void CModel::Draw(void)
 
 	//保存していたマテリアルを元に戻す
 	pDevice->SetMaterial(&matDef);
+}
+
+//===================================================
+// マルチテクスチャの描画
+//===================================================
+void CModel::DrawMultTexture(void)
+{
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+	// テクスチャステージステートの設定
+	pDevice->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_MODULATE);
+	pDevice->SetTextureStageState(1, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+	pDevice->SetTextureStageState(1, D3DTSS_COLORARG2, D3DTA_CURRENT);
+
+	// テクスチャクラスの取得
+	CTextureManager* pTexture = CManager::GetTexture();
+
+	// モデルクラスの取得
+	CModelManager* pModel = CManager::GetModel();
+
+	//計算用のマトリックス
+	D3DXMATRIX mtxRot, mtxTrans, mtxScal, mtxParent;
+
+	D3DMATERIAL9 matDef;//現在のマテリアル保存用
+
+	D3DXMATERIAL* pMat;//マテリアルデータへのポインタ
+
+	//ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&m_mtxWorld);
+
+	//向きを反映
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
+
+	//位置を反映
+	D3DXMatrixTranslation(&mtxTrans, m_pos.x + m_offpos.x, m_pos.y + m_offpos.y, m_pos.z + m_offpos.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
+	if (m_pParent != nullptr)
+	{ // 親が存在している
+		// 親モデルのマトリックスの取得
+		mtxParent = m_pParent->GetMatrixWorld();
+	}
+	else
+	{
+		// ワールドマトリックスの取得
+		pDevice->GetTransform(D3DTS_WORLD, &mtxParent);
+	}
+
+	// 親のワールドマトリックスと掛け合わせる
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxParent);
+
+	//ワールドマトリックスの設定
+	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+
+	//現在のマテリアルを取得
+	pDevice->GetMaterial(&matDef);
+
+	if (m_nModelIdx == -1)
+	{
+		//保存していたマテリアルを元に戻す
+		pDevice->SetMaterial(&matDef);
+
+		return;
+	}
+
+	//マテリアルのデータへのポインタを取得
+	pMat = (D3DXMATERIAL*)pModel->GetBuffMat(m_nModelIdx)->GetBufferPointer();
+
+	// マテリアルの総数の取得
+	DWORD dwNumMat = pModel->GetNumMat(m_nModelIdx);
+
+	// メッシュの取得
+	LPD3DXMESH pMesh = pModel->GetMesh(m_nModelIdx);
+
+	for (int nCntMat = 0; nCntMat < (int)dwNumMat; nCntMat++)
+	{
+		//マテリアルの設定
+		pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+
+		if (m_pTextureIdx[nCntMat] != -1)
+		{
+			//テクスチャの設定
+			pDevice->SetTexture(0, pTexture->GetAdress(m_pTextureIdx[nCntMat]));
+		}
+		else
+		{
+			//テクスチャの設定
+			pDevice->SetTexture(0, NULL);
+		}
+		
+		if (m_nTextureMTIdx != -1)
+		{
+			//テクスチャの設定
+			pDevice->SetTexture(1, pTexture->GetAdress(m_nTextureMTIdx));
+		}
+		else
+		{
+			//テクスチャの設定
+			pDevice->SetTexture(1, NULL);
+		}
+
+		//モデル(パーツ)の描画
+		pMesh->DrawSubset(nCntMat);
+	}
+
+	//保存していたマテリアルを元に戻す
+	pDevice->SetMaterial(&matDef);
+
+	// もとに戻す
+	pDevice->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
+	pDevice->SetTextureStageState(1, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
 }
 
 //===================================================
@@ -275,6 +390,21 @@ void CModel::DrawShadow(void)
 }
 
 //===================================================
+// テクスチャの名前
+//===================================================
+void CModel::SetTextureMT(const char* pTextureName)
+{
+	// テクスチャクラスの取得
+	CTextureManager* pTexture = CManager::GetTexture();
+
+	// 取得できなかったら処理しない
+	if (pTextureName == nullptr) return;
+
+	// IDの取得
+	m_nTextureMTIdx = pTexture->Register(pTextureName);
+}
+
+//===================================================
 // 生成処理
 //===================================================
 CModel* CModel::Create(const char *pModelName)
@@ -289,102 +419,4 @@ CModel* CModel::Create(const char *pModelName)
 	pModel->Init(pModelName);
 
 	return pModel;
-}
-
-//===================================================
-// キャラクターの設定のロード処理
-//===================================================
-int CModel::LoadCharctorSet(const char* pLoadFileName, CModel** pModel,const int nMaxSize)
-{
-	// ファイルを開く
-	FILE* pFile = fopen(pLoadFileName, "r");
-	
-	int nNumModel = 0; // モデルの総数
-	int nIdx = 0;	   // モデルのインデックス
-	int nParent = 0;   // モデルの親
-
-	if (pFile != NULL)
-	{
-		char aString[MAX_WORD] = {}; // 文字列格納用変数
-		char aSkip[MAX_WORD] = {};	 // [=] を飛ばす変数
-
-		while (1)
-		{
-			// ファイルから文字を読み取る
-			int nData = fscanf(pFile, "%s", &aString[0]);
-
-			if (strcmp(aString, "MODEL_FILENAME") == 0)
-			{
-				// [=]を飛ばす
-				nData = fscanf(pFile, "%s", &aSkip[0]);
-				nData = fscanf(pFile, "%s", &aString[0]);
-
-				if (nNumModel <= nMaxSize - 1)
-				{
-					// モデルの生成
-					pModel[nNumModel] = CModel::Create(aString);
-
-					nNumModel++;
-				}
-				else
-				{
-					MessageBox(NULL, aString, "これ以上読み込めません", MB_OK);
-				}
-			}
-			if (strcmp(aString, "INDEX") == 0)
-			{
-				// [=]を飛ばす
-				nData = fscanf(pFile, "%s", &aSkip[0]);
-				nData = fscanf(pFile, "%d", &nIdx);
-			}
-			else if (strcmp(aString, "PARENT") == 0)
-			{
-				// [=]を飛ばす
-				nData = fscanf(pFile, "%s", &aSkip[0]);
-				nData = fscanf(pFile, "%d", &nParent);
-
-				if (nParent != -1)
-				{// 親が存在していたら
-					// 親のモデルの設定
-					pModel[nIdx]->SetParent(pModel[nParent]);
-				}
-				else
-				{// 親が存在していなかったら
-					pModel[nIdx]->SetParent(nullptr);
-				}
-			}
-			else if (strcmp(aString, "POS") == 0)
-			{
-				// [=]を飛ばす
-				nData = fscanf(pFile, "%s", &aSkip[0]);
-				nData = fscanf(pFile, "%f", &pModel[nIdx]->m_offpos.x);
-				nData = fscanf(pFile, "%f", &pModel[nIdx]->m_offpos.y);
-				nData = fscanf(pFile, "%f", &pModel[nIdx]->m_offpos.z);
-			}
-			else if (strcmp(aString, "ROT") == 0)
-			{
-				// [=]を飛ばす
-				nData = fscanf(pFile, "%s", &aSkip[0]);
-				nData = fscanf(pFile, "%f", &pModel[nIdx]->m_offrot.x);
-				nData = fscanf(pFile, "%f", &pModel[nIdx]->m_offrot.y);
-				nData = fscanf(pFile, "%f", &pModel[nIdx]->m_offrot.z);
-			}
-
-			if (strcmp(aString, "END_CHARACTERSET") == 0)
-			{
-				break;
-			}
-		}
-	}
-	else
-	{
-		// メッセージボックス
-		MessageBox(NULL, pLoadFileName, "ファイルが開けませんでした", MB_OK);
-		return 0;
-	}
-
-	// ファイルを閉じる
-	fclose(pFile);
-
-	return nNumModel;
 }

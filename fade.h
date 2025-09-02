@@ -37,7 +37,7 @@ public:
 	~CFade();
 
 	static CFade* Create(void);
-	void SetFade(std::unique_ptr<CScene> pNewScene);
+	void SetFade(std::unique_ptr<CScene> pNewScene,const D3DXCOLOR col = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);

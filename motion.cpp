@@ -564,6 +564,18 @@ bool CMotion::IsEndMotion(void)
 }
 
 //===================================================
+// ループモーションが終わったら
+//===================================================
+bool CMotion::IsEndLoopMotion(void)
+{
+	if (m_nKey >= m_aInfo[m_nType].nNumkey - 1 && m_aInfo[m_nType].bLoop)
+	{
+		return true;
+	}
+	return false;
+}
+
+//===================================================
 // 終わりのブレンドが完了したか判定
 //===================================================
 bool CMotion::IsFinishEndBlend(void)

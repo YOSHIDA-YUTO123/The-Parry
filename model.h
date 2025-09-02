@@ -25,13 +25,14 @@ public:
 	CModel();
 	~CModel();
 	static CModel* Create(const char* pModelName);
-	static int LoadCharctorSet(const char* pLoadFileName, CModel** pModel,const int nMaxSize);
 
 	HRESULT Init(const char* pModelName);
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
+	void DrawMultTexture(void);
 	void DrawShadow(void);
+	void SetTextureMT(const char* pTextureName);
 
 	D3DXVECTOR3 GetPosition(void) const { return m_pos; }
 	D3DXVECTOR3 GetRotaition(void) const { return m_rot; }
@@ -56,6 +57,7 @@ private:
 	D3DXMATRIX m_mtxWorld;			// ワールドマトリックス
 	CModel* m_pParent;				// 親モデルへのポインタ
 	int m_nModelIdx;				// モデルのインデックス
+	int m_nTextureMTIdx;			// マルチテクスチャのインデックス
 	int* m_pTextureIdx;				// テクスチャのインデックス
 };
 #endif

@@ -16,6 +16,8 @@
 #include"LoadManager.h"
 #include<memory>
 #include "OpningEnemy.h"
+#include"fade.h"
+#include "tutorial.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std;   // 名前空間stdを使用
@@ -32,7 +34,7 @@ COpeningCamera::COpeningCamera()
 	m_nCounter = NULL;
 	m_nShakeRange = NULL;
 	m_nShakeTime = NULL;
-
+	m_bTutorial = false;
 	m_bReset = false;
 	m_move = VEC3_NULL;
 	m_bFlash = false;
@@ -92,7 +94,7 @@ void COpeningCamera::Update(void)
 
 #endif // _DEBUG
 
-	auto pFade = COpening::GetFadeEffect();
+	auto pFadeEffect = COpening::GetFadeEffect();
 
 	// 視点の取得
 	D3DXVECTOR3 posV = CCamera::GetPosV();
@@ -105,13 +107,21 @@ void COpeningCamera::Update(void)
 	// ライトの取得
 	CLight* pLight = CManager::GetLight();
 
-	if (pFade != nullptr)
+	if (pFadeEffect != nullptr)
 	{
 		// カメラが特定の位置まで来たら
 		if (posV.x >= FADEOUT_POS && !m_bFlash)
 		{
+			// フェードの取得
+			CFade* pFade = CManager::GetFade();
+
+			if (pFade != nullptr && m_bTutorial)
+			{
+				pFade->SetFade(make_unique<CTutorial>(), D3DXCOLOR(1.0f,1.0f,1.0f,0.0f));
+				return;
+			}
 			// フェードする
-			pFade->SetState(pFade->FADE_OUT);
+			pFadeEffect->SetState(pFadeEffect->FADE_OUT);
 
 			// ライトをリセット
 			pLight->Init();
@@ -119,11 +129,11 @@ void COpeningCamera::Update(void)
 			m_bFlash = true;
 		}
 
-		if (m_bFlash && pFade->GetState() == pFade->FADE_NONE && !m_bReset)
+		if (m_bFlash && pFadeEffect->GetState() == pFadeEffect->FADE_NONE && !m_bReset)
 		{
 			m_bReset = true;
 
-			pFade->SetState(pFade->FADE_IN);
+			pFadeEffect->SetState(pFadeEffect->FADE_IN);
 
 			// ライトの設定処理
 			pLight->SetDirectional(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, -0.56f, 0.74f), D3DXVECTOR3(0.0f, 100.0f, 0.0f));

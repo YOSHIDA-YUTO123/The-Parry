@@ -16,9 +16,11 @@
 #include"shadowS.h"
 #include"model.h"
 #include"motion.h"
+#include<string>
 
 using namespace math; // 名前空間mathを使用
 using namespace Const; // 名前空間Constを使用
+using namespace std; // 名前空間stdを使用
 
 //===================================================
 // コンストラクタ
@@ -189,12 +191,57 @@ void CCharacter3D::Draw(void)
 }
 
 //===================================================
+// 描画処理(マルチテクスチャ)
+//===================================================
+void CCharacter3D::DrawMT(void)
+{
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+	//計算用のマトリックス
+	D3DXMATRIX mtxRot, mtxTrans, mtxScal;
+
+	//ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&m_mtxWorld);
+
+	// 向きの取得
+	D3DXVECTOR3 rot = m_pRot->Get();
+
+	//向きを反映
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, rot.y, rot.x, rot.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
+
+	//位置を反映
+	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
+	//ワールドマトリックスの設定
+	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+
+	// モデルの描画
+	for (int nCnt = 0; nCnt < m_nNumModel; nCnt++)
+	{
+		if (m_apModel[nCnt] != nullptr)
+		{
+			// 描画処理
+			m_apModel[nCnt]->DrawMultTexture();
+		}
+	}
+}
+
+//===================================================
 // モーションのロード
 //===================================================
 void CCharacter3D::LoadMotion(const char* pFileName,const int nNumMotion)
 {
+	// 省略用
+	std::string string = "data/MOTION/";
+
+	// 文字列を合成
+	string += pFileName;
+
 	// モーションのロード処理
-	m_pMotion = CMotion::Load(pFileName, m_apModel, &m_nNumModel, nNumMotion, CMotion::LOAD_TEXT);
+	m_pMotion = CMotion::Load(string.c_str(), m_apModel, &m_nNumModel, nNumMotion, CMotion::LOAD_TEXT);
 }
 
 //===================================================
@@ -242,6 +289,19 @@ void CCharacter3D::SetCharacter(const int nLife, const float fSpeed, const D3DXV
 	m_fSpeed = fSpeed;
 	m_ShadowScal = ShadowScal;
 	m_Size = Size;
+}
+
+//===================================================
+// モデルのマルチテクスチャの設定
+//===================================================
+void CCharacter3D::SetModelMT(const char* pTextureName)
+{
+	// モデルの総数分調べる
+	for (auto itr = m_apModel.begin(); itr != m_apModel.end(); ++itr)
+	{
+		// テクスチャの設定
+		(*itr)->SetTextureMT(pTextureName);
+	}
 }
 
 //===================================================

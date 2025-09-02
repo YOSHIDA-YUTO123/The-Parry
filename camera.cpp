@@ -126,13 +126,13 @@ void CCamera::Update(void)
 		}
 	}
 
-	// ポーズマネージャーの取得
-	auto pPause = CPauseManager::GetInstance();
-
 	// シリンダーの当たり判定
 	if (pCylinder != nullptr)
 	{
 #ifdef _DEBUG
+		// ポーズマネージャーの取得
+		auto pPause = CPauseManager::GetInstance();
+
 		// ポーズ状態じゃないなら
 		if (pPause != nullptr && !pPause->GetPause())
 		{

@@ -17,6 +17,7 @@
 #include"block.h"
 #include"BlockManager.h"
 #include "particle.h"
+#include "TrainingEnemy.h"
 
 using namespace Const; // 名前空間Const
 
@@ -25,6 +26,7 @@ using namespace Const; // 名前空間Const
 //***************************************************
 CGameCamera* CTutorial::m_pCamera = nullptr;	// カメラクラスへのポインタ
 CMeshField* CTutorial::m_pMeshField = nullptr;	// メッシュフィールドへのポインタ
+CPlayer* CTutorial::m_pPlayer = nullptr;		// プレイヤーへのポインタ
 
 //===================================================
 // コンストラクタ
@@ -68,7 +70,7 @@ HRESULT CTutorial::Init(void)
 	m_pMeshField = CMeshField::Create(VEC3_NULL, 32, 32, D3DXVECTOR2(2500.0f, 2500.0f));
 
 	// プレイヤーの生成
-	CPlayer::Create(VEC3_NULL);
+	m_pPlayer = CPlayer::Create(VEC3_NULL);
 
 	// ブロックマネージャーの取得
 	auto pBlockManager = CBlockManager::GetInstance();
@@ -79,10 +81,13 @@ HRESULT CTutorial::Init(void)
 		// ロード
 		pBlockManager->Load();
 
-		//// ブロックの生成
-		//CBlock *pBlock = CBlock::Create(D3DXVECTOR3(500.0f, 0.0f, 0.0f), "wall000.x");
-		//pBlockManager->SetBlock(pBlock);
+		// ブロックの生成
+		CBlock *pBlock = CBlock::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), "wooden_box.x");
+		pBlock->SetTextureMT("data/TEXTURE/effect/grid.png");
 	}
+
+	// 敵の生成
+	CTrainingEnemy::Create(D3DXVECTOR3(0.0f,0.0f,-500.0f));
 
 
 	return S_OK;
@@ -94,6 +99,7 @@ HRESULT CTutorial::Init(void)
 void CTutorial::Uninit(void)
 {
 	m_pMeshField = nullptr;
+	m_pPlayer = nullptr;
 
 	// カメラの破棄
 	if (m_pCamera != nullptr)

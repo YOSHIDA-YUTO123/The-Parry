@@ -21,6 +21,7 @@
 //***************************************************
 class CGameCamera;
 class CMeshField;
+class CPlayer;
 
 //***************************************************
 // チュートリアルクラスの定義
@@ -38,9 +39,11 @@ public:
 
 	static CGameCamera* GetCamera(void) { return m_pCamera; }
 	static CMeshField* GetField(void) { return m_pMeshField; }
+	static CPlayer* GetPlayer(void) { return m_pPlayer; }
 private:
 	static CGameCamera* m_pCamera;		// カメラへのポインタ
 	static CMeshField* m_pMeshField;	// メッシュフィールドへのポインタ
+	static CPlayer* m_pPlayer;			// プレイヤーへのポインタ
 };
 
 #endif

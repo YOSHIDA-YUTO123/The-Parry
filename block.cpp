@@ -14,6 +14,8 @@
 #include"manager.h"
 #include"scene.h"
 #include "Collision.h"
+#include"manager.h"
+#include"renderer.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std;   // 名前空間stdを使用
@@ -140,8 +142,27 @@ void CBlock::Update(void)
 //===================================================
 void CBlock::Draw(void)
 {
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+	pDevice->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_MODULATE);
+	pDevice->SetTextureStageState(1, D3DTSS_COLORARG1, D3DTA_TEXTURE);   // テクスチャ1
+	pDevice->SetTextureStageState(1, D3DTSS_COLORARG2, D3DTA_CURRENT);   // ステージ0の結果
+
+		// テクスチャステージステートの設定
+	pDevice->SetTextureStageState(1, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+	pDevice->SetTextureStageState(1, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+	pDevice->SetTextureStageState(1, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
+
+	pDevice->SetTextureStageState(0, D3DTSS_TEXCOORDINDEX, 0);
+	pDevice->SetTextureStageState(1, D3DTSS_TEXCOORDINDEX, 0);
+
 	// 描画処理
 	CObjectX::Draw();
+
+	// もとに戻す
+	pDevice->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
+	pDevice->SetTextureStageState(1, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
 }
 
 //===================================================

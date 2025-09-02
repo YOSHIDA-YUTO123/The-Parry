@@ -86,6 +86,7 @@ public:
 	void Update(CModel** pModel, const int nNumModel);
 	void SetMotion(const int motiontype, bool bBlend, const int nBlendFrame);
 	bool IsEndMotion(void);
+	bool IsEndLoopMotion(void);
 	bool IsFinishEndBlend(void);
 	int GetType(void) const { return m_nType; }
 	int GetBlendType(void) const { return m_nTypeBlend; }

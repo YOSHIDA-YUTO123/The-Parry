@@ -26,6 +26,7 @@
 #include "TitleMenu.h"
 #include "edit.h"
 #include "tutorial.h"
+#include"opening.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std;   // 名前空間stdを使用
@@ -142,7 +143,12 @@ void CTitle::Update(void)
 
 	if (CManager::GetInputKeyboard()->GetTrigger(DIK_F2))
 	{
-		CManager::GetFade()->SetFade(make_unique<CTutorial>());
+		// オープニングの生成
+		auto pOpning = make_unique<COpening>();
+
+		pOpning->EnableTutorial(true);
+
+		CManager::GetFade()->SetFade(std::move(pOpning));
 	}
 
 	// カメラの更新処理

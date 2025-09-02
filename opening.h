@@ -53,11 +53,13 @@ public:
 
 	static COpeningCamera* GetCamera(void) { return m_pCamera; }
 	static CMeshField* GetField(void) { return m_pMeshField; }
+	void EnableTutorial(const bool bTutorial) { m_bTutorial = bTutorial; }
 private:
 	static CMeshField* m_pMeshField;	// メッシュフィールドへのポインタ
 	static STATE m_state;				// 状態
 	static CFadeEffect* m_pFadeEffect;	// フェードエフェクトへのポインタ
 	static COpeningCamera* m_pCamera;   // カメラへのポインタ
+	bool m_bTutorial;					// チュートリアルに移行するかどうか
 };
 
 #endif

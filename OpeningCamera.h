@@ -44,6 +44,7 @@ public:
 	void SetTracking(const D3DXVECTOR3 posRDest);		   // 追従処理
 	void SetShake(const int nShakeTime, const int nRange); // カメラの揺れ
 	void SetMove(const D3DXVECTOR3 move);
+	void EnableTutorial(const bool bTutorial) { m_bTutorial = bTutorial; }
 private:
 	void Load(void);
 	void UpdateKey(D3DXVECTOR3* pPosR);
@@ -77,6 +78,7 @@ private:
 	int m_nCounter;				// カウンター
 	int m_nShakeRange;			// 揺れの幅
 	int m_nShakeTime;			// 振れの時間
+	bool m_bTutorial;			// チュートリアルに移行するかどうか
 	bool m_bFlash;				// 画面が光ったか判定
 	bool m_bReset;				// 再設定したかどうか
 	bool m_bDestPos;			// 目的の位置に到達したかどうか

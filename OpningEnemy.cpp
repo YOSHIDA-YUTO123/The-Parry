@@ -72,7 +72,7 @@ HRESULT COpeningEnemy::Init(void)
 	}
 
 	// モーションロード処理
-	CCharacter3D::LoadMotion("data/MOTION/motionEnemy000.txt", CEnemy::MOTIONTYPE_MAX);
+	CCharacter3D::LoadMotion("motionEnemy000.txt", CEnemy::MOTIONTYPE_MAX);
 
 	// キャラクターの設定処理
 	CCharacter3D::SetCharacter(-1, 0.0f, D3DXVECTOR3(10.0f, 1.0f, 10.0f), D3DXVECTOR3(100.0f, 400.0f, 100.0f));

@@ -59,6 +59,8 @@ public:
 	virtual void Uninit(void) override;
 	virtual void Update(void) override;
 	virtual void Draw(void) override;
+	void DrawMT(void);
+	
 	void LoadMotion(const char *pFileName, const int nNumMotion);
 
 	// ゲッター
@@ -76,6 +78,7 @@ public:
 	// セッター
 	void SetPosition(const D3DXVECTOR3 pos) { m_pos = pos; }
 	void SetCharacter(const int nLife, const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size);
+	void SetModelMT(const char* pTextureName);
 
 	bool GetAlive(void);		// 生きているか
 

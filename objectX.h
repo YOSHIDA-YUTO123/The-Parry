@@ -42,6 +42,7 @@ public:
 	void DrawShadow(void);
 	void SetUpMatrix(const D3DXVECTOR3 Scal = D3DXVECTOR3(1.0f,1.0f,1.0f));
 	void SetUpDraw(void);
+	void SetTextureMT(const char* pTextureName);
 
 	HRESULT LoadModel(const char* pXFileName);
 	void SetPosition(const D3DXVECTOR3 pos) { m_pos = pos; }
@@ -57,5 +58,6 @@ private:
 	D3DXMATRIX m_mtxWorld;	// ワールドマトリックス
 	int m_nModelIdx;		// モデルのインデックス
 	int *m_pTextureIdx;		// テクスチャのインデックス
+	int m_nTextureMT;		// マルチテクスチャのインデックス
 };
 #endif

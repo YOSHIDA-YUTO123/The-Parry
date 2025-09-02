@@ -55,7 +55,7 @@ CFade* CFade::Create(void)
 //===================================================
 // フェード
 //===================================================
-void CFade::SetFade(unique_ptr<CScene> pNewScene)
+void CFade::SetFade(unique_ptr<CScene> pNewScene, const D3DXCOLOR col)
 {
 	if (m_Fade != FADE_NONE)
 	{
@@ -73,7 +73,7 @@ void CFade::SetFade(unique_ptr<CScene> pNewScene)
 		m_pScene = nullptr;
 	}
 
-	m_col = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);
+	m_col = col;
 	m_Fade = FADE_OUT;
 	m_pScene = move(pNewScene);
 }

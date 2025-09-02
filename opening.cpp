@@ -38,6 +38,7 @@ CMeshField* COpening::m_pMeshField = nullptr;				// メッシュフィールドへのポイン
 //===================================================
 COpening::COpening() : CScene(MODE_OPENING)
 {
+	m_bTutorial = false;
 }
 
 //===================================================
@@ -56,6 +57,7 @@ HRESULT COpening::Init(void)
 	// ゲームのカメラの生成
 	m_pCamera = new COpeningCamera;
 	m_pCamera->Init();
+	m_pCamera->EnableTutorial(m_bTutorial);
 
 	// ライトの取得
 	CLight* pLight = CManager::GetLight();
