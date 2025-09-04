@@ -266,3 +266,15 @@ BLOCKSET
 	ROT = 0.6 0.0 0.0			# 向き
 END_BLOCKSET
 
+BLOCKSET
+	POS = 0.0 0.0 500.0  	# 位置
+	FILE_NAME = monument.x 		# 読み込むファイル名
+	REVERSE = 1			# 反転するかどうか
+END_BLOCKSET
+
+BLOCKSET
+	POS = 471.0 0.0 -287.0  	# 位置
+	FILE_NAME = monument001.x 		# 読み込むファイル名
+	REVERSE = 0			# 反転するかどうか
+END_BLOCKSET
+

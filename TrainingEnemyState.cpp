@@ -15,8 +15,13 @@
 #include"player.h"
 #include"tutorial.h"
 #include"playerstate.h"
+#include "slow.h"
+#include "manager.h"
+#include"math.h"
+#include"transform.h"
 
-using namespace std; // 名前空間stdの使用
+using namespace math; // 名前空間mathの使用
+using namespace std;  // 名前空間stdの使用
 
 //************************************************
 // 定数宣言
@@ -159,6 +164,21 @@ void CTrainingEnemyAction::Update(void)
 	// 取得できなかったら処理しない
 	if (pPlayer == nullptr) return;
 
+	// 位置の取得
+	D3DXVECTOR3 pos = pEnemy->GetPosition();
+	D3DXVECTOR3 playerPos = pPlayer->GetPosition();
+
+	if (pMotion->IsEventFrame(1, 50, CTrainingEnemy::MOTIONTYPE_ACTION))
+	{
+		pEnemy->DeleteOrbit();
+
+		// プレイヤーまでの角度を求める
+		float fAngle = GetTargetAngle(pos, playerPos);
+
+		// 向きを設定
+		pEnemy->GetRotaition()->SetDest(D3DXVECTOR3(0.0f, fAngle, 0.0f));
+	}
+
 	// 範囲外にいたらかつモーションが終わったら
 	if (!pEnemy->CheckDistance(ACTION_RANGE) && pMotion->IsEndLoopMotion())
 	{
@@ -166,12 +186,12 @@ void CTrainingEnemyAction::Update(void)
 		pEnemy->ChangeState(make_shared<CTrainingEnemyIdle>());
 	}
 
-	// 位置の取得
-	D3DXVECTOR3 pos = pEnemy->GetPosition();
-
 	// イベントフレームの判定
 	if (pMotion->IsEventFrame(65, 88, CTrainingEnemy::MOTIONTYPE_ACTION))
 	{
+		// 軌跡の設定
+		pEnemy->Orbit(16, D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f));
+
 		// 攻撃の結果の取得
 		auto result = pEnemy->GetAttackResult();
 
@@ -199,9 +219,6 @@ void CTrainingEnemyAction::Update(void)
 		// 回避だったら
 		else if (result == CTrainingEnemy::RESULT_AVOID)
 		{
-			//CSlow* pSlow = CManager::GetSlow();
-
-			//pSlow->Start(60, 4);
 		}
 		// 攻撃があたった
 		else if (result == CTrainingEnemy::RESULT_HIT)

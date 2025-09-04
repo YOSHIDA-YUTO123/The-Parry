@@ -42,6 +42,7 @@
 #define FVF_VERTEX_2D (D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1)			     // 2Dの頂点情報
 #define FVF_VERTEX_2DMT (D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX2)				 // 2Dマルチテクスチャの頂点情報
 #define FVF_VERTEX_3D (D3DFVF_XYZ | D3DFVF_NORMAL |  D3DFVF_DIFFUSE | D3DFVF_TEX1)   // 座標,法線,カラー,テクスチャ
+#define FVF_VERTEX_3DMT (D3DFVF_XYZ | D3DFVF_NORMAL |  D3DFVF_DIFFUSE | D3DFVF_TEX2)   // 座標,法線,カラー,テクスチャ2
 
 //***************************************************
 // 定数の名前空間
@@ -90,5 +91,17 @@ typedef struct
 	D3DCOLOR col;				// 頂点カラー
 	D3DXVECTOR2 tex;			// テクスチャ座標
 }VERTEX_3D;
+
+//**********************
+// 頂点情報[3D]の構造体
+//**********************
+typedef struct
+{
+	D3DXVECTOR3 pos;			// 頂点座標
+	D3DXVECTOR3 nor;			// 法線ベクトル
+	D3DCOLOR col;				// 頂点カラー
+	D3DXVECTOR2 tex;			// テクスチャ座標
+	D3DXVECTOR2 texMT;			// テクスチャ座標MT
+}VERTEX_3D_MULT;
 
 #endif

@@ -78,6 +78,8 @@ HRESULT CBlockManager::Load(void)
 			}
 			if (line.find("REVERSE") != string::npos)
 			{
+				Angle = VEC3_NULL;
+
 				// ”’l‚ð“Ç‚Ýž‚Þ€”õ
 				istringstream value_Input = pLoad->SetInputvalue(input);
 
@@ -96,6 +98,8 @@ HRESULT CBlockManager::Load(void)
 			}
 			if (line.find("ROT") != string::npos)
 			{
+				Angle = VEC3_NULL;
+
 				// ”’l‚ð“Ç‚Ýž‚Þ€”õ
 				istringstream value_Input = pLoad->SetInputvalue(input);
 
@@ -173,6 +177,14 @@ CBlock* CBlockManager::GetBlock(const int nIdx)
 }
 
 //================================================
+// I—¹ˆ—
+//================================================
+void CBlockManager::Uninit(void)
+{
+	m_apBlockList.clear();
+}
+
+//================================================
 // “–‚½‚è”»’è
 //================================================
 bool CBlockManager::Collision(CColliderAABB* pAABB,D3DXVECTOR3* pPushPos)
@@ -183,7 +195,7 @@ bool CBlockManager::Collision(CColliderAABB* pAABB,D3DXVECTOR3* pPushPos)
 	for (auto itr = m_apBlockList.begin(); itr != m_apBlockList.end(); ++itr)
 	{
 		// “–‚½‚è”»’è
-		if ((*itr)->Collision(pAABB, pPushPos))
+		if ((*itr) != nullptr && (*itr)->Collision(pAABB, pPushPos))
 		{
 			bHit = true;
 		}

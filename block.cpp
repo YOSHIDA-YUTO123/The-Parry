@@ -153,6 +153,9 @@ void CBlock::Draw(void)
 	// •`‰æˆ—
 	CObjectX::Draw();
 
+	pDevice->SetTextureStageState(0, D3DTSS_TEXCOORDINDEX, 0);
+	pDevice->SetTextureStageState(1, D3DTSS_TEXCOORDINDEX, 1);
+
 	// ‚à‚Æ‚É–ß‚·
 	pDevice->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
 	pDevice->SetTextureStageState(1, D3DTSS_ALPHAOP, D3DTOP_DISABLE);

@@ -18,13 +18,31 @@
 #include"BlockManager.h"
 #include "particle.h"
 #include "TrainingEnemy.h"
+#include "object2D.h"
+#include "object3D.h"
+#include "Object3DMT.h"
+#include "RevengeGage.h"
+#include"Observer.h"
+#include "GageFrame.h"
+#include"Gage.h"
+#include"input.h"
+#include"fade.h"
+#include "game.h"
+#include "opening.h"
+#include "mark.h"
+#include "Obstacle.h"
+#include"Collider.h"
+#include"Collision.h"
 
-using namespace Const; // 名前空間Const
+using namespace std;	// 名前空間stdの使用
+using namespace Const;  // 名前空間Const
 
 //***************************************************
 // 定数宣言
 //***************************************************
-const D3DXVECTOR3 PLAYER_POS = { 0.0f,0.0f,1200.0f };
+const D3DXVECTOR3 PLAYER_POS = { 0.0f,0.0f,1200.0f }; // プレイヤーの初期位置
+const D3DXVECTOR3 GATE_POS = { 0.0f,0.0f,-1200.0f };  // ゲートの位置
+constexpr float GATE_RADIUS = 100.0f;				  // ゲートの半径
 
 //***************************************************
 // 静的メンバ変数宣言
@@ -38,7 +56,7 @@ CPlayer* CTutorial::m_pPlayer = nullptr;		// プレイヤーへのポインタ
 //===================================================
 CTutorial::CTutorial() : CScene(MODE_TUTORIAL)
 {
-
+	m_pSphere = nullptr;
 }
 
 //===================================================
@@ -66,17 +84,10 @@ HRESULT CTutorial::Init(void)
 	pLight->SetPoint(D3DXVECTOR3(0.0f, 400.0f, -1000.0f), 2500.0f, D3DCOLOR_RGBA(255, 170, 170, 255), D3DCOLOR_RGBA(255, 170, 170, 255));
 	pLight->SetPoint(D3DXVECTOR3(500.0f, 400.0f, 0.0f), 2500.0f, D3DCOLOR_RGBA(255, 170, 170, 255), D3DCOLOR_RGBA(255, 170, 170, 255));
 	pLight->SetPoint(D3DXVECTOR3(-500.0f, 400.0f, 0.0f), 2500.0f, D3DCOLOR_RGBA(255, 170, 170, 255), D3DCOLOR_RGBA(255, 170, 170, 255));
-
-	//pLight->SetDirectional(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(0.25f, -0.56f, 0.74f), D3DXVECTOR3(0.0f, 100.0f, 0.0f));
-	//pLight->SetDirectional(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, -0.56f, -0.74f), D3DXVECTOR3(0.0f, 100.0f, 0.0f));
-	//pLight->SetDirectional(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f,1.0f, 0.0f), D3DXVECTOR3(0.0f, 100.0f, 0.0f));
-	//pLight->SetDirectional(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(-0.75f, -0.96f, 0.25f), D3DXVECTOR3(0.0f, 100.0f, 0.0f));
+	pLight->SetPoint(D3DXVECTOR3(0.0f, 200.0f, 515.0f), 300.0f, D3DCOLOR_RGBA(255, 255, 255, 255), D3DCOLOR_RGBA(255, 255, 255, 255));
 
 	// フィールドの生成
 	m_pMeshField = CMeshField::Create(VEC3_NULL, 32, 32, D3DXVECTOR2(2500.0f, 2500.0f));
-
-	// プレイヤーの生成
-	m_pPlayer = CPlayer::Create(PLAYER_POS);
 
 	// ブロックマネージャーの取得
 	auto pBlockManager = CBlockManager::GetInstance();
@@ -86,14 +97,88 @@ HRESULT CTutorial::Init(void)
 	{
 		// ロード
 		pBlockManager->Load();
-
-		//// ブロックの生成
-		//CBlock *pBlock = CBlock::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), "wooden_box.x");
 	}
+
+	// プレイヤーの生成
+	m_pPlayer = CPlayer::Create(PLAYER_POS);
+
+	// 反撃UIの生成
+	auto pRevenge = CRevengeUI::Create(D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXVECTOR2(50.0f, 50.0f), CPlayer::MAX_REVENGE);
+
+	// 反撃オブザーバーの生成
+	auto pRevengeOb = new CRevengeUIObserver(pRevenge);
+
+	// オブザーバーの設定
+	m_pPlayer->SetRevengeObserver(pRevengeOb);
+
+	// ゲージのフレームの生成
+	auto gageFrame = CGageFrame::Create(D3DXVECTOR3(256.0f, 36.0f, 0.0f), D3DXVECTOR2(161.0f, 25.0f), CGageFrame::TYPE_HP_PLAYER);
+
+	// 生成できていたら
+	if (gageFrame != nullptr)
+	{
+		// テクスチャのIDの設定
+		gageFrame->SetTextureID("data/TEXTURE/GageFrame/playerHpFrame.png");
+	}
+
+	// スタミナゲージの生成
+	auto pStamina = CStaminaGage::Create(D3DXVECTOR3(110.0f, 81.0f, 0.0f), D3DXVECTOR2(298.0f, 8.0f), D3DXCOLOR(1.0f, 1.0f, 0.3f, 1.0f), CPlayer::MAX_STAMINA);
+
+	if (pStamina != nullptr)
+	{
+		// スタミナオブザーバーの生成
+		CStaminaObserver* pStaminaOb = new CStaminaObserver(pStamina);
+
+		// オブザーバーの設定
+		m_pPlayer->SetStaminaObserver(pStaminaOb);
+
+	}
+
+	// ゲージのフレームの生成
+	gageFrame = CGageFrame::Create(D3DXVECTOR3(258.0f, 80.0f, 0.0f), D3DXVECTOR2(160.0f, 20.0f), CGageFrame::TYPE_STAMINA);
+
+	// 生成できていたら
+	if (gageFrame != nullptr)
+	{
+		// テクスチャのIDの設定
+		gageFrame->SetTextureID("data/TEXTURE/GageFrame/staminaFrame.png");
+	}
+
+	// HPゲージの生成
+	auto pGage = CHpGage::Create(D3DXVECTOR3(108.0f, 36.0f, 0.0f), D3DXVECTOR2(302.0f, 14.0f), D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), CPlayer::MAX_LIFE, true);
+
+	// Hpゲージのオブザーバーの設定
+	CHpObserver* observer = new CHpObserver(pGage);
+
+	// オブザーバーの設定
+	m_pPlayer->SetHpObserver(observer);
 
 	// 敵の生成
 	CTrainingEnemy::Create(D3DXVECTOR3(0.0f,0.0f,-500.0f));
 
+	// 生成処理
+	CObject2D::Create(180.0f, 180.0f, D3DXVECTOR3(1080.0f, 200.0f, 0.0f))->SetTextureID("data/TEXTURE/tutorial/tuto.png");
+
+	// 生成処理
+	CObject3DMT::Create(D3DXVECTOR3(0.0f,100.0f,530.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), D3DXVECTOR3(15.0f, 65.0f, 0.0f))->SetTextureID("UI/monument.png","arena/wall.jpg");
+
+	// 生成処理
+	CObject3DMT::Create(D3DXVECTOR3(413.0f, 100.0f, -263.0f), D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f), D3DXVECTOR3(55.0f, 45.0f, 0.0f))->SetTextureID("UI/monument001.png", "");
+
+	// 目印
+	CMark::Create(D3DXVECTOR3(0.0f, 250.0f, 500.0f));
+
+	// 目印
+	CMark::Create(D3DXVECTOR3(471.0f, 250.0f, -267.0f));
+
+	// 面の設定
+	int face = CCollisionAABB::FACE_RIGHT;
+
+	// スパイクトラップ
+	CSpikeTrap::Create(D3DXVECTOR3(-1200.0f, 0.0f, -800.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), face);
+
+	// ゲート
+	m_pSphere = CColliderSphere::Create(GATE_POS, GATE_RADIUS);
 
 	return S_OK;
 }
@@ -142,6 +227,7 @@ void CTutorial::Update(void)
 			pBlock->SetTextureMT("");
 		}
 	}
+
 	// パーティクルの生成
 	auto pParticle = CParticle3DNormal::Create(D3DXVECTOR3(-225.0f, 325.0f, -1115.0f), 15.0f, D3DCOLOR_RGBA(240, 122, 27, 255));
 	pParticle->SetParticle(2.0f, 100, 10, 1, 40);
@@ -152,10 +238,33 @@ void CTutorial::Update(void)
 	pParticle->SetParticle(2.0f, 100, 10, 1, 40);
 	pParticle->SetParam(CEffect3D::TYPE_FIRE);
 
+	// キーボードの取得
+	auto pKeyboard = CManager::GetInputKeyboard();
+	auto pJoypad = CManager::GetInputJoypad();
+
 	// カメラの更新
 	if (m_pCamera != nullptr)
 	{
 		m_pCamera->Update();
+	}
+
+	// 円の当たり判定の取得
+	auto pCollision = CCollisionSphere::GetInstance();
+
+	// ゲートの範囲内に入ったら
+	if (pCollision != nullptr && pCollision->Collision(m_pPlayer->GetSphereCollider(), m_pSphere.get()))
+	{
+		if (pKeyboard->GetTrigger(DIK_RETURN) || pJoypad->GetTrigger(pJoypad->JOYKEY_START))
+		{
+			// フェードの取得
+			CFade* pFade = CManager::GetFade();
+
+			if (pFade != nullptr)
+			{
+				// ゲームシーンへ遷移
+				pFade->SetFade(make_unique<COpening>());
+			}
+		}
 	}
 }
 

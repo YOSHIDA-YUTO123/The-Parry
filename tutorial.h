@@ -15,6 +15,7 @@
 // インクルードファイル
 //***************************************************
 #include "scene.h"
+#include<memory>
 
 //***************************************************
 // 前方宣言
@@ -22,6 +23,7 @@
 class CGameCamera;
 class CMeshField;
 class CPlayer;
+class CColliderSphere;
 
 //***************************************************
 // チュートリアルクラスの定義
@@ -44,6 +46,7 @@ private:
 	static CGameCamera* m_pCamera;		// カメラへのポインタ
 	static CMeshField* m_pMeshField;	// メッシュフィールドへのポインタ
 	static CPlayer* m_pPlayer;			// プレイヤーへのポインタ
+	std::unique_ptr<CColliderSphere> m_pSphere; // 円のコライダー
 };
 
 #endif

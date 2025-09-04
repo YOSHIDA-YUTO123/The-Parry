@@ -398,6 +398,18 @@ void CPlayer::Update(void)
 	// 障害物との当たり判定
 	if (CollisionObstacle(&pos))
 	{
+		if (mode == CScene::MODE_GAME)
+		{
+			// ダメージ状態にする
+			ChangeState(make_shared<CPlayerDamage>(3));
+		}
+		else if (mode == CScene::MODE_TUTORIAL)
+		{
+			// ダメージ状態にする
+			ChangeState(make_shared<CPlayerDamage>(0));
+		}
+
+
 		// コライダーを更新する
 		UpdateCollider(pos);
 	}
@@ -550,7 +562,7 @@ void CPlayer::Update(void)
 	{
 		m_fRevengeValue = MAX_REVENGE;
 
-		if (pKeyboard->GetTrigger(DIK_Q))
+		if (pKeyboard->GetTrigger(DIK_Q) || pJoypad->GetTrigger(pJoypad->JOYKEY_LEFT_THUMB))
 		{
 			// 状態の遷移
 			ChangeState(make_shared<CPlayerRevenge>());
@@ -586,6 +598,12 @@ void CPlayer::Update(void)
 
 	// カメラの追従処理
 	pCamera->SetTracking(posVDest, posRDest, 0.1f, CGameCamera::TRACKOBJ_PLAYER);
+
+	// チュートリアルだったら
+	if (mode == CScene::MODE_TUTORIAL)
+	{
+		m_fRevengeValue += 0.5f;
+	}
 
 #ifdef _DEBUG
 
@@ -1262,10 +1280,7 @@ bool CPlayer::CollisionObstacle(D3DXVECTOR3* pPos)
 		
 		// 当たっていたら
 		if (pObstacle != nullptr && pObstacle->Collision(m_pAABB.get(), pPos))
-		{
-			// ダメージ状態にする
-			ChangeState(make_shared<CPlayerDamage>(3));
-	
+		{	
 			return true;
 		}
 	}
@@ -1331,6 +1346,15 @@ void CPlayer::SetRevengeEffect(void)
 	// 左足の位置
 	D3DXVECTOR3 FootL = GetModelPos(MODEL_FOOTL);
 
+	// メッシュサークルの生成
+	auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 0.5f, 0.5f, 1.0f), FootL, 0.0f, 35.0f);
+
+	// サークルの設定処理
+	pCircle->SetCircle(0.0f, 50.0f, 60, true);
+
+	// チュートリアルだったら
+	if (mode == CScene::MODE_TUTORIAL) return;
+
 	// フィールドの波の設定
 	CMeshFieldWave::Config config = { FootL,250.0f,380.0f,280.0f,12.0f,0.01f,120 };
 	
@@ -1339,12 +1363,6 @@ void CPlayer::SetRevengeEffect(void)
 		// 地面に波を発生させる
 		pMeshField->SetWave(config);
 	}
-
-	// メッシュサークルの生成
-	auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 0.5f, 0.5f, 1.0f), FootL, 0.0f, 35.0f);
-
-	// サークルの設定処理
-	pCircle->SetCircle(0.0f, 50.0f, 60, true);
 
 	const int NUM_RUBBLE = 16;
 
@@ -1446,7 +1464,7 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos)
 	}
 
 	// 左手の位置
-	D3DXVECTOR3 playerHandL = CCharacter3D::GetModelPos(8);
+	D3DXVECTOR3 playerHandL = CCharacter3D::GetModelPos(MODEL_HANDL);
 	
 	auto pEffect = CEffect3D::Create(playerHandL, 100.0f, D3DCOLOR_RGBA(255, 215, 0, 255),CEffect3D::TYPE_HIT);
 	pEffect->Set(60, VEC3_NULL);

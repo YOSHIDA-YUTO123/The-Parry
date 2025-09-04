@@ -1415,18 +1415,15 @@ void CEnemySwing::Update(void)
 	// 位置の取得
 	D3DXVECTOR3 pos = pEnemy->GetPosition();
 	
-	if (pMotion->IsEventFrame(0, 60, CEnemy::MOTIONTYPE_SWING))
-	{
-		// 軌跡の処理
-		pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f));
-	}
-
 	// モーションがあるなら
 	if (pMotion != nullptr)
 	{
 		// イベントフレームの判定
-		if (pMotion->IsEventFrame(40, 60, CEnemy::MOTIONTYPE_SWING) && pEnemy->IsDamageMotion() == false)
+		if (pMotion->IsEventFrame(60, 80, CEnemy::MOTIONTYPE_SWING) && pEnemy->IsDamageMotion() == false)
 		{
+			// 軌跡の処理
+			pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f));
+
 			// 攻撃の結果を取得
 			CEnemy::RESULT result = pEnemy->WeponAttackResult(pPlayer);
 

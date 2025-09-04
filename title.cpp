@@ -133,19 +133,6 @@ void CTitle::Update(void)
 	pParticle->SetParticle(2.0f, 60, 10, 1, 40);
 	pParticle->SetParam(CEffect3D::TYPE_FIRE);
 
-#ifdef _DEBUG
-	if(CManager::GetInputKeyboard()->GetTrigger(DIK_F1))
-	{
-		CManager::GetFade()->SetFade(make_unique<CEdit>());
-	}
-
-#endif // _DEBUG
-
-	if (CManager::GetInputKeyboard()->GetTrigger(DIK_F2))
-	{
-		CManager::GetFade()->SetFade(make_unique<CTutorial>(),D3DXCOLOR(1.0f,1.0f,1.0f,0.0f));
-	}
-
 	// ƒJƒƒ‰‚ÌXVˆ—
 	if (m_pCamera != nullptr)
 	{

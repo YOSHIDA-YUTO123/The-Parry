@@ -384,6 +384,12 @@
     <ClCompile Include="TrainingEnemyState.cpp">
       <Filter>ソース ファイル\statemachine</Filter>
     </ClCompile>
+    <ClCompile Include="Object3DMT.cpp">
+      <Filter>ソース ファイル\object3D</Filter>
+    </ClCompile>
+    <ClCompile Include="mark.cpp">
+      <Filter>ソース ファイル\objectBillboard</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="testword.h">
@@ -652,6 +658,12 @@
     </ClInclude>
     <ClInclude Include="TrainingEnemyState.h">
       <Filter>ヘッダー ファイル\statemachine</Filter>
+    </ClInclude>
+    <ClInclude Include="Object3DMT.h">
+      <Filter>ヘッダー ファイル\object3D</Filter>
+    </ClInclude>
+    <ClInclude Include="mark.h">
+      <Filter>ヘッダー ファイル\objectBillboard</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

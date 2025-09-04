@@ -23,6 +23,7 @@
 class CColliderCapsule;
 class CStateMachine;
 class CTrainingEnemyState;
+class CMeshOrbit;
 
 //************************************************
 // 練習用の敵のクラスの定義
@@ -85,6 +86,9 @@ public:
 	void Update(void) override;
 	void Draw(void) override;
 
+	void Orbit(const int nSegH, const D3DXCOLOR col);					// 軌跡の設定
+	void DeleteOrbit(void);												// 軌跡の消去
+
 	// 範囲内にいるか
 	bool CheckDistance(float fRange);
 	void ChangeState(std::shared_ptr<CTrainingEnemyState> pNewState);
@@ -95,6 +99,7 @@ private:
 	std::unique_ptr<CColliderCapsule> m_pCapsule; // カプセルコライダー
 	std::unique_ptr<CStateMachine> m_pMachine;	  // 状態マシーン
 	D3DXMATRIX m_SwordMtx;						  // 剣のマトリックス
+	CMeshOrbit* m_pOrbit;							// 軌跡
 };
 
 #endif

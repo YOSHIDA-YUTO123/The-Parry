@@ -29,6 +29,7 @@
 #include"light.h"
 #include "RevengeGage.h"
 #include "block.h"
+#include "BlockManager.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -42,7 +43,7 @@ CMeshCylinder* CGame::m_pCylinder = nullptr;				   // メッシュシリンダーへのポイ
 CGame::STATE CGame::m_state = STATE_NORMAL;					   // ゲームの状態
 CGameCamera* CGame::m_pCamera = nullptr;					   // ゲームカメラクラスへのポインタ
 CGame::RESULTTYPE CGame::m_ResultType = CGame::RESULTTYPE_WIN; // リザルトの種類
-unique_ptr<CGameManager> CGameManager::m_pInstance = nullptr;			   // 自分のインスタンス
+unique_ptr<CGameManager> CGameManager::m_pInstance = nullptr;  // 自分のインスタンス
 int CGameManager::m_nGameTime = 0;							   // ゲームの経過時間
 
 //===================================================
@@ -67,6 +68,16 @@ CGame::~CGame()
 //===================================================
 HRESULT CGame::Init(void)
 {
+	// ブロックマネージャーの取得
+	auto pBlockManager = CBlockManager::GetInstance();
+
+	// 取得できたら
+	if (pBlockManager != nullptr)
+	{
+		// 終了
+		pBlockManager->Uninit();
+	}
+
 	// ゲームマネージャーの生成
 	CGameManager::Create();
 
@@ -282,6 +293,7 @@ void CGame::Update(void)
 		break;
 	}
 
+#ifdef _DEBUG
 	// キーボードの取得
 	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
 
@@ -289,6 +301,7 @@ void CGame::Update(void)
 	{
 		SetState(STATE_END);
 	}
+#endif
 }
 
 //===================================================

@@ -258,14 +258,20 @@ void CGameCamera::ZoomIn(void)
 		NormalizeDiffRot(fDiff, &rot.y);
 
 		// 目的の角度に近づける
-		rot.x += (fDestAngleX - rot.x) * 0.07f;
-		rot.y += (fDestAngleY - rot.y) * 0.07f;
+		rot.x += (fDestAngleX - rot.x) * 0.1f;
+		rot.y += (fDestAngleY - rot.y) * 0.1f;
+
+		// 目的の角度までPI以上あったら逆回りする
+		NormalizeRot(&rot.y);
 
 		// 向きの設定
 		CCamera::SetRot(rot);
 
 		// 視点の更新処理
 		UpdatePositionV();
+
+		// 視点の更新処理
+		UpdatePositionR();
 
 		if (m_nZoomTime <= 0)
 		{

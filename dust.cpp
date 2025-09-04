@@ -14,6 +14,7 @@
 #include"math.h"
 #include "game.h"
 #include"opening.h"
+#include "tutorial.h"
 
 using namespace Const; // –¼‘O‹óŠÔConst‚ðŽg—p
 
@@ -140,6 +141,9 @@ void CRubble::Update(void)
 	{
 	case CScene::MODE_GAME:
 		pMesh = CGame::GetField();
+		break;
+	case CScene::MODE_TUTORIAL:
+		pMesh = CTutorial::GetField();
 		break;
 	case CScene::MODE_OPENING:
 		pMesh = COpening::GetField();

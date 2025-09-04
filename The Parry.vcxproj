@@ -165,6 +165,8 @@
     <ClCompile Include="EffectSpark.cpp" />
     <ClCompile Include="FadeEffect.cpp" />
     <ClCompile Include="GameCamera.cpp" />
+    <ClCompile Include="mark.cpp" />
+    <ClCompile Include="Object3DMT.cpp" />
     <ClCompile Include="opening.cpp" />
     <ClCompile Include="OpeningCamera.cpp" />
     <ClCompile Include="OpningEnemy.cpp" />
@@ -261,6 +263,8 @@
     <ClInclude Include="EffectSpark.h" />
     <ClInclude Include="FadeEffect.h" />
     <ClInclude Include="GameCamera.h" />
+    <ClInclude Include="mark.h" />
+    <ClInclude Include="Object3DMT.h" />
     <ClInclude Include="opening.h" />
     <ClInclude Include="OpeningCamera.h" />
     <ClInclude Include="OpningEnemy.h" />

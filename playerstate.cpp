@@ -342,8 +342,14 @@ void CPlayerRoundKick::Update(void)
 
 		if (pMotion->IsEventFrame(15, 15, pPlayer->MOTIONTYPE_ROUNDKICK))
 		{
+			// モードの取得
+			CScene::MODE mode = CManager::GetMode();
+
+			// ジャンプ量の設定
+			float fJumpHeight = (mode == CScene::MODE_GAME) ? 18.0f : 14.0f;
+
 			// 移動量の設定
-			pPlayer->GetMovement()->Set(D3DXVECTOR3(0.0f, 14.0f, 0.0f));
+			pPlayer->GetMovement()->Set(D3DXVECTOR3(0.0f, fJumpHeight, 0.0f));
 
 			// サークルの生成
 			auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f), pos, 0.0f, 20.0f);

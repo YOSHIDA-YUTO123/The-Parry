@@ -26,10 +26,13 @@ class CObject3D : public CObject
 public:
 	CObject3D(int nPriority = 3);
 	~CObject3D();
-	HRESULT Init(void);
-	void Uninit(void);
-	void Update(void);
-	void Draw(void);
+
+	static CObject3D* Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot, const D3DXVECTOR3 size, const char* pTextureName);
+
+	HRESULT Init(void) override;
+	void Uninit(void) override;
+	void Update(void) override;
+	void Draw(void) override;
 	void SetDraw(void);
 
 	CPosition* GetPosition(void);
@@ -41,7 +44,6 @@ public:
 	void UpdatePosition(const D3DXVECTOR3 pos, const D3DXVECTOR3 Size);
 	void UpdateCol(const D3DXCOLOR col);
 
-	static CObject3D* Create(const D3DXVECTOR3 pos,const D3DXVECTOR3 rot,const D3DXVECTOR3 size,const char *pTextureName);
 private:
 	CPosition *m_pPos;	// ˆÊ’u
 	CRotation *m_pRot;	// Œü‚«

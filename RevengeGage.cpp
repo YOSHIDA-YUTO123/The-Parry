@@ -43,7 +43,7 @@ CRevengeUI* CRevengeUI::Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size, co
 	// ƒQ[ƒW‚Ì¶¬
 	auto pGage = new CRevengeUI;
 
-	pGage->m_fValue = fValue;
+	pGage->m_fValue = 0.0f;
 	pGage->m_fMaxValue = fValue;
 
 	pGage->SetPosition(pos);

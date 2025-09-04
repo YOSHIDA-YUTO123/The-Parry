@@ -18,7 +18,7 @@
 #include"meshfield.h"
 #include"math.h"
 #include "game.h"
-
+#include"tutorial.h"
 
 using namespace Const;							// 名前空間Constを使用する
 using namespace std;							// 名前空間stdを使用する
@@ -87,8 +87,22 @@ void CObstacle::Uninit(void)
 //==============================================
 void CObstacle::Update(void)
 {
-	// フィールドの取得
-	CMeshField* pField = CGame::GetField();
+	// フィールドへのポインタ
+	CMeshField* pField = nullptr;
+
+	// 現在のモードの取得
+	CScene::MODE mode = CManager::GetMode();
+
+	if (mode == CScene::MODE_TUTORIAL)
+	{
+		// フィールドの取得
+		pField = CTutorial::GetField();
+	}
+	else if (mode == CScene::MODE_GAME)
+	{
+		// フィールドの取得
+		pField = CGame::GetField();
+	}
 
 	// 位置の取得
 	D3DXVECTOR3 pos = m_pObjectX->GetPosition();

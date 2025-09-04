@@ -27,6 +27,7 @@ public:
 	enum MENU
 	{
 		MENU_START = 0,
+		MENU_TUTORIAL,
 		MENU_QUIT,
 		MENU_MAX
 	};
@@ -56,6 +57,22 @@ class CTitleStart : public CTitleMenu
 public:
 	CTitleStart();
 	~CTitleStart();
+
+	HRESULT Init(void) override;
+	void Uninit(void) override;
+	void Update(void) override;
+	void Draw(void) override;
+private:
+};
+
+//***************************************************
+// タイトルメニュー(チュートリアル)のクラスの定義
+//***************************************************
+class CTitleTutorial : public CTitleMenu
+{
+public:
+	CTitleTutorial();
+	~CTitleTutorial();
 
 	HRESULT Init(void) override;
 	void Uninit(void) override;

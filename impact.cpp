@@ -112,7 +112,7 @@ HRESULT CMeshCircle::Init(void)
 	}
 
 	// テクスチャのIDの設定
-	CMesh::SetTextureID();
+	//CMesh::SetTextureID("data/TEXTURE/gradation/gradation100.jpg");
 
 	return E_FAIL;
 }

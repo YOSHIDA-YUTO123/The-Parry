@@ -12,8 +12,10 @@
 #include"manager.h"
 #include"renderer.h"
 #include"textureManager.h"
+#include<string>
 
-using namespace Const;							// 名前空間Constを使用する
+using namespace Const;		// 名前空間Constを使用する
+using namespace std;		// 名前空間stdを使用する
 
 //===================================================
 // コンストラクタ
@@ -340,7 +342,14 @@ CObject3D* CObject3D::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot, const
 	pObject3D->m_pRot->Set(rot);
 	pObject3D->m_pSize->Set(size);
 	pObject3D->SetOffsetVtx();
-	pObject3D->m_nTextureIdx = pTexture->Register(pTextureName);
+
+	// テクスチャのパス
+	string TexturePath = "data/TEXTURE/";
+
+	// 文字列を連結
+	TexturePath += pTextureName;
+
+	pObject3D->m_nTextureIdx = pTexture->Register(TexturePath.c_str());
 
 	return pObject3D;
 }

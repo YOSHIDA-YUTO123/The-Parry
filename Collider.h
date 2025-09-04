@@ -26,6 +26,7 @@ public:
 	CCollider();
 	virtual ~CCollider();
 	void SetPosition(const D3DXVECTOR3 pos) { m_pos = pos; }
+
 	D3DXVECTOR3 GetPos(void) const { return m_pos; }
 protected:
 	D3DXVECTOR3 m_pos; // ˆÊ’u

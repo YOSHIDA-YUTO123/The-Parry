@@ -37,6 +37,7 @@ public:
 	void SetBlock(CBlock* pBlock);
 	CBlock* GetBlock(const int nIdx);
 	int GetNumAll(void) const { return static_cast<int>(m_apBlockList.size()); }
+	void Uninit(void);
 	bool Collision(CColliderAABB* pAABB, D3DXVECTOR3* pPushPos);
 	HRESULT Load(void);
 private:

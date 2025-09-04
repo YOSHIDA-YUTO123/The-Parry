@@ -17,6 +17,7 @@
 #include<memory>
 //#include"game.h"
 #include"opening.h"
+#include "tutorial.h"
 
 using namespace math;  // 名前空間mathを使用
 using namespace Const; // 名前空間Constを使用
@@ -54,6 +55,9 @@ CTitleMenu* CTitleMenu::Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size,con
 	{
 	case MENU_START:
 		pMenu = new CTitleStart;
+		break;
+	case MENU_TUTORIAL:
+		pMenu = new CTitleTutorial;
 		break;
 	case MENU_QUIT:
 		pMenu = new CTitleQuit;
@@ -369,7 +373,7 @@ void CTitleMenuManager::Create(void)
 			CTitleMenu::MENU menu = static_cast<CTitleMenu::MENU>(nCnt);
 
 			// タイトルのメニューの生成
-			CTitleMenu::Create(D3DXVECTOR3(300.0f, 400.0f + nCnt * 160.0f, 0.0f), D3DXVECTOR2(100.0f, 80.0f), menu);
+			CTitleMenu::Create(D3DXVECTOR3(300.0f, 300.0f + nCnt * 140.0f, 0.0f), D3DXVECTOR2(150.0f, 50.0f), menu);
 		}
 	}
 }
@@ -398,6 +402,7 @@ void CTitleMenuManager::Uninit(void)
 {
 	// 終了処理
 	CObject2D::Uninit();
+
 	m_pInstance = nullptr;
 }
 
@@ -434,4 +439,96 @@ void CTitleMenuManager::Draw(void)
 {
 	// 描画処理
 	CObject2D::Draw();
+}
+
+//===================================================
+// コンストラクタ(チュートリアル)
+//===================================================
+CTitleTutorial::CTitleTutorial() : CTitleMenu(MENU_TUTORIAL)
+{
+}
+
+//===================================================
+// デストラクタ(チュートリアル)
+//===================================================
+CTitleTutorial::~CTitleTutorial()
+{
+}
+
+//===================================================
+// 初期化処理(チュートリアル)
+//===================================================
+HRESULT CTitleTutorial::Init(void)
+{
+	// 初期化処理
+	if (FAILED(CTitleMenu::Init()))
+	{
+		return E_FAIL;
+	}
+
+	// テクスチャのIDの設定
+	SetTextureID("data/TEXTURE/title/title_menu_tutorial.png");
+
+	return S_OK;
+}
+
+//===================================================
+// 終了処理(チュートリアル)
+//===================================================
+void CTitleTutorial::Uninit(void)
+{
+	// 終了処理
+	CTitleMenu::Uninit();
+}
+
+//===================================================
+// 更新処理(チュートリアル)
+//===================================================
+void CTitleTutorial::Update(void)
+{
+	// 更新処理
+	CTitleMenu::Update();
+
+	// キーボードの取得
+	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
+
+	// パッドの取得
+	CInputJoypad* pJoypad = CManager::GetInputJoypad();
+
+	// タイトルマネージャーの取得
+	auto pTitleManager = CTitleMenuManager::GetInstance();
+
+	// 取得できなかったら処理しない
+	if (pTitleManager == nullptr) return;
+
+	// 自分のメニュー
+	MENU myMenu = GetMenu();
+
+	// 選択中のメニュー
+	MENU selectMenu = pTitleManager->GetMenu();
+
+	// フェードの取得
+	CFade* pFade = CManager::GetFade();
+
+	// 選択されているメニューと自分のメニューが同じだったら
+	if (myMenu == selectMenu && pFade != nullptr && pFade->GetState() == CFade::FADE_NONE)
+	{
+		if (pKeyboard->GetTrigger(DIK_RETURN) || pJoypad->GetTrigger(pJoypad->JOYKEY_A))
+		{
+			// スタートを押した
+			pTitleManager->SetStart(true);
+
+			// 新しいモードの設定
+			pFade->SetFade(make_unique<CTutorial>(), D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
+		}
+	}
+}
+
+//===================================================
+// 描画処理(チュートリアル)
+//===================================================
+void CTitleTutorial::Draw(void)
+{
+	// 描画処理
+	CTitleMenu::Draw();
 }
