@@ -78,7 +78,9 @@ public:
 		MOTIONTYPE_LEFTMOVE,	// 横歩き(左)
 		MOTIONTYPE_RUSH,		// 突進攻撃
 		MOTIONTYPE_END_RUSH,	// 突進攻撃終了
-		MOTIONTYPE_BACKKICK,	// 後ろ下痢
+		MOTIONTYPE_BACKKICK,	// 後ろ蹴り
+		MOTIONTYPE_START_RUSH,	// 突進開始
+		MOTIONTYPE_LOOK_BACKL,	// 後ろを見る(左)
 		MOTIONTYPE_MAX
 	}MOTIONTYPE;
 
@@ -147,7 +149,7 @@ public:
 	void MoveSmoke(void);
 	void SetAngle(const float fAngle);
 	bool CollisionFOV(const D3DXVECTOR3 pos);
-	bool CollisionFOV(const D3DXVECTOR3 pos, const float fLeftAngle, const float fRightAngle);
+	bool CollisionFOV(const D3DXVECTOR3 Targetpos, const float fLeftAngle, const float fRightAngle);
 
 	// 武器攻撃の結果
 	RESULT WeponAttackResult(CPlayer* pPlayer);

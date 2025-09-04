@@ -358,6 +358,8 @@ bool CMeshField::Collision(const D3DXVECTOR3 pos,float *pOutHeight)
 		int nIdx1 = GetIndex(nCntVertex + 1);
 		int nIdx2 = GetIndex(nCntVertex + 2);
 
+		if (nIdx0 >= nCntVertex || nIdx1 >= nCntVertex || nIdx2 >= nCntVertex) continue;
+
 		// ’¸“_‚ðŽæ“¾
 		D3DXVECTOR3 vtx0 = GetVtxPos(nIdx0);
 		D3DXVECTOR3 vtx1 = GetVtxPos(nIdx1);

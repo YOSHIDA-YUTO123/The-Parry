@@ -61,6 +61,7 @@ public:
 		ID_RUSH,		 // 突進攻撃
 		ID_ENDRUSH,		 // 突進攻撃終了
 		ID_BACKKICK,	 // 後ろ蹴り
+		ID_LOOK_BACKL,	 // 後ろを見る(左)
 		ID_MAX
 	};
 
@@ -174,8 +175,11 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 private:
-	int m_nDamage;	  // ダメージ量
-	bool m_bBackStap; // モーション終わりにバックステップするか判定
+	static constexpr int IDLE_TIME = 30; // 何もしない状態の時間
+	int m_nDamage;		// ダメージ量
+	int m_nIdleTime;	// 何もしない状態の時間
+	bool m_bFinish;		// モーションが終わったかどうか
+	bool m_bBackStap;	// モーション終わりにバックステップするか判定
 };
 
 //***************************************************
@@ -241,8 +245,12 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 private:
-	int m_nDamage; // ダメージ量
-	int m_nNextAction; // 次の行動
+	static constexpr int IDLE_TIME = 30; // 何もしない時間
+
+	int m_nIdleTime;	// 何もしない時間
+	int m_nDamage;		// ダメージ量
+	int m_nNextAction;	// 次の行動
+	bool m_bFinish;		// モーションが終わったかどうか
 };
 
 //***************************************************
@@ -380,7 +388,6 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 private:
-	static constexpr int MOVE_TIME = 180; // 移動時間
 	static constexpr float ACTION_DISTANCE = 750.0f; // 攻撃してくる距離
 	int m_nTime; // 横移動の時間
 };
@@ -442,6 +449,22 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 private:
+};
+
+//***************************************************
+// 敵の状態(LookBackL)クラスの定義
+//***************************************************
+class CEnemyLookBackL : public CEnemyState
+{
+public:
+	CEnemyLookBackL();
+	~CEnemyLookBackL();
+	void Init(void) override;
+	void Update(void) override;
+private:
+	float m_fDestAngle; // 目的の向き
+	int m_nFrame;		// フレーム
+	int m_nCounter;		// カウンター
 };
 
 #endif

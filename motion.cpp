@@ -580,7 +580,7 @@ bool CMotion::IsEndLoopMotion(void)
 //===================================================
 bool CMotion::IsFinishEndBlend(void)
 {
-	if (m_bFinish == true && m_nFrameBlend <= m_nCounterBlend && m_bFirst == false)
+	if (m_bFinish == true && m_nFrameBlend <= m_nCounterBlend - 1 && m_bFirst == false)
 	{
 		return true;
 	}

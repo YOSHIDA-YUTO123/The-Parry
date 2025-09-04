@@ -27,6 +27,7 @@
 #include "debugproc.h"
 #include "transform.h"
 #include "dust.h"
+#include"Collider.h"
 
 //***************************************************
 // 名前空間
@@ -125,9 +126,20 @@ void CEnemyIdle::Update(void)
 	// 位置の取得
 	D3DXVECTOR3 playerPos = pPlayer->GetPosition();
 
+	//// 左側の視界
+	//CColliderFOV BackLeftFOV = CColliderFOV::CreateCollider(pos, rot.y, -D3DX_PI * 0.5f, D3DX_PI, 9999.0f);
+
 	// 次の行動に移るまでの時間が0だったら
 	if (m_nNextStateCount <= 0)
 	{
+		// 左後ろにいたら
+		if (pEnemy->CollisionFOV(playerPos, -D3DX_PI * 0.5f, D3DX_PI))
+		{
+			// 振り返り
+			pEnemy->ChangeState(make_shared<CEnemyLookBackL>());
+			return;
+		}
+
 		// 次の行動を選択
 		if (pEnemy->CheckDistane(350.0f))
 		{
@@ -444,7 +456,7 @@ void CEnemyAttackSmash::Update(void)
 		}
 	}
 	
-	if (pMotion->IsEventFrame(1, 54, CEnemy::MOTIONTYPE_SMASH))
+	if (pMotion->IsEventFrame(1, 15, CEnemy::MOTIONTYPE_SMASH))
 	{
 		// プレイヤーの方向を見る処理
 		pEnemy->AngleToPlayer();
@@ -467,10 +479,10 @@ void CEnemyAttackSmash::Update(void)
 		}
 	}
 	// 攻撃モーションが終わったら
-	if (pMotion->IsFinishEndBlend())
+	else if (pMotion->IsFinishEndBlend())
 	{
 		// IDLEにする
-		pEnemy->ChangeState(make_shared<CEnemyIdle>(120));
+		pEnemy->ChangeState(make_shared<CEnemyIdle>(60));
 
 		return;
 	}
@@ -481,6 +493,8 @@ void CEnemyAttackSmash::Update(void)
 //===================================================
 CEnemyDamageL::CEnemyDamageL(const int nDamage,const bool bBackStatp) : CEnemyState(ID_DAMAGEL)
 {
+	m_bFinish = false;
+	m_nIdleTime = IDLE_TIME;
 	m_nDamage = nDamage;
 	m_bBackStap = bBackStatp;
 }
@@ -555,19 +569,38 @@ void CEnemyDamageL::Update(void)
 		// 吹き飛び処理
 		pEnemy->GetMovement()->BlowOff(PlayerPos, 50.0f, 5.0f);
 	}
+
 	// モーションを最後まで行ったら
 	if (pMotion->IsFinishEndBlend())
 	{
-		if (m_bBackStap)
+		m_bFinish = true;
+	}
+
+	if (m_bFinish)
+	{
+		m_nIdleTime--;
+	}
+
+	// 何もしない時間が終わったら
+	if (m_nIdleTime <= 0)
+	{
+		// 次の行動を選出
+		int nAction = rand() % 2;
+
+		// 行動の遷移
+		switch (nAction)
 		{
-			// バックステップ
-			pEnemy->ChangeState(make_shared<CEnemyBackStep>());
-		}
-		else
-		{
-			pEnemy->ChangeState(make_shared<CEnemyIdle>(10));
+		case 0:
+			pEnemy->ChangeState(make_shared<CEnemyRightMove>());
+			break;
+		case 1:
+			pEnemy->ChangeState(make_shared<CEnemyLeftMove>());
+			break;
+		default:
+			break;
 		}
 	}
+
 }
 
 //===================================================
@@ -737,7 +770,7 @@ void CEnemyDash::Update(void)
 	pMotion->SetMotion(CEnemy::MOTIONTYPE_DASH, true, 10);
 
 	// プレイヤーを追いかける
-	pEnemy->ChasePlayer(0.1f,3.0f);
+	pEnemy->ChasePlayer(0.1f,10.0f);
 
 	// 一定の距離に入ったら
 	if (pEnemy->CheckDistane(250.0f))
@@ -879,9 +912,7 @@ void CEnemySpin::Update(void)
 		if (pMotion->FinishMotion())
 		{
 			// 状態の設定
-			pEnemy->ChangeState(make_shared<CEnemyIdle>(60));
-
-			pMotion->SetMotion(CEnemy::MOTIONTYPE_NEUTRAL, true, 20);
+			pEnemy->ChangeState(make_shared<CEnemyEndRush>(true));
 
 			return;
 		}
@@ -1096,6 +1127,8 @@ void CEnemyHit::Update(void)
 //===================================================
 CEnemyDamageS::CEnemyDamageS(const int nDamage) : CEnemyState(ID_DAMAGES)
 {
+	m_bFinish = false;
+	m_nIdleTime = IDLE_TIME;
 	m_nNextAction = INIT_NEXT_ACTION;
 	m_nDamage = nDamage;
 }
@@ -1164,20 +1197,44 @@ void CEnemyDamageS::Update(void)
 	CMotion* pMotion = pEnemy->GetMotion();
 
 	// モーションが終わったら
-	if (pMotion != nullptr && pMotion->FinishMotion())
+	if (pMotion != nullptr)
 	{
-		// 30%の確率
-		if (m_nNextAction <= 30)
+		// 10%の確率
+		if (pMotion->FinishMotion() && m_nNextAction <= 10)
 		{
 			// 距離を取る
 			pEnemy->ChangeState(make_shared<CEnemyAway>());
 		}
-		else
+		else if (pMotion->IsFinishEndBlend())
 		{
-			// 通常状態に戻す
-			pEnemy->ChangeState(make_shared<CEnemyIdle>(5));
+			m_bFinish = true;
 		}
+	}
 
+	// モーションが終わったら
+	if (m_bFinish)
+	{
+		m_nIdleTime--;
+	}
+
+	// 何もしない時間が終わったら
+	if (m_nIdleTime <= 0)
+	{
+		// 次の行動を選出
+		int nAction = rand() % 2;
+
+		// 行動の遷移
+		switch (nAction)
+		{
+		case 0:
+			pEnemy->ChangeState(make_shared<CEnemyRightMove>());
+			break;
+		case 1:
+			pEnemy->ChangeState(make_shared<CEnemyLeftMove>());
+			break;
+		default:
+			break;
+		}
 	}
 }
 
@@ -1492,8 +1549,8 @@ void CEnemySwing::Update(void)
 		// モーションが終わったら
 		if (pMotion->FinishMotion())
 		{
-			// 40%の確率
-			if (m_nNextAction <= 20)
+			// 10%の確率
+			if (m_nNextAction <= 10)
 			{
 				// バックステップする
 				pEnemy->ChangeState(make_shared<CEnemyBackStep>());
@@ -2067,7 +2124,7 @@ void CEnemyComboDamage::Update(void)
 //===================================================
 CEnemyRightMove::CEnemyRightMove() : CEnemyState(ID_RIGHT_MOVE)
 {
-	m_nTime = MOVE_TIME;
+	m_nTime = rand() % 180 + 180;
 }
 
 //===================================================
@@ -2114,7 +2171,7 @@ void CEnemyRightMove::Update(void)
 	pEnemy->AngleToPlayer();
 
 	// 右に移動する
-	pEnemy->GetMovement()->SetMoveDir(-D3DX_PI * 0.5f, 2.0f);
+	pEnemy->GetMovement()->SetMoveDir(-D3DX_PI * 0.5f, 3.0f);
 
 	m_nTime--;
 
@@ -2134,6 +2191,7 @@ void CEnemyRightMove::Update(void)
 				pEnemy->ChangeState(make_shared<CEnemyJumpAttack>());
 				break;
 			case 1:
+				pEnemy->ChangeState(make_shared<CEnemyRush>());
 				break;
 			default:
 				break;
@@ -2198,7 +2256,7 @@ void CEnemyLeftMove::Update(void)
 	pEnemy->AngleToPlayer();
 
 	// 右に移動する
-	pEnemy->GetMovement()->SetMoveDir(D3DX_PI * 0.5f, 2.0f);
+	pEnemy->GetMovement()->SetMoveDir(D3DX_PI * 0.5f, 3.0f);
 
 	m_nTime--;
 
@@ -2218,6 +2276,7 @@ void CEnemyLeftMove::Update(void)
 				pEnemy->ChangeState(make_shared<CEnemyJumpAttack>());
 				break;
 			case 1:
+				pEnemy->ChangeState(make_shared<CEnemyRush>());
 				break;
 			default:
 				break;
@@ -2271,7 +2330,7 @@ void CEnemyRush::Init(void)
 	if (pMotion != nullptr)
 	{
 		// モーションの再生
-		pMotion->SetMotion(CEnemy::MOTIONTYPE_RUSH, true, 10);
+		pMotion->SetMotion(CEnemy::MOTIONTYPE_START_RUSH, true, 10);
 	}
 }
 
@@ -2298,6 +2357,19 @@ void CEnemyRush::Update(void)
 	// プレイヤーの方向を向く
 	pEnemy->AngleToPlayer();
 
+	if (pMotion != nullptr)
+	{
+		// 呼び動作中だったら処理しない
+		if (pMotion->IsEventFrame(0, 70, CEnemy::MOTIONTYPE_START_RUSH))
+		{
+			return;
+		}
+		else
+		{
+			// モーションの再生
+			pMotion->SetMotion(CEnemy::MOTIONTYPE_RUSH, true, 10);
+		}
+	}
 	// プレイヤーの方向に向かう
 	pEnemy->ChasePlayer(0.5f, 10.0f);
 
@@ -2584,6 +2656,121 @@ void CEnemyBackKick::Update(void)
 			// 向きの設定処理
 			pEnemy->AngleToPlayer();
 
+			// 状態の遷移
+			pEnemy->ChangeState(make_shared<CEnemyIdle>(5));
+		}
+	}
+}
+
+//===================================================
+// コンストラクタ(左後ろを見る)
+//===================================================
+CEnemyLookBackL::CEnemyLookBackL() : CEnemyState(ID_LOOK_BACKL)
+{
+	m_nCounter = NULL;
+	m_nFrame = 60;
+	m_fDestAngle = NULL;
+}
+
+//===================================================
+// デストラクタ(左後ろを見る)
+//===================================================
+CEnemyLookBackL::~CEnemyLookBackL()
+{
+}
+
+//===================================================
+// 初期化処理(左後ろを見る)
+//===================================================
+void CEnemyLookBackL::Init(void)
+{
+	// 敵の取得
+	CEnemy* pEnemy = CEnemyState::GetEnemy();
+
+	// プレイヤーの取得
+	CPlayer* pPlayer = CGame::GetPlayer();
+
+	// 敵が使われていないなら処理しない
+	if (pEnemy == nullptr) return;
+
+	// 取得できなかったら処理しない
+	if (pPlayer == nullptr) return;
+
+	// モーションクラスの取得
+	CMotion* pMotion = pEnemy->GetMotion();
+
+	// モーションがあるなら
+	if (pMotion != nullptr)
+	{
+		// モーションの再生
+		pMotion->SetMotion(CEnemy::MOTIONTYPE_LOOK_BACKL, true, 10);
+	}
+
+	// 敵の位置の取得
+	D3DXVECTOR3 pos = pEnemy->GetPosition();
+
+	// プレイヤーの位置の取得
+	D3DXVECTOR3 playerPos = pPlayer->GetPosition();
+
+	// プレイヤーまでの角度を求める
+	float fAngle = GetTargetAngle(pos, playerPos);
+
+	// 向きの取得
+	D3DXVECTOR3 rot = pEnemy->GetRotaition()->GetDest();
+
+	// 今の角度から目的の角度までの距離を求める
+	m_fDestAngle = rot.y + (fAngle - rot.y);
+
+	// 角度の差分を求める
+	if (m_fDestAngle < -D3DX_PI)
+	{
+		m_fDestAngle += D3DX_PI * 2.0f;
+	}
+	else if (m_fDestAngle > D3DX_PI)
+	{
+		m_fDestAngle += -D3DX_PI * 2.0f;
+	}
+}
+
+//===================================================
+// 更新処理(左後ろを見る)
+//===================================================
+void CEnemyLookBackL::Update(void)
+{
+	// 敵の取得
+	CEnemy* pEnemy = CEnemyState::GetEnemy();
+
+	// 敵が使われていないなら処理しない
+	if (pEnemy == nullptr) return;
+
+	// モーションクラスの取得
+	CMotion* pMotion = pEnemy->GetMotion();
+
+	// モーションがあるなら
+	if (pMotion != nullptr)
+	{
+		if (!pMotion->IsEventFrame(0, 75, CEnemy::MOTIONTYPE_LOOK_BACKL))
+		{
+			// フレームを超えたら
+			if (m_nFrame <= m_nCounter)
+			{
+				// 制限する
+				m_nCounter = m_nFrame;
+			}
+
+			float fRate = m_nCounter / static_cast<float>(m_nFrame);
+
+			float fAngle = m_fDestAngle * fRate;
+
+			pEnemy->SetAngle(fAngle);
+
+			// カウンターを進める
+			m_nCounter++;
+		}
+
+		// モーションが終わったら
+		if (pMotion->IsFinishEndBlend())
+		{
 			// 状態の遷移
 			pEnemy->ChangeState(make_shared<CEnemyIdle>(5));
 		}

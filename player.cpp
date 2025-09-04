@@ -378,16 +378,16 @@ void CPlayer::Update(void)
 		// ここに処理があれば書く
 	}
 
-	if (pMotion->IsEventFrame(24, 24, MOTIONTYPE_ROUNDKICK))
-	{
-		// 軌跡のリセット
-		DeleteOrbit();
-	}
-	else if (pMotion->IsEventFrame(25, 35, MOTIONTYPE_ROUNDKICK))
-	{
-		// 軌跡の設定
-		Orbit(32, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
-	}
+	//if (pMotion->IsEventFrame(24, 24, MOTIONTYPE_ROUNDKICK))
+	//{
+	//	// 軌跡のリセット
+	//	DeleteOrbit();
+	//}
+	//else if (pMotion->IsEventFrame(25, 35, MOTIONTYPE_ROUNDKICK))
+	//{
+	//	// 軌跡の設定
+	//	Orbit(32, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
+	//}
 
 	// ブロックの当たり判定
 	CollisionBlock(&pos);

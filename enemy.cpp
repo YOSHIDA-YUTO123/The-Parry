@@ -265,6 +265,10 @@ void CEnemy::Update(void)
 	{
 		ChangeState(make_shared<CEnemyRush>());
 	}
+	if (pKeyboard->GetTrigger(DIK_8))
+	{
+		ChangeState(make_shared<CEnemyLookBackL>());
+	}
 
 	if (pKeyboard->GetTrigger(DIK_F1))
 	{
@@ -397,7 +401,7 @@ void CEnemy::Update(void)
 		// ウェーブの設定処理
 		pWave->SetWave(30,50.0f);
 	}
-	else if (pMotion->IsEventFrame(20, 20, MOTIONTYPE_SWING))
+	else if (pMotion->IsEventFrame(40, 40, MOTIONTYPE_SWING))
 	{
 		// パーティクルの生成
 		auto pParticle = CParticle3DNormal::Create(chestpos, 100.0f, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
@@ -1073,7 +1077,7 @@ bool CEnemy::CollisionFOV(const D3DXVECTOR3 pos)
 //===================================================
 // 視界の判定
 //===================================================
-bool CEnemy::CollisionFOV(const D3DXVECTOR3 pos, const float fLeftAngle, const float fRightAngle)
+bool CEnemy::CollisionFOV(const D3DXVECTOR3 Targetpos, const float fLeftAngle, const float fRightAngle)
 {
 	// 視界判定の取得
 	auto pCollision = CCollisionFOV::GetInstance();
@@ -1088,7 +1092,7 @@ bool CEnemy::CollisionFOV(const D3DXVECTOR3 pos, const float fLeftAngle, const f
 	auto ColliderFOV = CColliderFOV::CreateCollider(myPos, Angle.y, fLeftAngle, fRightAngle,1000.0f);
 	
 	// 視界内だったら
-	if (pCollision->Collision(pos, &ColliderFOV))
+	if (pCollision->Collision(Targetpos, &ColliderFOV))
 	{
 		return true;
 	}
