@@ -55,7 +55,7 @@ public:
 	void SetTracking(const TRACKOBJ obj) { m_TrackObj = obj; }
 	void SetState(const STATE state);
 	void ResetState(void);
-	void Rockon(D3DXVECTOR3 playerPos, D3DXVECTOR3 enemyPos);
+	void Rockon(D3DXVECTOR3 playerPos, D3DXVECTOR3 enemyPos,float fDistance);
 	void ZoomIn(void);
 	void SetShake(const int nShakeTime, const int nRange);
 private:

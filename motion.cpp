@@ -49,6 +49,7 @@ CMotion::CMotion()
 	m_nNumKeyBlend = NULL;
 	m_nAllCounter = NULL;
 	m_nAllFrame = NULL;
+	m_nEndBlendMotion = NEUTRAL;
 	m_bSlowMag = false; // スロー倍率がかかっているかどうか
 }
 
@@ -416,7 +417,7 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 		m_nCounterBlend = 0;			// ブレンドフレームをリセット
 		m_bFinish = true;				// モーションが終わった
 		m_nFrameBlend = nBlendFrame;	// ブレンドフレームを設定
-		m_nTypeBlend = NEUTRAL;			// ニュートラルにブレンドする
+		m_nTypeBlend = m_nEndBlendMotion;	// ニュートラルにブレンドする
 	}
 
 	// モーションの出だしのブレンドが終了した
@@ -429,7 +430,7 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 		m_bBlend = false;				// もとに戻す
 		m_nCount = m_nCounterMotionBlend;	    // フレームをブレンドした先のフレームに合わせる
 		m_nAllCounter = m_nCounterMotionBlend;
-		m_nType = NEUTRAL;				// モーションタイプをニュートラルにする
+		m_nType = m_nEndBlendMotion;				// モーションタイプをニュートラルにする
 		m_nCounterBlend = 0;
 		m_nKey = m_nKeyBlend;
 	}
@@ -504,7 +505,7 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 //===================================================
 // モーションの設定処理
 //===================================================
-void CMotion::SetMotion(const int motiontype,bool bBlend,const int nBlendFrame)
+void CMotion::SetMotion(const int motiontype,bool bBlend,const int nBlendFrame, const int nBlendType)
 {
 	// 同じ種類のモーションだったら
 	if (m_nTypeBlend == motiontype || m_nType == motiontype) return;
@@ -518,11 +519,11 @@ void CMotion::SetMotion(const int motiontype,bool bBlend,const int nBlendFrame)
 	// ブレンドがあるなら
 	if (bBlend == true)
 	{
-		m_nKeyBlend = 0;
+		m_nEndBlendMotion = nBlendType; // 終わった時につなげるモーション
+		m_nKeyBlend = 0;				// ブレンドキーをリセット
 
 		if (m_bFirst == false)
 		{
-		
 			m_nCounterBlend = 0;		 // ブレンドカウンターをリセット
 			m_nFrameBlend = nBlendFrame;		 // ブレンドフレームを設定する
 			m_bFirst = true;			 // 最初のブレンド開始フラグをtrueにする

@@ -45,6 +45,8 @@ constexpr float SHADOW_MAX_HEIGHT = 500.0f;		// 影が見える最大の高さ
 constexpr float SHADOW_SIZE = 150.0f;			// 影の大きさ
 constexpr float ROCKON_HEIGHT = 100.0f;			// ロックオン時の見る場所
 constexpr float INERTIA = 0.25f;				// 慣性
+constexpr float RUSH_EFFECT_POS = -350.0f;		// 突進エフェクトの位置
+
 constexpr int NUM_RUBBLE = 16;					// 瓦礫を出す数
 constexpr int NUM_MATRIX = 8;					// 武器につけるマトリックスの数
 constexpr int NEXT_ACTION_TIME = 300;			// 次の行動の抽選までの時間
@@ -62,6 +64,7 @@ CEnemy::CEnemy()
 	m_nParrySuccess = NULL;
 	m_pMove = nullptr;
 	m_pMachine = nullptr;
+	D3DXMatrixIdentity(&m_RushEffectMtx);
 	D3DXMatrixIdentity(&m_weponMatrix);
 	m_pOrbit = nullptr;
 	m_posOld = VEC3_NULL;
@@ -146,6 +149,10 @@ HRESULT CEnemy::Init(void)
 
 	m_pMovement->Init(m_pMove,this);
 
+	// 状態マネージャーの生成
+	m_pStateManager.reset(CEnemyStateManager::Create());
+	m_pStateManager->SetOnwer(this);
+
 	return S_OK;
 }
 
@@ -159,6 +166,7 @@ void CEnemy::Uninit(void)
 	m_pAABB = nullptr;
 	m_pCapsule = nullptr;
 	m_pFOV = nullptr;
+	m_pStateManager = nullptr;
 
 	//for (const auto& pCapsule : m_apCapsule)
 	//{
@@ -201,6 +209,17 @@ void CEnemy::Update(void)
 	if (pMotion->IsLoad() == false)
 	{
 		return;
+	}
+
+	MOTIONTYPE motiontype = static_cast<MOTIONTYPE>(pMotion->GetBlendType());
+
+	float fDistance = motiontype == MOTIONTYPE_JUMPATTACK ? 600.0f : 600.0f;
+	float fHeightV = motiontype == MOTIONTYPE_JUMPATTACK ? 100.0f : 160.0f;
+
+	// カメラがnullじゃないなら
+	if (pCamera != nullptr)
+	{
+		pCamera->Rockon(PlayerPos, D3DXVECTOR3(pos.x, pos.y + fHeightV, pos.z), fDistance);
 	}
 
 	if (CCharacter3D::HitStop())
@@ -470,11 +489,14 @@ void CEnemy::Update(void)
 	// 向きの補間
 	CCharacter3D::GetRotaition()->SetSmoothAngle(0.1f);
 
-	// カメラがnullじゃないなら
-	if (pCamera != nullptr)
-	{
-		pCamera->Rockon(PlayerPos, chestpos);
-	}
+	//// モデルの位置の取得
+	//D3DXVECTOR3 EffectPos = GetPositionFromMatrix(m_RushEffectMtx);
+
+	//auto p = CEffect3D::Create(EffectPos, 50.0f, WHITE, CEffect3D::TYPE_NORAML);
+	//p->Set(60, VEC3_NULL);
+
+	//// 腰
+	//D3DXVECTOR3 waist = CCharacter3D::GetModelPos(MODEL_WAIST);
 }
 
 //===================================================
@@ -486,7 +508,13 @@ void CEnemy::Draw(void)
 	CCharacter3D::Draw();
 
 	// 親子関係の設定処理
-	SetParent(MODEL_WEPON);
+	SetParent(MODEL_ARMUR,D3DXVECTOR3(0.0f,0.0f,0.0f),&m_RushEffectMtx);
+
+	// 大きさの取得
+	D3DXVECTOR3 Size = CCharacter3D::GetModelSize(MODEL_WEPON);
+
+	// 親子関係の設定処理
+	SetParent(MODEL_WEPON,D3DXVECTOR3(0.0f, Size.y,0.0f),&m_weponMatrix);
 }
 
 //===================================================
@@ -518,6 +546,9 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 {
 	// プレイヤーの取得
 	CPlayer* pPlayer = CGame::GetPlayer();
+
+	// 取得できなかったら処理しない
+	if (pPlayer == nullptr) return;
 
 	// ランダムな数値の選出
 	int random = rand() % 100;
@@ -1101,6 +1132,32 @@ bool CEnemy::CollisionFOV(const D3DXVECTOR3 Targetpos, const float fLeftAngle, c
 }
 
 //===================================================
+// 突進のエフェクト
+//===================================================
+void CEnemy::RushEffect(void)
+{
+	// 向きの取得
+	D3DXVECTOR3 rot = CCharacter3D::GetRotaition()->Get();
+	
+	//// モデルの位置を取得
+	//D3DXVECTOR3 modelpos = GetPositionFromMatrix(m_RushEffectMtx);
+
+	// 位置の取得
+	D3DXVECTOR3 pos = CCharacter3D::GetPosition();
+	D3DXVECTOR3 HeadPos = CCharacter3D::GetModelPos(MODEL_HEAD);
+
+	D3DXVECTOR3 CirclePos;
+
+	CirclePos.x = pos.x + sinf(rot.y) * RUSH_EFFECT_POS;
+	CirclePos.y = HeadPos.y;
+	CirclePos.z = pos.z + cosf(rot.y) * RUSH_EFFECT_POS;
+
+	// サークルの生成
+	auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f,1.0f,1.0f,0.5f), CirclePos, 0.0f, 50.0f);
+	pCircle->SetCircle(-100.0f, 10.0f, 60, false, D3DXVECTOR3(D3DX_PI * 0.5f, rot.y, 0.0f));
+}
+
+//===================================================
 // 武器攻撃の結果を返す
 //===================================================
 CEnemy::RESULT CEnemy::WeponAttackResult(CPlayer* pPlayer)
@@ -1347,7 +1404,7 @@ void CEnemy::CollisionPlayer(CMotion *pPlayerMotion,CPlayer *pPlayer)
 //===================================================
 // 親子関係の設定処理
 //===================================================
-void CEnemy::SetParent(const int nCnt)
+void CEnemy::SetParent(const int nCnt, const D3DXVECTOR3 offPos, D3DXMATRIX* pMatrixOut)
 {
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
@@ -1356,7 +1413,7 @@ void CEnemy::SetParent(const int nCnt)
 	D3DXMATRIX mtxRot, mtxTrans, mtxParent;
 
 	//ワールドマトリックスの初期化
-	D3DXMatrixIdentity(&m_weponMatrix);
+	D3DXMatrixIdentity(pMatrixOut);
 
 	// 親の位置、向きの設定
 	D3DXVECTOR3 ParentPos = CCharacter3D::GetModelPos(nCnt);
@@ -1364,23 +1421,20 @@ void CEnemy::SetParent(const int nCnt)
 
 	//向きを反映
 	D3DXMatrixRotationYawPitchRoll(&mtxRot, ParentRot.y, ParentRot.x, ParentRot.z);
-	D3DXMatrixMultiply(&m_weponMatrix, &m_weponMatrix, &mtxRot);
-
-	// 大きさの取得
-	D3DXVECTOR3 Size = CCharacter3D::GetModelSize(nCnt);
+	D3DXMatrixMultiply(pMatrixOut, pMatrixOut, &mtxRot);
 
 	//位置を反映
-	D3DXMatrixTranslation(&mtxTrans, 0.0f, Size.y, 0.0f);
-	D3DXMatrixMultiply(&m_weponMatrix, &m_weponMatrix, &mtxTrans);
+	D3DXMatrixTranslation(&mtxTrans, offPos.x, offPos.y, offPos.z);
+	D3DXMatrixMultiply(pMatrixOut, pMatrixOut, &mtxTrans);
 
-	// 親のワールドマトリックスの取得
-	pDevice->GetTransform(D3DTS_WORLD, &mtxParent);
+	// 親のマトリックスの取得
+	mtxParent = CCharacter3D::GetParent(nCnt);
 
 	// 親のワールドマトリックスと掛け合わせる
-	D3DXMatrixMultiply(&m_weponMatrix, &m_weponMatrix, &mtxParent);
+	D3DXMatrixMultiply(pMatrixOut, pMatrixOut, &mtxParent);
 
 	// ワールドマトリックスの設定
-	pDevice->SetTransform(D3DTS_WORLD, &m_weponMatrix);
+	pDevice->SetTransform(D3DTS_WORLD, pMatrixOut);
 }
 
 //===================================================

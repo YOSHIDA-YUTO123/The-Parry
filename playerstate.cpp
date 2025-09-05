@@ -307,6 +307,9 @@ void CPlayerRoundKick::Init(void)
 	// プレイヤーの取得
 	auto pPlayer = GetPlayer();
 
+	// 取得できなかったら処理しない
+	if (pPlayer == nullptr) return;
+
 	// モーションの取得
 	CMotion* pMotion = pPlayer->GetMotion();
 

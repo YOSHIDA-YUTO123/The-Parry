@@ -62,6 +62,7 @@ public:
 		ID_ENDRUSH,		 // 突進攻撃終了
 		ID_BACKKICK,	 // 後ろ蹴り
 		ID_LOOK_BACKL,	 // 後ろを見る(左)
+		ID_LOOK_BACKR,	 // 後ろを見る(右)
 		ID_MAX
 	};
 
@@ -77,6 +78,23 @@ protected:
 private:
 	CEnemy* m_pEnemy; // 敵クラスへのポインタ
 	ID m_ID; // IDの取得
+};
+
+//***************************************************
+// 敵の状態のマネージャークラスの定義
+//***************************************************
+class CEnemyStateManager
+{
+public:
+	~CEnemyStateManager();
+	static CEnemyStateManager* Create(void);
+	void SetOnwer(CEnemy* pEnemy) { m_pEnemy = pEnemy; }
+
+	// 後ろに出すモーションの設定
+	bool SetBackMotion(void);
+private:
+	CEnemyStateManager();
+	CEnemy* m_pEnemy;		// 敵のインスタンス
 };
 
 //***************************************************
@@ -419,7 +437,6 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 private:
-	void SetCircle(CEnemy* pEnemy);
 	static constexpr int MAX_TIME = 360; // 最大の時間
 	int m_nEndTime;						 // 終了する時間
 };
@@ -462,7 +479,25 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 private:
-	float m_fDestAngle; // 目的の向き
+	float m_fAngle;		// 現在の向き
+	float m_fDiffAngle; // 目的の向きまでの距離
+	int m_nFrame;		// フレーム
+	int m_nCounter;		// カウンター
+};
+
+//***************************************************
+// 敵の状態(LookBackR)クラスの定義
+//***************************************************
+class CEnemyLookBackR : public CEnemyState
+{
+public:
+	CEnemyLookBackR();
+	~CEnemyLookBackR();
+	void Init(void) override;
+	void Update(void) override;
+private:
+	float m_fAngle;		// 現在の向き
+	float m_fDiffAngle; // 目的の向きまでの距離
 	int m_nFrame;		// フレーム
 	int m_nCounter;		// カウンター
 };

@@ -41,6 +41,7 @@ template <class T>
 class CObserver;
 class CColliderCapsule;
 class CColliderFOV;
+class CEnemyStateManager;
 
 //***************************************************
 // 敵クラスの定義
@@ -81,6 +82,7 @@ public:
 		MOTIONTYPE_BACKKICK,	// 後ろ蹴り
 		MOTIONTYPE_START_RUSH,	// 突進開始
 		MOTIONTYPE_LOOK_BACKL,	// 後ろを見る(左)
+		MOTIONTYPE_LOOK_BACKR,	// 後ろを見る(右)
 		MOTIONTYPE_MAX
 	}MOTIONTYPE;
 
@@ -150,6 +152,9 @@ public:
 	void SetAngle(const float fAngle);
 	bool CollisionFOV(const D3DXVECTOR3 pos);
 	bool CollisionFOV(const D3DXVECTOR3 Targetpos, const float fLeftAngle, const float fRightAngle);
+	void RushEffect(void);
+
+	CEnemyStateManager* GetStateManager(void) { return m_pStateManager.get(); }
 
 	// 武器攻撃の結果
 	RESULT WeponAttackResult(CPlayer* pPlayer);
@@ -161,22 +166,24 @@ public:
 	void SetInertia(const float fInertia) { m_fInertia = fInertia; } 
 private:
 	void CollisionPlayer(CMotion* pPlayerMotion, CPlayer* pPlayer);
-	void SetParent(const int nCnt);
-	void Notify(void);								// オブザーバーへの通知処理
-	void UpdateCollider(const D3DXVECTOR3 pos);		// コライダーの更新
-	std::unique_ptr<CColliderCapsule> m_pCapsule;	// カプセルコライダー
-	std::unique_ptr<CColliderAABB> m_pAABB;			// AABBのコライダー
-	std::unique_ptr<CStateMachine> m_pMachine;		// 状態マシーン
-	std::unique_ptr<CColliderSphere> m_pSphere;		// 円の当たり判定クラス
-	std::shared_ptr<CVelocity> m_pMove;				// 移動クラスの生成
-	std::unique_ptr<CEnemyMovement> m_pMovement;	// 敵の移動制御クラス
-	std::unique_ptr<CColliderFOV> m_pFOV;			// 視界の判定
-	CObserver<int>* m_pObserver;					// オブザーバークラスへのポインタ
-	CMeshOrbit* m_pOrbit;							// 軌跡
-	D3DXMATRIX m_weponMatrix;						// 武器のワールドマトリックス
-	D3DXVECTOR3 m_posOld;							// 前回の位置
-	float m_fInertia;								// 慣性
-	int m_nParrySuccess;							// パリィの成功度(保存用)
+	void SetParent(const int nCnt, const D3DXVECTOR3 offPos, D3DXMATRIX* pMatrixOut);
+	void Notify(void);										// オブザーバーへの通知処理
+	void UpdateCollider(const D3DXVECTOR3 pos);				// コライダーの更新
+	std::unique_ptr<CColliderCapsule> m_pCapsule;			// カプセルコライダー
+	std::unique_ptr<CColliderAABB> m_pAABB;					// AABBのコライダー
+	std::unique_ptr<CStateMachine> m_pMachine;				// 状態マシーン
+	std::unique_ptr<CColliderSphere> m_pSphere;				// 円の当たり判定クラス
+	std::shared_ptr<CVelocity> m_pMove;						// 移動クラスの生成
+	std::unique_ptr<CEnemyMovement> m_pMovement;			// 敵の移動制御クラス
+	std::unique_ptr<CColliderFOV> m_pFOV;					// 視界の判定
+	std::unique_ptr<CEnemyStateManager> m_pStateManager;	// 状態マネージャーの生成
+	CObserver<int>* m_pObserver;							// オブザーバークラスへのポインタ
+	CMeshOrbit* m_pOrbit;									// 軌跡
+	D3DXMATRIX m_weponMatrix;								// 武器のワールドマトリックス
+	D3DXMATRIX m_RushEffectMtx;								// 突進攻撃のエフェクトのマトリックス
+	D3DXVECTOR3 m_posOld;									// 前回の位置
+	float m_fInertia;										// 慣性
+	int m_nParrySuccess;									// パリィの成功度(保存用)
 };
 
 //***************************************************

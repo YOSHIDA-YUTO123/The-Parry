@@ -183,7 +183,7 @@ void CTrainingEnemy::Update(void)
 	D3DXVECTOR3 chestpos = CCharacter3D::GetModelPos(MODEL_CHEST);
 
 	// ƒJƒƒ‰‚ªnull‚¶‚á‚È‚¢‚È‚ç
-	pCamera->Rockon(PlayerPos, chestpos);
+	pCamera->Rockon(PlayerPos, chestpos,400.0f);
 	
 }
 

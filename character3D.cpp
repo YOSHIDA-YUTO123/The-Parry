@@ -281,6 +281,19 @@ D3DXVECTOR3 CCharacter3D::GetModelSize(const int nIdx)
 }
 
 //===================================================
+// 親のマトリックスの取得
+//===================================================
+D3DXMATRIX CCharacter3D::GetParent(const int nIdx) const
+{
+	D3DXMATRIX OutMtx; // 親のマトリックス
+
+	// 親のマトリックスの取得
+	OutMtx = m_apModel[nIdx]->GetMatrixWorld();
+
+	return OutMtx;
+}
+
+//===================================================
 // キャラクターの設定処理
 //===================================================
 void CCharacter3D::SetCharacter(const int nLife, const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size)

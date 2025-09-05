@@ -84,7 +84,8 @@ public:
 	static std::unique_ptr<CMotion> Load(const char* pLoadFileName, std::vector<CModel*> &pModel, int* pOutModel, const int nNumMotion, LOAD type);
 	void Uninit(void);
 	void Update(CModel** pModel, const int nNumModel);
-	void SetMotion(const int motiontype, bool bBlend, const int nBlendFrame);
+	void SetMotion(const int motiontype, bool bBlend, const int nBlendFrame,const int nBlendType = 0);
+	void SetEndBlendType(const int nBlendType) { m_nEndBlendMotion = nBlendType; }
 	bool IsEndMotion(void);
 	bool IsEndLoopMotion(void);
 	bool IsFinishEndBlend(void);
@@ -116,6 +117,7 @@ private:
 	bool m_bFinish;				// モーションが終わったかどうか
 	bool m_bFirst;				// モーションが始まったフラグ
 
+	int m_nEndBlendMotion;		// モーションが終わった時につなげるモーションの種類
 	int m_nTypeBlend;			// ブレンドの種類
 	int m_nFrameBlend;			// ブレンドのフレーム数
 	int m_nCounterBlend;		// ブレンドカウンター

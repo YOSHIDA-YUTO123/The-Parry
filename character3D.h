@@ -74,6 +74,7 @@ public:
 	D3DXVECTOR3 GetModelPos(const int nIdx);
 	D3DXVECTOR3 GetModelRot(const int nIdx);
 	D3DXVECTOR3 GetModelSize(const int nIdx);
+	D3DXMATRIX GetParent(const int nIdx) const;
 
 	// セッター
 	void SetPosition(const D3DXVECTOR3 pos) { m_pos = pos; }

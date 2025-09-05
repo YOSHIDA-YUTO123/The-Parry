@@ -16,6 +16,7 @@
 #include"input.h"
 #include "game.h"
 #include"pause.h"
+#include "effect.h"
 
 using namespace Const; // 名前空間Constを使用
 
@@ -167,48 +168,45 @@ void CGameCamera::ResetState(void)
 //===================================================
 // ロックオンの設定処理
 //===================================================
-void CGameCamera::Rockon(D3DXVECTOR3 playerPos, D3DXVECTOR3 enemyPos)
+void CGameCamera::Rockon(D3DXVECTOR3 playerPos, D3DXVECTOR3 enemyPos, float fDistance)
 {
 	//	// カメラの状態がロックオンじゃないなら
 	if (m_state != STATE_ROCKON) return;
 
-	// プレイヤーまでの方向を求める
-	D3DXVECTOR3 dir = playerPos - enemyPos;
+	// 敵までの方向を求める
+	D3DXVECTOR3 dir = enemyPos - playerPos;
 
 	// 角度を求める
-	float fAngle = atan2f(dir.x, dir.z) + D3DX_PI;
-
-	// 注視点
-	D3DXVECTOR3 posR;
-
-	// 注視点を敵の位置にする
-	posR.x = enemyPos.x;
-	posR.y = (playerPos.y + enemyPos.y) * 0.5f;
-	posR.z = enemyPos.z;
+	float fAngleY = atan2f(dir.x, dir.z);
 
 	// 向きの取得
 	D3DXVECTOR3 rot = CCamera::GetRotaition();
 
-	// カメラのrotを設定
-	rot.y = fAngle;
+	rot.y = fAngleY;
 
-	// 向きの設定
 	CCamera::SetRot(rot);
 
-	// 方向ベクトルにする
-	D3DXVec3Normalize(&dir, &dir);
+	// 注視点
+	D3DXVECTOR3 posR = CCamera::GetPosR();
 
-	// 距離の取得
-	float fDistance = CCamera::GetDistance();
+	D3DXVECTOR3 CenterPos = (enemyPos + playerPos) * 0.5f;
 
-	// 距離を掛ける
-	dir *= fDistance;
+	CenterPos.y = enemyPos.y;
 
-	// y座標を設定
-	dir.y = (playerPos.y + enemyPos.y) * 0.5f;
+	auto p = CEffect3D::Create(CenterPos, 50.0f, WHITE, CEffect3D::TYPE_NORAML);
+	p->Set(10, VEC3_NULL);
 
-	// 位置の設定
-	D3DXVECTOR3 posV = playerPos + dir;
+	// 注視点を敵の位置にする
+	posR.x = CenterPos.x;
+	posR.y = CenterPos.y;
+	posR.z = CenterPos.z;
+
+	D3DXVECTOR3 posV;
+	float fHeightV = playerPos.y + 200.0f;
+
+	posV.x = playerPos.x - sinf(rot.y) * fDistance;
+	posV.y = fHeightV;
+	posV.z = playerPos.z - cosf(rot.y) * fDistance;
 
 	// 目的の位置に近づける
 	CCamera::LerpPos(posR, posV, 0.1f);
@@ -269,6 +267,13 @@ void CGameCamera::ZoomIn(void)
 
 		// 視点の更新処理
 		UpdatePositionV();
+
+		D3DXVECTOR3 posV = CCamera::GetPosV();
+
+		// 視点の高さを固定
+		posV.y = 100.0f;
+
+		CCamera::SetPosV(posV);
 
 		// 視点の更新処理
 		UpdatePositionR();
