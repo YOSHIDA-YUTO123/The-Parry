@@ -108,6 +108,56 @@ bool CMotion::IsEventFrame(const int nStartFrame, const int nEndFrame,const int 
 }
 
 //===================================================
+// イベントフレームの判定
+//===================================================
+bool CMotion::IsEventFrame(const int nType)
+{
+	// スローモーションの取得
+	CSlow* pSlow = CManager::GetSlow();
+
+	// イベントフレームの総数分回す
+	for (int nCnt = 0; nCnt < m_aInfo[nType].nNumEventFrame; nCnt++)
+	{
+		int Start = m_aInfo[nType].aStartFrame[nCnt] * (int)pSlow->GetLevel(true);
+		int End = m_aInfo[nType].aEndFrame[nCnt] * (int)pSlow->GetLevel(true);
+
+		if (m_nAllCounter >= Start &&
+			m_nAllCounter <= End &&
+			m_nTypeBlend == nType &&
+			m_bFinish == false)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+//===================================================
+// イベントフレームの判定
+//===================================================
+bool CMotion::IsEventFrame(const int nType,const int nIdx)
+{
+	// スローモーションの取得
+	CSlow* pSlow = CManager::GetSlow();
+
+	// イベントフレームの総数分回す
+	int Start = m_aInfo[nType].aStartFrame[nIdx] * (int)pSlow->GetLevel(true);
+	int End = m_aInfo[nType].aEndFrame[nIdx] * (int)pSlow->GetLevel(true);
+
+	if (m_nAllCounter >= Start &&
+		m_nAllCounter <= End &&
+		m_nTypeBlend == nType &&
+		m_bFinish == false)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+
+//===================================================
 // ロードできたかどうか
 //===================================================
 bool CMotion::IsLoad(void)
@@ -857,6 +907,51 @@ void CLoderText::LoadMotionSet(CLoderText* pLoader, ifstream& File, string nowLi
 				for (int nCntKey = 0; nCntKey < nNumKey; nCntKey++)
 				{
 					m_aInfo[nNum].aKeyInfo[nCntKey].aKey.resize(GetNumModel());
+				}
+			}
+			
+			if (line.find("NUM_FRAME") != string::npos)
+			{
+				// = から先を求める
+				input = line.substr(equal_pos + 1);
+
+				// 数値を読み込む準備
+				istringstream value_Input = SetInputvalue(input);
+
+				// 数値を代入する
+				value_Input >> m_aInfo[nNum].nNumEventFrame;
+			}
+
+			if (line.find("START_FRAME") != string::npos)
+			{
+				// = から先を求める
+				input = line.substr(equal_pos + 1);
+
+				// 数値を読み込む準備
+				istringstream value_Input = SetInputvalue(input);
+
+				int nFrame = 0;
+
+				// 残りの値をすべて読み込む
+				while (value_Input >> nFrame)
+				{
+					m_aInfo[nNum].aStartFrame.push_back(nFrame);
+				}
+			}
+			if (line.find("END_FRAME") != string::npos)
+			{
+				// = から先を求める
+				input = line.substr(equal_pos + 1);
+
+				// 数値を読み込む準備
+				istringstream value_Input = SetInputvalue(input);
+
+				int nFrame = 0;
+
+				// 残りの値をすべて読み込む
+				while (value_Input >> nFrame)
+				{
+					m_aInfo[nNum].aEndFrame.push_back(nFrame);
 				}
 			}
 

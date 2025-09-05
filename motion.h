@@ -76,6 +76,9 @@ public:
 		bool bLoop;						// ループするかどうか
 		int nNumkey;					// キーの総数
 		std::vector<Key_Info> aKeyInfo;	// キー情報
+		std::vector<int> aStartFrame;	// スタートフレーム
+		std::vector<int> aEndFrame;		// 終了フレーム
+		int nNumEventFrame;				// イベントフレームの総数
 	};
 
 	CMotion();
@@ -92,6 +95,8 @@ public:
 	int GetType(void) const { return m_nType; }
 	int GetBlendType(void) const { return m_nTypeBlend; }
 	bool IsEventFrame(const int nStartFrame, const int nEndFrame, const int nType);
+	bool IsEventFrame(const int nType);
+	bool IsEventFrame(const int nType,const int nIdx);
 	bool IsLoad(void);
 	bool FinishMotion(void);
 

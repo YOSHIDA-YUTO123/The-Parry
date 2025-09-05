@@ -163,7 +163,7 @@ END_CHARACTERSET
 MOTIONSET
 	LOOP = 1			# ループするかどうか[0:ループしない / 1:ループする]
 	NUM_KEY = 2			# キーの総数
-
+	
 	KEYSET				# --- << KEY : 0 / 2 >> --- 
 		FRAME = 80
 		KEY # ----- [ 0 ] -----
@@ -10031,6 +10031,10 @@ END_MOTIONSET
 MOTIONSET
 	LOOP = 0			# ループするかどうか[0:ループしない / 1:ループする]
 	NUM_KEY = 16			# キーの総数
+
+	NUM_FRAME = 14
+	START_FRAME = 8 16 24 32 40 48 56 64 72 80 88 96 104 112
+	END_FRAME = 8 16 24 32 40 48 56 64 72 80 88 96 104 112
 
 	KEYSET				# --- << KEY : 0 / 16 >> --- 
 		FRAME = 8

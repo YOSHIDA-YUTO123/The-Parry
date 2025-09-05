@@ -50,7 +50,7 @@ class CEnemy : public CCharacter3D
 {
 public:
 
-	static constexpr int MAX_LIFE = 50; // Å‘å‚ÌHP
+	static constexpr int MAX_LIFE = 100; // Å‘å‚ÌHP
 
 	// ƒ‚[ƒVƒ‡ƒ“‚Ìí—Ş
 	typedef enum

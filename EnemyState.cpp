@@ -2232,6 +2232,10 @@ void CEnemyComboDamage::Update(void)
 	// ƒ‚[ƒVƒ‡ƒ“‚ª‚ ‚é‚È‚ç
 	if (pMotion != nullptr)
 	{
+		if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_COMBODAMAGE))
+		{
+			pEnemy->Hit(3);
+		}
 		if (pMotion->IsEventFrame(159, 159, CEnemy::MOTIONTYPE_COMBODAMAGE))
 		{
 			// ó‘Ô‚Ì•ÏX
