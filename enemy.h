@@ -164,11 +164,14 @@ public:
 
 	// 慣性の設定(0.0f - 1.0f)
 	void SetInertia(const float fInertia) { m_fInertia = fInertia; } 
+
+	bool CheckObstacleDistance(const float fRange);
 private:
 	void CollisionPlayer(CMotion* pPlayerMotion, CPlayer* pPlayer);
 	void SetParent(const int nCnt, const D3DXVECTOR3 offPos, D3DXMATRIX* pMatrixOut);
 	void Notify(void);										// オブザーバーへの通知処理
 	void UpdateCollider(const D3DXVECTOR3 pos);				// コライダーの更新
+
 	std::unique_ptr<CColliderCapsule> m_pCapsule;			// カプセルコライダー
 	std::unique_ptr<CColliderAABB> m_pAABB;					// AABBのコライダー
 	std::unique_ptr<CStateMachine> m_pMachine;				// 状態マシーン

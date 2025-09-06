@@ -2249,7 +2249,7 @@ void CEnemyComboDamage::Update(void)
 //===================================================
 CEnemyRightMove::CEnemyRightMove() : CEnemyState(ID_RIGHT_MOVE)
 {
-	m_nTime = rand() % 180 + 180;
+	m_nTime = rand() % 180 + MOVE_TIME;
 }
 
 //===================================================
@@ -2300,6 +2300,12 @@ void CEnemyRightMove::Update(void)
 
 	m_nTime--;
 
+	// áŠQ•¨‚Ì‹ß‚­‚¾‚Á‚½‚ç
+	if (pEnemy->CheckObstacleDistance(OBSTACLE_DISTANCE))
+	{
+		// ó‘Ô‚Ì‘JˆÚ
+		pEnemy->ChangeState(make_shared<CEnemyMove>());
+	}
 	// ŠÔ‚ªI‚í‚Á‚½‚ç
 	if (m_nTime <= 0)
 	{
@@ -2334,7 +2340,7 @@ void CEnemyRightMove::Update(void)
 //===================================================
 CEnemyLeftMove::CEnemyLeftMove() : CEnemyState(ID_LEFT_MOVE)
 {
-	m_nTime = rand() % 180 + 180;
+	m_nTime = rand() % 180 + MOVE_TIME;
 }
 
 //===================================================
@@ -2382,6 +2388,13 @@ void CEnemyLeftMove::Update(void)
 
 	// ‰E‚ÉˆÚ“®‚·‚é
 	pEnemy->GetMovement()->SetMoveDir(D3DX_PI * 0.5f, 3.0f);
+
+	// áŠQ•¨‚Ì‹ß‚­‚¾‚Á‚½‚ç
+	if (pEnemy->CheckObstacleDistance(OBSTACLE_DISTANCE))
+	{
+		// ó‘Ô‚Ì‘JˆÚ
+		pEnemy->ChangeState(make_shared<CEnemyMove>());
+	}
 
 	m_nTime--;
 
@@ -2590,9 +2603,6 @@ CEnemyEndRush::~CEnemyEndRush()
 
 	// “G‚ªg‚í‚ê‚Ä‚¢‚È‚¢‚È‚çˆ—‚µ‚È‚¢
 	if (pEnemy == nullptr) return;
-
-	// ƒ‚[ƒVƒ‡ƒ“ƒNƒ‰ƒX‚Ìæ“¾
-	CMotion* pMotion = pEnemy->GetMotion();
 
 	// Šµ«‚Ìİ’è‚ğ‚à‚Æ‚É–ß‚·
 	pEnemy->SetInertia(0.25f);

@@ -1348,6 +1348,46 @@ void CEnemy::UpdateCollider(const D3DXVECTOR3 pos)
 }
 
 //===================================================
+// 障害物との距離を調べる
+//===================================================
+bool CEnemy::CheckObstacleDistance(const float fRange)
+{
+	//	障害物マネージャーのインスタンスの取得
+	CObstacleManager* pObstacleManager = CObstacleManager::GetInstance();
+
+	// マネージャーが無かったら
+	if (pObstacleManager == nullptr) return false;
+
+	// 障害物の総数の取得
+	int nNumObstacle = pObstacleManager->GetObstacleSize();
+
+	// 障害物の総数分調べる
+	for (int nCnt = 0; nCnt < nNumObstacle; nCnt++)
+	{
+		// 障害物の取得
+		CObstacle* pObstacle = pObstacleManager->GetObstacle(nCnt);
+
+		// 取得できなかったら処理しない
+		if (pObstacle == nullptr) continue;
+
+		// 位置の取得
+		D3DXVECTOR3 pos = CCharacter3D::GetPosition();
+		D3DXVECTOR3 obstaclePos = pObstacle->GetPosition();
+
+		// 障害物との距離を取得
+		float fDistance = GetDistance(obstaclePos - pos);
+
+		// 距離が範囲以下だったら
+		if (fDistance <= fRange)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+//===================================================
 // プレイヤーとの当たり判定
 //===================================================
 void CEnemy::CollisionPlayer(CMotion *pPlayerMotion,CPlayer *pPlayer)

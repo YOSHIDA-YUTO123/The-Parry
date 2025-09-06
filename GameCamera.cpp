@@ -193,9 +193,6 @@ void CGameCamera::Rockon(D3DXVECTOR3 playerPos, D3DXVECTOR3 enemyPos, float fDis
 
 	CenterPos.y = enemyPos.y;
 
-	auto p = CEffect3D::Create(CenterPos, 50.0f, WHITE, CEffect3D::TYPE_NORAML);
-	p->Set(10, VEC3_NULL);
-
 	// ’‹“_‚ğ“G‚ÌˆÊ’u‚É‚·‚é
 	posR.x = CenterPos.x;
 	posR.y = CenterPos.y;

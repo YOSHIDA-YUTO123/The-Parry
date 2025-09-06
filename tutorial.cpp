@@ -87,7 +87,7 @@ HRESULT CTutorial::Init(void)
 	pLight->SetPoint(D3DXVECTOR3(0.0f, 200.0f, 515.0f), 300.0f, D3DCOLOR_RGBA(255, 255, 255, 255), D3DCOLOR_RGBA(255, 255, 255, 255));
 
 	// フィールドの生成
-	m_pMeshField = CMeshField::Create(VEC3_NULL, 32, 32, D3DXVECTOR2(2500.0f, 2500.0f));
+	m_pMeshField = CMeshField::Create(VEC3_NULL, 32, 32, D3DXVECTOR2(3000.0f, 3000.0f));
 
 	// ブロックマネージャーの取得
 	auto pBlockManager = CBlockManager::GetInstance();

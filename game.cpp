@@ -30,6 +30,7 @@
 #include "RevengeGage.h"
 #include "block.h"
 #include "BlockManager.h"
+#include "obstaclemanager.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -80,6 +81,9 @@ HRESULT CGame::Init(void)
 
 	// ゲームマネージャーの生成
 	CGameManager::Create();
+
+	// マネージャーの生成
+	CObstacleManager::Create();
 
 	// ゲームのカメラの生成
 	m_pCamera = new CGameCamera;
@@ -178,7 +182,7 @@ HRESULT CGame::Init(void)
 	}
 
 	// HPゲージの生成
-	pGage = CHpGage::Create(D3DXVECTOR3(1115.0f, 36.0f, 0.0f), D3DXVECTOR2(308.0f, 17.0f), D3DXCOLOR(1.0f, 0.2f, 0.0f, 1.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), CEnemy::MAX_LIFE, false);
+	pGage = CHpGage::Create(D3DXVECTOR3(1115.0f, 36.0f, 0.0f), D3DXVECTOR2(308.0f, 17.0f), D3DXCOLOR(1.0f, 0.2f, 0.0f, 1.0f), D3DXCOLOR(1.0f, 0.5f, 1.0f, 1.0f), CEnemy::MAX_LIFE, false);
 
 	// Hpゲージのオブザーバーの設定
 	observer = new CHpObserver(pGage);
@@ -197,6 +201,9 @@ HRESULT CGame::Init(void)
 
 	// スパイクトラップ
 	CSpikeTrap::Create(D3DXVECTOR3(-1540.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f,D3DX_PI, 0.0f), face);
+
+	//// 爆発樽
+	//CTNTBarrel::Create(VEC3_NULL);
 
 	//// モデルの読み込み
 	//CBlock::Create(D3DXVECTOR3(520.0f, 1510.0f, 2976.0f), "dust003.x");
