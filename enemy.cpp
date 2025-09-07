@@ -110,7 +110,7 @@ HRESULT CEnemy::Init(void)
 
 	m_pMachine = make_unique<CStateMachine>();
 
-	ChangeState(make_shared<CEnemyIdle>(10));
+	ChangeState(make_shared<CEnemyIdle>(120));
 
 	// ˆÚ“®ƒNƒ‰ƒX‚Ì¶¬
 	m_pMove = make_unique<CVelocity>();

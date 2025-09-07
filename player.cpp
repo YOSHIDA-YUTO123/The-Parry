@@ -1047,9 +1047,10 @@ void CPlayer::UpdateCollider(D3DXVECTOR3 pos)
 		// データの取得
 		auto dataCapsule = m_Capsule->GetData();
 
-		D3DXVECTOR3 headpos = GetModelPos(2);
+		
+		dataCapsule.EndPos = pos;
+		dataCapsule.EndPos.y = pos.y + Size.y;
 
-		dataCapsule.EndPos = headpos;
 
 		// データの更新
 		dataCapsule.StartPos = pos;

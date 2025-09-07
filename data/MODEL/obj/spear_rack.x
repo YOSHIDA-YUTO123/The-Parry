@@ -2245,7 +2245,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\rack000.jpg";
+    "data/TEXTURE/obj/rack000.jpg";
    }
   }
   Material {

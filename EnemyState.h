@@ -63,6 +63,8 @@ public:
 		ID_BACKKICK,	 // 後ろ蹴り
 		ID_LOOK_BACKL,	 // 後ろを見る(左)
 		ID_LOOK_BACKR,	 // 後ろを見る(右)
+		ID_SWEEP_RIGHT,	 // 薙ぎ払い(右)
+		ID_SWEEP_LEFT,	 // 薙ぎ払い(左)
 		ID_MAX
 	};
 
@@ -91,7 +93,7 @@ public:
 	void SetOnwer(CEnemy* pEnemy) { m_pEnemy = pEnemy; }
 
 	// 後ろに出すモーションの設定
-	bool SetBackMotion(void);
+	bool SetMotionByPlayerPosition(void);
 private:
 	CEnemyStateManager();
 	CEnemy* m_pEnemy;		// 敵のインスタンス
@@ -503,6 +505,32 @@ private:
 	float m_fDiffAngle; // 目的の向きまでの距離
 	int m_nFrame;		// フレーム
 	int m_nCounter;		// カウンター
+};
+
+//***************************************************
+// 敵の状態(SweepRight)クラスの定義
+//***************************************************
+class CEnemySweepRight : public CEnemyState
+{
+public:
+	CEnemySweepRight();
+	~CEnemySweepRight();
+	void Init(void) override;
+	void Update(void) override;
+private:
+};
+
+//***************************************************
+// 敵の状態(SweepLeft)クラスの定義
+//***************************************************
+class CEnemySweepLeft : public CEnemyState
+{
+public:
+	CEnemySweepLeft();
+	~CEnemySweepLeft();
+	void Init(void) override;
+	void Update(void) override;
+private:
 };
 
 #endif
