@@ -390,6 +390,12 @@
     <ClCompile Include="mark.cpp">
       <Filter>ソース ファイル\objectBillboard</Filter>
     </ClCompile>
+    <ClCompile Include="Object3DAnim.cpp">
+      <Filter>ソース ファイル\object3D</Filter>
+    </ClCompile>
+    <ClCompile Include="ParryEffect.cpp">
+      <Filter>ソース ファイル\object3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="testword.h">
@@ -664,6 +670,12 @@
     </ClInclude>
     <ClInclude Include="mark.h">
       <Filter>ヘッダー ファイル\objectBillboard</Filter>
+    </ClInclude>
+    <ClInclude Include="Object3DAnim.h">
+      <Filter>ヘッダー ファイル\object3D</Filter>
+    </ClInclude>
+    <ClInclude Include="ParryEffect.h">
+      <Filter>ヘッダー ファイル\object3D</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

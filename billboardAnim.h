@@ -24,8 +24,9 @@ class CBillboardAnimation : public CObject
 {
 public:
 	CBillboardAnimation(int nPriority = 4);
-	~CBillboardAnimation();
+	virtual ~CBillboardAnimation();
 
+	static CBillboardAnimation* Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size,const int nSpeed,const int U,const int V,const bool bLoop);
 	virtual HRESULT Init(void);
 	virtual void Uninit(void);
 	virtual void Update(void);
@@ -42,7 +43,6 @@ public:
 	void SetColor(const D3DXCOLOR col);
 	void SetTextureID(const char* pTextureName);
 	void UpdateVertexPos(const D3DXVECTOR3 pos);
-	bool Delete(void);
 
 private:
 	D3DXVECTOR3 m_pos;						// 位置のクラスのポインタ

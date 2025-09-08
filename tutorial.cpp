@@ -100,7 +100,7 @@ HRESULT CTutorial::Init(void)
 	}
 
 	// プレイヤーの生成
-	m_pPlayer = CPlayer::Create(PLAYER_POS);
+	m_pPlayer = CPlayer::Create(999,6.0f,D3DXVECTOR3(4.0f,1.0f,4.0f),D3DXVECTOR3(50.0f,200.0f,50.0f),PLAYER_POS);
 
 	// 反撃UIの生成
 	auto pRevenge = CRevengeUI::Create(D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXVECTOR2(50.0f, 50.0f), CPlayer::MAX_REVENGE);
@@ -145,7 +145,7 @@ HRESULT CTutorial::Init(void)
 	}
 
 	// HPゲージの生成
-	auto pGage = CHpGage::Create(D3DXVECTOR3(108.0f, 36.0f, 0.0f), D3DXVECTOR2(302.0f, 14.0f), D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), CPlayer::MAX_LIFE, true);
+	auto pGage = CHpGage::Create(D3DXVECTOR3(108.0f, 36.0f, 0.0f), D3DXVECTOR2(302.0f, 14.0f), D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), 999, true);
 
 	// Hpゲージのオブザーバーの設定
 	CHpObserver* observer = new CHpObserver(pGage);

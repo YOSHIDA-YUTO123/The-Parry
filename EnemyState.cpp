@@ -510,7 +510,7 @@ void CEnemyAttackSmash::Update(void)
 			pPlayerMotion->SetMotion(pPlayer->MOTIONTYPE_DAMAGE, true, 2);
 
 			// プレイヤー状態の変更
-			pPlayer->ChangeState(make_shared<CPlayerDamage>(2));
+			pPlayer->ChangeState(make_shared<CPlayerDamage>(8));
 		}
 		// 絶対反撃
 		else if (result == CEnemy::RESULT_SPREVENGE)
@@ -1000,7 +1000,7 @@ void CEnemySpin::Update(void)
 			pPlayer->BlowOff(pos, 50.0f, 10.0f);
 
 			// プレイヤー状態の変更
-			pPlayer->ChangeState(make_shared<CPlayerDamage>(1));
+			pPlayer->ChangeState(make_shared<CPlayerDamage>(4));
 		}
 	}
 
@@ -1630,7 +1630,7 @@ void CEnemySwing::Update(void)
 				pPlayerMotion->SetMotion(pPlayer->MOTIONTYPE_DAMAGE, true, 2);
 
 				// プレイヤー状態の変更
-				pPlayer->ChangeState(make_shared<CPlayerDamage>(2));
+				pPlayer->ChangeState(make_shared<CPlayerDamage>(5));
 			}
 			// 絶対反撃
 			else if (result == CEnemy::RESULT_SPREVENGE)
@@ -1879,7 +1879,7 @@ void CEnemyJumpAttack::CollisionPlayer(CPlayer* pPlayer, CMotion* pMotion)
 			pPlayer->BlowOff(pos, 100.0f, 10.0f);
 
 			// プレイヤー状態の変更
-			pPlayer->ChangeState(make_shared<CPlayerDamage>(2));
+			pPlayer->ChangeState(make_shared<CPlayerDamage>(9));
 		}
 	}
 }
@@ -2591,7 +2591,7 @@ void CEnemyRush::Update(void)
 			pPlayer->BlowOff(pos, 100.0f, 10.0f);
 
 			// プレイヤー状態の変更
-			pPlayer->ChangeState(make_shared<CPlayerDamage>(2));
+			pPlayer->ChangeState(make_shared<CPlayerDamage>(7));
 		}
 	}
 }
@@ -2798,7 +2798,7 @@ void CEnemyBackKick::Update(void)
 				pPlayer->BlowOff(pos, 100.0f, 10.0f);
 
 				// プレイヤー状態の変更
-				pPlayer->ChangeState(make_shared<CPlayerDamage>(2));
+				pPlayer->ChangeState(make_shared<CPlayerDamage>(3));
 			}
 		}
 		// モーションが終わったら
@@ -3168,7 +3168,7 @@ void CEnemySweepRight::Update(void)
 				pPlayerMotion->SetMotion(pPlayer->MOTIONTYPE_DAMAGE, true, 2);
 
 				// プレイヤー状態の変更
-				pPlayer->ChangeState(make_shared<CPlayerDamage>(2));
+				pPlayer->ChangeState(make_shared<CPlayerDamage>(5));
 			}
 			// 絶対反撃
 			else if (result == CEnemy::RESULT_SPREVENGE)
@@ -3310,7 +3310,7 @@ void CEnemySweepLeft::Update(void)
 				pPlayerMotion->SetMotion(pPlayer->MOTIONTYPE_DAMAGE, true, 2);
 
 				// プレイヤー状態の変更
-				pPlayer->ChangeState(make_shared<CPlayerDamage>(2));
+				pPlayer->ChangeState(make_shared<CPlayerDamage>(4));
 			}
 			// 絶対反撃
 			else if (result == CEnemy::RESULT_SPREVENGE)

@@ -68,6 +68,12 @@ public:
 	static CGameCamera* GetCamera(void) { return m_pCamera; }
 	static STATE GetState(void) { return m_state; }
 private:
+	void Load(void);					// ゲームのロード
+	void LoadObstacle(std::fstream& file, std::string line, CLoadManager* pLoad);
+	void LoadCharacter(std::fstream& file, std::string line, CLoadManager* pLoad);
+	void PlayerConfig(const int nLife, const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size, const D3DXVECTOR3 pos, const float fAngle);
+	void EnemyConfig(const int nLife, const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size, const D3DXVECTOR3 pos, const float fAngle);
+
 	static STATE m_state;				// ゲームの状態
 	static CMeshField* m_pMeshField;	// メッシュフィールドへのポインタ
 	static CPlayer* m_pPlayer;			// プレイヤークラスへのポインタ
@@ -95,8 +101,6 @@ public:
 	static int GetTime(void) { return m_nGameTime; }
 private:
 	CGameManager();
-	void Load(void);
-	void LoadObstacle(std::fstream& file, std::string line,CLoadManager* pLoad);
 
 	static std::unique_ptr<CGameManager> m_pInstance; // 自分のインスタンス
 	int m_nCounter;					  // カウンター

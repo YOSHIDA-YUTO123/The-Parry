@@ -33,16 +33,8 @@ class CCharacter3D : public CObject
 {
 public:
 
-	// モーションの種類
-	enum TYPE
-	{
-		TYPE_NEUTRAL = 0,
-		TYPE_MOVE,
-		TYPE_MAX
-	};
-
 	// 状態の種類
-	enum STATE
+	typedef enum
 	{
 		STATE_NORMAL = 0,
 		STATE_MOVE,
@@ -50,7 +42,17 @@ public:
 		STATE_DAMAGE,
 		STATE_DEATH,
 		STATE_MAX
-	};
+	}STATE;
+
+	// キャラクターの種類
+	typedef enum
+	{
+		TYPE_NONE = 0,
+		TYPE_PLAYER,
+		TYPE_ENEMY,
+		TYPE_TRAININGENEMY,
+		TYPE_MAX
+	}TYPE;
 
 	CCharacter3D();
 	~CCharacter3D();

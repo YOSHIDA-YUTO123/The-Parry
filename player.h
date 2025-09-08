@@ -52,7 +52,6 @@ class CPlayer : public CCharacter3D
 {
 public:
 
-	static constexpr int MAX_LIFE = 10;				// HP
 	static constexpr float MAX_STAMINA = 100.0f;	// スタミナ
 	static constexpr float MAX_REVENGE = 100.0f;	// 反撃ゲージの最大
 
@@ -119,7 +118,7 @@ public:
 	CPlayer();
 	~CPlayer();
 
-	static CPlayer* Create(const D3DXVECTOR3 pos = Const::VEC3_NULL, const D3DXVECTOR3 rot = Const::VEC3_NULL);
+	static CPlayer* Create(const int nLife, const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size, const D3DXVECTOR3 pos = Const::VEC3_NULL, const D3DXVECTOR3 rot = Const::VEC3_NULL);
 	void Load(void); // モーションのロード
 
 	HRESULT Init(void) override;
@@ -171,6 +170,7 @@ private:
 	void UpdateStamina(void);
 	bool CollisionBlock(D3DXVECTOR3 *pPos);
 
+	void Config(const int nLife,const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size);
 	std::unique_ptr<CStateMachine> m_pMachine;		// 状態の制御クラス
 	std::unique_ptr<CPlayerMovement> m_pMovement;	// 移動処理
 	std::unique_ptr<CColliderFOV> m_pFOV;			// 視界の判定

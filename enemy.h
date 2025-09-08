@@ -50,8 +50,6 @@ class CEnemy : public CCharacter3D
 {
 public:
 
-	static constexpr int MAX_LIFE = 100; // 最大のHP
-
 	// モーションの種類
 	typedef enum
 	{
@@ -125,7 +123,7 @@ public:
 	CEnemy();
 	~CEnemy();
 
-	static CEnemy* Create(const D3DXVECTOR3 pos = Const::VEC3_NULL, const D3DXVECTOR3 rot = Const::VEC3_NULL);
+	static CEnemy* Create(const int nLife, const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size,const D3DXVECTOR3 pos = Const::VEC3_NULL, const D3DXVECTOR3 rot = Const::VEC3_NULL);
 
 	HRESULT Init(void) override;
 	void Uninit(void) override;
@@ -173,6 +171,7 @@ private:
 	void SetParent(const int nCnt, const D3DXVECTOR3 offPos, D3DXMATRIX* pMatrixOut);
 	void Notify(void);										// オブザーバーへの通知処理
 	void UpdateCollider(const D3DXVECTOR3 pos);				// コライダーの更新
+	void Config(const int nLife, const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size);
 	bool CollisionObstacleToWepon(CObstacle* pObstacle);	// 障害物と武器の当たり判定
 
 	std::unique_ptr<CColliderCapsule> m_pCapsule;			// カプセルコライダー

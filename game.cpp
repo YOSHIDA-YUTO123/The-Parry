@@ -32,6 +32,8 @@
 #include "BlockManager.h"
 #include "obstaclemanager.h"
 #include"LoadManager.h"
+#include "Object3DAnim.h"
+#include "ParryEffect.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -86,6 +88,9 @@ HRESULT CGame::Init(void)
 	// ゲームマネージャーの生成
 	CGameManager::Create();
 
+	// ゲームのロード
+	Load();
+
 	// ゲームのカメラの生成
 	m_pCamera = new CGameCamera;
 	m_pCamera->Init();
@@ -112,93 +117,19 @@ HRESULT CGame::Init(void)
 
 	m_pCylinder->Set(CMeshCylinder::TYPE_WALL);
 
-	// プレイヤーの生成
-	m_pPlayer = CPlayer::Create(D3DXVECTOR3(1.0f, 0.0f, -1200.0f),D3DXVECTOR3(0.0f,D3DX_PI,0.0f));
-
-	// 反撃UIの生成
-	auto pRevenge = CRevengeUI::Create(D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXVECTOR2(50.0f, 50.0f), CPlayer::MAX_REVENGE);
-
-	// 反撃オブザーバーの生成
-	auto pRevengeOb = new CRevengeUIObserver(pRevenge);
-
-	// オブザーバーの設定
-	m_pPlayer->SetRevengeObserver(pRevengeOb);
-
-	// ゲージのフレームの生成
-	auto gageFrame = CGageFrame::Create(D3DXVECTOR3(256.0f, 36.0f, 0.0f), D3DXVECTOR2(161.0f, 25.0f),CGageFrame::TYPE_HP_PLAYER);
-
-	// 生成できていたら
-	if (gageFrame != nullptr)
-	{
-		// テクスチャのIDの設定
-		gageFrame->SetTextureID("data/TEXTURE/GageFrame/playerHpFrame.png");
-	}
-
-	// スタミナゲージの生成
-	auto pStamina = CStaminaGage::Create(D3DXVECTOR3(110.0f, 81.0f, 0.0f), D3DXVECTOR2(298.0f, 8.0f), D3DXCOLOR(1.0f, 1.0f, 0.3f, 1.0f), CPlayer::MAX_STAMINA);
-
-	if (pStamina != nullptr)
-	{
-		// スタミナオブザーバーの生成
-		CStaminaObserver* pStaminaOb = new CStaminaObserver(pStamina);
-
-		// オブザーバーの設定
-		m_pPlayer->SetStaminaObserver(pStaminaOb);
-
-	}
-
-	// ゲージのフレームの生成
-	gageFrame = CGageFrame::Create(D3DXVECTOR3(258.0f, 80.0f, 0.0f), D3DXVECTOR2(160.0f, 20.0f), CGageFrame::TYPE_STAMINA);
-
-	// 生成できていたら
-	if (gageFrame != nullptr)
-	{
-		// テクスチャのIDの設定
-		gageFrame->SetTextureID("data/TEXTURE/GageFrame/staminaFrame.png");
-	}
-
-	// HPゲージの生成
-	auto pGage = CHpGage::Create(D3DXVECTOR3(108.0f, 36.0f, 0.0f), D3DXVECTOR2(302.0f, 14.0f), D3DXCOLOR(0.0f,1.0f,0.0f,1.0f),D3DXCOLOR(1.0f,0.0f,0.0f,1.0f), CPlayer::MAX_LIFE,true);
-
-	// Hpゲージのオブザーバーの設定
-	CHpObserver *observer = new CHpObserver(pGage);
-
-	// オブザーバーの設定
-	m_pPlayer->SetHpObserver(observer);
-
 	// アリーナの生成
 	CObjectX::Create(VEC3_NULL, "data/MODEL/field/arena.x",VEC3_NULL);
-
-	// 敵の生成
-	auto pEnemy = CEnemy::Create(D3DXVECTOR3(0.0f, 0.0f, 1500.0f));
-
-	// ゲージのフレームの生成
-	gageFrame = CGageFrame::Create(D3DXVECTOR3(1000.0f, 36.0f, 0.0f), D3DXVECTOR2(200.0f, 25.0f), CGageFrame::TYPE_HP_ENEMY);
-
-	// 生成できていたら
-	if (gageFrame != nullptr)
-	{
-		// テクスチャのIDの設定
-		gageFrame->SetTextureID("data/TEXTURE/GageFrame/enemyHpgageFrame.png");
-	}
-
-	// HPゲージの生成
-	pGage = CHpGage::Create(D3DXVECTOR3(1115.0f, 36.0f, 0.0f), D3DXVECTOR2(308.0f, 17.0f), D3DXCOLOR(1.0f, 0.2f, 0.0f, 1.0f), D3DXCOLOR(1.0f, 0.5f, 1.0f, 1.0f), CEnemy::MAX_LIFE, false);
-
-	// Hpゲージのオブザーバーの設定
-	observer = new CHpObserver(pGage);
-
-	// オブザーバーの設定
-	pEnemy->SetObserver(observer);
-
-	//// モデルの読み込み
-	//CBlock::Create(D3DXVECTOR3(520.0f, 1510.0f, 2976.0f), "dust003.x");
 
 	// ポーズマネージャーの生成
 	CPauseManager::Create();
 
 	// ポーズマネージャーの取得
 	m_pPauseManager = CPauseManager::GetInstance();
+
+	//// パリィエフェクトの生成
+	//CParryEffect::Create(D3DXVECTOR3(0.0f,200.0f,0.0f), D3DXVECTOR3(150.0f, 150.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 5, 2, 4, true);
+
+	//CParryEffect::Create(D3DXVECTOR3(0.0f, 300.0f, 0.0f), D3DXVECTOR3(150.0f, 150.0f, 0.0f), VEC3_NULL, 5, 3, 3, true);
 
 	return S_OK;
 }
@@ -350,7 +281,7 @@ void CGame::Draw(void)
 //===================================================
 // ロード処理
 //===================================================
-void CGameManager::Load(void)
+void CGame::Load(void)
 {
 	// ファイルを開く
 	fstream file("data/TXT/game.txt");
@@ -377,6 +308,11 @@ void CGameManager::Load(void)
 				// 障害物の読み込み処理
 				LoadObstacle(file, line,pLoad.get());
 			}
+			if (line.find("CHARACTERSET") != string::npos)
+			{
+				// キャラクター読み込み処理
+				LoadCharacter(file, line, pLoad.get());
+			}
 		}
 
 		// 破棄
@@ -389,7 +325,7 @@ void CGameManager::Load(void)
 //===================================================
 // 障害物のロード処理
 //===================================================
-void CGameManager::LoadObstacle(std::fstream& file, std::string line,CLoadManager *pLoad)
+void CGame::LoadObstacle(std::fstream& file, std::string line,CLoadManager *pLoad)
 {
 	D3DXVECTOR3 pos = VEC3_NULL; // 位置
 	float fAngle = 0.0f;	// 角度
@@ -462,6 +398,187 @@ void CGameManager::LoadObstacle(std::fstream& file, std::string line,CLoadManage
 }
 
 //===================================================
+//キャラクターのロード処理
+//===================================================
+void CGame::LoadCharacter(std::fstream& file, std::string line, CLoadManager* pLoad)
+{
+	D3DXVECTOR3 pos = VEC3_NULL; // 位置
+	D3DXVECTOR3 ShadowScal = { 1.0f,1.0f,1.0f };
+	D3DXVECTOR3 Size = VEC3_NULL;
+	float fAngle = 0.0f;		 // 向き
+	float fSpeed = 0.0f;		 // 速さ
+	int nType = -1;				 // 種類
+	int nLife = -1;				 // 体力
+
+	string input;
+
+	while (1)
+	{
+		// ファイルを読み取る
+		getline(file, line);
+
+		size_t equal_pos = line.find("="); // =の位置
+
+		// [=] から先を求める
+		input = line.substr(equal_pos + 1);
+
+		if (line.find("TYPE") != string::npos)
+		{
+			// 数値を読み込む準備
+			istringstream value_Input = pLoad->SetInputvalue(input);
+
+			value_Input >> nType;
+		}
+		if (line.find("POS") != string::npos)
+		{
+			// 数値を読み込む準備
+			istringstream value_Input = pLoad->SetInputvalue(input);
+
+			value_Input >> pos.x >> pos.y >> pos.z;
+		}
+		if (line.find("ANGLE") != string::npos)
+		{
+			// 数値を読み込む準備
+			istringstream value_Input = pLoad->SetInputvalue(input);
+
+			value_Input >> fAngle;
+		}
+		if (line.find("LIFE") != string::npos)
+		{
+			// 数値を読み込む準備
+			istringstream value_Input = pLoad->SetInputvalue(input);
+
+			value_Input >> nLife;
+		}
+		if (line.find("SPEED") != string::npos)
+		{
+			// 数値を読み込む準備
+			istringstream value_Input = pLoad->SetInputvalue(input);
+
+			value_Input >> fSpeed;
+		}
+		if (line.find("SHADOW") != string::npos)
+		{
+			// 数値を読み込む準備
+			istringstream value_Input = pLoad->SetInputvalue(input);
+
+			value_Input >> ShadowScal.x >> ShadowScal.y >> ShadowScal.z;
+		}
+		if (line.find("SIZE") != string::npos)
+		{
+			// 数値を読み込む準備
+			istringstream value_Input = pLoad->SetInputvalue(input);
+
+			value_Input >> Size.x >> Size.y >> Size.z;
+		}
+
+		if (line.find("END_CHARACTERSET") != string::npos)
+		{
+			switch (nType)
+			{
+			case CCharacter3D::TYPE_PLAYER:
+				PlayerConfig(nLife,fSpeed,ShadowScal,Size,pos,fAngle);
+				break;
+			case CCharacter3D::TYPE_ENEMY:
+				EnemyConfig(nLife, fSpeed, ShadowScal, Size, pos, fAngle);
+				break;
+			default:
+				break;
+			}
+			break;
+		}
+	}
+}
+
+//===================================================
+// プレイヤーの構成
+//===================================================
+void CGame::PlayerConfig(const int nLife, const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size, const D3DXVECTOR3 pos, const float fAngle)
+{
+	// プレイヤーの生成
+	m_pPlayer = CPlayer::Create(nLife, fSpeed, ShadowScal, Size, pos, D3DXVECTOR3(0.0f, fAngle, 0.0f));
+
+	// 反撃UIの生成
+	auto pRevenge = CRevengeUI::Create(D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXVECTOR2(50.0f, 50.0f), CPlayer::MAX_REVENGE);
+
+	// 反撃オブザーバーの生成
+	auto pRevengeOb = new CRevengeUIObserver(pRevenge);
+
+	// オブザーバーの設定
+	m_pPlayer->SetRevengeObserver(pRevengeOb);
+
+	// ゲージのフレームの生成
+	auto gageFrame = CGageFrame::Create(D3DXVECTOR3(256.0f, 36.0f, 0.0f), D3DXVECTOR2(161.0f, 25.0f), CGageFrame::TYPE_HP_PLAYER);
+
+	// 生成できていたら
+	if (gageFrame != nullptr)
+	{
+		// テクスチャのIDの設定
+		gageFrame->SetTextureID("data/TEXTURE/GageFrame/playerHpFrame.png");
+	}
+
+	// スタミナゲージの生成
+	auto pStamina = CStaminaGage::Create(D3DXVECTOR3(110.0f, 81.0f, 0.0f), D3DXVECTOR2(298.0f, 8.0f), D3DXCOLOR(1.0f, 1.0f, 0.3f, 1.0f), CPlayer::MAX_STAMINA);
+
+	if (pStamina != nullptr)
+	{
+		// スタミナオブザーバーの生成
+		CStaminaObserver* pStaminaOb = new CStaminaObserver(pStamina);
+
+		// オブザーバーの設定
+		m_pPlayer->SetStaminaObserver(pStaminaOb);
+
+	}
+
+	// ゲージのフレームの生成
+	gageFrame = CGageFrame::Create(D3DXVECTOR3(258.0f, 80.0f, 0.0f), D3DXVECTOR2(160.0f, 20.0f), CGageFrame::TYPE_STAMINA);
+
+	// 生成できていたら
+	if (gageFrame != nullptr)
+	{
+		// テクスチャのIDの設定
+		gageFrame->SetTextureID("data/TEXTURE/GageFrame/staminaFrame.png");
+	}
+
+	// HPゲージの生成
+	auto pGage = CHpGage::Create(D3DXVECTOR3(108.0f, 36.0f, 0.0f), D3DXVECTOR2(302.0f, 14.0f), D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), nLife, true);
+
+	// Hpゲージのオブザーバーの設定
+	CHpObserver* observer = new CHpObserver(pGage);
+
+	// オブザーバーの設定
+	m_pPlayer->SetHpObserver(observer);
+}
+
+//===================================================
+// 敵の構成
+//===================================================
+void CGame::EnemyConfig(const int nLife, const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size, const D3DXVECTOR3 pos, const float fAngle)
+{
+	// 敵の生成
+	auto pEnemy = CEnemy::Create(nLife,fSpeed,ShadowScal,Size,pos,D3DXVECTOR3(0.0f,fAngle,0.0f));
+
+	// ゲージのフレームの生成
+	auto gageFrame = CGageFrame::Create(D3DXVECTOR3(1000.0f, 36.0f, 0.0f), D3DXVECTOR2(200.0f, 25.0f), CGageFrame::TYPE_HP_ENEMY);
+
+	// 生成できていたら
+	if (gageFrame != nullptr)
+	{
+		// テクスチャのIDの設定
+		gageFrame->SetTextureID("data/TEXTURE/GageFrame/enemyHpgageFrame.png");
+	}
+
+	// HPゲージの生成
+	auto pGage = CHpGage::Create(D3DXVECTOR3(1115.0f, 36.0f, 0.0f), D3DXVECTOR2(308.0f, 17.0f), D3DXCOLOR(1.0f, 0.2f, 0.0f, 1.0f), D3DXCOLOR(1.0f, 0.5f, 1.0f, 1.0f), nLife, false);
+
+	// Hpゲージのオブザーバーの設定
+	auto observer = new CHpObserver(pGage);
+
+	// オブザーバーの設定
+	pEnemy->SetObserver(observer);
+}
+
+//===================================================
 // コンストラクタ
 //===================================================
 CGameManager::CGameManager()
@@ -497,7 +614,6 @@ void CGameManager::Create(void)
 void CGameManager::Init(void)
 {
 	m_nGameTime = 0;
-	Load();
 }
 
 //===================================================

@@ -277,7 +277,7 @@ void CPlayerAvoid::Update(void)
 		{
 			pPlayer->ChangeState(make_shared<CPlayerNormal>());
 
-			pMotion->SetMotion(pPlayer->TYPE_NEUTRAL, true, 5);
+			pMotion->SetMotion(pPlayer->MOTIONTYPE_NEUTRAL, true, 5);
 
 			return;
 		}

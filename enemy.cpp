@@ -36,6 +36,7 @@
 #include "game.h"
 #include"Observer.h"
 #include "MoveSmoke.h"
+#include "ParryEffect.h"
 
 //***************************************************
 // 定数定義
@@ -82,7 +83,7 @@ CEnemy::~CEnemy()
 //===================================================
 // 生成処理
 //===================================================
-CEnemy* CEnemy::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
+CEnemy* CEnemy::Create(const int nLife, const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size,const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 {
 	CEnemy* pEnemy = nullptr;
 
@@ -91,8 +92,17 @@ CEnemy* CEnemy::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 
 	if (pEnemy == nullptr) return nullptr;
 
+	// 構成情報
+	pEnemy->Config(nLife, fSpeed, ShadowScal, Size);
+
 	pEnemy->SetPosition(pos);
-	pEnemy->Init();
+
+	if (FAILED(pEnemy->Init()))
+	{
+		pEnemy->Uninit();
+		pEnemy = nullptr;
+		return nullptr;
+	}
 	pEnemy->GetRotaition()->Set(rot);
 
 	return pEnemy;
@@ -103,21 +113,12 @@ CEnemy* CEnemy::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 //===================================================
 HRESULT CEnemy::Init(void)
 {
-	// 初期化処理
-	CCharacter3D::Init();
-
-	// モーションロード処理
-	CCharacter3D::LoadMotion("motionEnemy000.txt", MOTIONTYPE_MAX);
-
 	m_pMachine = make_unique<CStateMachine>();
 
 	ChangeState(make_shared<CEnemyIdle>(120));
 
 	// 移動クラスの生成
 	m_pMove = make_unique<CVelocity>();
-
-	// キャラクターの設定処理
-	CCharacter3D::SetCharacter(MAX_LIFE, 4.0f,D3DXVECTOR3(10.0f, 1.0f, 10.0f),D3DXVECTOR3(100.0f, 400.0f, 100.0f));
 
 	// 大きさの取得
 	D3DXVECTOR3 Size = CCharacter3D::GetSize();
@@ -277,10 +278,10 @@ void CEnemy::Update(void)
 	{
 		ChangeState(make_shared<CEnemyDeath>());
 	}
-	if (pKeyboard->GetTrigger(DIK_F5))
-	{
-		Hit(MAX_LIFE - 1);
-	}
+	//if (pKeyboard->GetTrigger(DIK_F5))
+	//{
+	//	Hit(MAX_LIFE - 1);
+	//}
 	if (pKeyboard->GetTrigger(DIK_7))
 	{
 		ChangeState(make_shared<CEnemyRush>());
@@ -620,6 +621,12 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 		// 向きの設定
 		pPlayer->SetAngle(fAngle + D3DX_PI);
 
+		//// パリィエフェクトの生成
+		//CParryEffect::Create(ImpactPos, D3DXVECTOR3(150.0f, 150.0f, 0.0f), D3DXVECTOR3(0.0f, fAngle, 0.0f), 5, 3, 4, false, CParryEffect::TYPE_ROUND_KICK);
+
+		//// パリィエフェクトの生成
+		//CParryEffect::Create(ImpactPos, D3DXVECTOR3(150.0f, 150.0f, 0.0f), D3DXVECTOR3(0.0f, fAngle, 0.0f), 5, 2, 6, false, CParryEffect::TYPE_SPARK);
+
 		// インパクトを生成
 		auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.6f, 0.8f), ImpactPos, 0.0f, 50.0f);
 
@@ -652,6 +659,12 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 
 		// 向きの設定
 		pPlayer->SetAngle(fAngle + D3DX_PI);
+
+		//// パリィエフェクトの生成
+		//CParryEffect::Create(ImpactPos, D3DXVECTOR3(150.0f, 150.0f, 0.0f), D3DXVECTOR3(0.0f, fAngle, 0.0f), 5, 3, 7, false, CParryEffect::TYPE_ROUND_KICK);
+
+		//// パリィエフェクトの生成
+		//CParryEffect::Create(ImpactPos, D3DXVECTOR3(150.0f, 150.0f, 0.0f), D3DXVECTOR3(0.0f, fAngle, 0.0f), 5, 2, 8, false, CParryEffect::TYPE_SPARK);
 
 		// インパクトを生成
 		auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.4f, 0.8f), ImpactPos, 0.0f, 100.0f);
@@ -708,7 +721,7 @@ bool CEnemy::CollisionWepon(void)
 	D3DXVECTOR3 sword_Top = GetPositionFromMatrix(m_weponMatrix);
 
 	// コライダーの作成
-	CColliderCapsule capsule = CColliderCapsule::CreateCollider(sword_buttom, sword_Top, 140.0f);
+	CColliderCapsule capsule = CColliderCapsule::CreateCollider(sword_buttom, sword_Top, 150.0f);
 
 	// プレイヤーの取得
 	CPlayer* pPlayer = CGame::GetPlayer();
@@ -1340,6 +1353,21 @@ void CEnemy::UpdateCollider(const D3DXVECTOR3 pos)
 }
 
 //===================================================
+// 敵の設定
+//===================================================
+void CEnemy::Config(const int nLife, const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size)
+{
+	// 初期化処理
+	CCharacter3D::Init();
+
+	// モーションロード処理
+	CCharacter3D::LoadMotion("motionEnemy000.txt", MOTIONTYPE_MAX);
+
+	// キャラクターの設定処理
+	CCharacter3D::SetCharacter(nLife, fSpeed, ShadowScal, Size);
+}
+
+//===================================================
 // 武器と障害物の当たり判定
 //===================================================
 bool CEnemy::CollisionObstacleToWepon(CObstacle *pObstacle)
@@ -1352,6 +1380,9 @@ bool CEnemy::CollisionObstacleToWepon(CObstacle *pObstacle)
 
 	// ワールドマトリックスの設定がされていなかったら処理しない
 	if (!m_bSetMatrix) return false;
+
+	// 爆発樽じゃないなら処理しない
+	if (pObstacle->GetType() != CObstacle::TYPE_TNT_BARREL) return false;
 
 	// 障害物の位置
 	D3DXVECTOR3 obstaclePos = pObstacle->GetPosition();

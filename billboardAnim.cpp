@@ -137,11 +137,27 @@ void CBillboardAnimation::UpdateVertexPos(const D3DXVECTOR3 pos)
 }
 
 //===================================================
-// アニメーションの消去判定
+// 生成処理
 //===================================================
-bool CBillboardAnimation::Delete(void)
+CBillboardAnimation* CBillboardAnimation::Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size, const int nSpeed, const int U, const int V, const bool bLoop)
 {
-	return false;
+	CBillboardAnimation* pBillboard = new CBillboardAnimation;
+
+	// アニメーションの設定
+	pBillboard->SetAnim(nSpeed, U, V, bLoop);
+
+	pBillboard->SetPosition(pos);
+	pBillboard->SetSize(Size);
+
+	// 初期化処理
+	if (FAILED(pBillboard->Init()))
+	{
+		pBillboard->Uninit();
+		pBillboard = nullptr;
+		return nullptr;;
+	}
+
+	return pBillboard;
 }
 
 //===================================================

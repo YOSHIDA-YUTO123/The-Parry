@@ -166,11 +166,13 @@
     <ClCompile Include="FadeEffect.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="mark.cpp" />
+    <ClCompile Include="Object3DAnim.cpp" />
     <ClCompile Include="Object3DMT.cpp" />
     <ClCompile Include="opening.cpp" />
     <ClCompile Include="OpeningCamera.cpp" />
     <ClCompile Include="OpningEnemy.cpp" />
     <ClCompile Include="overlay.cpp" />
+    <ClCompile Include="ParryEffect.cpp" />
     <ClCompile Include="ParticleSpark.cpp" />
     <ClCompile Include="ParticleTornado.cpp" />
     <ClCompile Include="ResultCamera.cpp" />
@@ -264,11 +266,13 @@
     <ClInclude Include="FadeEffect.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="mark.h" />
+    <ClInclude Include="Object3DAnim.h" />
     <ClInclude Include="Object3DMT.h" />
     <ClInclude Include="opening.h" />
     <ClInclude Include="OpeningCamera.h" />
     <ClInclude Include="OpningEnemy.h" />
     <ClInclude Include="overlay.h" />
+    <ClInclude Include="ParryEffect.h" />
     <ClInclude Include="ParticleSpark.h" />
     <ClInclude Include="ParticleTornado.h" />
     <ClInclude Include="ResultCamera.h" />

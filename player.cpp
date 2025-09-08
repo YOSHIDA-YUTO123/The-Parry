@@ -45,6 +45,7 @@
 #include"light.h"
 #include "tutorial.h"
 #include "BlockManager.h"
+#include "ParryEffect.h"
 
 
 using namespace math; // 名前空間mathを使用
@@ -99,15 +100,6 @@ CPlayer::~CPlayer()
 //===================================================
 HRESULT CPlayer::Init(void)
 {
-	// モーションのロード処理
-	LoadMotion("motionPlayer.txt", MOTIONTYPE_MAX);
-
-	// キャラクターの初期化処理
-	CCharacter3D::Init();
-
-	// キャラクターの設定処理
-	CCharacter3D::SetCharacter(MAX_LIFE, 6.0f,D3DXVECTOR3(4.0f,1.0f,4.0f),D3DXVECTOR3(50.0f, 200.0f, 50.0f));
-
 	// 大きさの取得
 	D3DXVECTOR3 Size = CCharacter3D::GetSize();
 
@@ -721,7 +713,7 @@ void CPlayer::ChangeState(std::shared_ptr<CPlayerState> pNewState)
 //===================================================
 // 生成処理
 //===================================================
-CPlayer* CPlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
+CPlayer* CPlayer::Create(const int nLife, const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size, const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 {
 	CPlayer* pPlayer = nullptr;
 
@@ -729,6 +721,9 @@ CPlayer* CPlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 	pPlayer = new CPlayer;
 
 	if (pPlayer == nullptr) return nullptr;
+
+	// 設定処理
+	pPlayer->Config(nLife,fSpeed,ShadowScal,Size);
 
 	// 初期化処理
 	if (FAILED(pPlayer->Init()))
@@ -1471,8 +1466,8 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos)
 	// 左手の位置
 	D3DXVECTOR3 playerHandL = CCharacter3D::GetModelPos(MODEL_HANDL);
 	
-	auto pEffect = CEffect3D::Create(playerHandL, 100.0f, D3DCOLOR_RGBA(255, 215, 0, 255),CEffect3D::TYPE_HIT);
-	pEffect->Set(60, VEC3_NULL);
+	// パリィエフェクトの生成
+	CParryEffect::Create(playerHandL, D3DXVECTOR3(150.0f, 150.0f, 0.0f), D3DXVECTOR3(0.0f, fAngle, 0.0f), 5, 2, 4, false,CParryEffect::TYPE_PARRY);
 
 	// パーティクルの生成
 	CParticleSpark* pSpark = CParticleSpark::Create(playerHandL, D3DXVECTOR2(3.0f, 40.0f), D3DCOLOR_RGBA(255, 127, 80,255));
@@ -1583,6 +1578,21 @@ bool CPlayer::CollisionBlock(D3DXVECTOR3 *pPos)
 	}
 
 	return false;
+}
+
+//===================================================
+// 初期設定
+//===================================================
+void CPlayer::Config(const int nLife, const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size)
+{
+	// モーションのロード処理
+	LoadMotion("motionPlayer.txt", MOTIONTYPE_MAX);
+
+	// キャラクターの初期化処理
+	CCharacter3D::Init();
+
+	// キャラクターの設定処理
+	CCharacter3D::SetCharacter(nLife, fSpeed, ShadowScal, Size);
 }
 
 //===================================================
