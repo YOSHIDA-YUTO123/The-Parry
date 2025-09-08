@@ -31,6 +31,7 @@
 #include "block.h"
 #include "BlockManager.h"
 #include "obstaclemanager.h"
+#include"LoadManager.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -79,11 +80,11 @@ HRESULT CGame::Init(void)
 		pBlockManager->Uninit();
 	}
 
-	// ゲームマネージャーの生成
-	CGameManager::Create();
-
 	// マネージャーの生成
 	CObstacleManager::Create();
+
+	// ゲームマネージャーの生成
+	CGameManager::Create();
 
 	// ゲームのカメラの生成
 	m_pCamera = new CGameCamera;
@@ -190,21 +191,6 @@ HRESULT CGame::Init(void)
 	// オブザーバーの設定
 	pEnemy->SetObserver(observer);
 
-	// 面の設定
-	int face = CCollisionAABB::FACE_LEFT;
-
-	// スパイクトラップ
-	CSpikeTrap::Create(D3DXVECTOR3(1540.0f, 0.0f, 0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f) ,face);
-
-	// 面の設定
-	face = CCollisionAABB::FACE_RIGHT;
-
-	// スパイクトラップ
-	CSpikeTrap::Create(D3DXVECTOR3(-1540.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f,D3DX_PI, 0.0f), face);
-
-	//// 爆発樽
-	//CTNTBarrel::Create(VEC3_NULL);
-
 	//// モデルの読み込み
 	//CBlock::Create(D3DXVECTOR3(520.0f, 1510.0f, 2976.0f), "dust003.x");
 
@@ -225,6 +211,16 @@ void CGame::Uninit(void)
 	m_pMeshField = nullptr;
 	m_pCylinder = nullptr;
 	m_pPlayer = nullptr;
+
+	// 障害物マネージャーのインスタンスの取得
+	CObstacleManager* pObstacleManager = CObstacleManager::GetInstance();
+
+	// マネージャーの終了処理
+	if (pObstacleManager != nullptr)
+	{
+		pObstacleManager->Uninit();
+		pObstacleManager = nullptr;
+	}
 
 	// カメラの破棄
 	if (m_pCamera != nullptr)
@@ -352,6 +348,123 @@ void CGame::Draw(void)
 }
 
 //===================================================
+// ロード処理
+//===================================================
+void CGameManager::Load(void)
+{
+	// ファイルを開く
+	fstream file("data/TXT/game.txt");
+	string line, input;
+
+	D3DXVECTOR3 pos;	// 位置
+	string filepath;	// ファイルパス
+	int nReverse;		// 反転するかどうか
+	D3DXVECTOR3 Angle = VEC3_NULL;	// 角度
+
+	// nullじゃなかったら
+	if (file.is_open())
+	{
+		// ロードマネージャーの生成
+		unique_ptr<CLoadManager> pLoad = make_unique<CLoadManager>();
+
+		// ファイルを一行ずつ読み取る
+		while (getline(file, line))
+		{
+			size_t equal_pos = line.find("="); // =の位置
+
+			// [=] から先を求める
+			input = line.substr(equal_pos + 1);
+
+			if (line.find("OBSTACLESET") != string::npos)
+			{
+				// 障害物の読み込み処理
+				LoadObstacle(file, line,pLoad.get());
+			}
+		}
+
+		// 破棄
+		pLoad.reset();
+		file.close();
+		file.clear();
+	}
+}
+
+//===================================================
+// 障害物のロード処理
+//===================================================
+void CGameManager::LoadObstacle(std::fstream& file, std::string line,CLoadManager *pLoad)
+{
+	D3DXVECTOR3 pos = VEC3_NULL; // 位置
+	float fAngle = 0.0f;	// 角度
+	int nType = -1;			// 種類
+	int nReverse = 0;		// 反転するかどうか
+	int nDamageFase = -999;	// ダメージを受ける面
+
+	string input;
+
+	while (1)
+	{
+		// ファイルを読み取る
+		getline(file, line);
+
+		size_t equal_pos = line.find("="); // =の位置
+
+		// [=] から先を求める
+		input = line.substr(equal_pos + 1);
+
+		if (line.find("TYPE") != string::npos)
+		{
+			// 数値を読み込む準備
+			istringstream value_Input = pLoad->SetInputvalue(input);
+
+			value_Input >> nType;
+		}
+		if (line.find("POS") != string::npos)
+		{
+			// 数値を読み込む準備
+			istringstream value_Input = pLoad->SetInputvalue(input);
+
+			value_Input >> pos.x >> pos.y >> pos.z;
+		}
+		if (line.find("REVERSE") != string::npos)
+		{
+			// 数値を読み込む準備
+			istringstream value_Input = pLoad->SetInputvalue(input);
+
+			value_Input >> nReverse;
+
+			// 1だったら反転
+			fAngle = (nReverse == 0) ? 0.0f : D3DX_PI;
+		}
+		if (line.find("DAMAGE_FACE") != string::npos)
+		{
+			// 数値を読み込む準備
+			istringstream value_Input = pLoad->SetInputvalue(input);
+
+			value_Input >> nDamageFase;
+		}
+		if (line.find("END_OBSTACLESET") != string::npos)
+		{
+			// 種類の遷移
+			switch (nType)
+			{
+			case CObstacle::TYPE_SPIKE_TRAP:
+				// スパイクトラップ
+				CSpikeTrap::Create(pos, D3DXVECTOR3(0.0f, fAngle, 0.0f), nDamageFase);
+				break;
+			case CObstacle::TYPE_TNT_BARREL:
+				// 爆発樽
+				CTNTBarrel::Create(pos);
+				break;
+			default:
+				break;
+			}
+			break;
+		}
+	}
+}
+
+//===================================================
 // コンストラクタ
 //===================================================
 CGameManager::CGameManager()
@@ -387,6 +500,7 @@ void CGameManager::Create(void)
 void CGameManager::Init(void)
 {
 	m_nGameTime = 0;
+	Load();
 }
 
 //===================================================

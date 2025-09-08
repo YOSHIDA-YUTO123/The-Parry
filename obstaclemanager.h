@@ -18,6 +18,9 @@
 #include<vector>
 #include<memory>
 
+//**********************************************
+// ëOï˚êÈåæ
+//**********************************************
 class CObstacle;
 
 //**********************************************
@@ -29,6 +32,7 @@ public:
 	static void Create(void);
 	static CObstacleManager* GetInstance(void);
 	CObstacle* GetObstacle(const int nIdx);
+	void Destroy(CObstacle* pObstacle);
 	void AddObstacle(CObstacle *pObstacle);
 	void Uninit(void);
 	int GetObstacleSize(void);

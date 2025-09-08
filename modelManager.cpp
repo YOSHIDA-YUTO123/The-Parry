@@ -235,7 +235,7 @@ HRESULT CModelManager::Load(void)
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
 	// ファイルを開く
-	fstream file("data/Modellist.txt");
+	fstream file("data/TXT/Modellist.txt");
 	string line, input;
 
 	// nullじゃなかったら

@@ -17,6 +17,7 @@
 #include"main.h"
 #include "scene.h"
 #include<memory>
+#include<string>
 
 //***************************************************
 // 前方宣言
@@ -26,6 +27,7 @@ class CPlayer;
 class CMeshCylinder;
 class CPauseManager;
 class CGameCamera;
+class CLoadManager;
 
 //***************************************************
 // ゲームクラスの定義
@@ -93,6 +95,9 @@ public:
 	static int GetTime(void) { return m_nGameTime; }
 private:
 	CGameManager();
+	void Load(void);
+	void LoadObstacle(std::fstream& file, std::string line,CLoadManager* pLoad);
+
 	static std::unique_ptr<CGameManager> m_pInstance; // 自分のインスタンス
 	int m_nCounter;					  // カウンター
 	static int m_nGameTime;			  // ゲームの経過時間

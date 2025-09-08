@@ -467,7 +467,7 @@ void CEnemyAttackSmash::Update(void)
 	D3DXVECTOR3 pos = pEnemy->GetPosition();
 
 	// イベントフレームの判定
-	if (pMotion->IsEventFrame(64, 71, CEnemy::MOTIONTYPE_SMASH) && pEnemy->IsDamageMotion() == false)
+	if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_SMASH) && pEnemy->IsDamageMotion() == false)
 	{
 		// 攻撃の結果を取得
 		CEnemy::RESULT result = pEnemy->WeponAttackResult(pPlayer);
@@ -749,13 +749,13 @@ void CEnemyAttackImpact::Update(void)
 	// 攻撃モーションの設定
 	pMotion->SetMotion(CEnemy::MOTIONTYPE_IMPACT, true, 10);
 
-	if (pMotion->IsEventFrame(1, 93, CEnemy::MOTIONTYPE_IMPACT))
+	if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_IMPACT,0))
 	{
 		// プレイヤーの方向を見る処理
 		pEnemy->AngleToPlayer();
 	}
 
-	if (pMotion->IsEventFrame(93, 116, CEnemy::MOTIONTYPE_IMPACT))
+	if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_IMPACT, 1))
 	{
 		// 軌跡の処理
 		pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f));
@@ -942,8 +942,7 @@ void CEnemySpin::Update(void)
 	// 向いている方向に移動する
 	pEnemy->GetMovement()->MoveForWard(15.0f);
 
-
-	if (pMotion->IsEventFrame(1, 116, CEnemy::MOTIONTYPE_SPIN))
+	if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_SPIN))
 	{
 		// 軌跡の処理
 		pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 0.5f, 0.5f));
@@ -1589,7 +1588,7 @@ void CEnemySwing::Update(void)
 	if (pMotion != nullptr)
 	{
 		// イベントフレームの判定
-		if (pMotion->IsEventFrame(60, 80, CEnemy::MOTIONTYPE_SWING) && pEnemy->IsDamageMotion() == false)
+		if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_SWING) && pEnemy->IsDamageMotion() == false)
 		{
 			// 軌跡の処理
 			pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f));

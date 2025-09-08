@@ -33,7 +33,7 @@ CBlockManager::CBlockManager()
 HRESULT CBlockManager::Load(void)
 {
 	// ファイルを開く
-	fstream file("data/MODEL/tutorialStage.txt");
+	fstream file("data/TXT/tutorialStage.txt");
 	string line, input;
 
 	D3DXVECTOR3 pos;	// 位置

@@ -173,6 +173,7 @@ private:
 	void SetParent(const int nCnt, const D3DXVECTOR3 offPos, D3DXMATRIX* pMatrixOut);
 	void Notify(void);										// オブザーバーへの通知処理
 	void UpdateCollider(const D3DXVECTOR3 pos);				// コライダーの更新
+	bool CollisionObstacleToWepon(CObstacle* pObstacle);	// 障害物と武器の当たり判定
 
 	std::unique_ptr<CColliderCapsule> m_pCapsule;			// カプセルコライダー
 	std::unique_ptr<CColliderAABB> m_pAABB;					// AABBのコライダー

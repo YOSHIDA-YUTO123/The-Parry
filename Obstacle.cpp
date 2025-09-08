@@ -27,8 +27,9 @@ using namespace std;							// 名前空間stdを使用する
 //==============================================
 // コンストラクタ
 //==============================================
-CObstacle::CObstacle()
+CObstacle::CObstacle(const TYPE type)
 {
+	m_type = type;
 	m_pMove = nullptr;
 	m_pAABB = nullptr;
 	m_CenterPos = VEC3_NULL;
@@ -86,16 +87,6 @@ HRESULT CObstacle::Init(void)
 //==============================================
 void CObstacle::Uninit(void)
 {
-	// 障害物マネージャーのインスタンスの取得
-	CObstacleManager* pObstacleManager = CObstacleManager::GetInstance();
-
-	// マネージャーの終了処理
-	if (pObstacleManager != nullptr)
-	{
-		pObstacleManager->Uninit();
-		pObstacleManager = nullptr;
-	}
-
 	CObjectX::Uninit();
 }
 
@@ -188,7 +179,7 @@ void CObstacle::CreateCollider(void)
 //==============================================
 // コンストラクタ
 //==============================================
-CSpikeTrap::CSpikeTrap()
+CSpikeTrap::CSpikeTrap() : CObstacle(TYPE_SPIKE_TRAP)
 {
 	m_nDamageFace = NULL;
 }
@@ -310,7 +301,7 @@ bool CSpikeTrap::Collision(CColliderAABB *pCollider, D3DXVECTOR3* pushPos)
 //==============================================
 // コンストラクタ
 //==============================================
-CTNTBarrel::CTNTBarrel()
+CTNTBarrel::CTNTBarrel() : CObstacle(TYPE_TNT_BARREL)
 {
 }
 
@@ -364,7 +355,7 @@ HRESULT CTNTBarrel::Init(void)
 	}
 
 	// モデルの読み込み
-	CObjectX::LoadModel("data/MODEL/obstacle/barrel.x");
+	CObjectX::LoadModel("data/MODEL/obstacle/TNTBarrel.x");
 
 	// コライダーの生成	
 	CreateCollider();
@@ -378,7 +369,7 @@ HRESULT CTNTBarrel::Init(void)
 void CTNTBarrel::Uninit(void)
 {
 	// 終了処理
-	CObjectX::Uninit();
+	CObstacle::Uninit();
 }
 
 //==============================================
@@ -387,7 +378,7 @@ void CTNTBarrel::Uninit(void)
 void CTNTBarrel::Update(void)
 {
 	// 更新処理
-	CObjectX::Update();
+	CObstacle::Update();
 }
 
 //==============================================
@@ -396,7 +387,7 @@ void CTNTBarrel::Update(void)
 void CTNTBarrel::Draw(void)
 {
 	// 描画処理
-	CObjectX::Draw();
+	CObstacle::Draw();
 }
 
 //==============================================

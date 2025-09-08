@@ -387,18 +387,6 @@ void CPlayer::Update(void)
 	// 障害物との当たり判定
 	if (CollisionObstacle(&pos))
 	{
-		if (mode == CScene::MODE_GAME)
-		{
-			// ダメージ状態にする
-			ChangeState(make_shared<CPlayerDamage>(3));
-		}
-		else if (mode == CScene::MODE_TUTORIAL)
-		{
-			// ダメージ状態にする
-			ChangeState(make_shared<CPlayerDamage>(0));
-		}
-
-
 		// コライダーを更新する
 		UpdateCollider(pos);
 	}
@@ -1262,17 +1250,48 @@ bool CPlayer::CollisionObstacle(D3DXVECTOR3* pPos)
 	// 障害物の総数の取得
 	int nNumObstacle = pObstacleManager->GetObstacleSize();
 	
+	// モードの取得
+	CScene::MODE mode = CManager::GetMode();
+
 	// 障害物の総数分調べる
 	for (int nCnt = 0; nCnt < nNumObstacle; nCnt++)
 	{
 		// 障害物の取得
 		CObstacle* pObstacle = pObstacleManager->GetObstacle(nCnt);
-		
-		// 当たっていたら
-		if (pObstacle != nullptr && pObstacle->Collision(m_pAABB.get(), pPos))
-		{	
-			return true;
+
+		// 取得できなかったら処理しない
+		if (pObstacle == nullptr)
+		{
+			continue;
 		}
+
+		// 当たっているかどうか
+		const bool bCollision = pObstacle->Collision(m_pAABB.get(), pPos);
+
+		// 当たっていたら
+		if (!bCollision)
+		{
+			continue;
+		}
+
+		// 種類の取得
+		CObstacle::TYPE type = pObstacle->GetType();
+
+		if (type != CObstacle::TYPE_TNT_BARREL)
+		{
+			if (mode == CScene::MODE_GAME)
+			{
+				// ダメージ状態にする
+				ChangeState(make_shared<CPlayerDamage>(3));
+			}
+			else if (mode == CScene::MODE_TUTORIAL)
+			{
+				// ダメージ状態にする
+				ChangeState(make_shared<CPlayerDamage>(0));
+			}
+		}
+
+		return true;
 	}
 	return false;
 }

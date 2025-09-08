@@ -31,7 +31,16 @@ class CColliderAABB;
 class CObstacle : public CObjectX
 {
 public:
-	CObstacle();
+
+	// 障害物の距離
+	typedef enum
+	{
+		TYPE_SPIKE_TRAP = 0, // スパイクトラップ
+		TYPE_TNT_BARREL,		// 爆発樽
+		TYPE_MAX
+	}TYPE;
+
+	CObstacle(const TYPE type);
 	virtual ~CObstacle();
 
 	virtual HRESULT Init(void) override;
@@ -39,12 +48,14 @@ public:
 	virtual void Update(void) override;
 	virtual void Draw(void) override;
 	virtual bool Collision(CColliderAABB* pCollider,D3DXVECTOR3 *pushPos) = 0;
+	TYPE GetType(void) const { return m_type; }
 protected:
 	CColliderAABB* GetCollider(void) { return m_pAABB.get(); }
 	void CreateCollider(void);
 private:
-	std::unique_ptr<CVelocity> m_pMove;				  // 移動量
+	std::unique_ptr<CVelocity> m_pMove;		 // 移動量
 	std::unique_ptr<CColliderAABB> m_pAABB;  // 矩形のコライダー
+	TYPE m_type;							 // 種類
 	D3DXVECTOR3 m_posOld;					 // 前回の位置
 	D3DXVECTOR3 m_CenterPos;				 // 真ん中の位置
 };

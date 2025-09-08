@@ -28,7 +28,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 #ifdef _DEBUG
 
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF); //メモリーリーク検知用フラグ
-	//_CrtSetBreakAlloc();
+	//_CrtSetBreakAlloc(12314);
 #endif // _DEBUG
 
 	DWORD dwCurrentTime;					// 現在時刻

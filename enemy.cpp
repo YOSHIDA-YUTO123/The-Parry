@@ -935,27 +935,45 @@ bool CEnemy::CollisionObstacle(D3DXVECTOR3 *pPos)
 		// コライダーの更新
 		UpdateCollider(*pPos);
 
-		// 当たっていたら
-		if (pObstacle != nullptr && pObstacle->Collision(m_pAABB.get(), pPos))
+		// 障害物と武器の判定
+		if (CollisionObstacleToWepon(pObstacle))
 		{
-			// 障害物の位置の取得
-			D3DXVECTOR3 obstaclePos = pObstacle->GetPosition();
+			// 障害物の破棄
+			pObstacleManager->Destroy(pObstacle);
+		}
 
-			// 障害物までの向きの取得
-			float fAngle = GetTargetAngle(*pPos, obstaclePos);
+		// 当たり判定
+		const bool bCollision = pObstacle != nullptr && pObstacle->Collision(m_pAABB.get(), pPos);
 
-			// 向きの設定
-			CCharacter3D::GetRotaition()->SetDest(D3DXVECTOR3(0.0f, fAngle, 0.0f));
+		// 当たっていたら
+		if (!bCollision)
+		{
+			continue;
+		}
 
+		// 種類の取得
+		CObstacle::TYPE type = pObstacle->GetType();
+
+		// 障害物の位置の取得
+		D3DXVECTOR3 obstaclePos = pObstacle->GetPosition();
+
+		// 障害物までの向きの取得
+		float fAngle = GetTargetAngle(*pPos, obstaclePos);
+
+		// 向きの設定
+		CCharacter3D::GetRotaition()->SetDest(D3DXVECTOR3(0.0f, fAngle, 0.0f));
+		
+		if (type != CObstacle::TYPE_TNT_BARREL)
+		{
 			// 死亡状態じゃないなら
 			if (pMotion->GetBlendType() != MOTIONTYPE_DEATH)
 			{
 				// ダメージ状態にする
 				ChangeState(make_shared<CEnemyDamageL>(10, true));
 			}
-
-			return true;
 		}
+
+		return true;
 	}
 
 	return false;
@@ -1345,6 +1363,36 @@ void CEnemy::UpdateCollider(const D3DXVECTOR3 pos)
 	}
 
 	SetPosition(pos);
+}
+
+//===================================================
+// 武器と障害物の当たり判定
+//===================================================
+bool CEnemy::CollisionObstacleToWepon(CObstacle *pObstacle)
+{
+	// 当たり判定の取得
+	auto pCollision = CCollisionCapsule::GetInstance();
+
+	// 使われていないなら処理しない
+	if (pObstacle == nullptr) return false;
+
+	// 障害物の位置
+	D3DXVECTOR3 obstaclePos = pObstacle->GetPosition();
+	D3DXVECTOR3 obstacleSize = pObstacle->GetSize();
+	D3DXVECTOR3 obstacleTopPos = obstaclePos;
+	obstacleTopPos.y = obstaclePos.y + obstacleSize.y;
+
+	// 半径
+	float fRadius = obstacleSize.x * 0.5f;
+
+	// カプセルの生成
+	auto capsule = CColliderCapsule::CreateCollider(obstaclePos, obstacleTopPos, fRadius);
+
+	if (pCollision->Collision(m_pCapsule.get(),&capsule))
+	{
+		return true;
+	}
+	return false;
 }
 
 //===================================================

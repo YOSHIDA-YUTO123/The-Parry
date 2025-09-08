@@ -9,6 +9,7 @@
 // インクルードファイル
 //**********************************************
 #include "obstaclemanager.h"
+#include "Obstacle.h"
 
 using namespace std; // 名前空間stdを使用
 
@@ -54,8 +55,24 @@ CObstacle* CObstacleManager::GetObstacle(const int nIdx)
 	{
 		return nullptr;
 	}
-
+	
 	return m_apObstacle[nIdx];
+}
+
+//==============================================
+// 指定障害物の破棄
+//==============================================
+void CObstacleManager::Destroy(CObstacle* pObstacle)
+{
+	// 全て調べる
+	for (auto itr = m_apObstacle.begin(); itr != m_apObstacle.end(); ++itr)
+	{
+		if ((*itr) == pObstacle)
+		{
+			(*itr)->Uninit();
+			(*itr) = nullptr;
+		}
+	}
 }
 
 //==============================================
