@@ -27,6 +27,16 @@ OBSTACLESET
 	POS =  100.0 0.0 0.0 	# 位置
 END_OBSTACLESET
 
+OBSTACLESET
+	TYPE = 1 					# 種類
+	POS =  200.0 0.0 0.0 	# 位置
+END_OBSTACLESET
+
+OBSTACLESET
+	TYPE = 1 					# 種類
+	POS =  300.0 0.0 0.0 	# 位置
+END_OBSTACLESET
+
 //======================================================
 // 
 //======================================================

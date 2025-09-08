@@ -356,10 +356,7 @@ void CGameManager::Load(void)
 	fstream file("data/TXT/game.txt");
 	string line, input;
 
-	D3DXVECTOR3 pos;	// 位置
 	string filepath;	// ファイルパス
-	int nReverse;		// 反転するかどうか
-	D3DXVECTOR3 Angle = VEC3_NULL;	// 角度
 
 	// nullじゃなかったら
 	if (file.is_open())

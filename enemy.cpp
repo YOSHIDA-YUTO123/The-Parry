@@ -61,6 +61,7 @@ using namespace std;							// 名前空間stdを使用
 //===================================================
 CEnemy::CEnemy()
 {
+	m_bSetMatrix = false;
 	m_nParrySuccess = NULL;
 	m_pMove = nullptr;
 	m_pMachine = nullptr;
@@ -515,6 +516,8 @@ void CEnemy::Draw(void)
 
 	// 親子関係の設定処理
 	SetParent(MODEL_WEPON,D3DXVECTOR3(0.0f, Size.y,0.0f),&m_weponMatrix);
+
+	m_bSetMatrix = true;
 }
 
 //===================================================
@@ -700,53 +703,23 @@ bool CEnemy::IsDamageMotion(void)
 //===================================================
 bool CEnemy::CollisionWepon(void)
 {
+	// 位置の取得
+	D3DXVECTOR3 sword_buttom = CCharacter3D::GetModelPos(MODEL_WEPON);
+	D3DXVECTOR3 sword_Top = GetPositionFromMatrix(m_weponMatrix);
+
+	// コライダーの作成
+	CColliderCapsule capsule = CColliderCapsule::CreateCollider(sword_buttom, sword_Top, 140.0f);
+
 	// プレイヤーの取得
 	CPlayer* pPlayer = CGame::GetPlayer();
 
-	// 武器の先の座標
-	D3DXVECTOR3 WeponTop = GetPositionFromMatrix(m_weponMatrix);
+	// プレイヤーの取得
+	if (pPlayer == nullptr) return false;
 
-	// 武器の根元の座標
-	D3DXVECTOR3 WeponBottom = CCharacter3D::GetModelPos(15);
-
-	// 武器の長さを求める
-	D3DXVECTOR3 diff = WeponTop - WeponBottom;
-
-	// 武器のマトリックス分回す
-	for (int nCnt = 0; nCnt < NUM_MATRIX; nCnt++)
+	// プレイヤーとの当たり判定
+	if (pPlayer->CollisionCapsule(&capsule,false))
 	{
-		// 相対値
-		float fRate = nCnt / (float)NUM_MATRIX;
-
-		// 武器の根元(基準)から先まで点を打つ
-		D3DXVECTOR3 pos = WeponBottom + diff * fRate;
-
-		// 円の判定
-		if (m_pSphere != nullptr)
-		{
-			// 位置の更新
-			m_pSphere->SetPosition(pos);
-		}
-
-#ifdef _DEBUG
-
-		//// 武器のマトリックス確認用
-		//CEffect3D::Create(pos, 50.0f, VEC3_NULL, WHITE, 10);
-#endif // _DEBUG
-
-		// 円の判定の取得
-		CCollisionSphere* pCollision = CCollisionSphere::GetInstance();
-
-		// 敵の武器に当たったら
-		if (pCollision != nullptr)
-		{
-			CColliderSphere *playersphere = pPlayer->GetSphereCollider();
-
-			if (pCollision->Collision(m_pSphere.get(), playersphere))
-			{
-				return true;
-			}
-		}
+		return true;
 	}
 
 	return false;
@@ -923,39 +896,38 @@ bool CEnemy::CollisionObstacle(D3DXVECTOR3 *pPos)
 	// マネージャーが無かったら
 	if (pObstacleManager == nullptr) return false;
 
-	// 障害物の総数の取得
-	int nNumObstacle = pObstacleManager->GetObstacleSize();
-
 	// 障害物の総数分調べる
-	for (int nCnt = 0; nCnt < nNumObstacle; nCnt++)
+	for (auto itr = pObstacleManager->Begin(); itr != pObstacleManager->End();)
 	{
-		// 障害物の取得
-		CObstacle* pObstacle = pObstacleManager->GetObstacle(nCnt);
-
 		// コライダーの更新
 		UpdateCollider(*pPos);
 
 		// 障害物と武器の判定
-		if (CollisionObstacleToWepon(pObstacle))
+		if (CollisionObstacleToWepon((*itr)))
 		{
-			// 障害物の破棄
-			pObstacleManager->Destroy(pObstacle);
+			(*itr)->Uninit();
+			(*itr) = nullptr;
+			itr = pObstacleManager->Erase(itr);
+
+			// 処理を飛ばす
+			continue;
 		}
 
 		// 当たり判定
-		const bool bCollision = pObstacle != nullptr && pObstacle->Collision(m_pAABB.get(), pPos);
+		const bool bCollision = (*itr) != nullptr && (*itr)->Collision(m_pAABB.get(), pPos);
 
 		// 当たっていたら
 		if (!bCollision)
 		{
+			++itr;
 			continue;
 		}
 
 		// 種類の取得
-		CObstacle::TYPE type = pObstacle->GetType();
+		CObstacle::TYPE type = (*itr)->GetType();
 
 		// 障害物の位置の取得
-		D3DXVECTOR3 obstaclePos = pObstacle->GetPosition();
+		D3DXVECTOR3 obstaclePos = (*itr)->GetPosition();
 
 		// 障害物までの向きの取得
 		float fAngle = GetTargetAngle(*pPos, obstaclePos);
@@ -972,6 +944,8 @@ bool CEnemy::CollisionObstacle(D3DXVECTOR3 *pPos)
 				ChangeState(make_shared<CEnemyDamageL>(10, true));
 			}
 		}
+
+		++itr;
 
 		return true;
 	}
@@ -1376,19 +1350,29 @@ bool CEnemy::CollisionObstacleToWepon(CObstacle *pObstacle)
 	// 使われていないなら処理しない
 	if (pObstacle == nullptr) return false;
 
+	// ワールドマトリックスの設定がされていなかったら処理しない
+	if (!m_bSetMatrix) return false;
+
 	// 障害物の位置
 	D3DXVECTOR3 obstaclePos = pObstacle->GetPosition();
 	D3DXVECTOR3 obstacleSize = pObstacle->GetSize();
 	D3DXVECTOR3 obstacleTopPos = obstaclePos;
 	obstacleTopPos.y = obstaclePos.y + obstacleSize.y;
 
+	// 位置の取得
+	D3DXVECTOR3 sword_buttom = CCharacter3D::GetModelPos(MODEL_WEPON);
+	D3DXVECTOR3 sword_Top = GetPositionFromMatrix(m_weponMatrix);
+
+	// コライダーの作成
+	auto Weponcapsule = CColliderCapsule::CreateCollider(sword_buttom, sword_Top, 140.0f);
+
 	// 半径
-	float fRadius = obstacleSize.x * 0.5f;
+	float fRadius = 100.0f;
 
 	// カプセルの生成
 	auto capsule = CColliderCapsule::CreateCollider(obstaclePos, obstacleTopPos, fRadius);
 
-	if (pCollision->Collision(m_pCapsule.get(),&capsule))
+	if (pCollision->Collision(m_pCapsule.get(),&capsule) || pCollision->Collision(&Weponcapsule, &capsule))
 	{
 		return true;
 	}
@@ -1406,21 +1390,15 @@ bool CEnemy::CheckObstacleDistance(const float fRange)
 	// マネージャーが無かったら
 	if (pObstacleManager == nullptr) return false;
 
-	// 障害物の総数の取得
-	int nNumObstacle = pObstacleManager->GetObstacleSize();
-
 	// 障害物の総数分調べる
-	for (int nCnt = 0; nCnt < nNumObstacle; nCnt++)
+	for (auto itr = pObstacleManager->Begin(); itr != pObstacleManager->End(); ++itr)
 	{
-		// 障害物の取得
-		CObstacle* pObstacle = pObstacleManager->GetObstacle(nCnt);
-
 		// 取得できなかったら処理しない
-		if (pObstacle == nullptr) continue;
+		if ((*itr) == nullptr) continue;
 
 		// 位置の取得
 		D3DXVECTOR3 pos = CCharacter3D::GetPosition();
-		D3DXVECTOR3 obstaclePos = pObstacle->GetPosition();
+		D3DXVECTOR3 obstaclePos = (*itr)->GetPosition();
 
 		// 障害物との距離を取得
 		float fDistance = GetDistance(obstaclePos - pos);

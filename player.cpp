@@ -1161,7 +1161,7 @@ void CPlayer::BlowOff(const D3DXVECTOR3 attacker, const float blowOff, const flo
 //===================================================
 // カプセルの当たり判定
 //===================================================
-bool CPlayer::CollisionCapsule(CColliderCapsule* pCapsule)
+bool CPlayer::CollisionCapsule(CColliderCapsule* pCapsule, const bool bPush)
 {
 	// 当たり判定の取得
 	auto pCollision = CCollisionCapsule::GetInstance();
@@ -1171,27 +1171,29 @@ bool CPlayer::CollisionCapsule(CColliderCapsule* pCapsule)
 	// カプセルとカプセルが当たったら
 	if (pCollision->Collision(m_Capsule.get(), pCapsule,&nearPlayerPos,&nearPos2))
 	{
-		// 敵の方向を求める
-		D3DXVECTOR3 dir = nearPos2 - nearPlayerPos;
+		if (bPush)
+		{
+			// 敵の方向を求める
+			D3DXVECTOR3 dir = nearPos2 - nearPlayerPos;
 
-		// 距離を求める
-		float fDistance = D3DXVec3Length(&dir);
+			// 距離を求める
+			float fDistance = D3DXVec3Length(&dir);
 
-		// 方向ベクトルを正規化
-		D3DXVec3Normalize(&dir, &dir);
+			// 方向ベクトルを正規化
+			D3DXVec3Normalize(&dir, &dir);
 
-		// 二つの半径を足す
-		float fRadius = m_Capsule->GetData().fRadius + pCapsule->GetData().fRadius;
+			// 二つの半径を足す
+			float fRadius = m_Capsule->GetData().fRadius + pCapsule->GetData().fRadius;
 
-		// どのくらい埋まったか
-		float fDepth = fRadius - fDistance;
+			// どのくらい埋まったか
+			float fDepth = fRadius - fDistance;
 
-		// プレイヤーの位置の取得
-		D3DXVECTOR3 playerPos = GetPosition();
+			// プレイヤーの位置の取得
+			D3DXVECTOR3 playerPos = GetPosition();
 
-		// コライダーの更新 + 埋まった分を戻す
-		UpdateCollider(playerPos - dir * fDepth);
-
+			// コライダーの更新 + 埋まった分を戻す
+			UpdateCollider(playerPos - dir * fDepth);
+		}
 		return true;
 	}
 
@@ -1246,27 +1248,21 @@ bool CPlayer::CollisionObstacle(D3DXVECTOR3* pPos)
 	
 	// マネージャーが無かったら
 	if (pObstacleManager == nullptr) return false;
-	
-	// 障害物の総数の取得
-	int nNumObstacle = pObstacleManager->GetObstacleSize();
-	
+		
 	// モードの取得
 	CScene::MODE mode = CManager::GetMode();
 
 	// 障害物の総数分調べる
-	for (int nCnt = 0; nCnt < nNumObstacle; nCnt++)
+	for (auto itr = pObstacleManager->Begin(); itr != pObstacleManager->End(); ++itr)
 	{
-		// 障害物の取得
-		CObstacle* pObstacle = pObstacleManager->GetObstacle(nCnt);
-
 		// 取得できなかったら処理しない
-		if (pObstacle == nullptr)
+		if ((*itr) == nullptr)
 		{
 			continue;
 		}
 
 		// 当たっているかどうか
-		const bool bCollision = pObstacle->Collision(m_pAABB.get(), pPos);
+		const bool bCollision = (*itr)->Collision(m_pAABB.get(), pPos);
 
 		// 当たっていたら
 		if (!bCollision)
@@ -1275,7 +1271,7 @@ bool CPlayer::CollisionObstacle(D3DXVECTOR3* pPos)
 		}
 
 		// 種類の取得
-		CObstacle::TYPE type = pObstacle->GetType();
+		CObstacle::TYPE type = (*itr)->GetType();
 
 		if (type != CObstacle::TYPE_TNT_BARREL)
 		{

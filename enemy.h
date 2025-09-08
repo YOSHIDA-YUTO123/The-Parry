@@ -190,6 +190,7 @@ private:
 	D3DXVECTOR3 m_posOld;									// 前回の位置
 	float m_fInertia;										// 慣性
 	int m_nParrySuccess;									// パリィの成功度(保存用)
+	bool m_bSetMatrix;										// ワールドマトリックスの設定をしたかどうか
 };
 
 //***************************************************

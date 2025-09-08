@@ -156,7 +156,7 @@ public:
 	void SetStamina(const float fStamina);
 
 	bool CollisionAABB(CColliderAABB* pAABB);
-	bool CollisionCapsule(CColliderCapsule* pCapsule);
+	bool CollisionCapsule(CColliderCapsule* pCapsule,const bool bPush = true);
 	void SetRevengeEffect(void); // 絶対反撃のエフェクトの設定
 	void EnableGravity(const bool bEnable) { m_bGravity = bEnable; } // 重力の判定の設定
 private:

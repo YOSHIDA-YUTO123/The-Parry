@@ -15,7 +15,7 @@
 // インクルードファイル
 //**********************************************
 #include"main.h"
-#include<vector>
+#include<list>
 #include<memory>
 
 //**********************************************
@@ -31,16 +31,20 @@ class CObstacleManager
 public:
 	static void Create(void);
 	static CObstacleManager* GetInstance(void);
-	CObstacle* GetObstacle(const int nIdx);
+	std::list <CObstacle*>::iterator Begin(void);
+	std::list <CObstacle*>::iterator End(void);
+	std::list <CObstacle*>::iterator Erase(std::list<CObstacle*>::iterator itr);
+
 	void Destroy(CObstacle* pObstacle);
+	void Clear(CObstacle* pObstacle);
 	void AddObstacle(CObstacle *pObstacle);
 	void Uninit(void);
 	int GetObstacleSize(void);
 private:
 	CObstacleManager();
 	~CObstacleManager();
-	static CObstacleManager* m_pManager; // 障害物マネージャーへのポインタ
-	static std::vector<CObstacle*> m_apObstacle;		  // 障害物へのポインタ
+	static CObstacleManager* m_pManager;			// 障害物マネージャーへのポインタ
+	static std::list <CObstacle*> m_apObstacleList;	// 障害物へのポインタ
 };
 
 

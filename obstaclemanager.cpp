@@ -16,7 +16,7 @@ using namespace std; // 名前空間stdを使用
 //**********************************************
 // 静的メンバ変数宣言
 //**********************************************
-vector<CObstacle*> CObstacleManager::m_apObstacle = {};					// 障害物クラスへのポインタ
+list<CObstacle*> CObstacleManager::m_apObstacleList = {};	// 障害物クラスへのポインタ
 CObstacleManager* CObstacleManager::m_pManager = nullptr;	// 障害物マネージャーのポインタ
 
 //==============================================
@@ -43,20 +43,29 @@ CObstacleManager* CObstacleManager::GetInstance(void)
 }
 
 //==============================================
-// 障害物の取得
+// 障害物の取得(先頭)
 //==============================================
-CObstacle* CObstacleManager::GetObstacle(const int nIdx)
-{
-	// 総数の取得
-	int Size = static_cast<int>(m_apObstacle.size());
+list <CObstacle*>::iterator CObstacleManager::Begin(void)
+{	
+	// 先頭を返す
+	return m_apObstacleList.begin();
+}
 
-	// インデックスがサイズオーバーしていなかったら
-	if (nIdx >= Size)
-	{
-		return nullptr;
-	}
-	
-	return m_apObstacle[nIdx];
+//==============================================
+// 障害物の取得(最後尾)
+//==============================================
+list<CObstacle*>::iterator CObstacleManager::End(void)
+{
+	// 最後尾を返す
+	return m_apObstacleList.end();
+}
+
+//==============================================
+// 障害物の並び替え
+//==============================================
+std::list<CObstacle*>::iterator CObstacleManager::Erase(std::list<CObstacle*>::iterator itr)
+{
+	return m_apObstacleList.erase(itr);
 }
 
 //==============================================
@@ -65,12 +74,37 @@ CObstacle* CObstacleManager::GetObstacle(const int nIdx)
 void CObstacleManager::Destroy(CObstacle* pObstacle)
 {
 	// 全て調べる
-	for (auto itr = m_apObstacle.begin(); itr != m_apObstacle.end(); ++itr)
+	for (auto itr = m_apObstacleList.begin(); itr != m_apObstacleList.end();)
+	{
+		if ((*itr) == pObstacle)
+		{
+			(*itr)->Uninit();
+			itr = m_apObstacleList.erase(itr);
+		}
+		else
+		{
+			++itr;
+		}
+	}
+}
+
+//==============================================
+// クリア処理
+//==============================================
+void CObstacleManager::Clear(CObstacle* pObstacle)
+{
+	// 全て調べる
+	for (auto itr = m_apObstacleList.begin(); itr != m_apObstacleList.end();)
 	{
 		if ((*itr) == pObstacle)
 		{
 			(*itr)->Uninit();
 			(*itr) = nullptr;
+			break;
+		}
+		else
+		{
+			++itr;
 		}
 	}
 }
@@ -96,7 +130,7 @@ void CObstacleManager::Create(void)
 void CObstacleManager::AddObstacle(CObstacle* pObstacle)
 {
 	// 障害物の設定
-	m_apObstacle.push_back(pObstacle);
+	m_apObstacleList.push_back(pObstacle);
 }
 
 //==============================================
@@ -113,7 +147,7 @@ void CObstacleManager::Uninit(void)
 	}
 
 	// 要素のクリア
-	m_apObstacle.clear();
+	m_apObstacleList.clear();
 }
 
 //==============================================
@@ -122,7 +156,7 @@ void CObstacleManager::Uninit(void)
 int CObstacleManager::GetObstacleSize(void)
 {
 	// 総数の取得
-	int Size = static_cast<int>(m_apObstacle.size());
+	int Size = static_cast<int>(m_apObstacleList.size());
 
 	return Size;
 }
