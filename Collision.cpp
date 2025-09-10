@@ -153,8 +153,8 @@ bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox,
 	if (tPosMin.z < posMax.z && tPosMax.z > posMin.z)
 	{
 		// ç∂Ç©ÇÁâEÇ…ÇﬂÇËçûÇÒÇæ
-		if (tPosOldMax.x < posMin.x &&
-			tPosMax.x > posMin.x)
+		if (tPosOldMin.x > posOldMax.x &&
+			tPosMin.x < posMax.x)
 		{
 			// ìñÇΩÇ¡ÇΩñ Çê›íË
 			if (pFace != nullptr)
@@ -167,13 +167,13 @@ bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox,
 			if (pushPos != nullptr)
 			{
 				// ÇﬂÇËçûÇÒÇæï™ñﬂÇ∑
-				pushPos->x += posMin.x - tPosMax.x - 0.5f;
+				pushPos->x = tPosMin.x - myData.Size.x * HALF_VALUE - 0.1f;
 			}
 			return true;
 		}
 		// âEÇ©ÇÁç∂Ç…ÇﬂÇËçûÇÒÇæ
-		else if (tPosOldMin.x > posMax.x &&
-			tPosMin.x < posMax.x)
+		else if (tPosOldMax.x < posOldMin.x &&
+			tPosMax.x > posMin.x)
 		{
 			// ìñÇΩÇ¡ÇΩñ Çê›íË
 			if (pFace != nullptr)
@@ -186,7 +186,7 @@ bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox,
 			if (pushPos != nullptr)
 			{
 				// ÇﬂÇËçûÇÒÇæï™ñﬂÇ∑
-				pushPos->x += posMax.x - tPosMin.x + 0.5f;
+				pushPos->x = tPosMax.x + myData.Size.x * HALF_VALUE + 0.1f;
 			}
 			return true;
 		}
@@ -196,7 +196,7 @@ bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox,
 	if (tPosMin.x < posMax.x && tPosMax.x > posMin.x)
 	{
 		// å„ï˚Ç©ÇÁÇﬂÇËçûÇÒÇæ(ç∂éËç¿ïWån)
-		if (tPosOldMax.z < posMin.z &&
+		if (tPosOldMax.z < posOldMin.z &&
 			tPosMax.z > posMin.z)
 		{
 			// ìñÇΩÇ¡ÇΩñ Çê›íË
@@ -210,11 +210,11 @@ bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox,
 			if (pushPos != nullptr)
 			{
 				// ÇﬂÇËçûÇÒÇæï™ñﬂÇ∑
-				pushPos->z += posMin.z - tPosMax.z - 0.5f;
+				pushPos->z = tPosMax.z + myData.Size.z * HALF_VALUE + 0.1f;
 			}
 			return true;
 		}
-		else if (tPosOldMin.z > posMax.z &&
+		else if (tPosOldMin.z > posOldMax.z &&
 			tPosMin.z < posMax.z)
 		{
 			// ìñÇΩÇ¡ÇΩñ Çê›íË
@@ -227,7 +227,7 @@ bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox,
 			if (pushPos != nullptr)
 			{
 				// ÇﬂÇËçûÇÒÇæï™ñﬂÇ∑
-				pushPos->z += posMax.z - tPosMin.z + 0.5f;
+				pushPos->z = tPosMin.z - myData.Size.z * HALF_VALUE - 0.1f;
 			}
 			return true;
 		}

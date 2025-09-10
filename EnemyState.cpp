@@ -91,7 +91,7 @@ bool CEnemyStateManager::SetMotionByPlayerPosition(void)
 	D3DXVECTOR3 playerPos = pPlayer->GetPosition();
 
 	// 近くにいたら
-	if (m_pEnemy->CheckDistane(350.0f))
+	if (m_pEnemy->CheckDistane(400.0f))
 	{
 		// 後ろにいたら
 		if (m_pEnemy->CollisionFOV(playerPos, -D3DX_PI * 0.15f, D3DX_PI * 0.15f))
@@ -469,6 +469,9 @@ void CEnemyAttackSmash::Update(void)
 	// イベントフレームの判定
 	if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_SMASH) && pEnemy->IsDamageMotion() == false)
 	{
+		// 状態の設定
+		pEnemy->SetState(CCharacter3D::STATE_ACTION, 5);
+
 		// 攻撃の結果を取得
 		CEnemy::RESULT result = pEnemy->WeponAttackResult(pPlayer);
 
@@ -956,6 +959,9 @@ void CEnemySpin::Update(void)
 	// 回転モーション
 	if (pMotion->IsEventFrame(0, 999, CEnemy::MOTIONTYPE_SPIN))
 	{
+		// 状態の設定
+		pEnemy->SetState(CCharacter3D::STATE_ACTION, 5);
+
 		// 攻撃の結果を取得
 		CEnemy::RESULT result = pEnemy->WeponAttackResult(pPlayer);
 
@@ -1590,6 +1596,9 @@ void CEnemySwing::Update(void)
 		// イベントフレームの判定
 		if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_SWING) && pEnemy->IsDamageMotion() == false)
 		{
+			// 状態の設定
+			pEnemy->SetState(CCharacter3D::STATE_ACTION, 5);
+
 			// 軌跡の処理
 			pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f));
 
@@ -1781,6 +1790,9 @@ void CEnemyJumpAttack::Update(void)
 		// ジャンプ中だったら
 		if (pMotion->IsEventFrame(40, 90, CEnemy::MOTIONTYPE_JUMPATTACK))
 		{
+			// 状態の設定
+			pEnemy->SetState(CCharacter3D::STATE_ACTION, 5);
+
 			// 軌跡の設定
 			pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f));
 
@@ -1841,6 +1853,9 @@ void CEnemyJumpAttack::CollisionPlayer(CPlayer* pPlayer, CMotion* pMotion)
 	// イベントフレームの判定
 	if (pMotion->IsEventFrame(80, 88, CEnemy::MOTIONTYPE_JUMPATTACK) && pEnemy->IsDamageMotion() == false)
 	{
+		// 状態の設定
+		pEnemy->SetState(CCharacter3D::STATE_ACTION, 5);
+
 		// 攻撃の結果を取得
 		CEnemy::RESULT result = pEnemy->WeponAttackResult(pPlayer);
 
@@ -2520,6 +2535,9 @@ void CEnemyRush::Update(void)
 		}
 	}
 
+	// 状態の設定
+	pEnemy->SetState(CCharacter3D::STATE_ACTION, 5);
+
 	// プレイヤーの方向に向かう
 	pEnemy->ChasePlayer(0.5f, 10.0f);
 
@@ -2658,6 +2676,8 @@ void CEnemyEndRush::Update(void)
 	// モーションがあるなら
 	if (pMotion != nullptr)
 	{
+		pEnemy->SetState(CCharacter3D::STATE_ACTION, 5);
+
 		// 慣性の設定
 		pEnemy->SetInertia(m_fInertia);
 
@@ -2752,6 +2772,9 @@ void CEnemyBackKick::Update(void)
 	// モーションがあるなら
 	if (pMotion != nullptr)
 	{
+		// 状態の設定
+		pEnemy->SetState(CCharacter3D::STATE_ACTION, 5);
+
 		// 攻撃の結果を取得
 		CEnemy::RESULT result = pEnemy->AttackResult(pPlayer, CEnemy::MODEL_FOOTR, 150.0f);
 
@@ -2804,9 +2827,6 @@ void CEnemyBackKick::Update(void)
 		// モーションが終わったら
 		if (pMotion->IsFinishEndBlend())
 		{
-			// 向きの設定処理
-			pEnemy->AngleToPlayer();
-
 			// 状態の遷移
 			pEnemy->ChangeState(make_shared<CEnemyIdle>(5));
 		}
@@ -3128,6 +3148,9 @@ void CEnemySweepRight::Update(void)
 		// 指定のフレーム内か判定
 		if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_SWEEP_RIGHT))
 		{
+			// 状態の設定
+			pEnemy->SetState(CCharacter3D::STATE_ACTION, 5);
+
 			// 軌跡の処理
 			pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f));
 
@@ -3273,6 +3296,9 @@ void CEnemySweepLeft::Update(void)
 		// 指定のフレーム内か判定
 		if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_SWEEP_LEFT))
 		{
+			// 状態の設定
+			pEnemy->SetState(CCharacter3D::STATE_ACTION, 5);
+
 			// 攻撃の結果を取得
 			CEnemy::RESULT result = pEnemy->AttackResult(pPlayer,CEnemy::MODEL_HANDL,150.0f);
 

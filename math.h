@@ -116,5 +116,6 @@ namespace math
 	D3DXQUATERNION CreateQuaternion(D3DXQUATERNION* pOut, D3DXVECTOR3 axis, float fAngle); 
 	D3DXMATRIX SetMatrixRotationQuaternion(D3DXMATRIX* pOut, D3DXQUATERNION quaternion);
 	D3DXVECTOR3 MatrixToEulerXYZ(const D3DXMATRIX mtxWorld);			// 回転行列をオイラー角に変換
+
 }
 #endif

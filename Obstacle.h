@@ -52,6 +52,7 @@ public:
 protected:
 	CColliderAABB* GetCollider(void) { return m_pAABB.get(); }
 	void CreateCollider(void);
+	CVelocity* GetMove(void) { return m_pMove.get(); }
 private:
 	std::unique_ptr<CVelocity> m_pMove;		 // 移動量
 	std::unique_ptr<CColliderAABB> m_pAABB;  // 矩形のコライダー
@@ -89,7 +90,7 @@ public:
 	CTNTBarrel();
 	~CTNTBarrel();
 
-	static CTNTBarrel* Create(const D3DXVECTOR3 pos);
+	static CTNTBarrel* Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 DestPos);
 
 	HRESULT Init(void) override;
 	void Uninit(void) override;
@@ -97,7 +98,15 @@ public:
 	void Draw(void) override;
 	bool Collision(CColliderAABB* pCollider, D3DXVECTOR3* pushPos) override;
 private:
-	int m_nDamageFace;						 // ダメージを食らう面
+	void SetQuaternion(void); // クォータニオンの設定処理
+	D3DXQUATERNION m_quat;	 // クォータニオン
+	D3DXMATRIX m_mtxRot;	 // 回転行列
+	D3DXVECTOR3 m_axis;		 // 回転軸
+	float m_fDirDest;		 // 目的の移動方向
+	float m_fDir;			 // 移動方向
+	float m_fCircumference;  // 半径
+	float m_fDestValueRot;	 // 目的の回転量
+	float m_fValueRot;		 // 回転量
 };
 
 #endif

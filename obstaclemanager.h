@@ -29,6 +29,7 @@ class CObstacle;
 class CObstacleManager
 {
 public:
+	~CObstacleManager();
 	static void Create(void);
 	static CObstacleManager* GetInstance(void);
 	std::list <CObstacle*>::iterator Begin(void);
@@ -39,12 +40,16 @@ public:
 	void Clear(CObstacle* pObstacle);
 	void AddObstacle(CObstacle *pObstacle);
 	void Uninit(void);
+	void Update(void);
 	int GetObstacleSize(void);
 private:
+	static constexpr int NUM_TNTPOP_POINT = 4;		// 爆発樽の出現ポイントの数
 	CObstacleManager();
-	~CObstacleManager();
 	static CObstacleManager* m_pManager;			// 障害物マネージャーへのポインタ
 	static std::list <CObstacle*> m_apObstacleList;	// 障害物へのポインタ
+	D3DXVECTOR3 m_Point[NUM_TNTPOP_POINT];			// 爆発樽の出現する位置
+	int m_nTNTPopPosID;								// 爆発樽の位置のID
+	int m_nPopTime;									// ポップする時間
 };
 
 

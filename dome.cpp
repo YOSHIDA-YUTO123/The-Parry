@@ -75,6 +75,7 @@ CMeshDome* CMeshDome::Create(const D3DXVECTOR3 pos, const int nSegH, const int n
 	pMesh->SetRotation(rot);
 
 	pMesh->SetDome(nSegH, nSegV, fRadius, fHeight);
+
 	return pMesh;
 }
 
@@ -100,12 +101,6 @@ HRESULT CMeshDome::Init(void)
 //================================================
 void CMeshDome::Uninit(void)
 {
-	//if (m_pIdxBuffMeshDome != nullptr)
-	//{
-	//	m_pIdxBuffMeshDome->Release();
-	//	m_pIdxBuffMeshDome = nullptr;
-	//}
-
 	// I—¹ˆ—
 	CMesh::Uninit();
 }

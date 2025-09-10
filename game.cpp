@@ -386,8 +386,6 @@ void CGame::LoadObstacle(std::fstream& file, std::string line,CLoadManager *pLoa
 				CSpikeTrap::Create(pos, D3DXVECTOR3(0.0f, fAngle, 0.0f), nDamageFase);
 				break;
 			case CObstacle::TYPE_TNT_BARREL:
-				// ”š”­’M
-				CTNTBarrel::Create(pos);
 				break;
 			default:
 				break;

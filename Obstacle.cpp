@@ -23,6 +23,12 @@
 
 using namespace Const;							// 名前空間Constを使用する
 using namespace std;							// 名前空間stdを使用する
+using namespace math;							// 名前空間mathを使用する
+
+//**********************************************
+// 定数宣言
+//**********************************************
+constexpr float TWO_PI = D3DX_PI * 2.0f; // 2PI
 
 //==============================================
 // コンストラクタ
@@ -215,7 +221,7 @@ CSpikeTrap* CSpikeTrap::Create(const D3DXVECTOR3 pos,const D3DXVECTOR3 rot, cons
 	
 	// オブジェクト
 	pObstacle->SetPosition(pos);
-	pObstacle->GetRotaition()->Set(rot);
+	pObstacle->GetRotation()->Set(rot);
 	pObstacle->m_nDamageFace = nDamageFace;
 
 	return pObstacle;
@@ -286,7 +292,7 @@ bool CSpikeTrap::Collision(CColliderAABB *pCollider, D3DXVECTOR3* pushPos)
 	int nDamageFace = 0;
 
 	// 矩形の判定
-	if (pCollisionAABB->Collision(pColliderAABB, pCollider, pushPos,&nDamageFace))
+	if (pCollisionAABB->Collision(pCollider, pColliderAABB, pushPos,&nDamageFace))
 	{
 		// ダメージを食らう面が同じだったら(またはすべて食らうなら)
 		if (m_nDamageFace == nDamageFace || m_nDamageFace == -1)
@@ -303,6 +309,14 @@ bool CSpikeTrap::Collision(CColliderAABB *pCollider, D3DXVECTOR3* pushPos)
 //==============================================
 CTNTBarrel::CTNTBarrel() : CObstacle(TYPE_TNT_BARREL)
 {
+	m_fDirDest = NULL;
+	m_fDir = NULL;
+	D3DXQuaternionIdentity(&m_quat);
+	D3DXMatrixIdentity(&m_mtxRot);
+	m_axis = VEC3_NULL;
+	m_fDestValueRot = NULL;
+	m_fValueRot = NULL;
+	m_fCircumference = NULL;
 }
 
 //==============================================
@@ -315,7 +329,7 @@ CTNTBarrel::~CTNTBarrel()
 //==============================================
 // 生成処理
 //==============================================
-CTNTBarrel* CTNTBarrel::Create(const D3DXVECTOR3 pos)
+CTNTBarrel* CTNTBarrel::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 DestPos)
 {
 	CTNTBarrel* pObstacle = nullptr;
 
@@ -336,6 +350,13 @@ CTNTBarrel* CTNTBarrel::Create(const D3DXVECTOR3 pos)
 
 	// オブジェクト
 	pObstacle->SetPosition(pos);
+
+	// 方向ベクトルを求める
+	float dir = GetTargetAngle(DestPos, pos);
+
+	// 移動方向を設定
+	pObstacle->m_fDirDest = dir;
+	pObstacle->GetRotation()->Set(D3DXVECTOR3(0.0f, dir, 0.0f));
 
 	return pObstacle;
 }
@@ -360,6 +381,17 @@ HRESULT CTNTBarrel::Init(void)
 	// コライダーの生成	
 	CreateCollider();
 
+	// 大きさの取得
+	D3DXVECTOR3 Size = CObjectX::GetSize();
+
+	// 半径を求める
+	float fRadius = Size.x * 0.5f;
+
+	// 円周を求める
+	m_fCircumference = D3DX_PI * 2.0f * fRadius;
+
+	m_fValueRot = 0.057f;
+
 	return S_OK;
 }
 
@@ -379,6 +411,42 @@ void CTNTBarrel::Update(void)
 {
 	// 更新処理
 	CObstacle::Update();
+
+	// 回転量の減衰
+	m_fValueRot += (0.0f - m_fValueRot) * 0.1f;
+
+	m_fValueRot = 0.057f;
+
+	// 位置の取得
+	D3DXVECTOR3 pos = CObstacle::GetPosition();
+
+	// 移動クラスの取得
+	CVelocity* pMove = CObstacle::GetMove();
+
+	if (pMove != nullptr)
+	{
+		// 移動量の取得
+		D3DXVECTOR3 moveWk = pMove->Get();
+
+		// 円周から移動量を求める
+		float fMove = (m_fValueRot / TWO_PI) * m_fCircumference;
+
+		// 移動量の設定
+		moveWk.x = sinf(m_fDir) * fMove;
+		moveWk.z = cosf(m_fDir) * fMove;
+
+		// 移動量の設定
+		pMove->Set(moveWk);
+	}
+
+	// クォータニオンの設定処理
+	SetQuaternion();
+
+	// 方向の正規化
+	NormalizeDiffRot(m_fDirDest - m_fDir, &m_fDir);
+
+	// 目的の角度に近づける
+	m_fDir += (m_fDirDest - m_fDir) * 0.99f;
 }
 
 //==============================================
@@ -386,8 +454,28 @@ void CTNTBarrel::Update(void)
 //==============================================
 void CTNTBarrel::Draw(void)
 {
-	// 描画処理
-	CObstacle::Draw();
+	// 位置の取得
+	D3DXVECTOR3 pos = CObjectX::GetPosition();
+
+	//計算用のマトリックス
+	D3DXMATRIX mtxTrans,mtxRot,mtxRotWk;
+
+	D3DXVECTOR3 Size = CObjectX::GetSize();
+
+	// 位置のマトリックスの作成
+	D3DXMatrixTranslation(&mtxTrans, pos.x, pos.y + Size.y * 0.5f , pos.z);
+
+	D3DXVECTOR3 rot = GetRotation()->Get();
+	
+	// 回転行列の作成
+	D3DXMatrixRotationYawPitchRoll(&mtxRotWk, rot.y, rot.x, rot.z);
+	D3DXMatrixMultiply(&mtxRot, &mtxRotWk, &m_mtxRot);
+	
+	// マトリックスの設定
+	CObjectX::SetUpMatrix(mtxRot, mtxTrans);
+
+	// 描画の設定
+	CObjectX::SetUpDraw();
 }
 
 //==============================================
@@ -402,10 +490,66 @@ bool CTNTBarrel::Collision(CColliderAABB* pCollider, D3DXVECTOR3* pushPos)
 	auto pColliderAABB = CObstacle::GetCollider();
 
 	// 矩形の判定
-	if (pCollisionAABB->Collision(pColliderAABB, pCollider, pushPos))
+	if (pCollisionAABB->Collision(pCollider, pColliderAABB, pushPos))
 	{
 		return true;
 	}
 
 	return false;
+}
+
+//==============================================
+// クォータニオンの設定処理
+//==============================================
+void CTNTBarrel::SetQuaternion(void)
+{
+	// 上方向ベクトルの作成
+	D3DXVECTOR3 VecUp = { 0.0f,1.0f,0.0f };
+
+	// 移動クラスの取得
+	CVelocity* pMove = CObstacle::GetMove();
+
+	// 取得できなかったら処理しない
+	if (pMove == nullptr) return;
+
+	// 進行ベクトル
+	D3DXVECTOR3 VecMove = pMove->Get();
+	
+	D3DXVec3Normalize(&VecMove, &VecMove);
+
+	// 移動していないなら
+	if (D3DXVec3Length(&VecMove) == 0.0f)
+	{
+		return;
+	}
+
+	// 回転軸の作成
+	D3DXVec3Cross(&m_axis, &VecUp, &VecMove);
+
+	// 初期姿勢だったら
+	if (m_quat.x == 0.0f && m_quat.y == 0.0f && m_quat.z == 0.0f && m_quat.w == 1.0f)
+	{
+		// 回転軸における指定の回転角からクォータニオンを作成
+		D3DXQuaternionRotationAxis(&m_quat, &m_axis, m_fValueRot);
+
+		// クォータニオンから回転マトリックスを作成
+		D3DXMatrixRotationQuaternion(&m_mtxRot, &m_quat);
+	}
+	else
+	{
+		// 計算用クォータニオン
+		D3DXQUATERNION quat, quatNew;
+
+		// 回転軸における指定の回転角からクォータニオンを作成
+		D3DXQuaternionRotationAxis(&quat, &m_axis, m_fValueRot);
+
+		// 前の姿勢と今の姿勢の合成
+		D3DXQuaternionMultiply(&quatNew, &m_quat, &quat);
+
+		// 保存
+		m_quat = quatNew;
+
+		// クォータニオンから回転マトリックスを作成
+		D3DXMatrixRotationQuaternion(&m_mtxRot, &quatNew);
+	}
 }

@@ -10,8 +10,15 @@
 //**********************************************
 #include "obstaclemanager.h"
 #include "Obstacle.h"
+#include <string>
+#include <fstream>
 
 using namespace std; // –¼‘O‹óŠÔstd‚ğg—p
+
+//**********************************************
+// ’è”éŒ¾
+//**********************************************
+constexpr int POP_TIME = 600; // ƒ|ƒbƒv‚·‚éŠÔ
 
 //**********************************************
 // Ã“Iƒƒ“ƒo•Ï”éŒ¾
@@ -24,7 +31,10 @@ CObstacleManager* CObstacleManager::m_pManager = nullptr;	// áŠQ•¨ƒ}ƒl[ƒWƒƒ[‚
 //==============================================
 CObstacleManager::CObstacleManager()
 {
-
+	// ƒƒ‚ƒŠ‚ÌƒNƒŠƒA
+	ZeroMemory(&m_Point, sizeof(m_Point));
+	m_nPopTime = NULL;
+	m_nTNTPopPosID = -1;
 }
 
 //==============================================
@@ -122,6 +132,8 @@ void CObstacleManager::Create(void)
 
 	// áŠQ•¨ƒ}ƒl[ƒWƒƒ[‚Ì¶¬
 	m_pManager = new CObstacleManager;
+
+	m_pManager->m_Point[0] = D3DXVECTOR3(-713.0f,286.0f,1613.0f);
 }
 
 //==============================================
@@ -148,6 +160,28 @@ void CObstacleManager::Uninit(void)
 
 	// —v‘f‚ÌƒNƒŠƒA
 	m_apObstacleList.clear();
+}
+
+//==============================================
+// XVˆ—
+//==============================================
+void CObstacleManager::Update(void)
+{
+	// ƒ^ƒCƒ€‚ğŒ¸‚ç‚·
+	m_nPopTime--;
+
+	// ƒ^ƒCƒ€‚ª0‚É‚È‚Á‚½‚ç
+	if (m_nPopTime <= 0)
+	{
+		// Äİ’è
+		m_nPopTime = POP_TIME;
+
+		// oŒ»ˆÊ’u‚ğ‘Io
+		int nID = rand() % NUM_TNTPOP_POINT;
+
+		// ˆÊ’u‚Ìæ“¾
+		D3DXVECTOR3 pos = m_Point[nID];
+	}
 }
 
 //==============================================

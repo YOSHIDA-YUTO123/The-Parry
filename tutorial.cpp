@@ -33,6 +33,7 @@
 #include "Obstacle.h"
 #include"Collider.h"
 #include"Collision.h"
+#include "obstaclemanager.h"
 
 using namespace std;	// 名前空間stdの使用
 using namespace Const;  // 名前空間Const
@@ -71,6 +72,9 @@ CTutorial::~CTutorial()
 //===================================================
 HRESULT CTutorial::Init(void)
 {
+	// マネージャーの生成
+	CObstacleManager::Create();
+
 	m_pCamera = new CGameCamera;
 	m_pCamera->Init();
 	m_pCamera->SetCamera(D3DXVECTOR3(0.0f, 250.0f, 350.0f), VEC3_NULL, D3DXVECTOR3(1.59f, -3.12f, 0.0f));
@@ -190,6 +194,16 @@ void CTutorial::Uninit(void)
 {
 	m_pMeshField = nullptr;
 	m_pPlayer = nullptr;
+
+	// 障害物マネージャーのインスタンスの取得
+	CObstacleManager* pObstacleManager = CObstacleManager::GetInstance();
+
+	// マネージャーの終了処理
+	if (pObstacleManager != nullptr)
+	{
+		pObstacleManager->Uninit();
+		pObstacleManager = nullptr;
+	}
 
 	// カメラの破棄
 	if (m_pCamera != nullptr)

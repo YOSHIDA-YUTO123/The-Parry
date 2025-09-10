@@ -51,7 +51,7 @@ CObjectX* CObjectX::Create(const D3DXVECTOR3 pos, const char* pModelName,const D
 
 	pObjectX->Init();
 	pObjectX->m_pos = pos;
-	pObjectX->GetRotaition()->Set(rot);
+	pObjectX->GetRotation()->Set(rot);
 	pObjectX->LoadModel(pModelName);
 
 	return pObjectX;
@@ -378,6 +378,34 @@ void CObjectX::SetUpMatrix(const D3DXVECTOR3 Scal)
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
 
 	//ワールドマトリックスの設定
+	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+}
+
+//===================================================
+// ワールドマトリックスの設定
+//===================================================
+void CObjectX::SetUpMatrix(const D3DXMATRIX mtxRot, const D3DXMATRIX mtxTrans, const D3DXVECTOR3 Scal)
+{
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+	// 計算用のマトリックス
+	D3DXMATRIX mtxScal;
+
+	// ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&m_mtxWorld);
+
+	// 大きさを反映
+	D3DXMatrixScaling(&mtxScal, Scal.x, Scal.y, Scal.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxScal);
+
+	// 向きを反映
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
+
+	// 位置を反映
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
+	// ワールドマトリックスの設定
 	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 }
 

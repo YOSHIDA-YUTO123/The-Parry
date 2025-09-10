@@ -66,7 +66,7 @@ CBlock* CBlock::Create(const D3DXVECTOR3 pos, const char* pModelFileName, const 
 	}
 
 	// Œü‚«‚ÌÝ’è
-	pBlock->GetRotaition()->Set(rot);
+	pBlock->GetRotation()->Set(rot);
 
 	return pBlock;
 }
@@ -179,7 +179,7 @@ bool CBlock::Collision(CColliderAABB* pAABB,D3DXVECTOR3 *pPushPos)
 	if (pAABB == nullptr) return false;
 
 	// ‹éŒ`‚Ì”»’è
-	if (pCollision->Collision(m_pAABB.get(), pAABB, pPushPos))
+	if (pCollision->Collision(pAABB, m_pAABB.get(), pPushPos))
 	{
 		return true;
 	}

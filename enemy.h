@@ -18,6 +18,7 @@
 #include"character3D.h"
 #include<memory>
 #include<vector>
+#include<list>
 
 //***************************************************
 // 前方宣言
@@ -42,6 +43,7 @@ class CObserver;
 class CColliderCapsule;
 class CColliderFOV;
 class CEnemyStateManager;
+class CObstacleManager;
 
 //***************************************************
 // 敵クラスの定義
@@ -173,6 +175,7 @@ private:
 	void UpdateCollider(const D3DXVECTOR3 pos);				// コライダーの更新
 	void Config(const int nLife, const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size);
 	bool CollisionObstacleToWepon(CObstacle* pObstacle);	// 障害物と武器の当たり判定
+	bool SetTNTEffect(CObstacle* pObstacle);				// 障害物の爆発の演出
 
 	std::unique_ptr<CColliderCapsule> m_pCapsule;			// カプセルコライダー
 	std::unique_ptr<CColliderAABB> m_pAABB;					// AABBのコライダー

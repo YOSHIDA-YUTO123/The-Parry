@@ -918,12 +918,16 @@ bool CEnemy::CollisionObstacle(D3DXVECTOR3 *pPos)
 		// 障害物と武器の判定
 		if (CollisionObstacleToWepon((*itr)))
 		{
-			(*itr)->Uninit();
-			(*itr) = nullptr;
-			itr = pObstacleManager->Erase(itr);
+			// 爆発のエフェクト
+			if (SetTNTEffect((*itr)))
+			{
+				(*itr)->Uninit();
+				(*itr) = nullptr;
+				itr = pObstacleManager->Erase(itr);
 
-			// 処理を飛ばす
-			continue;
+				// 処理を飛ばす
+				continue;
+			}
 		}
 
 		// 当たり判定
@@ -1001,29 +1005,8 @@ void CEnemy::SetRubble(void)
 	// サークルの設定処理
 	pCircle->SetCircle(0.0f, 50.0f, 60, true);
 
-	// 瓦礫の数分出す
-	for (int nCnt = 0; nCnt < NUM_RUBBLE; nCnt++)
-	{
-		// 分割に応じた方向を求める
-		float fAngle = (D3DX_PI * 2.0f) / NUM_RUBBLE * nCnt;
-
-		// 吹っ飛び量を選出
-		float dir = rand() % 15 + 5.0f;
-		float Jump = rand() % 15 + 25.0f;
-
-		// 方向に応じた吹っ飛び量を計算
-		float fMoveX = sinf(fAngle) * dir;
-		float fMoveZ = cosf(fAngle) * dir;
-
-		// 寿命を選出
-		int nLife = rand() % 120 + 60;
-
-		// 種類を選出
-		int nType = rand() % CRubble::TYPE_MAX;
-
-		// 瓦礫を生成
-		CRubble::Create(WeponPos, D3DXVECTOR3(fMoveX, Jump, fMoveZ), nLife, nType);
-	}
+	// 瓦礫を出す
+	CRubbleManager::SetImpact(WeponPos, 120, NUM_RUBBLE, D3DXVECTOR2(15.0f, 35.0f));
 }
 
 //===================================================
@@ -1408,6 +1391,55 @@ bool CEnemy::CollisionObstacleToWepon(CObstacle *pObstacle)
 		return true;
 	}
 	return false;
+}
+
+//===================================================
+// 爆発の演出の処理
+//===================================================
+bool CEnemy::SetTNTEffect(CObstacle* pObstacle)
+{
+	// nullだったら処理しない
+	if (pObstacle == nullptr) return false;
+
+	// 現在の状態の取得
+	auto STATE = CCharacter3D::GetState();
+
+	// 状態が攻撃じゃないなら処理しない
+	if (STATE != STATE_ACTION)
+	{
+		// 状態の変更
+		ChangeState(make_shared<CEnemySwing>());
+
+		return false;
+	}
+
+	// 障害物の位置の取得
+	D3DXVECTOR3 obstaclePos = pObstacle->GetPosition();
+	D3DXVECTOR3 Size = pObstacle->GetSize();
+	D3DXVECTOR3 CenterPos = { obstaclePos.x,obstaclePos.y + Size.y * 0.5f,obstaclePos.z };
+	D3DXVECTOR3 TopPos = { obstaclePos.x,obstaclePos.y + Size.y,obstaclePos.z };
+
+	// 爆発の生成
+	auto pExplotion = CExplosionManager::SetParam(CenterPos, D3DXVECTOR2(100.0f, 100.0f), D3DXCOLOR(0.8f, 0.8f, 0.8f, 0.8f), 4, 3, 10);
+
+	if (pExplotion != nullptr)
+	{
+		// 爆発の生成
+		pExplotion->Create(CExplosion::TYPE_SMOKE, D3DXVECTOR2(25.0f, 1.0f), 16);
+	}
+	else
+	{
+		return false;
+	}
+
+	// 瓦礫の生成
+	CRubbleManager::SetExplosionTNT(CenterPos, 120, 16, D3DXVECTOR2(15.0f, 15.0f));
+
+	// 爆発の生成
+	CExplosion::Create(TopPos, D3DXVECTOR2(500.0f, 500.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 8, 8, 3, CExplosion::TYPE_EXPLOSION);
+	CExplosion::Create(TopPos, D3DXVECTOR2(100.0f, 100.0f), D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f), 5, 2, 5, CExplosion::TYPE_FIRE);
+
+	return true;
 }
 
 //===================================================

@@ -383,7 +383,6 @@ void CPlayer::Update(void)
 		UpdateCollider(pos);
 	}
 
-
 	// インパクトの当たり判定
 	CollisionImpact(pMesh, &pos, pMotion);
 
@@ -607,6 +606,14 @@ void CPlayer::Update(void)
 	if (pKeyboard->GetPress(DIK_9))
 	{
 		m_fRevengeValue += 1.0f;
+	}
+
+	if (pKeyboard->GetTrigger(DIK_O))
+	{
+		CTNTBarrel::Create(D3DXVECTOR3(-713.0f, 286.0f, 1613.0f),VEC3_NULL);
+		CTNTBarrel::Create(D3DXVECTOR3(656.0f, 286.0f, 1574.0f), VEC3_NULL);
+		CTNTBarrel::Create(D3DXVECTOR3(795.0f, 286.0f, -1412.0f), VEC3_NULL);
+		CTNTBarrel::Create(D3DXVECTOR3(-685.0f, 286.0f, -1507.0f), VEC3_NULL);
 	}
 #endif // _DEBUG
 }
@@ -1030,10 +1037,8 @@ void CPlayer::UpdateCollider(D3DXVECTOR3 pos)
 		// データの取得
 		auto dataCapsule = m_Capsule->GetData();
 
-		
 		dataCapsule.EndPos = pos;
 		dataCapsule.EndPos.y = pos.y + Size.y;
-
 
 		// データの更新
 		dataCapsule.StartPos = pos;
@@ -1247,6 +1252,8 @@ bool CPlayer::CollisionObstacle(D3DXVECTOR3* pPos)
 	// モードの取得
 	CScene::MODE mode = CManager::GetMode();
 
+	bool bResult = false;
+
 	// 障害物の総数分調べる
 	for (auto itr = pObstacleManager->Begin(); itr != pObstacleManager->End(); ++itr)
 	{
@@ -1282,9 +1289,10 @@ bool CPlayer::CollisionObstacle(D3DXVECTOR3* pPos)
 			}
 		}
 
-		return true;
+		bResult = true;
 	}
-	return false;
+
+	return bResult;
 }
 
 //===================================================

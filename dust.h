@@ -14,17 +14,19 @@
 //***************************************************
 // インクルードファイル
 //***************************************************
-#include "main.h"
-#include "object.h"
-#include"transform.h"
 #include"objectX.h"
-#include"shadow.h"
 #include<memory>
+
+//***************************************************
+// 前方宣言
+//***************************************************
+class CShadow;
+class CVelocity;
 
 //***************************************************
 // 瓦礫クラスの定義
 //***************************************************
-class CRubble : public CObject
+class CRubble : public CObjectX
 {
 public:
 
@@ -34,6 +36,10 @@ public:
 		TYPE_ONE = 0,
 		TYPE_TWO,
 		TYPE_THREE,
+		TYPE_FOUR,
+		TYPE_FIVE,
+		TYPE_SIX,
+		TYPE_SEVEN,
 		TYPE_MAX
 	}TYPE;
 
@@ -47,18 +53,25 @@ public:
 	void Update(void);
 	void Draw(void);
 private:
-	CObjectX* m_pObjectX; // オブジェクトXへのポインタ
-
-	std::unique_ptr<CShadow>m_pShadow; // 影クラスの定義
-	CPosition m_pos;	  // 位置クラス
-	CRotation m_rot;	  // 向きクラス
-	CVelocity m_move;	  // 移動クラス
-
-	float m_fShadowSize;  // 影の大きさ
-	float m_fDecAlv;	  // アルファ値の減少スピード
-	int m_nLife;		  // 寿命
-	int m_nMaxLife;		  // 最大のHP
+	std::unique_ptr<CShadow> m_pShadow; // 影クラスの定義
+	CVelocity m_move;					// 移動クラス
+	float m_fShadowSize;				// 影の大きさ
+	float m_fDecAlv;					// アルファ値の減少スピード
+	int m_nLife;						// 寿命
+	int m_nMaxLife;						// 最大のHP
 };
 
+//***************************************************
+// 瓦礫のマネージャークラスの定義
+//***************************************************
+class CRubbleManager
+{
+public:
+	CRubbleManager();
+	~CRubbleManager();
+	static void SetImpact(const D3DXVECTOR3 pos, const int nLife, const int nNum, const D3DXVECTOR2 move);
+	static void SetExplosionTNT(const D3DXVECTOR3 pos, const int nLife, const int nNum, const D3DXVECTOR2 move);
+private:
+};
 #endif
 

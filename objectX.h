@@ -41,16 +41,17 @@ public:
 	void Draw(const float Diffuse); // ìßñæìxÇïœçXÇ≈Ç´ÇÈï`âÊèàóù
 	void DrawShadow(void);
 	void SetUpMatrix(const D3DXVECTOR3 Scal = D3DXVECTOR3(1.0f,1.0f,1.0f));
+	void SetUpMatrix(const D3DXMATRIX mtxRot, const D3DXMATRIX mtxTrans,const D3DXVECTOR3 Scal = D3DXVECTOR3(1.0f, 1.0f, 1.0f));
 	void SetUpDraw(void);
 	void SetTextureMT(const char* pTextureName);
 
 	HRESULT LoadModel(const char* pXFileName);
 	void SetPosition(const D3DXVECTOR3 pos) { m_pos = pos; }
+	CRotation* GetRotation(void) { return m_pRot; }
 
 	D3DXMATRIX GetMatrix(void) const { return m_mtxWorld; }
 	D3DXVECTOR3 GetSize(void);
 	D3DXVECTOR3 GetPosition(void) const { return m_pos; }
-	CRotation* GetRotaition(void) const { return m_pRot; }
 
 private:
 	D3DXVECTOR3 m_pos;		// à íu
