@@ -438,7 +438,10 @@ bool CMeshField::Collision(const D3DXVECTOR3 pos,float *pOutHeight)
 			// プレイヤーがポリゴンの裏側かどうかの判定
 			float dot = D3DXVec3Dot(&Normal, &vec); // 法線とプレイヤー方向との内積
 
-			*pOutHeight = field.y + PosY;
+			if (pOutHeight != nullptr)
+			{
+				*pOutHeight = field.y + PosY;
+			}
 
 			if (dot >= 0.0f)
 			{

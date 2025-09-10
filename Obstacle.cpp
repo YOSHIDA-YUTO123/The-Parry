@@ -20,6 +20,7 @@
 #include "game.h"
 #include"tutorial.h"
 #include"transform.h"
+#include"shadowS.h"
 
 using namespace Const;							// 名前空間Constを使用する
 using namespace std;							// 名前空間stdを使用する
@@ -309,14 +310,18 @@ bool CSpikeTrap::Collision(CColliderAABB *pCollider, D3DXVECTOR3* pushPos)
 //==============================================
 CTNTBarrel::CTNTBarrel() : CObstacle(TYPE_TNT_BARREL)
 {
-	m_fDirDest = NULL;
-	m_fDir = NULL;
+	m_StopPos = VEC3_NULL;
+	m_ShadowSize = VEC3_NULL;
+	m_pShadow = nullptr;
+	m_nShakeTime = NULL;
+	m_bLanding = false;
 	D3DXQuaternionIdentity(&m_quat);
 	D3DXMatrixIdentity(&m_mtxRot);
 	m_axis = VEC3_NULL;
 	m_fDestValueRot = NULL;
 	m_fValueRot = NULL;
 	m_fCircumference = NULL;
+	m_bFirstLanding = false;
 }
 
 //==============================================
@@ -338,6 +343,12 @@ CTNTBarrel* CTNTBarrel::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 DestPos)
 
 	if (pObstacle == nullptr) return nullptr;
 
+	// オブジェクト
+	pObstacle->SetPosition(pos);
+
+	// 目的の位置
+	pObstacle->m_DestPos = DestPos;
+
 	// 初期化に失敗したら
 	if (FAILED(pObstacle->Init()))
 	{
@@ -348,15 +359,12 @@ CTNTBarrel* CTNTBarrel::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 DestPos)
 		return nullptr;
 	}
 
-	// オブジェクト
-	pObstacle->SetPosition(pos);
-
 	// 方向ベクトルを求める
 	float dir = GetTargetAngle(DestPos, pos);
 
 	// 移動方向を設定
-	pObstacle->m_fDirDest = dir;
 	pObstacle->GetRotation()->Set(D3DXVECTOR3(0.0f, dir, 0.0f));
+	pObstacle->GetRotation()->SetDest(D3DXVECTOR3(0.0f, dir, 0.0f));
 
 	return pObstacle;
 }
@@ -370,7 +378,7 @@ HRESULT CTNTBarrel::Init(void)
 	if (FAILED(CObstacle::Init()))
 	{
 		// 終了処理
-		CObstacle::Release();
+		Uninit();
 
 		return E_FAIL;
 	}
@@ -390,7 +398,14 @@ HRESULT CTNTBarrel::Init(void)
 	// 円周を求める
 	m_fCircumference = D3DX_PI * 2.0f * fRadius;
 
-	m_fValueRot = 0.057f;
+	// 位置の取得
+	D3DXVECTOR3 pos = CObjectX::GetPosition();
+
+	m_ShadowSize = D3DXVECTOR3(7.0f, 1.0f, 7.0f);
+	m_pShadow = CShadowS::Create(pos, &m_ShadowSize);
+
+	// 目的の位置の中間の位置を求める
+	m_StopPos = pos + (m_DestPos - pos) * 0.5f;
 
 	return S_OK;
 }
@@ -400,6 +415,13 @@ HRESULT CTNTBarrel::Init(void)
 //==============================================
 void CTNTBarrel::Uninit(void)
 {
+	// 影の破棄
+	if (m_pShadow != nullptr)
+	{
+		m_pShadow->Uninit();
+		m_pShadow = nullptr;
+	}
+
 	// 終了処理
 	CObstacle::Uninit();
 }
@@ -412,13 +434,19 @@ void CTNTBarrel::Update(void)
 	// 更新処理
 	CObstacle::Update();
 
-	// 回転量の減衰
+	//// 回転量の減衰
 	m_fValueRot += (0.0f - m_fValueRot) * 0.1f;
-
-	m_fValueRot = 0.057f;
 
 	// 位置の取得
 	D3DXVECTOR3 pos = CObstacle::GetPosition();
+
+	if (m_pShadow != nullptr)
+	{
+		m_pShadow->SetPosition(pos);
+	}
+
+	// 着地したときの揺れ
+	LandingShake(pos);
 
 	// 移動クラスの取得
 	CVelocity* pMove = CObstacle::GetMove();
@@ -428,25 +456,27 @@ void CTNTBarrel::Update(void)
 		// 移動量の取得
 		D3DXVECTOR3 moveWk = pMove->Get();
 
-		// 円周から移動量を求める
-		float fMove = (m_fValueRot / TWO_PI) * m_fCircumference;
+		D3DXVECTOR3 dir = GetVector(m_StopPos, pos);
+
+		moveWk.x = dir.x * 4.0f;
+		moveWk.z = dir.z * 4.0f;
+
+		D3DXVECTOR3 moveValue = moveWk;
+		moveValue.y = 0.0f;
+		
+		float fMoveValue = D3DXVec3Length(&moveValue);
+
+		m_fValueRot = (fMoveValue / m_fCircumference) * TWO_PI;
 
 		// 移動量の設定
-		moveWk.x = sinf(m_fDir) * fMove;
-		moveWk.z = cosf(m_fDir) * fMove;
-
-		// 移動量の設定
-		pMove->Set(moveWk);
+		pMove->Set(moveWk);	
 	}
 
 	// クォータニオンの設定処理
 	SetQuaternion();
 
-	// 方向の正規化
-	NormalizeDiffRot(m_fDirDest - m_fDir, &m_fDir);
-
 	// 目的の角度に近づける
-	m_fDir += (m_fDirDest - m_fDir) * 0.99f;
+	CObjectX::GetRotation()->SetSmoothAngle(0.1f);
 }
 
 //==============================================
@@ -551,5 +581,70 @@ void CTNTBarrel::SetQuaternion(void)
 
 		// クォータニオンから回転マトリックスを作成
 		D3DXMatrixRotationQuaternion(&m_mtxRot, &quatNew);
+	}
+}
+
+//==============================================
+// 着地したときの処理
+//==============================================
+void CTNTBarrel::LandingShake(const D3DXVECTOR3 pos)
+{
+	// フィールドの取得
+	CMeshField* pMeshField = CGame::GetField();
+
+	if (pMeshField != nullptr)
+	{
+		float fHeight = 0.0f;
+
+		// 地面の着地していたら
+		if (pMeshField->Collision(pos, &fHeight))
+		{
+			// 着地したら
+			if (!m_bLanding)
+			{
+				// 揺れる時間
+				m_nShakeTime = 30;
+
+				// 着地した
+				m_bLanding = true;
+			}
+		}
+	}
+
+	if (m_nShakeTime > 0 && m_bLanding)
+	{
+		// 最初の着地が終わってたら処理しない
+		if (m_bFirstLanding) return;
+
+		// 揺れの時間を減らす
+		m_nShakeTime--;
+
+		// 現在の向きの取得
+		D3DXVECTOR3 rot = CObjectX::GetRotation()->GetDest();
+
+		float fCounter = static_cast<float>(m_nShakeTime) * 0.1f;
+
+		float sin = sinf(fCounter);
+		rot.z = sin * 0.5f;
+
+		// 向きの設定
+		CObjectX::GetRotation()->Set(rot);
+		CObjectX::GetRotation()->SetDest(rot);
+
+		if (m_nShakeTime <= 0)
+		{
+			m_bFirstLanding = true;
+		}
+	}
+	else
+	{
+		// 向きの取得
+		D3DXVECTOR3 rot = CObjectX::GetRotation()->GetDest();
+
+		// 向きのリセット
+		rot.z = 0.0f;
+
+		// 向きの設定
+		CObjectX::GetRotation()->SetDest(rot);
 	}
 }

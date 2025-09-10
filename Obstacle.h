@@ -24,6 +24,7 @@ class CVelocity;
 class CCollision;
 class CCollisionAABB;
 class CColliderAABB;
+class CShadowS;
 
 //**********************************************
 // 障害物のクラスの定義
@@ -99,14 +100,21 @@ public:
 	bool Collision(CColliderAABB* pCollider, D3DXVECTOR3* pushPos) override;
 private:
 	void SetQuaternion(void); // クォータニオンの設定処理
-	D3DXQUATERNION m_quat;	 // クォータニオン
-	D3DXMATRIX m_mtxRot;	 // 回転行列
-	D3DXVECTOR3 m_axis;		 // 回転軸
-	float m_fDirDest;		 // 目的の移動方向
-	float m_fDir;			 // 移動方向
-	float m_fCircumference;  // 半径
-	float m_fDestValueRot;	 // 目的の回転量
-	float m_fValueRot;		 // 回転量
+	void LandingShake(const D3DXVECTOR3 pos);		  // 着地した時の処理
+
+	CShadowS* m_pShadow;		// 影クラスへのポインタ
+	D3DXQUATERNION m_quat;		// クォータニオン
+	D3DXMATRIX m_mtxRot;		// 回転行列
+	D3DXVECTOR3 m_ShadowSize;	// 影の大きさ
+	D3DXVECTOR3 m_axis;			// 回転軸
+	D3DXVECTOR3 m_DestPos;		// 目的の位置
+	D3DXVECTOR3 m_StopPos;		// 停止する位置
+	float m_fCircumference;		// 半径
+	float m_fDestValueRot;		// 目的の回転量
+	float m_fValueRot;			// 回転量
+	int m_nShakeTime;			// 着地してから揺れる時間
+	bool m_bLanding;			// 着地したかどうか
+	bool m_bFirstLanding;		// 最初の着地をしたかどうか
 };
 
 #endif

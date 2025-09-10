@@ -12,13 +12,15 @@
 #include "Obstacle.h"
 #include <string>
 #include <fstream>
+#include "player.h"
+#include "game.h"
 
 using namespace std; // 名前空間stdを使用
 
 //**********************************************
 // 定数宣言
 //**********************************************
-constexpr int POP_TIME = 600; // ポップする時間
+constexpr int POP_TIME = 1200; // ポップする時間
 
 //**********************************************
 // 静的メンバ変数宣言
@@ -133,7 +135,11 @@ void CObstacleManager::Create(void)
 	// 障害物マネージャーの生成
 	m_pManager = new CObstacleManager;
 
+	// ポイントの設定
 	m_pManager->m_Point[0] = D3DXVECTOR3(-713.0f,286.0f,1613.0f);
+	m_pManager->m_Point[1] = D3DXVECTOR3(656.0f, 286.0f, 1574.0f);
+	m_pManager->m_Point[2] = D3DXVECTOR3(795.0f, 286.0f, -1412.0f);
+	m_pManager->m_Point[3] = D3DXVECTOR3(-685.0f, 286.0f, -1507.0f);
 }
 
 //==============================================
@@ -181,6 +187,17 @@ void CObstacleManager::Update(void)
 
 		// 位置の取得
 		D3DXVECTOR3 pos = m_Point[nID];
+
+		// プレイヤーの取得
+		CPlayer* pPlayer = CGame::GetPlayer();
+
+		if (pPlayer == nullptr) return;
+
+		// プレイヤーの位置の取得
+		D3DXVECTOR3 playerPos = pPlayer->GetPosition();
+
+		// 爆発樽の生成
+		CTNTBarrel::Create(pos, playerPos);
 	}
 }
 

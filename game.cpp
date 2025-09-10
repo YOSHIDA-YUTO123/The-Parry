@@ -183,6 +183,14 @@ void CGame::Update(void)
 		pGameManager->Update();
 	}
 
+	// 障害物マネージャーのインスタンスの取得
+	CObstacleManager* pObstacleManager = CObstacleManager::GetInstance();
+
+	if (pObstacleManager != nullptr)
+	{
+		// 更新処理
+		pObstacleManager->Update();
+	}
 	// カメラの更新
 	if (m_pCamera != nullptr)
 	{

@@ -14,143 +14,142 @@ NUM_MODEL = 16
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/MODEL/enemy000/00_waist.x	# [0]腰
-MODEL_FILENAME = data/MODEL/enemy000/01_chest.x	# [1]胸
-MODEL_FILENAME = data/MODEL/enemy000/02_head.x	# [2]頭
-MODEL_FILENAME = data/MODEL/enemy000/03_armUR.x	# [3]右上腕
-MODEL_FILENAME = data/MODEL/enemy000/04_armFR.x	# [4]右前腕
-MODEL_FILENAME = data/MODEL/enemy000/05_handR.x	# [5]右手
-MODEL_FILENAME = data/MODEL/enemy000/06_armUL.x	# [6]左上腕
-MODEL_FILENAME = data/MODEL/enemy000/07_armFL.x	# [7]左前腕
-MODEL_FILENAME = data/MODEL/enemy000/08_handL.x	# [8]左手
-MODEL_FILENAME = data/MODEL/enemy000/09_legUR.x	# [9]右腿
-MODEL_FILENAME = data/MODEL/enemy000/10_legDR.x	# [10]右脛
-MODEL_FILENAME = data/MODEL/enemy000/11_footR.x	# [11]右足
-MODEL_FILENAME = data/MODEL/enemy000/12_legUL.x	# [12]左腿
-MODEL_FILENAME = data/MODEL/enemy000/13_legDL.x	# [13]左脛
-MODEL_FILENAME = data/MODEL/enemy000/14_footL.x	# [14]左足
-MODEL_FILENAME = data/MODEL/enemy000/15_wepon.x	# [15]武器
+MODEL_FILENAME = data/MODEL/enemy001/00_waist.x	# [0]腰
+MODEL_FILENAME = data/MODEL/enemy001/01_chest.x	# [1]胸
+MODEL_FILENAME = data/MODEL/enemy001/02_head.x	# [2]頭
+MODEL_FILENAME = data/MODEL/enemy001/03_armUR.x	# [3]右上腕
+MODEL_FILENAME = data/MODEL/enemy001/04_armFR.x	# [4]右前腕
+MODEL_FILENAME = data/MODEL/enemy001/05_handR.x	# [5]右手
+MODEL_FILENAME = data/MODEL/enemy001/06_armUL.x	# [6]左上腕
+MODEL_FILENAME = data/MODEL/enemy001/07_armFL.x	# [7]左前腕
+MODEL_FILENAME = data/MODEL/enemy001/08_handL.x	# [8]左手
+MODEL_FILENAME = data/MODEL/enemy001/09_legUR.x	# [9]右腿
+MODEL_FILENAME = data/MODEL/enemy001/10_legDR.x	# [10]右脛
+MODEL_FILENAME = data/MODEL/enemy001/11_footR.x	# [11]右足
+MODEL_FILENAME = data/MODEL/enemy001/12_legUL.x	# [12]左腿
+MODEL_FILENAME = data/MODEL/enemy001/13_legDL.x	# [13]左脛
+MODEL_FILENAME = data/MODEL/enemy001/14_footL.x	# [14]左足
+MODEL_FILENAME = data/MODEL/enemy001/15_wepon.x	# [15]武器
 
 #--------------------------------------------------------
 # キャラクター情報
 #--------------------------------------------------------
 CHARACTERSET
 	NUM_PARTS = 16		# パーツの総数
-	MOVE = 2.00		# 移動量
+	MOVE = 3.00		# 移動量
 	JUMP = 15.48		# ジャンプ量
 
 	PARTSSET
 		INDEX = 0					# 
 		PARENT = -1					# 親モデル()
-		POS = -0.00 229.17 0.00		# 位置
+		POS = -0.00 239.17 0.00		# 位置
 		ROT = 0.00 0.00 0.00		# 向き
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 1					# 
 		PARENT = 0					# 親モデル()
-		POS = 3.50 0.00 0.00		# 位置
+		POS = 0.00 -18.00 0.00		# 位置
 		ROT = 0.00 0.00 0.00		# 向き
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 2					# 
 		PARENT = 1					# 親モデル()
-		POS = 0.27 81.39 1.14		# 位置
+		POS = 0.27 94.39 1.14		# 位置
 		ROT = 0.00 0.00 0.00		# 向き
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 3					# 
 		PARENT = 1					# 親モデル()
-		POS = -66.41 64.50 0.00		# 位置
+		POS = -53.41 69.50 0.00		# 位置
 		ROT = 0.00 0.00 0.00		# 向き
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 4					# 
 		PARENT = 3					# 親モデル()
-		POS = -70.99 0.89 0.00		# 位置
+		POS = -63.99 7.89 -1.00		# 位置
 		ROT = 0.00 0.00 0.00		# 向き
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 5					# 
 		PARENT = 4					# 親モデル()
-		POS = -68.05 0.00 0.00		# 位置
+		POS = -84.05 -1.00 0.00		# 位置
 		ROT = 0.00 0.00 0.00		# 向き
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 6					# 
 		PARENT = 1					# 親モデル()
-		POS = 64.41 61.50 0.00		# 位置
+		POS = 58.41 77.50 0.00		# 位置
 		ROT = 0.00 0.00 0.00		# 向き
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 7					# 
 		PARENT = 6					# 親モデル()
-		POS = 70.58 0.80 0.00		# 位置
+		POS = 63.58 0.00 1.00		# 位置
 		ROT = 0.00 0.00 0.00		# 向き
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 8					# 
 		PARENT = 7					# 親モデル()
-		POS = 71.25 0.00 0.00		# 位置
+		POS = 82.25 0.00 0.00		# 位置
 		ROT = 0.00 0.00 0.00		# 向き
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 9					# 
 		PARENT = 0					# 親モデル()
-		POS = -23.30 -61.61 2.00		# 位置
+		POS = -21.30 -45.61 -5.00		# 位置
 		ROT = 0.00 0.00 0.00		# 向き
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 10					# 
 		PARENT = 9					# 親モデル()
-		POS = 0.00 -69.00 0.00		# 位置
+		POS = -1.00 -78.00 0.00		# 位置
 		ROT = 0.00 0.00 0.00		# 向き
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 11					# 
 		PARENT = 10					# 親モデル()
-		POS = 0.00 -81.00 -0.69		# 位置
+		POS = 0.00 -94.00 -0.69		# 位置
 		ROT = 0.00 0.00 0.00		# 向き
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 12					# 
 		PARENT = 0					# 親モデル()
-		POS = 20.30 -61.61 0.00		# 位置
+		POS = 24.30 -45.61 -2.00		# 位置
 		ROT = 0.00 0.00 0.00		# 向き
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 13					# 
 		PARENT = 12					# 親モデル()
-		POS = 0.00 -69.00 0.00		# 位置
+		POS = -1.00 -78.00 0.00		# 位置
 		ROT = 0.00 0.00 0.00		# 向き
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 14					# 
 		PARENT = 13					# 親モデル()
-		POS = 0.00 -81.00 -0.69		# 位置
+		POS = 0.00 -94.00 -0.69		# 位置
 		ROT = 0.00 0.00 0.00		# 向き
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 15					# 
 		PARENT = 5					# 親モデル()
-		POS = -11.91 0.00 0.69		# 位置
+		POS = -17.91 2.00 0.69		# 位置
 		ROT = 0.00 0.00 0.00		# 向き
 	END_PARTSSET
-
 END_CHARACTERSET
 
 +=================================================================+
@@ -2374,7 +2373,7 @@ MOTIONSET
 	KEYSET				# --- << KEY : 7 / 10 >> --- 
 		FRAME = 46
 		KEY # ----- [ 0 ] -----
-			POS = 0.00 -204.00 0.00
+			POS = 0.00 -230.00 0.00
 			ROT = 1.50 0.00 0.00
 		END_KEY
 
@@ -2457,7 +2456,7 @@ MOTIONSET
 	KEYSET				# --- << KEY : 8 / 10 >> --- 
 		FRAME = 30
 		KEY # ----- [ 0 ] -----
-			POS = 0.00 -204.00 0.00
+			POS = 0.00 -230.00 0.00
 			ROT = 1.50 0.00 0.00
 		END_KEY
 
@@ -8533,7 +8532,7 @@ MOTIONSET
 	KEYSET				# --- << KEY : 14 / 18 >> --- 
 		FRAME = 15
 		KEY # ----- [ 0 ] -----
-			POS = 0.00 -197.00 0.00
+			POS = 0.00 -230.00 0.00
 			ROT = 1.49 1.35 1.00
 		END_KEY
 
@@ -8699,7 +8698,7 @@ MOTIONSET
 	KEYSET				# --- << KEY : 16 / 18 >> --- 
 		FRAME = 95
 		KEY # ----- [ 0 ] -----
-			POS = 0.00 -197.00 0.00
+			POS = 0.00 -230.00 0.00
 			ROT = 1.49 1.35 1.00
 		END_KEY
 
@@ -8782,7 +8781,7 @@ MOTIONSET
 	KEYSET				# --- << KEY : 17 / 18 >> --- 
 		FRAME = 10
 		KEY # ----- [ 0 ] -----
-			POS = 0.00 -197.00 0.00
+			POS = 0.00 -230.00 0.00
 			ROT = 1.49 1.35 1.00
 		END_KEY
 
@@ -8873,7 +8872,7 @@ MOTIONSET
 	KEYSET				# --- << KEY : 0 / 2 >> --- 
 		FRAME = 40
 		KEY # ----- [ 0 ] -----
-			POS = 0.00 -197.00 0.00
+			POS = 0.00 -230.00 0.00
 			ROT = 1.49 1.35 1.00
 		END_KEY
 
@@ -8956,7 +8955,7 @@ MOTIONSET
 	KEYSET				# --- << KEY : 1 / 2 >> --- 
 		FRAME = 40
 		KEY # ----- [ 0 ] -----
-			POS = 0.00 -197.00 0.00
+			POS = 0.00 -230.00 0.00
 			ROT = 1.49 1.35 1.00
 		END_KEY
 

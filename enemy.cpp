@@ -472,6 +472,9 @@ void CEnemy::Update(void)
 
 	if (CCharacter3D::GetAlive() == false && pMotion->GetBlendType() != MOTIONTYPE_DEATH && pMotion->GetBlendType() != MOTIONTYPE_DOWN)
 	{
+		// ó‘Ô‚ğ’Ç]‚É‚·‚é
+		pCamera->SetState(CGameCamera::STATE_TRACKING);
+
 		// “G‚ğ’Ç]‚·‚é
 		pCamera->SetTracking(CGameCamera::TRACKOBJ_ENEMY);
 
@@ -1407,8 +1410,8 @@ bool CEnemy::SetTNTEffect(CObstacle* pObstacle)
 	// ó‘Ô‚ªUŒ‚‚¶‚á‚È‚¢‚È‚çˆ—‚µ‚È‚¢
 	if (STATE != STATE_ACTION)
 	{
-		// ó‘Ô‚Ì•ÏX
-		ChangeState(make_shared<CEnemySwing>());
+		//// ó‘Ô‚Ì•ÏX
+		//ChangeState(make_shared<CEnemySwing>());
 
 		return false;
 	}

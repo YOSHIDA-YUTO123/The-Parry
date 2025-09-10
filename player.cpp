@@ -610,7 +610,7 @@ void CPlayer::Update(void)
 
 	if (pKeyboard->GetTrigger(DIK_O))
 	{
-		CTNTBarrel::Create(D3DXVECTOR3(-713.0f, 286.0f, 1613.0f),VEC3_NULL);
+		CTNTBarrel::Create(D3DXVECTOR3(-713.0f, 286.0f, 1613.0f),pos);
 		CTNTBarrel::Create(D3DXVECTOR3(656.0f, 286.0f, 1574.0f), VEC3_NULL);
 		CTNTBarrel::Create(D3DXVECTOR3(795.0f, 286.0f, -1412.0f), VEC3_NULL);
 		CTNTBarrel::Create(D3DXVECTOR3(-685.0f, 286.0f, -1507.0f), VEC3_NULL);
