@@ -153,10 +153,13 @@
   <ItemGroup>
     <ClCompile Include="background.cpp" />
     <ClCompile Include="billboard.cpp" />
+    <ClCompile Include="bird.cpp" />
+    <ClCompile Include="BirdState.cpp" />
     <ClCompile Include="block.cpp" />
     <ClCompile Include="BlockManager.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="billboardAnim.cpp" />
+    <ClCompile Include="CharacterManager.cpp" />
     <ClCompile Include="character2D.cpp" />
     <ClCompile Include="character3D.cpp" />
     <ClCompile Include="Collider.cpp" />
@@ -253,10 +256,13 @@
   <ItemGroup>
     <ClInclude Include="background.h" />
     <ClInclude Include="billboard.h" />
+    <ClInclude Include="bird.h" />
+    <ClInclude Include="BirdState.h" />
     <ClInclude Include="block.h" />
     <ClInclude Include="BlockManager.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="billboardAnim.h" />
+    <ClInclude Include="CharacterManager.h" />
     <ClInclude Include="character2D.h" />
     <ClInclude Include="character3D.h" />
     <ClInclude Include="Collider.h" />

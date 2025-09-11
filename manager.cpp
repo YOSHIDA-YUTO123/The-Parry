@@ -30,6 +30,7 @@
 #include "fade.h"
 #include "pause.h"
 #include "BlockManager.h"
+#include "CharacterManager.h"
 
 using namespace Const;			// 名前空間Constを使用する
 using namespace std;			// 名前空間stdを使用する
@@ -110,6 +111,9 @@ HRESULT CManager::Init(HINSTANCE hInstance,HWND hWnd, BOOL bWindow)
 
 	// ブロックのマネージャーの生成
 	CBlockManager::Create();
+
+	// キャラクターマネージャーの生成
+	CCharacterManager::Create();
 
 	// テクスチャの生成
 	m_pTexture = new CTextureManager;

@@ -86,6 +86,18 @@ unique_ptr<CMotion> CMotion::Load(const char* pLoadFileName, vector<CModel*>& pM
 }
 
 //===================================================
+// モーションの情報の取得
+//===================================================
+void CMotion::GetInfo(CMotion* pMotion)
+{
+	pMotion->m_aInfo = m_aInfo;
+
+	pMotion->m_pLoader = new CMotionLoader;
+
+	m_pLoader->GetInfo(pMotion->m_pLoader);
+}
+
+//===================================================
 // イベントフレームの判定
 //===================================================
 bool CMotion::IsEventFrame(const int nStartFrame, const int nEndFrame,const int nType)
@@ -655,6 +667,16 @@ CMotionLoader::~CMotionLoader()
 }
 
 //===================================================
+// モーションのローダーの取得
+//===================================================
+void CMotionLoader::GetInfo(CMotionLoader* pLoader)
+{
+	pLoader->m_aInfo = m_aInfo;
+	pLoader->m_nNumModel = m_nNumModel;
+	pLoader->m_nNumMotion = m_nNumMotion;
+}
+
+//===================================================
 // テキストファイルのロード処理
 //===================================================
 CLoderText* CLoderText::LoadTextFile(const char* pFileName, vector<CMotion::Info>& Info, std::vector<CModel*>& pModel, int* OutNumModel,const int nNumMotion)
@@ -811,11 +833,11 @@ bool CLoderText::LoadCharacterSet(std::vector<CModel*>& pModel, string line, str
 		if (nParent != -1)
 		{// 親が存在していたら
 			// 親のモデルの設定
-			pModel[nIdx]->SetParent(pModel[nParent]);
+			pModel[nIdx]->SetParent(pModel[nParent],nParent);
 		}
 		else
 		{// 親が存在していなかったら
-			pModel[nIdx]->SetParent(nullptr);
+			pModel[nIdx]->SetParent(nullptr,-1);
 		}
 	}
 

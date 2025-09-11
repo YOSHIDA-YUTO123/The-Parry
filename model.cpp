@@ -38,6 +38,7 @@ CModel::CModel()
 	m_pTextureIdx = nullptr;
 	m_Size = VEC3_NULL;
 	m_nTextureMTIdx = -1;
+	m_nParentIdx = -1;
 }
 
 //===================================================
@@ -68,6 +69,9 @@ HRESULT CModel::Init(const char* pModelName)
 	{
 		return E_FAIL;
 	}
+
+	// モデルの名前の設定
+	m_aModelName = pModelName;
 
 	// マテリアルの取得
 	DWORD dwNumMat = pModel->GetNumMat(m_nModelIdx);
@@ -402,6 +406,24 @@ void CModel::SetTextureMT(const char* pTextureName)
 
 	// IDの取得
 	m_nTextureMTIdx = pTexture->Register(pTextureName);
+}
+
+//===================================================
+// 親の設定
+//===================================================
+void CModel::SetParent(CModel* pModel, const int nIdx)
+{
+	m_pParent = pModel;
+	m_nParentIdx = nIdx;
+}
+
+//===================================================
+// 情報のコピー
+//===================================================
+void CModel::Copy(CModel* pModel)
+{
+	pModel->m_offpos = m_offpos;	// 基準の位置
+	pModel->m_offrot = m_offrot;	// 基準の向き
 }
 
 //===================================================

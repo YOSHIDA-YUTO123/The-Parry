@@ -51,10 +51,12 @@ public:
 		TYPE_PLAYER,
 		TYPE_ENEMY,
 		TYPE_TRAININGENEMY,
+		TYPE_BIRD,
 		TYPE_MAX
 	}TYPE;
 
 	CCharacter3D();
+	CCharacter3D(const TYPE type);
 	~CCharacter3D();
 
 	virtual HRESULT Init(void) override;
@@ -63,7 +65,8 @@ public:
 	virtual void Draw(void) override;
 	void DrawMT(void);
 	
-	void LoadMotion(const char *pFileName, const int nNumMotion);
+	TYPE GetType(void) const { return m_type; }
+	CMotion* LoadMotion(const char *pFileName, const int nNumMotion);
 
 	// ゲッター
 	D3DXVECTOR3 GetPosition(void) const { return m_pos; }
@@ -82,6 +85,7 @@ public:
 	void SetPosition(const D3DXVECTOR3 pos) { m_pos = pos; }
 	void SetCharacter(const int nLife, const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size);
 	void SetModelMT(const char* pTextureName);
+	void Copy(CCharacter3D* pCharacter);
 
 	bool GetAlive(void);		// 生きているか
 
@@ -91,12 +95,18 @@ public:
 	bool HitStop(void);			// ヒットストップしてるかどうか
 	void SetHitStop(const int nTime) { m_nHitStopTime = nTime; } // ヒットストップの設定
 	void UpdateMotion(void);
+
+protected:
+	void CreateMotion(void);
 private:
+
 	std::unique_ptr<CMotion> m_pMotion;		// モーションのクラスへのポインタ
 	std::vector<CModel*> m_apModel;			// モデルクラスのポインタ
+	
 	CShadowS* m_pShadowS;					// 影(ステンシル)
 	CRotation* m_pRot;						// 向きクラスへのポインタ
 	STATE m_state;							// 状態
+	TYPE m_type;							// 種類
 	D3DXVECTOR3 m_pos;						// 位置
 	D3DXVECTOR3 m_ShadowScal;				// 影の大きさ
 	D3DXVECTOR3 m_Size;						// 大きさ
@@ -107,5 +117,4 @@ private:
 	int m_nLife;							// 寿命
 	int m_nHitStopTime;						// ヒットストップの時間
 };
-
 #endif

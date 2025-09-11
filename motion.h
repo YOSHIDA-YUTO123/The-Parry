@@ -85,6 +85,9 @@ public:
 	~CMotion();
 
 	static std::unique_ptr<CMotion> Load(const char* pLoadFileName, std::vector<CModel*> &pModel, int* pOutModel, const int nNumMotion, LOAD type);
+
+	void GetInfo(CMotion* pMotion);
+
 	void Uninit(void);
 	void Update(CModel** pModel, const int nNumModel);
 	void SetMotion(const int motiontype, bool bBlend, const int nBlendFrame,const int nBlendType = 0);
@@ -150,6 +153,7 @@ public:
 	int GetNumModel(void) const { return m_nNumModel; }
 	int GetNumMotion(void) const { return m_nNumMotion; }
 
+	void GetInfo(CMotionLoader *pLoader);
 protected:
 	std::vector<CMotion::Info> m_aInfo;  // ÉÇÅ[ÉVÉáÉìÇÃèÓïÒ
 private:

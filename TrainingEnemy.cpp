@@ -33,7 +33,7 @@ using namespace math; // 名前空間mathを使用
 //================================================
 // コンストラクタ
 //================================================
-CTrainingEnemy::CTrainingEnemy()
+CTrainingEnemy::CTrainingEnemy() : CCharacter3D(TYPE_TRAININGENEMY)
 {
 	m_pOrbit = nullptr;
 	m_pCapsule = nullptr;

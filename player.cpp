@@ -46,7 +46,7 @@
 #include "tutorial.h"
 #include "BlockManager.h"
 #include "ParryEffect.h"
-
+#include "bird.h"
 
 using namespace math; // 名前空間mathを使用
 using namespace std;  // 名前空間をstdを使用する
@@ -66,7 +66,7 @@ constexpr float AVOID_STAMINA = 15.0f;		// 回避に使用するスタミナ
 //===================================================
 // コンストラクタ
 //===================================================
-CPlayer::CPlayer()
+CPlayer::CPlayer() : CCharacter3D(TYPE_PLAYER)
 {
 	m_fRevengeValue = NULL;
 	m_pMachine = nullptr;				// ステートマシーン
@@ -406,20 +406,20 @@ void CPlayer::Update(void)
 		pCamera->SetState(state);
 	}
 
-	//// ジャンプできるなら
-	//if ((pKeyboard->GetTrigger(DIK_SPACE) == true || pJoypad->GetTrigger(pJoypad->JOYKEY_A) == true) && m_bJump == true)
-	//{
-	//	// 生きてるなら
-	//	if (bAlive)
-	//	{
-	//		// ジャンプ状態に移行する
-	//		ChangeState(make_shared<CPlayerJump>());
+	// ジャンプできるなら
+	if ((pKeyboard->GetTrigger(DIK_SPACE) == true || pJoypad->GetTrigger(pJoypad->JOYKEY_A) == true) && m_bJump == true)
+	{
+		// 生きてるなら
+		if (bAlive)
+		{
+			// ジャンプ状態に移行する
+			ChangeState(make_shared<CPlayerJump>());
 
-	//		// 移動量を上方向に設定
-	//		m_pMove->Jump(JUMP_HEIGHT);
-	//		m_bJump = false;
-	//	}
-	//}
+			// 移動量を上方向に設定
+			m_pMove->Jump(JUMP_HEIGHT);
+			m_bJump = false;
+		}
+	}
 
 	// 回避ボタンを押したかつ生きているなら
 	if ((pKeyboard->GetTrigger(DIK_SPACE) || pJoypad->GetTrigger(pJoypad->JOYKEY_B)) && bAlive)
@@ -608,6 +608,10 @@ void CPlayer::Update(void)
 		m_fRevengeValue += 1.0f;
 	}
 
+	if (pKeyboard->GetTrigger(DIK_B))
+	{
+		CBird::Create(D3DXVECTOR3(static_cast<float>(rand()%2000 - 1000.0f),0.0f, static_cast<float>(rand() % 2000 - 1000.0f)));
+	}
 	if (pKeyboard->GetTrigger(DIK_O))
 	{
 		CTNTBarrel::Create(D3DXVECTOR3(-713.0f, 286.0f, 1613.0f),pos);

@@ -34,6 +34,7 @@
 #include"LoadManager.h"
 #include "Object3DAnim.h"
 #include "ParryEffect.h"
+#include "bird.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -487,6 +488,9 @@ void CGame::LoadCharacter(std::fstream& file, std::string line, CLoadManager* pL
 				break;
 			case CCharacter3D::TYPE_ENEMY:
 				EnemyConfig(nLife, fSpeed, ShadowScal, Size, pos, fAngle);
+				break;
+			case CCharacter3D::TYPE_BIRD:
+				CBird::Create(pos)->SetCharacter(nLife, fSpeed, ShadowScal, Size);
 				break;
 			default:
 				break;

@@ -396,6 +396,15 @@
     <ClCompile Include="ParryEffect.cpp">
       <Filter>ソース ファイル\object3D</Filter>
     </ClCompile>
+    <ClCompile Include="bird.cpp">
+      <Filter>ソース ファイル\model</Filter>
+    </ClCompile>
+    <ClCompile Include="BirdState.cpp">
+      <Filter>ソース ファイル\statemachine</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterManager.cpp">
+      <Filter>ソース ファイル\manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="testword.h">
@@ -676,6 +685,15 @@
     </ClInclude>
     <ClInclude Include="ParryEffect.h">
       <Filter>ヘッダー ファイル\object3D</Filter>
+    </ClInclude>
+    <ClInclude Include="bird.h">
+      <Filter>ヘッダー ファイル\model</Filter>
+    </ClInclude>
+    <ClInclude Include="BirdState.h">
+      <Filter>ヘッダー ファイル\statemachine</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterManager.h">
+      <Filter>ヘッダー ファイル\model</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -216,7 +216,7 @@ void CExplosionManager::Create(const CExplosion::TYPE type, const D3DXVECTOR2 mo
 		float fRandomSize = static_cast<float>(rand() % static_cast<int>(fSize)) + fSize * 0.5f;
 
 		// îöî≠ÇÃê∂ê¨
-		auto pExplosion = CExplosion::Create(pos, size, col, U, V, nAnimSpeed, type);
+		auto pExplosion = CExplosion::Create(pos, D3DXVECTOR2(fRandomSize, fRandomSize), col, U, V, nAnimSpeed, type);
 
 		if (pExplosion != nullptr)
 		{

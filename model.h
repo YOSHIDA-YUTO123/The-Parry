@@ -14,7 +14,8 @@
 //***************************************************
 // インクルードファイル
 //***************************************************
-#include"main.h"
+#include "main.h"
+#include <string>
 
 //***************************************************
 // モデルクラスの定義
@@ -46,8 +47,12 @@ public:
 	void SetOffPos(const D3DXVECTOR3 pos) { m_offpos = pos; }
 	void SetOffRot(const D3DXVECTOR3 rot) { m_offrot = rot; }
 
-	void SetParent(CModel* pModel) { m_pParent = pModel; }
+	void SetParent(CModel* pModel,const int nIdx);
 	D3DXMATRIX GetMatrixWorld(void) const { return m_mtxWorld; }
+
+	const char* GetModelName(void) { return m_aModelName.c_str(); }
+	void Copy(CModel* pModel); 
+	int GetParentID(void) const { return m_nParentIdx; }
 private:
 	D3DXVECTOR3 m_Size;			// 大きさ
 	D3DXVECTOR3 m_offpos;			// 基準の位置
@@ -56,6 +61,8 @@ private:
 	D3DXVECTOR3 m_rot;				// 向き
 	D3DXMATRIX m_mtxWorld;			// ワールドマトリックス
 	CModel* m_pParent;				// 親モデルへのポインタ
+	std::string m_aModelName;		// モデルの名前
+	int m_nParentIdx;				// 親のインデックス
 	int m_nModelIdx;				// モデルのインデックス
 	int m_nTextureMTIdx;			// マルチテクスチャのインデックス
 	int* m_pTextureIdx;				// テクスチャのインデックス

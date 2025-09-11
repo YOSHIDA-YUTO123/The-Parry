@@ -17,6 +17,7 @@
 #include"model.h"
 #include"motion.h"
 #include<string>
+#include "CharacterManager.h"
 
 using namespace math; // 名前空間mathを使用
 using namespace Const; // 名前空間Constを使用
@@ -41,6 +42,25 @@ CCharacter3D::CCharacter3D() : CObject(4)
 }
 
 //===================================================
+// コンストラクタ
+//===================================================
+CCharacter3D::CCharacter3D(const TYPE type) : CObject(4)
+{
+	m_type = type;
+	m_Size = VEC3_NULL;
+	m_nNumModel = NULL;
+	m_pMotion = nullptr;
+	m_pos = VEC3_NULL;
+	m_pRot = nullptr;
+	memset(m_mtxWorld, NULL, sizeof(m_mtxWorld));
+	m_nLife = NULL;
+	m_state = STATE::STATE_NORMAL;
+	m_fSpeed = NULL;
+	m_ShadowScal = D3DXVECTOR3(2.0f, 1.0f, 2.0f);
+	m_nHitStopTime = NULL;
+}
+
+//===================================================
 // デストラクタ
 //===================================================
 CCharacter3D::~CCharacter3D()
@@ -52,6 +72,12 @@ CCharacter3D::~CCharacter3D()
 //===================================================
 HRESULT CCharacter3D::Init(void)
 {
+	// キャラクターマネージャーの取得
+	auto pCharacterManager = CCharacterManager::GetInstance();
+
+	// キャラクターの追加
+	pCharacterManager->AddCharacter(this);
+
 	// 位置、向きの生成
 	m_pRot = new CRotation;
 
@@ -232,7 +258,7 @@ void CCharacter3D::DrawMT(void)
 //===================================================
 // モーションのロード
 //===================================================
-void CCharacter3D::LoadMotion(const char* pFileName,const int nNumMotion)
+CMotion* CCharacter3D::LoadMotion(const char* pFileName,const int nNumMotion)
 {
 	// 省略用
 	std::string string = "data/MOTION/";
@@ -242,6 +268,8 @@ void CCharacter3D::LoadMotion(const char* pFileName,const int nNumMotion)
 
 	// モーションのロード処理
 	m_pMotion = CMotion::Load(string.c_str(), m_apModel, &m_nNumModel, nNumMotion, CMotion::LOAD_TEXT);
+
+	return m_pMotion.get();
 }
 
 //===================================================
@@ -318,6 +346,48 @@ void CCharacter3D::SetModelMT(const char* pTextureName)
 }
 
 //===================================================
+// 情報のコピー
+//===================================================
+void CCharacter3D::Copy(CCharacter3D* pCharacter)
+{
+	pCharacter->m_nNumModel = m_nNumModel;
+
+	// モデルの要素分を調べる
+	for (int nCnt = 0;nCnt < m_nNumModel;nCnt++)
+	{
+		// nullだったら処理しない
+		if (m_apModel[nCnt] == nullptr) continue;
+
+		// モデルの名前の取得
+		const char* pModelName = m_apModel[nCnt]->GetModelName();
+
+		// モデルの生成
+		auto pModel = CModel::Create(pModelName);
+
+		// 親のインデックスの取得
+		int nParentIdx = m_apModel[nCnt]->GetParentID();
+
+		// 情報のコピー
+		m_apModel[nCnt]->Copy(pModel);
+
+		if (nParentIdx != -1)
+		{
+			// 親のモデルの設定
+			pModel->SetParent(pCharacter->m_apModel[nParentIdx], nParentIdx);
+		}
+		else
+		{
+			// 親のモデルの設定
+			pModel->SetParent(nullptr, nParentIdx);
+		}
+		// モデルの読み込み
+		pCharacter->m_apModel.push_back(pModel);
+	}
+
+	m_pMotion->GetInfo(pCharacter->m_pMotion.get());
+}
+
+//===================================================
 // キャラクターのヒット処理
 //===================================================
 bool CCharacter3D::Hit(int nDamage)
@@ -376,6 +446,15 @@ void CCharacter3D::UpdateMotion(void)
 		// モーションの更新処理
 		m_pMotion->Update(&m_apModel[0], m_nNumModel);
 	}
+}
+
+//===================================================
+// モーションの生成
+//===================================================
+void CCharacter3D::CreateMotion(void)
+{
+	// モーションの生成
+	m_pMotion = make_unique<CMotion>();
 }
 
 //===================================================

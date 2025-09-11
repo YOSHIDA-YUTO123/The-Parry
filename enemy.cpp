@@ -60,7 +60,7 @@ using namespace std;							// 名前空間stdを使用
 //===================================================
 // コンストラクタ
 //===================================================
-CEnemy::CEnemy()
+CEnemy::CEnemy() : CCharacter3D(TYPE_ENEMY)
 {
 	m_bSetMatrix = false;
 	m_nParrySuccess = NULL;
