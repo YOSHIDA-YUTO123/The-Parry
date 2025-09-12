@@ -393,7 +393,7 @@ void CPlayer::Update(void)
 	if (pBirdManager != nullptr)
 	{
 		// 鳥との距離の判定
-		pBirdManager->CheckDistance(pos, 200.0f);
+		pBirdManager->CheckDistance(pos, 300.0f);
 	}
 
 	if (m_bGravity)
@@ -416,20 +416,20 @@ void CPlayer::Update(void)
 		pCamera->SetState(state);
 	}
 
-	// ジャンプできるなら
-	if ((pKeyboard->GetTrigger(DIK_SPACE) == true || pJoypad->GetTrigger(pJoypad->JOYKEY_A) == true) && m_bJump == true)
-	{
-		// 生きてるなら
-		if (bAlive)
-		{
-			// ジャンプ状態に移行する
-			ChangeState(make_shared<CPlayerJump>());
+	//// ジャンプできるなら
+	//if ((pKeyboard->GetTrigger(DIK_SPACE) == true || pJoypad->GetTrigger(pJoypad->JOYKEY_A) == true) && m_bJump == true)
+	//{
+	//	// 生きてるなら
+	//	if (bAlive)
+	//	{
+	//		// ジャンプ状態に移行する
+	//		ChangeState(make_shared<CPlayerJump>());
 
-			// 移動量を上方向に設定
-			m_pMove->Jump(JUMP_HEIGHT);
-			m_bJump = false;
-		}
-	}
+	//		// 移動量を上方向に設定
+	//		m_pMove->Jump(JUMP_HEIGHT);
+	//		m_bJump = false;
+	//	}
+	//}
 
 	// 回避ボタンを押したかつ生きているなら
 	if ((pKeyboard->GetTrigger(DIK_SPACE) || pJoypad->GetTrigger(pJoypad->JOYKEY_B)) && bAlive)
@@ -621,17 +621,17 @@ void CPlayer::Update(void)
 	if (pKeyboard->GetTrigger(DIK_O))
 	{
 		CTNTBarrel::Create(D3DXVECTOR3(-713.0f, 286.0f, 1613.0f),pos);
-		CTNTBarrel::Create(D3DXVECTOR3(656.0f, 286.0f, 1574.0f), VEC3_NULL);
-		CTNTBarrel::Create(D3DXVECTOR3(795.0f, 286.0f, -1412.0f), VEC3_NULL);
-		CTNTBarrel::Create(D3DXVECTOR3(-685.0f, 286.0f, -1507.0f), VEC3_NULL);
-
+		CTNTBarrel::Create(D3DXVECTOR3(656.0f, 286.0f, 1574.0f), pos);
+		CTNTBarrel::Create(D3DXVECTOR3(795.0f, 286.0f, -1412.0f), pos);
+		CTNTBarrel::Create(D3DXVECTOR3(-685.0f, 286.0f, -1507.0f), pos);
 	}
+
 	if (pKeyboard->GetTrigger(DIK_B))
 	{
-		//for (int nCnt = 0; nCnt < 16; nCnt++)
-		//{
-		CBird::Create(D3DXVECTOR3(static_cast<float>(rand() % 2000 - 1000.0f), 0.0f, static_cast<float>(rand() % 2000 - 1000.0f)));
-		//}
+		for (int nCnt = 0; nCnt < 16; nCnt++)
+		{
+			CBird::Create(D3DXVECTOR3(static_cast<float>(rand() % 2000 - 1000.0f), 0.0f, static_cast<float>(rand() % 2000 - 1000.0f)));
+		}
 	}
 #endif // _DEBUG
 }

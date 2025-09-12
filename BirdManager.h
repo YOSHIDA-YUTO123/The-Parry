@@ -43,9 +43,22 @@ public:
 	// 対象の位置からの距離を判定
 	bool CheckDistance(const D3DXVECTOR3 otherPos,const float fRadius);
 private:
+	void InAreaRenge(const D3DXVECTOR3 otherPos);
+
+	static const int MAX_POINT = 4; // 出現エリア
+
+	// 位置の情報
+	struct Point
+	{
+		D3DXVECTOR3 pos; // 出現エリアの位置
+		float fRadius;	 // エリアの半径
+	};
+
 	CBirdManager();
 	static CBirdManager* m_pInstance; // 自分のインスタンス
 	std::list<CBird*> m_apBirdList;	  // 鳥のリスト
+	Point m_Point[MAX_POINT];		  // 出現ポイントの情報
+	int m_nAreaPopTime;				  // エリアに出現する時間
 };
 
 #endif

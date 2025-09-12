@@ -37,6 +37,7 @@
 #include"Observer.h"
 #include "MoveSmoke.h"
 #include "ParryEffect.h"
+#include "BirdManager.h"
 
 //***************************************************
 // 定数定義
@@ -376,6 +377,15 @@ void CEnemy::Update(void)
 		pCylinder->Collision(&pos);
 	}
 	
+	// 鳥のマネージャの取得
+	auto pBirdManager = CBirdManager::GetInstance();
+
+	if (pBirdManager != nullptr)
+	{
+		// 鳥との距離の判定
+		pBirdManager->CheckDistance(pos, 500.0f);
+	}
+
 	if (m_pMove != nullptr)
 	{
 		// 重力の設定
