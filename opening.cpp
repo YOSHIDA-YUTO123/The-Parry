@@ -21,6 +21,7 @@
 #include "dome.h"
 #include"fade.h"
 #include"game.h"
+#include "BirdManager.h"
 
 using namespace Const; // 名前空間Constの使用
 using namespace std;   // 名前空間stdの使用
@@ -54,6 +55,9 @@ COpening::~COpening()
 //===================================================
 HRESULT COpening::Init(void)
 {
+	// 鳥のマネージャの取得
+	CBirdManager::Create();
+
 	// ゲームのカメラの生成
 	m_pCamera = new COpeningCamera;
 	m_pCamera->Init();
@@ -87,6 +91,14 @@ HRESULT COpening::Init(void)
 	// アリーナの生成
 	CObjectX::Create(D3DXVECTOR3(5500.0f,0.0f,0.0f), "data/MODEL/field/TitleArena.x", D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
+	// 鳥のマネージャーの取得
+	auto pBirdManager = CBirdManager::GetInstance();
+
+	if (pBirdManager != nullptr)
+	{
+		// オープニングの鳥
+		pBirdManager->SetOpening();
+	}
 	//// トーチの生成
 	//CObjectX::Create(D3DXVECTOR3(250.0f, 150.0f, 165.0f), "data/MODEL/obj/torch.x", D3DXVECTOR3(-D3DX_PI * 0.15f, 0.0f, 0.0f));
 

@@ -201,8 +201,8 @@ void CTrainingEnemyAction::Update(void)
 			// 構えの設定処理
 			pPlayer->SetStance(pos);
 
-			//// 成功度の取得
-			//int nSuccess = pPlayer->SuccessParry();
+			// 成功度の取得
+			pPlayer->SuccessParry();
 
 			// ヒットストップ
 			pEnemy->SetHitStop(25);

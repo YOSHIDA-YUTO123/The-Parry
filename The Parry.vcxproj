@@ -167,6 +167,7 @@
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="edit.cpp" />
     <ClCompile Include="EffectSpark.cpp" />
+    <ClCompile Include="ExplosionArea.cpp" />
     <ClCompile Include="FadeEffect.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="mark.cpp" />
@@ -271,6 +272,7 @@
     <ClInclude Include="Collision.h" />
     <ClInclude Include="edit.h" />
     <ClInclude Include="EffectSpark.h" />
+    <ClInclude Include="ExplosionArea.h" />
     <ClInclude Include="FadeEffect.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="mark.h" />

@@ -43,7 +43,7 @@ public:
 	CBird();
 	~CBird();
 
-	static CBird* Create(const D3DXVECTOR3 pos);
+	static CBird* Create(const D3DXVECTOR3 pos, const bool bGravity = true);
 
 	HRESULT Init(void) override;
 	void Uninit(void) override;
@@ -58,6 +58,8 @@ private:
 	static bool m_bLoad; // ロードしたかどうか
 	std::unique_ptr<CStateMachine> m_pMachine;  // 状態マシーン
 	std::unique_ptr<CVelocity> m_pMove;			// 移動クラス
+	int m_nMaxLife;								// 最大の寿命
 	int m_nLife;								// 寿命
+	bool m_bGravity;							// 重力をつけるか
 };
 #endif

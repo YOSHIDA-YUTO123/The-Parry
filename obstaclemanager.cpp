@@ -14,6 +14,8 @@
 #include <fstream>
 #include "player.h"
 #include "game.h"
+#include"Collider.h"
+#include"ExplosionArea.h"
 
 using namespace std; // 名前空間stdを使用
 
@@ -152,6 +154,26 @@ void CObstacleManager::AddObstacle(CObstacle* pObstacle)
 }
 
 //==============================================
+// 爆発の破棄
+//==============================================
+void CObstacleManager::EraseExplosion(CExplosionArea* pExplosionArea)
+{
+	// 要素分調べる
+	for (auto itr = m_apExplosionArea.begin(); itr != m_apExplosionArea.end(); ++itr)
+	{
+		// 指定したものと同じだったら
+		if ((*itr) != nullptr && (*itr) == pExplosionArea)
+		{
+			(*itr)->Uninit();
+			(*itr) = nullptr;
+			itr = m_apExplosionArea.erase(itr);
+			break;
+		}
+	}
+
+}
+
+//==============================================
 // 破棄
 //==============================================
 void CObstacleManager::Uninit(void)
@@ -164,8 +186,12 @@ void CObstacleManager::Uninit(void)
 		m_pManager = nullptr;
 	}
 
-	// 要素のクリア
-	m_apObstacleList.clear();
+	// 空じゃないなら
+	if (!m_apObstacleList.empty())
+	{
+		// 要素のクリア
+		m_apObstacleList.clear();
+	}
 }
 
 //==============================================
@@ -210,4 +236,24 @@ int CObstacleManager::GetObstacleSize(void)
 	int Size = static_cast<int>(m_apObstacleList.size());
 
 	return Size;
+}
+
+//==============================================
+// 爆発の当たり判定
+//==============================================
+bool CObstacleManager::CollisionExplotion(CColliderCapsule* pCapsule)
+{
+	// 要素分調べる
+	for (auto itr = m_apExplosionArea.begin(); itr != m_apExplosionArea.end(); ++itr)
+	{
+		// nullだったら処理を飛ばす
+		if ((*itr) == nullptr) continue;
+
+		// 爆発との当たり判定
+		if ((*itr)->Collision(pCapsule))
+		{
+			return true;
+		}
+	}
+	return false;
 }

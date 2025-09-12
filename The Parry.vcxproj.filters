@@ -408,6 +408,9 @@
     <ClCompile Include="BirdManager.cpp">
       <Filter>ソース ファイル\manager</Filter>
     </ClCompile>
+    <ClCompile Include="ExplosionArea.cpp">
+      <Filter>ソース ファイル\manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="testword.h">
@@ -699,6 +702,9 @@
       <Filter>ヘッダー ファイル\model</Filter>
     </ClInclude>
     <ClInclude Include="BirdManager.h">
+      <Filter>ヘッダー ファイル\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="ExplosionArea.h">
       <Filter>ヘッダー ファイル\manager</Filter>
     </ClInclude>
   </ItemGroup>

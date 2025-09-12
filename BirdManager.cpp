@@ -13,12 +13,14 @@
 #include "math.h"
 #include "debugproc.h"
 
-using namespace math; // 名前空間Constの使用
+using namespace math;  // 名前空間mathの使用
+using namespace Const; // 名前空間Constの使用
 
 //***************************************************
 // 定数宣言
 //***************************************************
 constexpr int AREA_POP_TIME = 1800; // 30秒
+constexpr int POINT_POP_TIME = 900; // 15秒
 constexpr int POP_BIRD = 10; // 10匹
 
 //***************************************************
@@ -54,6 +56,30 @@ bool CBirdManager::CheckDistance(const D3DXVECTOR3 otherPos, const float fRadius
 }
 
 //===================================================
+// オープニングの鳥の設定
+//===================================================
+void CBirdManager::SetOpening(void)
+{
+	// 鳥の出現
+	for (int nCnt = 0; nCnt < POP_BIRD; nCnt++)
+	{
+		// 位置
+		D3DXVECTOR3 pos = m_Arena[0].pos;
+
+		// 半径
+		int nRadius = static_cast<int>(m_Arena[0].fRadius);
+
+		// ランダムな位置の設定
+		float fRandomPosX = static_cast<float>(rand() % (nRadius * 2) - m_Arena[0].fRadius);
+		float fRandomPosZ = static_cast<float>(rand() % (nRadius * 2) - m_Arena[0].fRadius);
+
+		// 鳥の生成
+		CBird::Create(D3DXVECTOR3(pos.x + fRandomPosX, pos.y, pos.z + fRandomPosZ),false);
+	}
+
+}
+
+//===================================================
 // エリアにいるかどうか
 //===================================================
 void CBirdManager::InAreaRenge(const D3DXVECTOR3 otherPos)
@@ -64,12 +90,12 @@ void CBirdManager::InAreaRenge(const D3DXVECTOR3 otherPos)
 	for (int nCnt = 0; nCnt < MAX_POINT; nCnt++)
 	{
 		// 位置の取得
-		D3DXVECTOR3 pos = m_Point[nCnt].pos;
+		D3DXVECTOR3 pos = m_Arena[nCnt].pos;
 
 		// 距離を求める
 		float fDistance = GetDistance(pos - otherPos);
 
-		if (fDistance <= m_Point[nCnt].fRadius)
+		if (fDistance <= m_Arena[nCnt].fRadius)
 		{
 			nIdx = nCnt;
 			break;
@@ -98,14 +124,14 @@ void CBirdManager::InAreaRenge(const D3DXVECTOR3 otherPos)
 	for (int nCnt = 0; nCnt < POP_BIRD; nCnt++)
 	{
 		// 位置
-		D3DXVECTOR3 pos = m_Point[nPoint].pos;
+		D3DXVECTOR3 pos = m_Arena[nPoint].pos;
 
 		// 半径
-		int nRadius = static_cast<int>(m_Point[nPoint].fRadius);
+		int nRadius = static_cast<int>(m_Arena[nPoint].fRadius);
 
 		// ランダムな位置の設定
-		float fRandomPosX = static_cast<float>(rand() % (nRadius * 2) - m_Point[nPoint].fRadius);
-		float fRandomPosZ = static_cast<float>(rand() % (nRadius * 2) - m_Point[nPoint].fRadius);
+		float fRandomPosX = static_cast<float>(rand() % (nRadius * 2) - m_Arena[nPoint].fRadius);
+		float fRandomPosZ = static_cast<float>(rand() % (nRadius * 2) - m_Arena[nPoint].fRadius);
 
 		// 鳥の生成
 		CBird::Create(D3DXVECTOR3(pos.x + fRandomPosX,pos.y,pos.z + fRandomPosZ));
@@ -120,7 +146,9 @@ void CBirdManager::InAreaRenge(const D3DXVECTOR3 otherPos)
 CBirdManager::CBirdManager()
 {
 	m_nAreaPopTime = NULL;
+	m_nPointPopTime = POINT_POP_TIME;
 	m_apBirdList = {};					   
+	ZeroMemory(&m_Arena, sizeof(m_Arena));
 	ZeroMemory(&m_Point, sizeof(m_Point));
 }
 
@@ -129,6 +157,7 @@ CBirdManager::CBirdManager()
 //===================================================
 CBirdManager::~CBirdManager()
 {
+	m_pInstance = nullptr;
 }
 
 //===================================================
@@ -174,13 +203,16 @@ HRESULT CBirdManager::Init(void)
 	// ポイントの総数分回す
 	for (int nCnt = 0; nCnt < MAX_POINT; nCnt++)
 	{
-		m_Point[nCnt].fRadius = 300.0f;
+		m_Arena[nCnt].fRadius = 300.0f;
 	}
 
-	m_Point[0].pos = { 0.0f,0.0f,0.0f };
-	m_Point[1].pos = { 100.0f,0.0f,1000.0f };
-	m_Point[2].pos = { 1000.0f,0.0f,1000.0f };
-	m_Point[3].pos = { 1000.0f,0.0f,-1000.0f };
+	m_Arena[0].pos = { 0.0f,0.0f,0.0f };
+	m_Arena[1].pos = { 100.0f,0.0f,1000.0f };
+	m_Arena[2].pos = { 1000.0f,0.0f,1000.0f };
+	m_Arena[3].pos = { 1000.0f,0.0f,-1000.0f };
+
+	m_Point[0] = { 1760.0f,736.0f,68.0f };
+	m_Point[1] = { -1682.0f,736.0f,37.0f };
 
 	return S_OK;
 }
@@ -199,8 +231,22 @@ void CBirdManager::Uninit(void)
 //===================================================
 void CBirdManager::Update(void)
 {
+	// エリアに出現する時間
 	m_nAreaPopTime--;
 
+	// 出現位置に出現する時間
+	m_nPointPopTime--;
+
+	if (m_nPointPopTime <= 0)
+	{
+		// ポイントを選出
+		int nPoint = rand() % MAX_POINT;
+
+		// 生成処理
+		CBird::Create(m_Point[nPoint],false);
+
+		m_nPointPopTime = POINT_POP_TIME;
+	}
 	// 情報の描画
 	CDebugProc::Print("鳥出現まで %d秒\n", m_nAreaPopTime / 60);
 }

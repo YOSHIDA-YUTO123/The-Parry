@@ -531,6 +531,7 @@ void CCharacter3D::SetCharacter(void)
 	// モデルの総数分調べる
 	for (int nCnt = 0;nCnt < m_nNumModel;nCnt++)
 	{
+		// 親のインデックス
 		int nParentIdx = -1;
 
 		// モデルの取得

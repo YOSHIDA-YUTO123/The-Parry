@@ -27,7 +27,7 @@ using namespace Const;	// 名前空間Constの使用
 //***************************************************
 constexpr float BIRD_RADIUS = 50.0f; // 鳥の半径
 constexpr int MAX_LIFE = 180;		 // 鳥の寿命
-
+constexpr int POP_TIME = 600;		 // 鳥の最大の寿命
 
 //***************************************************
 // 静的メンバ変数宣言
@@ -39,6 +39,8 @@ bool CBird::m_bLoad = false;  // ロードしたかどうか
 //===================================================
 CBird::CBird() : CCharacter3D(TYPE_BIRD)
 {
+	m_bGravity = true;
+	m_nMaxLife = POP_TIME;
 	m_nLife = MAX_LIFE;
 	m_pMove = nullptr;
 	m_pMachine = nullptr;
@@ -54,12 +56,13 @@ CBird::~CBird()
 //===================================================
 // 生成処理
 //===================================================
-CBird* CBird::Create(const D3DXVECTOR3 pos)
+CBird* CBird::Create(const D3DXVECTOR3 pos,const bool bGravity)
 {
 	CBird* pBird = new CBird;
 
 	// 位置の設定
 	pBird->SetPosition(pos);
+	pBird->m_bGravity = bGravity;
 
 	// 初期化処理
 	if (FAILED(pBird->Init()))
@@ -170,7 +173,7 @@ void CBird::Update(void)
 		pos.y = fHeight;
 	}
 
-	if (m_pMove != nullptr)
+	if (m_pMove != nullptr && m_bGravity)
 	{
 		// 重力の処理
 		m_pMove->Gravity(-MAX_GRABITY);
@@ -206,8 +209,20 @@ void CBird::Update(void)
 			{
 				// 破棄
 				DeleteList();
+				return;
 			}
 		}
+	}
+
+	m_nMaxLife--;
+
+	// 寿命が尽きたら
+	if (m_nMaxLife <= 0)
+	{
+		// 状態の変更
+		ChangeState(make_shared<CBirdFly>());
+
+		return;
 	}
 }
 

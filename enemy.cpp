@@ -38,6 +38,7 @@
 #include "MoveSmoke.h"
 #include "ParryEffect.h"
 #include "BirdManager.h"
+#include"ExplosionArea.h"
 
 //***************************************************
 // 定数定義
@@ -729,23 +730,53 @@ bool CEnemy::IsDamageMotion(void)
 //===================================================
 bool CEnemy::CollisionWepon(void)
 {
-	// 位置の取得
-	D3DXVECTOR3 sword_buttom = CCharacter3D::GetModelPos(MODEL_WEPON);
-	D3DXVECTOR3 sword_Top = GetPositionFromMatrix(m_weponMatrix);
-
-	// コライダーの作成
-	CColliderCapsule capsule = CColliderCapsule::CreateCollider(sword_buttom, sword_Top, 150.0f);
-
 	// プレイヤーの取得
 	CPlayer* pPlayer = CGame::GetPlayer();
 
-	// プレイヤーの取得
-	if (pPlayer == nullptr) return false;
+	// 武器の先の座標
+	D3DXVECTOR3 WeponTop = GetPositionFromMatrix(m_weponMatrix);
 
-	// プレイヤーとの当たり判定
-	if (pPlayer->CollisionCapsule(&capsule,false))
+	// 武器の根元の座標
+	D3DXVECTOR3 WeponBottom = CCharacter3D::GetModelPos(15);
+
+	// 武器の長さを求める
+	D3DXVECTOR3 diff = WeponTop - WeponBottom;
+
+	// 武器のマトリックス分回す
+	for (int nCnt = 0; nCnt < NUM_MATRIX; nCnt++)
 	{
-		return true;
+		// 相対値
+		float fRate = nCnt / (float)NUM_MATRIX;
+
+		// 武器の根元(基準)から先まで点を打つ
+		D3DXVECTOR3 pos = WeponBottom + diff * fRate;
+
+		// 円の判定
+		if (m_pSphere != nullptr)
+		{
+			// 位置の更新
+			m_pSphere->SetPosition(pos);
+		}
+
+#ifdef _DEBUG
+
+		//// 武器のマトリックス確認用
+		//CEffect3D::Create(pos, 50.0f, VEC3_NULL, WHITE, 10);
+#endif // _DEBUG
+
+		// 円の判定の取得
+		CCollisionSphere* pCollision = CCollisionSphere::GetInstance();
+
+		// 敵の武器に当たったら
+		if (pCollision != nullptr)
+		{
+			CColliderSphere* playersphere = pPlayer->GetSphereCollider();
+
+			if (pCollision->Collision(m_pSphere.get(), playersphere))
+			{
+				return true;
+			}
+		}
 	}
 
 	return false;
@@ -934,6 +965,12 @@ bool CEnemy::CollisionObstacle(D3DXVECTOR3 *pPos)
 			// 爆発のエフェクト
 			if (SetTNTEffect((*itr)))
 			{
+				// 障害物の位置の取得
+				D3DXVECTOR3 obstaclePos = (*itr)->GetPosition();
+
+				// 爆発のエリアの生成
+				CExplosionArea::Create(obstaclePos);
+
 				(*itr)->Uninit();
 				(*itr) = nullptr;
 				itr = pObstacleManager->Erase(itr);

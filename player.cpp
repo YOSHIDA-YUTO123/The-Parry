@@ -1310,6 +1310,13 @@ bool CPlayer::CollisionObstacle(D3DXVECTOR3* pPos)
 		bResult = true;
 	}
 
+	// 爆発の当たり判定
+	if (pObstacleManager->CollisionExplotion(m_Capsule.get()))
+	{
+		// ダメージ状態に変更
+		ChangeState(make_shared<CPlayerDamage>(2));
+	}
+
 	return bResult;
 }
 
