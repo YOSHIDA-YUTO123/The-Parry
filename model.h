@@ -31,6 +31,7 @@ public:
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
+	void Draw(const float fAlv);
 	void DrawMultTexture(void);
 	void DrawShadow(void);
 	void SetTextureMT(const char* pTextureName);
@@ -51,6 +52,7 @@ public:
 	D3DXMATRIX GetMatrixWorld(void) const { return m_mtxWorld; }
 
 	const char* GetModelName(void) { return m_aModelName.c_str(); }
+	void SetModelName(const char* pModelName) { m_aModelName = pModelName; }
 	void Copy(CModel* pModel); 
 	int GetParentID(void) const { return m_nParentIdx; }
 private:

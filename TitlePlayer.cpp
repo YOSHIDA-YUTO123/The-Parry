@@ -20,7 +20,7 @@ using namespace std; // 名前空間stdを使用
 //===================================================
 // コンストラクタ
 //===================================================
-CTitlePlayer::CTitlePlayer() : CCharacter3D(TYPE_PLAYER)
+CTitlePlayer::CTitlePlayer() : CCharacter3D(TYPE_TITLEPLAYER)
 {
 	m_pMove = nullptr;
 	m_pMoveMent = nullptr;

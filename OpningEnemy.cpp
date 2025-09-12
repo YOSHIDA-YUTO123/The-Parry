@@ -27,7 +27,7 @@ using namespace std;   // 名前空間stdを使用
 //===================================================
 // コンストラクタ
 //===================================================
-COpeningEnemy::COpeningEnemy() : CCharacter3D(TYPE_ENEMY)
+COpeningEnemy::COpeningEnemy() : CCharacter3D(TYPE_OPENING_ENEMY)
 {
 	m_nNextSceneCnt = NULL;
 	m_bLanding = true;

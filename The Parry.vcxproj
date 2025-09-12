@@ -154,6 +154,7 @@
     <ClCompile Include="background.cpp" />
     <ClCompile Include="billboard.cpp" />
     <ClCompile Include="bird.cpp" />
+    <ClCompile Include="BirdManager.cpp" />
     <ClCompile Include="BirdState.cpp" />
     <ClCompile Include="block.cpp" />
     <ClCompile Include="BlockManager.cpp" />
@@ -257,6 +258,7 @@
     <ClInclude Include="background.h" />
     <ClInclude Include="billboard.h" />
     <ClInclude Include="bird.h" />
+    <ClInclude Include="BirdManager.h" />
     <ClInclude Include="BirdState.h" />
     <ClInclude Include="block.h" />
     <ClInclude Include="BlockManager.h" />

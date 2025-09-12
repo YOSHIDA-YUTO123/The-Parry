@@ -72,12 +72,6 @@ CCharacter3D::~CCharacter3D()
 //===================================================
 HRESULT CCharacter3D::Init(void)
 {
-	// キャラクターマネージャーの取得
-	auto pCharacterManager = CCharacterManager::GetInstance();
-
-	// キャラクターの追加
-	pCharacterManager->AddCharacter(this);
-
 	// 位置、向きの生成
 	m_pRot = new CRotation;
 
@@ -217,6 +211,45 @@ void CCharacter3D::Draw(void)
 }
 
 //===================================================
+// 描画処理(透明度設定)
+//===================================================
+void CCharacter3D::Draw(const float fAvl)
+{
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+	//計算用のマトリックス
+	D3DXMATRIX mtxRot, mtxTrans, mtxScal;
+
+	//ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&m_mtxWorld);
+
+	// 向きの取得
+	D3DXVECTOR3 rot = m_pRot->Get();
+
+	//向きを反映
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, rot.y, rot.x, rot.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
+
+	//位置を反映
+	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
+	//ワールドマトリックスの設定
+	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+
+	// モデルの描画
+	for (int nCnt = 0; nCnt < m_nNumModel; nCnt++)
+	{
+		if (m_apModel[nCnt] != nullptr)
+		{
+			// 描画処理
+			m_apModel[nCnt]->Draw(fAvl);
+		}
+	}
+}
+
+//===================================================
 // 描画処理(マルチテクスチャ)
 //===================================================
 void CCharacter3D::DrawMT(void)
@@ -266,8 +299,33 @@ CMotion* CCharacter3D::LoadMotion(const char* pFileName,const int nNumMotion)
 	// 文字列を合成
 	string += pFileName;
 
+	// キャラクターのマネージャーの取得
+	auto pCharacterManager = CCharacterManager::GetInstance();
+
+	if (pCharacterManager == nullptr) return nullptr;
+
+	// 自分の種類の取得
+	TYPE type = GetType();
+
 	// モーションのロード処理
 	m_pMotion = CMotion::Load(string.c_str(), m_apModel, &m_nNumModel, nNumMotion, CMotion::LOAD_TEXT);
+
+	// モーションの設定
+	pCharacterManager->SetMotion(m_pMotion.get(), type);
+
+	int nCnt = 0;
+
+	// モデルの要素分調べる
+	for (auto itr = m_apModel.begin(); itr != m_apModel.end(); ++itr)
+	{
+		// nullなら処理しない
+		if ((*itr) == nullptr) continue;
+
+		// モーションの設定
+		pCharacterManager->SetModel((*itr), type, m_nNumModel,nCnt);
+
+		nCnt++;
+	}
 
 	return m_pMotion.get();
 }
@@ -449,12 +507,46 @@ void CCharacter3D::UpdateMotion(void)
 }
 
 //===================================================
-// モーションの生成
+// キャラクターの設定
 //===================================================
-void CCharacter3D::CreateMotion(void)
+void CCharacter3D::SetCharacter(void)
 {
 	// モーションの生成
 	m_pMotion = make_unique<CMotion>();
+
+	// キャラクターのマネージャーの取得
+	auto pCharacterManager = CCharacterManager::GetInstance();
+
+	if (pCharacterManager == nullptr) return;
+
+	// モーションの取得
+	pCharacterManager->GetMotion(m_pMotion.get(), m_type);
+
+	// モデルのサイズの取得
+	m_nNumModel = pCharacterManager->GetModelSize(m_type);
+
+	// モデルのサイズの確保
+	m_apModel.resize(m_nNumModel);
+
+	// モデルの総数分調べる
+	for (int nCnt = 0;nCnt < m_nNumModel;nCnt++)
+	{
+		int nParentIdx = -1;
+
+		// モデルの取得
+		pCharacterManager->GetModel(&m_apModel[nCnt],m_type,nCnt,&nParentIdx);
+
+		if (nParentIdx != -1)
+		{
+			// 親のモデルの設定
+			m_apModel[nCnt]->SetParent(m_apModel[nParentIdx], nParentIdx);
+		}
+		else
+		{
+			// 親のモデルの設定
+			m_apModel[nCnt]->SetParent(nullptr, nParentIdx);
+		}
+	}
 }
 
 //===================================================

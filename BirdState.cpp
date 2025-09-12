@@ -41,7 +41,7 @@ CBirdState::~CBirdState()
 //===================================================
 // コンストラクタ
 //===================================================
-CBirdIdle::CBirdIdle()
+CBirdIdle::CBirdIdle() : CBirdState(ID_IDLE)
 {
 }
 
@@ -85,4 +85,60 @@ void CBirdIdle::Init(void)
 void CBirdIdle::Update(void)
 {
 
+}
+
+//===================================================
+// コンストラクタ
+//===================================================
+CBirdFly::CBirdFly() : CBirdState(ID_FLY)
+{
+}
+
+//===================================================
+// デストラクタ
+//===================================================
+CBirdFly::~CBirdFly()
+{
+}
+
+//===================================================
+// 初期化処理
+//===================================================
+void CBirdFly::Init(void)
+{
+	// 鳥の取得
+	CBird* pBird = CBirdState::GetBird();
+
+	// 取得できなかったら処理しない
+	if (pBird == nullptr) return;
+
+	// モーションの取得
+	CMotion* pMotion = pBird->GetMotion();
+
+	// 取得できなかったら処理しない
+	if (pMotion == nullptr) return;
+
+	// モーションの設定
+	pMotion->SetMotion(CBird::MOTIONTYPE_FLY, true, 10);
+}
+
+//===================================================
+// 更新処理
+//===================================================
+void CBirdFly::Update(void)
+{
+	// 鳥の取得
+	CBird* pBird = CBirdState::GetBird();
+
+	// 取得できなかったら処理しない
+	if (pBird == nullptr) return;
+
+	// モーションの取得
+	CMotion* pMotion = pBird->GetMotion();
+
+	// 取得できなかったら処理しない
+	if (pMotion == nullptr) return;
+
+	// 飛行状態の設定
+	pBird->SetFly(D3DXVECTOR3(5.0f, 5.0f, 5.0f));
 }

@@ -52,17 +52,20 @@ public:
 		TYPE_ENEMY,
 		TYPE_TRAININGENEMY,
 		TYPE_BIRD,
+		TYPE_TITLEPLAYER,
+		TYPE_OPENING_ENEMY,
 		TYPE_MAX
 	}TYPE;
 
 	CCharacter3D();
 	CCharacter3D(const TYPE type);
-	~CCharacter3D();
+	virtual ~CCharacter3D();
 
 	virtual HRESULT Init(void) override;
 	virtual void Uninit(void) override;
 	virtual void Update(void) override;
 	virtual void Draw(void) override;
+	void Draw(const float fAvl);
 	void DrawMT(void);
 	
 	TYPE GetType(void) const { return m_type; }
@@ -97,7 +100,7 @@ public:
 	void UpdateMotion(void);
 
 protected:
-	void CreateMotion(void);
+	void SetCharacter(void);
 private:
 
 	std::unique_ptr<CMotion> m_pMotion;		// モーションのクラスへのポインタ

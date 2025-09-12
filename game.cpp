@@ -35,6 +35,7 @@
 #include "Object3DAnim.h"
 #include "ParryEffect.h"
 #include "bird.h"
+#include "BirdManager.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -88,6 +89,9 @@ HRESULT CGame::Init(void)
 
 	// ゲームマネージャーの生成
 	CGameManager::Create();
+
+	// 鳥のマネージャの取得
+	CBirdManager::Create();
 
 	// ゲームのロード
 	Load();

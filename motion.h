@@ -102,14 +102,13 @@ public:
 	bool IsEventFrame(const int nType,const int nIdx);
 	bool IsLoad(void);
 	bool FinishMotion(void);
-
 	void Debug(void);
 private:
 	void UpdateCurrentMotion(CModel** pModel, int nIdx);
 	void UpdateBlendMotion(CModel** pModel, int nIdx);
 	void FinishFirstBlend(void);
 
-	CMotionLoader* m_pLoader;   // モーションのローダー
+	std::unique_ptr<CMotionLoader> m_pLoader;   // モーションのローダー
 	std::vector<Info> m_aInfo;	// モーション情報へのポインタ
 	int m_nType;				// モーションの種類
 	int m_nNumKey;				// キーの総数
@@ -167,7 +166,7 @@ private:
 class CLoderText : public CMotionLoader
 {
 public:
-	static CLoderText* LoadTextFile(const char* pFileName, std::vector<CMotion::Info>& Info, std::vector<CModel*>& pModel, int* OutNumModel, const int nNumMotion);
+	static std::unique_ptr<CLoderText> LoadTextFile(const char* pFileName, std::vector<CMotion::Info>& Info, std::vector<CModel*>& pModel, int* OutNumModel, const int nNumMotion);
 private:
 	bool LoadModel(std::vector<CModel*>& pModel, int nCnt, std::string input, std::string line);
 	bool LoadCharacterSet(std::vector<CModel*>& pModel, std::string line, std::string input);

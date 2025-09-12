@@ -405,6 +405,9 @@
     <ClCompile Include="CharacterManager.cpp">
       <Filter>ソース ファイル\manager</Filter>
     </ClCompile>
+    <ClCompile Include="BirdManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="testword.h">
@@ -694,6 +697,9 @@
     </ClInclude>
     <ClInclude Include="CharacterManager.h">
       <Filter>ヘッダー ファイル\model</Filter>
+    </ClInclude>
+    <ClInclude Include="BirdManager.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

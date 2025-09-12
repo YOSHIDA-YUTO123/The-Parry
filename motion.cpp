@@ -15,9 +15,11 @@
 #include "debugproc.h"
 #include "manager.h"
 #include"slow.h"
+#include "CharacterManager.h"
+#include "character3D.h"
 
-using namespace std; // 名前空間stdを使用
-using namespace Const;							// 名前空間Constを使用する
+using namespace std;	// 名前空間stdを使用
+using namespace Const;	// 名前空間Constを使用する
 
 //***************************************************
 // マクロ定義
@@ -73,15 +75,16 @@ unique_ptr<CMotion> CMotion::Load(const char* pLoadFileName, vector<CModel*>& pM
 		switch (type)
 		{
 		case LOAD_TEXT:
+		{
 			// モーションのロード処理(textFile)
 			pMotion->m_pLoader = CLoderText::LoadTextFile(pLoadFileName, pMotion->m_aInfo, pModel, pOutModel, nNumMotion);
-			break;
+		}
+		break;
 		default:
 			MessageBox(NULL, "この形式は読み込めません", "エラー", MB_OK | MB_ICONWARNING);
-			break;
+		break;
 		}
 	}
-
 	return pMotion;
 }
 
@@ -92,9 +95,9 @@ void CMotion::GetInfo(CMotion* pMotion)
 {
 	pMotion->m_aInfo = m_aInfo;
 
-	pMotion->m_pLoader = new CMotionLoader;
+	pMotion->m_pLoader = make_unique<CMotionLoader>();
 
-	m_pLoader->GetInfo(pMotion->m_pLoader);
+	m_pLoader->GetInfo(pMotion->m_pLoader.get());
 }
 
 //===================================================
@@ -205,12 +208,7 @@ void CMotion::Debug(void)
 //===================================================
 void CMotion::Uninit(void)
 {
-	// ローダーの破棄
-	if (m_pLoader != nullptr)
-	{
-		delete m_pLoader;
-		m_pLoader = nullptr;
-	}
+	m_pLoader.reset();
 }
 
 //===================================================
@@ -560,8 +558,6 @@ void CMotion::Update(CModel** pModel,const int nNumModel)
 	{
 		m_nAllCounter = 0;
 	}
-
-	CDebugProc::Print("%d / %d\n", m_nAllCounter, nFrame);
 }
 
 //===================================================
@@ -664,6 +660,7 @@ CMotionLoader::CMotionLoader()
 //===================================================
 CMotionLoader::~CMotionLoader()
 {
+	m_aInfo.clear();
 }
 
 //===================================================
@@ -679,7 +676,7 @@ void CMotionLoader::GetInfo(CMotionLoader* pLoader)
 //===================================================
 // テキストファイルのロード処理
 //===================================================
-CLoderText* CLoderText::LoadTextFile(const char* pFileName, vector<CMotion::Info>& Info, std::vector<CModel*>& pModel, int* OutNumModel,const int nNumMotion)
+unique_ptr<CLoderText> CLoderText::LoadTextFile(const char* pFileName, vector<CMotion::Info>& Info, std::vector<CModel*>& pModel, int* OutNumModel,const int nNumMotion)
 {
 	// ファイルをロードする
 	ifstream File(pFileName);
@@ -695,7 +692,7 @@ CLoderText* CLoderText::LoadTextFile(const char* pFileName, vector<CMotion::Info
 	if (File.is_open() == true)
 	{
 		// モーションを生成
-		CLoderText* pLoder = new CLoderText;
+		auto pLoder = make_unique<CLoderText>();
 
 		// モーション情報構造体のメモリの確保
 		pLoder->m_aInfo.resize(nNumMotion);
@@ -721,7 +718,7 @@ CLoderText* CLoderText::LoadTextFile(const char* pFileName, vector<CMotion::Info
 			}
 
 			// モーションの設定の読み込み
-			pLoder->LoadMotionSet(pLoder, File, line, nNumMotion);
+			pLoder->LoadMotionSet(pLoder.get(), File, line, nNumMotion);
 
 			// モーションの数が最大まで行ったら
 			if (pLoder->GetNumMotion() >= nNumMotion)
@@ -786,6 +783,7 @@ bool CLoderText::LoadModel(std::vector<CModel*>& pModel, int nCnt, string input,
 
 		// モデルの生成
 		pModel[nCnt] = CModel::Create(MODEL_NAME);
+
 		return true;
 	}
 	return false;
@@ -1041,7 +1039,6 @@ void CLoderText::LoadMotionSet(CLoderText* pLoader, ifstream& File, string nowLi
 				else
 				{
 				}
-
 
 				break;
 			}

@@ -47,6 +47,7 @@
 #include "BlockManager.h"
 #include "ParryEffect.h"
 #include "bird.h"
+#include "BirdManager.h"
 
 using namespace math; // 名前空間mathを使用
 using namespace std;  // 名前空間をstdを使用する
@@ -386,6 +387,15 @@ void CPlayer::Update(void)
 	// インパクトの当たり判定
 	CollisionImpact(pMesh, &pos, pMotion);
 
+	// 鳥のマネージャの取得
+	auto pBirdManager = CBirdManager::GetInstance();
+
+	if (pBirdManager != nullptr)
+	{
+		// 鳥との距離の判定
+		pBirdManager->CheckDistance(pos, 200.0f);
+	}
+
 	if (m_bGravity)
 	{
 		// 重力を加算
@@ -608,16 +618,20 @@ void CPlayer::Update(void)
 		m_fRevengeValue += 1.0f;
 	}
 
-	if (pKeyboard->GetTrigger(DIK_B))
-	{
-		CBird::Create(D3DXVECTOR3(static_cast<float>(rand()%2000 - 1000.0f),0.0f, static_cast<float>(rand() % 2000 - 1000.0f)));
-	}
 	if (pKeyboard->GetTrigger(DIK_O))
 	{
 		CTNTBarrel::Create(D3DXVECTOR3(-713.0f, 286.0f, 1613.0f),pos);
 		CTNTBarrel::Create(D3DXVECTOR3(656.0f, 286.0f, 1574.0f), VEC3_NULL);
 		CTNTBarrel::Create(D3DXVECTOR3(795.0f, 286.0f, -1412.0f), VEC3_NULL);
 		CTNTBarrel::Create(D3DXVECTOR3(-685.0f, 286.0f, -1507.0f), VEC3_NULL);
+
+	}
+	if (pKeyboard->GetTrigger(DIK_B))
+	{
+		//for (int nCnt = 0; nCnt < 16; nCnt++)
+		//{
+		CBird::Create(D3DXVECTOR3(static_cast<float>(rand() % 2000 - 1000.0f), 0.0f, static_cast<float>(rand() % 2000 - 1000.0f)));
+		//}
 	}
 #endif // _DEBUG
 }

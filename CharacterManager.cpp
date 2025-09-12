@@ -9,7 +9,8 @@
 // インクルードファイル
 //***************************************************
 #include "CharacterManager.h"
-#include"character3D.h"
+#include "character3D.h"
+#include "motion.h"
 
 using namespace std; // 名前空間stdの使用
 
@@ -45,44 +46,79 @@ void CCharacterManager::Create(void)
 }
 
 //===================================================
-// キャラクターの追加
+// モーションの情報の設定
 //===================================================
-void CCharacterManager::AddCharacter(CCharacter3D* pCharacter)
+void CCharacterManager::SetMotion(CMotion* pMotion, const CCharacter3D::TYPE type)
 {
-	// 要素を調べる
-	for (auto itr = m_apCharacterList.begin(); itr != m_apCharacterList.end(); ++itr)
-	{
-		// nullだったらreturn
-		if (pCharacter == nullptr || (*itr) == nullptr) continue;
-
-		// 種類が同じだったら
-		if (pCharacter->GetType() == (*itr)->GetType())
-		{
-			// 関数を抜ける
-			return;
-		}
-	}
-
-	// キャラクターの追加
-	m_apCharacterList.push_back(pCharacter);
+	// モーションの情報の設定
+	pMotion->GetInfo(&m_aConfig[type].Motion);
+	m_aConfig[type].type = type;
 }
 
 //===================================================
-// キャラクターの取得
+// モデルの設定
 //===================================================
-void CCharacterManager::GetCharacter(CCharacter3D* pCharacter)
+void CCharacterManager::SetModel(CModel* pModel, const CCharacter3D::TYPE type, const int nNumModel,const int nIdx)
 {
-	// 要素を調べる
-	for (auto itr = m_apCharacterList.begin(); itr != m_apCharacterList.end(); ++itr)
-	{
-		// nullだったらreturn
-		if (pCharacter == nullptr || (*itr) == nullptr) continue;
+	CModel modelWk = {};
 
-		// 種類が同じだったら
-		if (pCharacter->GetType() == (*itr)->GetType())
-		{
-			// 情報のコピー
-			(*itr)->Copy(pCharacter);
-		}
+	// モデルの情報のコピー
+	pModel->Copy(&modelWk);
+
+	// サイズの確保
+	m_aConfig[type].aModelList.resize(nNumModel);
+
+	// 親モデルのID
+	int nParentIdx = pModel->GetParentID();
+
+	if (nParentIdx != -1)
+	{
+		// 親モデルの設定
+		modelWk.SetParent(&m_aConfig[type].aModelList[nParentIdx], nParentIdx);
 	}
+	else
+	{
+		// 親モデルの設定
+		modelWk.SetParent(nullptr, nParentIdx);
+	}
+
+	// モデルの名前の取得
+	const char* pModelName = pModel->GetModelName();
+
+	// モデルの名前の取得
+	modelWk.SetModelName(pModelName);
+
+	// 情報の設定
+	m_aConfig[type].aModelList[nIdx] = modelWk;
+
+	m_aConfig[type].type = type;
+}
+
+//===================================================
+// モーションのリストの設定
+//===================================================
+void CCharacterManager::GetMotion(CMotion* pMotion, const CCharacter3D::TYPE type)
+{
+	// 情報の取得
+	m_aConfig[type].Motion.GetInfo(pMotion);
+}
+
+//===================================================
+// モデルの取得
+//===================================================
+void CCharacterManager::GetModel(CModel** pModel, const CCharacter3D::TYPE type, const int nIdx,int *pParentIndx)
+{
+	// モデルの名前の取得
+	const char* pModelName = m_aConfig[type].aModelList[nIdx].GetModelName();
+
+	// モデルの生成
+	(*pModel) = CModel::Create(pModelName);
+
+	// モデルの情報のコピー
+	m_aConfig[type].aModelList[nIdx].Copy((*pModel));
+
+	// 親のインデックスの取得
+	int nParentIdx = m_aConfig[type].aModelList[nIdx].GetParentID();
+
+	*pParentIndx = nParentIdx;
 }
