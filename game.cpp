@@ -36,6 +36,7 @@
 #include "ParryEffect.h"
 #include "bird.h"
 #include "BirdManager.h"
+#include "gear.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -130,6 +131,9 @@ HRESULT CGame::Init(void)
 
 	// ポーズマネージャーの取得
 	m_pPauseManager = CPauseManager::GetInstance();
+
+	// 歯車の生成
+	CGear::Create(D3DXVECTOR3(-2700.0f,2100.0f,-155.0f));
 
 	//// パリィエフェクトの生成
 	//CParryEffect::Create(D3DXVECTOR3(0.0f,200.0f,0.0f), D3DXVECTOR3(150.0f, 150.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 5, 2, 4, true);

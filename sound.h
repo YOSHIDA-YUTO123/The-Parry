@@ -32,6 +32,7 @@ public:
 
 	CSound();
 	~CSound();
+
 	HRESULT Init(HWND hWnd);
 	void Uninit(void);
 	HRESULT PlaySound(SOUND_LABEL label);

@@ -411,6 +411,9 @@
     <ClCompile Include="ExplosionArea.cpp">
       <Filter>ソース ファイル\manager</Filter>
     </ClCompile>
+    <ClCompile Include="gear.cpp">
+      <Filter>ソース ファイル\objectX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="testword.h">
@@ -706,6 +709,9 @@
     </ClInclude>
     <ClInclude Include="ExplosionArea.h">
       <Filter>ヘッダー ファイル\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="gear.h">
+      <Filter>ヘッダー ファイル\objectX</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -95,7 +95,7 @@ void CBirdManager::InAreaRenge(const D3DXVECTOR3 otherPos)
 		// ‹——£‚ğ‹‚ß‚é
 		float fDistance = GetDistance(pos - otherPos);
 
-		if (fDistance <= m_Arena[nCnt].fRadius)
+		if (fDistance >= m_Arena[nCnt].fRadius)
 		{
 			nIdx = nCnt;
 			break;

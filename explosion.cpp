@@ -215,8 +215,10 @@ void CExplosionManager::Create(const CExplosion::TYPE type, const D3DXVECTOR2 mo
 		float fSize = D3DXVec2Length(&size);
 		float fRandomSize = static_cast<float>(rand() % static_cast<int>(fSize)) + fSize * 0.5f;
 
+		int nRandomAnimSpeed = rand() % nAnimSpeed + (nAnimSpeed / 2);
+
 		// îöî≠ÇÃê∂ê¨
-		auto pExplosion = CExplosion::Create(pos, D3DXVECTOR2(fRandomSize, fRandomSize), col, U, V, nAnimSpeed, type);
+		auto pExplosion = CExplosion::Create(pos, D3DXVECTOR2(fRandomSize, fRandomSize), col, U, V, nRandomAnimSpeed, type);
 
 		if (pExplosion != nullptr)
 		{

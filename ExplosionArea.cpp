@@ -16,6 +16,12 @@
 using namespace std;	// 名前空間stdの使用
 using namespace Const;	// 名前空間Constの使用
 
+//**********************************************
+// 定数宣言
+//**********************************************
+constexpr float RANGE = 450.0f; // 爆発の範囲
+constexpr int MAX_LIFE = 30;	// 寿命
+
 //==============================================
 // コンストラクタ
 //==============================================
@@ -62,9 +68,9 @@ HRESULT CExplosionArea::Init(void)
 	m_pSphere = make_unique<CColliderSphere>();
 
 	// 円の判定の生成
-	m_pSphere = CColliderSphere::Create(m_pos, 450.0f);
+	m_pSphere = CColliderSphere::Create(m_pos, RANGE);
 
-	m_nLife = 30;
+	m_nLife = MAX_LIFE;
 
 	// 障害物マネージャーの取得
 	auto pObstacleManager = CObstacleManager::GetInstance();

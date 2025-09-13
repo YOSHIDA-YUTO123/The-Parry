@@ -170,6 +170,7 @@
     <ClCompile Include="ExplosionArea.cpp" />
     <ClCompile Include="FadeEffect.cpp" />
     <ClCompile Include="GameCamera.cpp" />
+    <ClCompile Include="gear.cpp" />
     <ClCompile Include="mark.cpp" />
     <ClCompile Include="Object3DAnim.cpp" />
     <ClCompile Include="Object3DMT.cpp" />
@@ -275,6 +276,7 @@
     <ClInclude Include="ExplosionArea.h" />
     <ClInclude Include="FadeEffect.h" />
     <ClInclude Include="GameCamera.h" />
+    <ClInclude Include="gear.h" />
     <ClInclude Include="mark.h" />
     <ClInclude Include="Object3DAnim.h" />
     <ClInclude Include="Object3DMT.h" />
