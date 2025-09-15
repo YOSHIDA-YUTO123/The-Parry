@@ -113,9 +113,6 @@ HRESULT CBird::Init(void)
 	}
 	else
 	{
-		// キャラクターのマネージャーの取得
-		auto pCharacterManager =  CCharacterManager::GetInstance();
-
 		CCharacter3D::SetCharacter();
 	}
 

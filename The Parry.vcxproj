@@ -169,6 +169,7 @@
     <ClCompile Include="EffectSpark.cpp" />
     <ClCompile Include="ExplosionArea.cpp" />
     <ClCompile Include="FadeEffect.cpp" />
+    <ClCompile Include="FadeInObject2D.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GateUI.cpp" />
     <ClCompile Include="gear.cpp" />
@@ -185,6 +186,7 @@
     <ClCompile Include="ResultCamera.cpp" />
     <ClCompile Include="ResultMenu.cpp" />
     <ClCompile Include="ResultPlayer.cpp" />
+    <ClCompile Include="ResultScore.cpp" />
     <ClCompile Include="RevengeGage.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="TitleCamera.cpp" />
@@ -194,6 +196,7 @@
     <ClCompile Include="TrainingEnemy.cpp" />
     <ClCompile Include="TrainingEnemyState.cpp" />
     <ClCompile Include="tutorial.cpp" />
+    <ClCompile Include="WinResultManager.cpp" />
     <ClCompile Include="ZoneParticle.cpp" />
     <ClCompile Include="cylinder.cpp" />
     <ClCompile Include="debugproc.cpp" />
@@ -277,6 +280,7 @@
     <ClInclude Include="EffectSpark.h" />
     <ClInclude Include="ExplosionArea.h" />
     <ClInclude Include="FadeEffect.h" />
+    <ClInclude Include="FadeInObject2D.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GateUI.h" />
     <ClInclude Include="gear.h" />
@@ -293,6 +297,7 @@
     <ClInclude Include="ResultCamera.h" />
     <ClInclude Include="ResultMenu.h" />
     <ClInclude Include="ResultPlayer.h" />
+    <ClInclude Include="ResultScore.h" />
     <ClInclude Include="RevengeGage.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="TitleCamera.h" />
@@ -302,6 +307,7 @@
     <ClInclude Include="TrainingEnemy.h" />
     <ClInclude Include="TrainingEnemyState.h" />
     <ClInclude Include="tutorial.h" />
+    <ClInclude Include="WinResultManager.h" />
     <ClInclude Include="ZoneParticle.h" />
     <ClInclude Include="cylinder.h" />
     <ClInclude Include="debugproc.h" />

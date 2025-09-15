@@ -98,13 +98,14 @@ public:
 
 	static void Create(void);
 	static CGameManager* GetInstance(void) { return m_pInstance.get(); }
-	static int GetTime(void) { return m_nGameTime; }
+	int GetTime(void) { return m_pInstance->m_nGameTime; }
+	void SavePlayerInfo(const int nPerfect, const int nNormal, const int nWeak);
 private:
 	CGameManager();
 
 	static std::unique_ptr<CGameManager> m_pInstance; // 自分のインスタンス
 	int m_nCounter;					  // カウンター
-	static int m_nGameTime;			  // ゲームの経過時間
+	int m_nGameTime;			  // ゲームの経過時間
 };
 
 #endif

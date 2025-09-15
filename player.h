@@ -115,6 +115,11 @@ public:
 		MODEL_MAX
 	}MODEL;
 
+	// パリィの情報
+	struct ParryInfo
+	{
+	};
+
 	CPlayer();
 	~CPlayer();
 
@@ -158,6 +163,7 @@ public:
 	bool CollisionCapsule(CColliderCapsule* pCapsule,const bool bPush = true);
 	void SetRevengeEffect(void); // 絶対反撃のエフェクトの設定
 	void EnableGravity(const bool bEnable) { m_bGravity = bEnable; } // 重力の判定の設定
+
 private:
 	void CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos, CMotion* pMotion); // インパクトの当たり判定
 	bool IsMove(CMotion* pMotion);		// 移動できるか判定
@@ -169,8 +175,8 @@ private:
 	void UpdateCollider(D3DXVECTOR3 pos);
 	void UpdateStamina(void);
 	bool CollisionBlock(D3DXVECTOR3 *pPos);
-
 	void Config(const int nLife,const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size);
+
 	std::unique_ptr<CStateMachine> m_pMachine;		// 状態の制御クラス
 	std::unique_ptr<CPlayerMovement> m_pMovement;	// 移動処理
 	std::unique_ptr<CColliderFOV> m_pFOV;			// 視界の判定
@@ -186,6 +192,9 @@ private:
 	PARRY m_ParryResult;							// パリィの結果
 	float m_fStamina;								// スタミナ
 	float m_fRevengeValue;							// 反撃ゲージ量
+	int m_nPerfectCnt;								// パリィのパーフェクトの回数
+	int m_nNormalCnt;								// パリィの普通の回数
+	int m_nWeakCnt;									// パリィの弱いの回数
 	int m_nParryTime;								// パリィの有効時間
 	int m_nParryCounter;							// パリィのカウンター
 	int m_nAttackCounter;							// 攻撃の有効時間

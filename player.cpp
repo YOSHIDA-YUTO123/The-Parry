@@ -88,6 +88,9 @@ CPlayer::CPlayer() : CCharacter3D(TYPE_PLAYER)
 	m_nAttackCounter = NULL;
 	m_fStamina = NULL;
 	m_bGravity = true;
+	m_nPerfectCnt = NULL;
+	m_nNormalCnt = NULL;
+	m_nWeakCnt = NULL;
 }
 
 //===================================================
@@ -144,6 +147,14 @@ HRESULT CPlayer::Init(void)
 //===================================================
 void CPlayer::Uninit(void)
 {
+	// ゲームのマネージャーの取得
+	auto pGameManager = CGameManager::GetInstance();
+
+	if (pGameManager != nullptr)
+	{
+		// プレイヤーの情報のセーブ
+		pGameManager->SavePlayerInfo(m_nPerfectCnt, m_nNormalCnt, m_nWeakCnt);
+	}
 	// HPオブザーバーの破棄
 	if (m_pHpObserver != nullptr)
 	{
@@ -1503,6 +1514,7 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos)
 	// パーフェクトだったら
 	if (m_nParryCounter >= 0 && m_nParryCounter <= 3)
 	{
+		// 反撃ゲージを増やす
 		m_fRevengeValue += 10;
 
 		if (pSound != nullptr)
@@ -1510,6 +1522,9 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos)
 			// パリィ
 			pSound->PlaySoundA(CSound::SOUND_LABEL_PARRYPARFECT);
 		}
+
+		// パーフェクト回数を増やす
+		m_nPerfectCnt++;
 
 		// 成功度の設定
 		m_ParryResult = PARRY_PARFECT;
@@ -1526,6 +1541,9 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos)
 			pSound->PlaySoundA(CSound::SOUND_LABEL_PARRYNORMAL);
 		}
 
+		// 普通回数を増やす
+		m_nNormalCnt++;
+
 		// 成功度の設定
 		m_ParryResult = PARRY_NORMAL;
 
@@ -1540,6 +1558,9 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos)
 			// パリィ
 			pSound->PlaySoundA(CSound::SOUND_LABEL_PARRYWEAK);
 		}
+
+		// 弱い回数を増やす
+		m_nWeakCnt++;
 
 		// 成功度の設定
 		m_ParryResult = PARRY_WEAK;

@@ -63,7 +63,6 @@ private:
 	D3DXCOLOR m_col;						// F
 	float m_fWidth, m_fHeight;				// •A‚‚³
 
-	int m_nDestTime;						// –Ú“I‚ÌŠÔ
 	int m_nTime;							// ŠÔ
 	int m_nMinute;							// •ª
 	int m_nSecond;							// •b

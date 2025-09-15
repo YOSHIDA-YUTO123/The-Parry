@@ -71,7 +71,7 @@ HRESULT CBackGround::Init(void)
 		break;
 	case TYPE_RESULT:
 		// テクスチャのID
-		SetTextureID("data/TEXTURE/gradation/result_bg.jpg");
+		//SetTextureID("data/TEXTURE/gradation/result_bg.jpg");
 		break;
 	default:
 		break;

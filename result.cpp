@@ -23,6 +23,8 @@
 #include"player.h"
 #include "ResultPlayer.h"
 #include "bird.h"
+#include "WinResultManager.h"
+#include "background.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -47,20 +49,8 @@ CResultWin::~CResultWin()
 //===================================================
 HRESULT CResultWin::Init(void)
 {
-	// ゲームマネージャーの取得
-	auto pGameManager = CGameManager::GetInstance();
-
-	// ゲームの時間の取得
-	const int nTime = pGameManager->GetTime();
-
-	// タイマーの生成
-	CTime::Create(D3DXVECTOR3(540.0f, 360.0f, 0.0f), 100.0f, 50.0f, nTime, true);
-
-	if (pGameManager != nullptr)
-	{
-		// 破棄
-		pGameManager->Uninit();
-	}
+	// 勝利時のリザルトのマネージャーの生成
+	CWinResultManager::Create();
 
 	// リザルトのカメラの生成
 	m_pCamera = make_unique<CResultCamera>();
@@ -71,6 +61,9 @@ HRESULT CResultWin::Init(void)
 
 	// フィールドの生成
 	CMeshField::Create(VEC3_NULL, 48, 48, D3DXVECTOR2(5000.0f, 5000.0f));
+
+	// 背景の生成
+	CBackGround::Create(D3DXVECTOR3(640.0f, 360.0f, 0.0f), D3DXVECTOR2(500.0f, 300.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.4f), CBackGround::TYPE_RESULT);
 
 	return S_OK;
 }
@@ -85,6 +78,15 @@ void CResultWin::Uninit(void)
 	{
 		m_pCamera->Uninit();
 		m_pCamera.reset();
+	}
+
+	// ゲームマネージャーの取得
+	auto pGameManager = CGameManager::GetInstance();
+
+	if (pGameManager != nullptr)
+	{
+		// 破棄
+		pGameManager->Uninit();
 	}
 }
 

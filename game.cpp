@@ -51,7 +51,6 @@ CGame::STATE CGame::m_state = STATE_NORMAL;					   // ゲームの状態
 CGameCamera* CGame::m_pCamera = nullptr;					   // ゲームカメラクラスへのポインタ
 CGame::RESULTTYPE CGame::m_ResultType = CGame::RESULTTYPE_WIN; // リザルトの種類
 unique_ptr<CGameManager> CGameManager::m_pInstance = nullptr;  // 自分のインスタンス
-int CGameManager::m_nGameTime = 0;							   // ゲームの経過時間
 
 //===================================================
 // コンストラクタ
@@ -597,10 +596,36 @@ void CGame::EnemyConfig(const int nLife, const float fSpeed, const D3DXVECTOR3 S
 }
 
 //===================================================
+// プレイヤーの情報のセーブ
+//===================================================
+void CGameManager::SavePlayerInfo(const int nPerfect, const int nNormal, const int nWeak)
+{
+	// ファイルを開く
+	ofstream file("data/TXT/playerInfo.txt");
+
+	// ファイルが開けたら
+	if (file.is_open())
+	{
+		file << "PARFECT = " << nPerfect << "\n";
+		file << "NORMAL = " << nNormal << "\n";
+		file << "WEAK = " << nWeak;
+
+		// ファイルを閉じる
+		file.clear();
+		file.close();
+	}
+	else
+	{
+		MessageBox(NULL, "ファイルが開けませんでした", "data/TXT/playerInfo.txt", MB_OK);
+	}
+}
+
+//===================================================
 // コンストラクタ
 //===================================================
 CGameManager::CGameManager()
 {
+	m_nGameTime = NULL;
 	m_nCounter = NULL;
 }
 
@@ -609,7 +634,7 @@ CGameManager::CGameManager()
 //===================================================
 CGameManager::~CGameManager()
 {
-	m_nGameTime = 0;
+
 }
 
 //===================================================
@@ -664,7 +689,7 @@ void CGameManager::Update(void)
 			m_nCounter = 0;
 
 			// タイマーを加算
-			m_nGameTime++;
+ 			m_pInstance->m_nGameTime++;
 		}
 	}
 }

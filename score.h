@@ -19,12 +19,6 @@
 #include "number.h"
 
 //*************************************************
-// マクロ定義
-//*************************************************
-#define MAX_SCORE (999999999)	// 最大のスコア
-#define MIN_SCORE (0)			// 最小のスコア
-
-//*************************************************
 // スコアクラスの定義
 //*************************************************
 class CScore : public CObject
@@ -41,6 +35,7 @@ public:
 
 	CScore(int nPriority = Const::NUM_PRIORITY - 2);
 	~CScore();
+
 	virtual HRESULT Init(void);
 	virtual void Uninit(void);
 	virtual void Update(void);

@@ -31,7 +31,6 @@ namespace
 CTime::CTime(int nPriority) : CObject(nPriority)
 {
 	m_nTime = NULL;
-	m_nDestTime = NULL;
 
 	m_nMinute = NULL;
 	m_nSecond = NULL;
@@ -148,19 +147,6 @@ void CTime::Update(void)
 	// カウントアップ
 	UpdateCountUp();
 
-	// 目的の値以上になったら
-	if (m_nTime >= m_nDestTime)
-	{
-		// 制限
-		m_nTime = m_nDestTime;
-	}
-	else
-	{
-		// タイマーを加算
-		m_nTime++;
-	}
-
-	// 分と秒の設定
 	SetMinute(m_nTime);
 	SetSecond(m_nTime);
 
@@ -324,11 +310,10 @@ CTime* CTime::Create(const D3DXVECTOR3 pos, const float fWidth, const float fHei
 	// 位置の設定
 	pTime->SetPosition(pos);
 
-	// 目的の時間の設定
-	pTime->m_nDestTime = nTime;
-
 	// 初期化
 	pTime->Init();
+
+	pTime->m_nTime = nTime;
 
 	pTime->m_bCountUp = bCountUp;
 

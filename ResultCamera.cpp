@@ -58,7 +58,7 @@ void CResultCamera::Update(void)
 	D3DXVECTOR3 rot = CCamera::GetRotaition();
 
 	// ƒJƒƒ‰‚ğ‰ñ“]
-	rot.y += 0.01f;
+	rot.y += 0.005f;
 
 	// Œü‚«‚Ìİ’è
 	CCamera::SetRot(rot);
