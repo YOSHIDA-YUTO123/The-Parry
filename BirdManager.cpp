@@ -95,6 +95,7 @@ void CBirdManager::InAreaRenge(const D3DXVECTOR3 otherPos)
 		// 距離を求める
 		float fDistance = GetDistance(pos - otherPos);
 
+		// 出現エリアの範囲外だったら
 		if (fDistance >= m_Arena[nCnt].fRadius)
 		{
 			nIdx = nCnt;

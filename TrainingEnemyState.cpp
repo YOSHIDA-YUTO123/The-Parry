@@ -201,17 +201,11 @@ void CTrainingEnemyAction::Update(void)
 			// 構えの設定処理
 			pPlayer->SetStance(pos);
 
-			// 成功度の取得
-			pPlayer->SuccessParry();
-
 			// ヒットストップ
 			pEnemy->SetHitStop(25);
 
 			// ヒットストップ
 			pPlayer->SetHitStop(25);
-
-			//// 成功度の設定
-			//pEnemy->SetSuccess(nSuccess);
 
 			// ヒット状態にする
 			pEnemy->ChangeState(make_shared<CTrainingEnemyHit>());

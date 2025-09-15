@@ -25,6 +25,8 @@
 #include "effect.h"
 #include "ParticleSpark.h"
 #include"Orbit.h"
+#include "game.h"
+#include"slow.h"
 
 using namespace Const;// 名前空間Constを使用
 using namespace std;  // 名前空間stdを使用
@@ -378,6 +380,9 @@ void CTrainingEnemy::CollisionPlayerAttack(void)
 	// プレイヤーのモーションの取得
 	CMotion* pPlayerMotion = pPlayer->GetMotion();
 
+	// パリィの成功度の取得
+	int nSuccess = pPlayer->SuccessParry();
+
 	// パリィモーションの蹴りになったら
 	if (pPlayerMotion->IsEventFrame(38, 38, pPlayer->MOTIONTYPE_ROUNDKICK))
 	{
@@ -393,37 +398,8 @@ void CTrainingEnemy::CollisionPlayerAttack(void)
 		// 手が当たったら
 		if (pCapsule != nullptr && pCapsule->CollisionSphere(m_pCapsule.get(), &FootRSphere))
 		{
-			// 状態の変更
-			ChangeState(make_shared<CTrainingEnemyDamage>());
-
-			// 位置の取得
-			D3DXVECTOR3 FootR = pPlayer->GetModelPos(CPlayer::MODEL_FOOTR);
-			D3DXVECTOR3 pos = GetPosition();
-
-			//auto pEffect = CEffect3D::Create(FootR, 100.0f, D3DCOLOR_RGBA(255, 215, 0, 255), CEffect3D::TYPE_HIT);
-			//pEffect->Set(60, VEC3_NULL);
-
-			// パーティクルの生成
-			CParticleSpark* pSpark = CParticleSpark::Create(FootR, D3DXVECTOR2(3.0f, 40.0f), D3DCOLOR_RGBA(255, 127, 80, 255));
-			pSpark->SetParticle(15.0f, 60, 150, 1, -180);
-
-			pSpark = CParticleSpark::Create(FootR, D3DXVECTOR2(3.0f, 40.0f), D3DCOLOR_RGBA(106, 90, 205, 255));
-			pSpark->SetParticle(15.0f, 60, 150, 1, -180);
-
-			// プレイヤーの位置の取得
-			D3DXVECTOR3 PlayerPos = pPlayer->GetPosition();
-
-			// ボスまでの角度を取得
-			float fAngle = GetTargetAngle(pos, PlayerPos);
-
-			// 向きの設定
-			pPlayer->SetAngle(fAngle + D3DX_PI);
-
-			// インパクトを生成
-			auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.9f), FootR, 30.0f, 50.0f);
-
-			// サークルの設定処理
-			pCircle->SetCircle(15.0f, 1.0f, 30, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
+			// ダメ―ジモーションの設定
+			SelectDamageMotion(nSuccess, playerFootR);
 		}
 	}
 
@@ -468,10 +444,147 @@ bool CTrainingEnemy::CollisionPlayer(void)
 	if (pPlayer == nullptr) return false;
 
 	// プレイヤーとの当たり判定
-	if (pPlayer->CollisionCapsule(&capsule))
+	if (pPlayer->CollisionCapsule(&capsule,false))
 	{
 		return true;
 	}
 
 	return false;
+}
+//===================================================
+// どのダメージモーションが出るか判定
+//===================================================
+void CTrainingEnemy::SelectDamageMotion(int success, const D3DXVECTOR3 ImpactPos)
+{
+	// プレイヤーの取得
+	CPlayer* pPlayer = CTutorial::GetPlayer();
+
+	// 取得できなかったら処理しない
+	if (pPlayer == nullptr) return;
+
+	// 成功度の遷移
+	switch (success)
+	{
+	case CPlayer::PARRY_MISS:
+		break;
+	case CPlayer::PARRY_WEAK:
+	{
+		//// 状態の設定
+		//ChangeState(make_shared<CEnemyDamageS>(1));
+
+		//// 位置の取得
+		//D3DXVECTOR3 pos = GetPosition();
+
+		//// プレイヤーの位置の取得
+		//D3DXVECTOR3 PlayerPos = pPlayer->GetPosition();
+
+		//// パーティクルの生成
+		//auto pParticle = CParticle3DNormal::Create(ImpactPos, 10.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
+
+		//// パーティクルの設定処理
+		//pParticle->SetParticle(15.0f, 240, 50, 5, 314);
+
+		//// ボスまでの角度を取得
+		//float fAngle = GetTargetAngle(pos, PlayerPos);
+
+		//// 向きの設定
+		//pPlayer->SetAngle(fAngle + D3DX_PI);
+
+		//// インパクトを生成
+		//auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.6f, 0.8f), ImpactPos, 0.0f, 50.0f);
+
+		//// サークルの設定処理
+		//pCircle->SetCircle(35.0f, 15.0f, 60, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
+
+				// 状態の設定
+		ChangeState(make_shared<CTrainingEnemyDamage>());
+	}
+	break;
+	case CPlayer::PARRY_NORMAL:
+	{
+		//// 位置の取得
+		//D3DXVECTOR3 pos = GetPosition();
+
+		//// プレイヤーの位置の取得
+		//D3DXVECTOR3 PlayerPos = pPlayer->GetPosition();
+
+		//// パーティクルの生成
+		//auto pParticle = CParticle3DNormal::Create(ImpactPos, 10.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
+
+		//// パーティクルの設定処理
+		//pParticle->SetParticle(15.0f, 240, 50, 5, 314);
+
+		//// ボスまでの角度を取得
+		//float fAngle = GetTargetAngle(pos, PlayerPos);
+
+		//// 向きの設定
+		//pPlayer->SetAngle(fAngle + D3DX_PI);
+
+		////// パリィエフェクトの生成
+		////CParryEffect::Create(ImpactPos, D3DXVECTOR3(150.0f, 150.0f, 0.0f), D3DXVECTOR3(0.0f, fAngle, 0.0f), 5, 3, 4, false, CParryEffect::TYPE_ROUND_KICK);
+
+		////// パリィエフェクトの生成
+		////CParryEffect::Create(ImpactPos, D3DXVECTOR3(150.0f, 150.0f, 0.0f), D3DXVECTOR3(0.0f, fAngle, 0.0f), 5, 2, 6, false, CParryEffect::TYPE_SPARK);
+
+		//// インパクトを生成
+		//auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.6f, 0.8f), ImpactPos, 0.0f, 50.0f);
+
+		//// サークルの設定処理
+		//pCircle->SetCircle(35.0f, 15.0f, 60, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
+
+		//// 状態の設定
+		//ChangeState(make_shared<CEnemyDamageS>(5));
+
+				// 状態の設定
+		ChangeState(make_shared<CTrainingEnemyDamage>());
+	}
+	break;
+	case CPlayer::PARRY_PARFECT:
+	{
+		// スローモーションの取得
+		CSlow* pSlow = CManager::GetSlow();
+
+		// 状態の変更
+		ChangeState(make_shared<CTrainingEnemyDamage>());
+
+		D3DXVECTOR3 pos = GetPosition();
+
+		//auto pEffect = CEffect3D::Create(FootR, 100.0f, D3DCOLOR_RGBA(255, 215, 0, 255), CEffect3D::TYPE_HIT);
+		//pEffect->Set(60, VEC3_NULL);
+
+		// パーティクルの生成
+		CParticleSpark* pSpark = CParticleSpark::Create(ImpactPos, D3DXVECTOR2(3.0f, 40.0f), D3DCOLOR_RGBA(255, 127, 80, 255));
+		pSpark->SetParticle(15.0f, 60, 150, 1, -180);
+
+		pSpark = CParticleSpark::Create(ImpactPos, D3DXVECTOR2(3.0f, 40.0f), D3DCOLOR_RGBA(106, 90, 205, 255));
+		pSpark->SetParticle(15.0f, 60, 150, 1, -180);
+
+		// プレイヤーの位置の取得
+		D3DXVECTOR3 PlayerPos = pPlayer->GetPosition();
+
+		// ボスまでの角度を取得
+		float fAngle = GetTargetAngle(pos, PlayerPos);
+
+		// 向きの設定
+		pPlayer->SetAngle(fAngle + D3DX_PI);
+
+		// インパクトを生成
+		auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.9f), ImpactPos, 30.0f, 50.0f);
+
+		// サークルの設定処理
+		pCircle->SetCircle(15.0f, 1.0f, 30, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
+
+		if (pSlow != nullptr)
+		{
+			// スローモーション
+			pSlow->Start(60, 12);
+		}
+
+		// 状態の設定
+		ChangeState(make_shared<CTrainingEnemyDamage>());
+	}
+	break;
+	default:
+		break;
+	}
 }

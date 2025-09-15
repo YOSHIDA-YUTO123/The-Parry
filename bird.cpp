@@ -18,6 +18,7 @@
 #include "transform.h"
 #include "game.h"
 #include"meshfield.h"
+#include "manager.h"
 
 using namespace std;	// 名前空間stdの使用
 using namespace Const;	// 名前空間Constの使用
@@ -193,6 +194,12 @@ void CBird::Update(void)
 	// 位置の設定
 	CCharacter3D::SetPosition(pos);
 
+	// 現在のモードの取得
+	CScene::MODE mode = CManager::GetMode();
+
+	// モードがリザルトだったら
+	if (mode == CScene::MODE_RESULT) return;
+
 	CMotion* pMotion = CCharacter3D::GetMotion();
 
 	if (pMotion != nullptr)
@@ -321,6 +328,9 @@ void CBird::DeleteList(void)
 	// 取得出来たら
 	if (pBirdManager != nullptr)
 	{
+		// 影の消去
+		CCharacter3D::DeleteShadow();
+
 		// リストから切り離す
 		pBirdManager->Erase(this);
 	}

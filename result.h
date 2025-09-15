@@ -22,6 +22,7 @@
 // 前方宣言
 //***************************************************
 class CResultCamera;
+class CCamera;
 
 //***************************************************
 // リザルト(勝利)クラスの定義
@@ -56,6 +57,7 @@ public:
 	void Update(void);
 	void Draw(void);
 private:
+	std::unique_ptr<CCamera> m_pCamera; // カメラクラスへのポインタ
 };
 
 #endif

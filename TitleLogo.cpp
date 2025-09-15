@@ -9,14 +9,23 @@
 // インクルードファイル
 //***************************************************
 #include "TitleLogo.h"
+#include"math.h"
 
 using namespace Const; // 名前空間Constを使用
+using namespace math;  // 名前空間mathの使用
+
+//***************************************************
+// 定数宣言
+//***************************************************
+constexpr int FADE_TIME = 120;	// フェードイン時間
 
 //===================================================
 // コンストラクタ
 //===================================================
 CTitleLogo::CTitleLogo()
 {
+	m_fAddAlv = NULL;
+	m_col = WHITE;
 }
 
 //===================================================
@@ -64,6 +73,9 @@ HRESULT CTitleLogo::Init(void)
 	// テクスチャのIDの設定
 	SetTextureID("data/TEXTURE/title/title000.png");
 
+	m_col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f);
+	m_fAddAlv = 1.0f / FADE_TIME;
+
 	return S_OK;
 }
 
@@ -81,7 +93,14 @@ void CTitleLogo::Uninit(void)
 //===================================================
 void CTitleLogo::Update(void)
 {
+	// アルファ値を設定
+	m_col.a += m_fAddAlv;
 
+	// 範囲の制限
+	m_col.a = Clamp(m_col.a, 0.0f, 1.0f);
+
+	// 色の設定
+	CObject2D::SetColor(m_col);
 }
 
 //===================================================

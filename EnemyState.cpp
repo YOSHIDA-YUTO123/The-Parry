@@ -28,6 +28,7 @@
 #include "transform.h"
 #include "dust.h"
 #include"Collider.h"
+#include"sound.h"
 
 //***************************************************
 // 名前空間
@@ -481,17 +482,11 @@ void CEnemyAttackSmash::Update(void)
 			// 構えの設定
 			pPlayer->SetStance(pos);
 
-			// 成功度
-			int nSuccess = pPlayer->SuccessParry();
-
 			// ヒットストップ
 			pEnemy->SetHitStop(20);
 
 			// ヒットストップ
 			pPlayer->SetHitStop(20);
-
-			// 成功度の設定
-			pEnemy->SetSuccess(nSuccess);
 
 			// ヒット状態にする
 			pEnemy->ChangeState(make_shared<CEnemyHit>());
@@ -815,8 +810,23 @@ void CEnemyRoar::Update(void)
 	// モーションクラスの取得
 	CMotion* pMotion = pEnemy->GetMotion();
 
-	// 攻撃モーションの設定
+	// 取得できなかったら処理しない
+	if (pMotion == nullptr) return;
+
+	// 叫びモーションの設定
 	pMotion->SetMotion(CEnemy::MOTIONTYPE_ROAR, true, 10);
+
+	if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_ROAR))
+	{
+		// 音の取得
+		CSound *pSound = CManager::GetSound();
+
+		if (pSound != nullptr)
+		{
+			// 咆哮
+			pSound->PlaySoundA(CSound::SOUND_LABEL_ROAR);
+		}
+	}
 
 	// 攻撃モーションが終わったら
 	if (pMotion->FinishMotion())
@@ -971,19 +981,11 @@ void CEnemySpin::Update(void)
 			// 構えの設定
 			pPlayer->SetStance(pos);
 
-			int nSuccess = pPlayer->SuccessParry();
-
-			// 右手の位置
-			D3DXVECTOR3 playerHandR = pPlayer->GetModelPos(8);
-
 			// ヒットストップ
 			pEnemy->SetHitStop(25);
 
 			// ヒットストップ
 			pPlayer->SetHitStop(25);
-
-			// 成功度の設定
-			pEnemy->SetSuccess(nSuccess);
 
 			// ヒット状態にする
 			pEnemy->ChangeState(make_shared<CEnemyHit>());
@@ -1610,14 +1612,9 @@ void CEnemySwing::Update(void)
 			{
 				pPlayer->SetStance(pos);
 
-				int nSuccess = pPlayer->SuccessParry();
-
 				pEnemy->SetHitStop(25);
 
 				pPlayer->SetHitStop(25);
-
-				// 成功度の設定
-				pEnemy->SetSuccess(nSuccess);
 
 				// ヒット状態にする
 				pEnemy->ChangeState(make_shared<CEnemyHit>());
@@ -1865,17 +1862,11 @@ void CEnemyJumpAttack::CollisionPlayer(CPlayer* pPlayer, CMotion* pMotion)
 			// 構えの設定処理
 			pPlayer->SetStance(pos);
 
-			// 成功度の取得
-			int nSuccess = pPlayer->SuccessParry();
-
 			// ヒットストップ
 			pEnemy->SetHitStop(25);
 
 			// ヒットストップ
 			pPlayer->SetHitStop(25);
-
-			// 成功度の設定
-			pEnemy->SetSuccess(nSuccess);
 
 			// ヒット状態にする
 			pEnemy->ChangeState(make_shared<CEnemyHit>());
@@ -2574,17 +2565,11 @@ void CEnemyRush::Update(void)
 			// 構えの設定処理
 			pPlayer->SetStance(pos);
 
-			// 成功度の取得
-			int nSuccess = pPlayer->SuccessParry();
-
 			// ヒットストップ
 			pEnemy->SetHitStop(25);
 
 			// ヒットストップ
 			pPlayer->SetHitStop(25);
-
-			// 成功度の設定
-			pEnemy->SetSuccess(nSuccess);
 
 			// ヒット状態にする
 			pEnemy->ChangeState(make_shared<CEnemyHit>());
@@ -2789,17 +2774,11 @@ void CEnemyBackKick::Update(void)
 				// 構えの設定処理
 				pPlayer->SetStance(pos);
 
-				// 成功度の取得
-				int nSuccess = pPlayer->SuccessParry();
-
 				// ヒットストップ
 				pEnemy->SetHitStop(25);
 
 				// ヒットストップ
 				pPlayer->SetHitStop(25);
-
-				// 成功度の設定
-				pEnemy->SetSuccess(nSuccess);
 
 				// ヒット状態にする
 				pEnemy->ChangeState(make_shared<CEnemyHit>());
@@ -3162,14 +3141,9 @@ void CEnemySweepRight::Update(void)
 			{
 				pPlayer->SetStance(pos);
 
-				int nSuccess = pPlayer->SuccessParry();
-
 				pEnemy->SetHitStop(25);
 
 				pPlayer->SetHitStop(25);
-
-				// 成功度の設定
-				pEnemy->SetSuccess(nSuccess);
 
 				// ヒット状態にする
 				pEnemy->ChangeState(make_shared<CEnemyHit>());
@@ -3307,14 +3281,9 @@ void CEnemySweepLeft::Update(void)
 			{
 				pPlayer->SetStance(pos);
 
-				int nSuccess = pPlayer->SuccessParry();
-
 				pEnemy->SetHitStop(25);
 
 				pPlayer->SetHitStop(25);
-
-				// 成功度の設定
-				pEnemy->SetSuccess(nSuccess);
 
 				// ヒット状態にする
 				pEnemy->ChangeState(make_shared<CEnemyHit>());

@@ -34,6 +34,7 @@
 #include"Collider.h"
 #include"Collision.h"
 #include "obstaclemanager.h"
+#include "GateUI.h"
 
 using namespace std;	// 名前空間stdの使用
 using namespace Const;  // 名前空間Const
@@ -174,6 +175,12 @@ HRESULT CTutorial::Init(void)
 
 	// 目印
 	CMark::Create(D3DXVECTOR3(471.0f, 250.0f, -267.0f));
+
+	// 目印
+	CMark::Create(D3DXVECTOR3(0.0f, 200.0f, -1100.0f));
+
+	// ゲートのUIの生成
+	CGateUI::Create(D3DXVECTOR3(640.0f, 500.0f, 0.0f), D3DXVECTOR2(350.0f,50.0f), D3DXVECTOR3(0.0f, 0.0f, -1100.0f));
 
 	// 面の設定
 	int face = CCollisionAABB::FACE_RIGHT;

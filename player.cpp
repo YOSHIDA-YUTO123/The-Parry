@@ -13,41 +13,42 @@
 #include "manager.h"
 #include "effect.h"
 #include "particle.h"
-#include"renderer.h"
+#include "renderer.h"
 #include "impact.h"
-#include"motion.h"
-#include"score.h"
-#include"shadow.h"
+#include "motion.h"
+#include "score.h"
+#include "shadow.h"
 #include "explosion.h"
 #include "dust.h"
 #include "LoadManager.h"
 #include "Wave.h"
 #include "cylinder.h"
-#include"Collider.h"
+#include "Collider.h"
 #include "obstaclemanager.h"
-#include"Obstacle.h"
-#include"statebase.h"
-#include"playerstate.h"
-#include"shadowS.h"
-#include"meshfield.h"
-#include"GameCamera.h"
-#include"slow.h"
+#include "Obstacle.h"
+#include "statebase.h"
+#include "playerstate.h"
+#include "shadowS.h"
+#include "meshfield.h"
+#include "GameCamera.h"
+#include "slow.h"
 #include "game.h"
-#include"Observer.h"
-#include"Gage.h"
+#include "Observer.h"
+#include "Gage.h"
 #include "EffectAnim.h"
 #include "MoveSmoke.h"
-#include"Orbit.h"
+#include "Orbit.h"
 #include "ZoneParticle.h"
 #include "overlay.h"
-#include"math.h"
+#include "math.h"
 #include "ParticleSpark.h"
-#include"light.h"
+#include "light.h"
 #include "tutorial.h"
 #include "BlockManager.h"
 #include "ParryEffect.h"
 #include "bird.h"
 #include "BirdManager.h"
+#include "sound.h"
 
 using namespace math; // 名前空間mathを使用
 using namespace std;  // 名前空間をstdを使用する
@@ -183,6 +184,9 @@ void CPlayer::Update(void)
 	// モーションの取得
 	auto pMotion = CCharacter3D::GetMotion();
 
+	// モードの取得
+	CScene::MODE mode = CManager::GetMode();
+
 	// 読み込めていなかったら
 	if (pMotion->IsLoad() == false)
 	{
@@ -206,9 +210,6 @@ void CPlayer::Update(void)
 		CGame::SetState(CGame::STATE_END);
 		CGame::SetResult(CGame::RESULTTYPE_LOSE);
 	}
-
-	// モードの取得
-	CScene::MODE mode = CManager::GetMode();
 
 	// キーボードの取得
 	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
@@ -812,6 +813,9 @@ bool CPlayerMovement::MoveKeyboard(CInputKeyboard* pKeyboard,const float fSpeed,
 		pCamera = CTutorial::GetCamera();
 	}
 
+	// 取得できなかったら処理しない
+	if (pCamera == nullptr) return false;
+
 	// カメラの向き
 	D3DXVECTOR3 cameraRot = pCamera->GetRotaition();
 
@@ -946,6 +950,9 @@ bool CPlayerMovement::MoveJoypad(CInputJoypad* pJoypad, const float fSpeed, floa
 		// カメラの取得
 		pCamera = CTutorial::GetCamera();
 	}
+
+	// 取得できなかったら処理しない
+	if (pCamera == nullptr) return false;
 
 	// カメラの向き
 	D3DXVECTOR3 cameraRot = pCamera->GetRotaition();
@@ -1086,39 +1093,7 @@ void CPlayer::UpdateStamina(void)
 //===================================================
 int CPlayer::SuccessParry(void)
 {		
-	// 状態がアクションじゃなかったら抜ける
-	if (CCharacter3D::GetState() != STATE::STATE_ACTION) return PARRY_MISS;
-	
-	//// パーフェクトタイムまでの差分を求める
-	//int nDiff = abs(nParfectTime - m_nParryCounter);
-	
-	// 攻撃の有効時間を設定
-	m_nAttackCounter = ATTACK_TIME;
-	
-	// パーフェクトだったら
-	if (m_nParryCounter >= 0 && m_nParryCounter <= 3)
-	{
-		m_fRevengeValue += 10;
-
-		// 完璧
-		return PARRY_PARFECT;
-	}
-	else if (m_nParryCounter > 3 && m_nParryCounter <= 10)
-	{
-		m_fRevengeValue += 5;
-
-		// 普通
-		return PARRY_NORMAL;
-	}
-	else if (m_nParryCounter > 10 && m_nParryCounter <= m_nParryTime)
-	{
-		m_fRevengeValue += 3;
-
-		// 弱い
-		return PARRY_WEAK;
-	}
-	
-	return PARRY_MISS;
+	return m_ParryResult;
 }
 
 //===================================================
@@ -1515,6 +1490,65 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos)
 	// パーティクルの設定処理
 	pNormal->SetParticle(15.0f, 120, 60, 1, 314);
 	pNormal->SetParam(CEffect3D::TYPE_HIT);
+
+	// 状態がアクションじゃなかったら抜ける
+	if (CCharacter3D::GetState() != STATE::STATE_ACTION) return;
+
+	// 攻撃の有効時間を設定
+	m_nAttackCounter = ATTACK_TIME;
+
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	// パーフェクトだったら
+	if (m_nParryCounter >= 0 && m_nParryCounter <= 3)
+	{
+		m_fRevengeValue += 10;
+
+		if (pSound != nullptr)
+		{
+			// パリィ
+			pSound->PlaySoundA(CSound::SOUND_LABEL_PARRYPARFECT);
+		}
+
+		// 成功度の設定
+		m_ParryResult = PARRY_PARFECT;
+
+		return;
+	}
+	else if (m_nParryCounter > 3 && m_nParryCounter <= 10)
+	{
+		m_fRevengeValue += 5;
+
+		if (pSound != nullptr)
+		{
+			// パリィ
+			pSound->PlaySoundA(CSound::SOUND_LABEL_PARRYNORMAL);
+		}
+
+		// 成功度の設定
+		m_ParryResult = PARRY_NORMAL;
+
+		return;
+	}
+	else if (m_nParryCounter > 10 && m_nParryCounter <= m_nParryTime)
+	{
+		m_fRevengeValue += 3;
+
+		if (pSound != nullptr)
+		{
+			// パリィ
+			pSound->PlaySoundA(CSound::SOUND_LABEL_PARRYWEAK);
+		}
+
+		// 成功度の設定
+		m_ParryResult = PARRY_WEAK;
+
+		return;
+	}
+
+	// 成功度の設定
+	m_ParryResult = PARRY_MISS;
 }
 
 //===================================================

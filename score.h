@@ -21,7 +21,6 @@
 //*************************************************
 // マクロ定義
 //*************************************************
-#define MAX_DIGIT (9)			// 最大の桁数
 #define MAX_SCORE (999999999)	// 最大のスコア
 #define MIN_SCORE (0)			// 最小のスコア
 
@@ -58,6 +57,8 @@ public:
 	void SetScore(const int value) { m_nScore = value; }
 	int GetScore(void) const { return m_nScore; }
 private:
+	static constexpr int  MAX_DIGIT = 9;	// 最大の桁数
+
 	static CNumber* m_apNumber[MAX_DIGIT];	// ナンバーオブジェクトへのポインタ
 	int m_nScore;							// スコア
 	D3DXVECTOR3 m_pos;						// 位置	

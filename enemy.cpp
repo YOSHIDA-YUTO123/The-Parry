@@ -39,7 +39,7 @@
 #include "ParryEffect.h"
 #include "BirdManager.h"
 #include"ExplosionArea.h"
-
+#include"sound.h"
 //***************************************************
 // 定数定義
 //***************************************************
@@ -65,7 +65,6 @@ using namespace std;							// 名前空間stdを使用
 CEnemy::CEnemy() : CCharacter3D(TYPE_ENEMY)
 {
 	m_bSetMatrix = false;
-	m_nParrySuccess = NULL;
 	m_pMove = nullptr;
 	m_pMachine = nullptr;
 	D3DXMatrixIdentity(&m_RushEffectMtx);
@@ -1482,6 +1481,15 @@ bool CEnemy::SetTNTEffect(CObstacle* pObstacle)
 		return false;
 	}
 
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	if (pSound != nullptr)
+	{
+		// 爆発
+		pSound->PlaySoundA(CSound::SOUND_LABEL_EXPLOSION);
+	}
+
 	// 瓦礫の生成
 	CRubbleManager::SetExplosionTNT(CenterPos, 120, 16, D3DXVECTOR2(15.0f, 15.0f));
 
@@ -1537,6 +1545,9 @@ void CEnemy::CollisionPlayer(CMotion *pPlayerMotion,CPlayer *pPlayer)
 	// プレイヤーの位置の取得
 	D3DXVECTOR3 PlayerPos = pPlayer->GetPosition();
 
+	// 反撃の成功度の取得
+	int nParrySuccess = pPlayer->SuccessParry();
+
 	// パリィモーションの蹴りになったら
 	if (pPlayerMotion->IsEventFrame(38, 38, pPlayer->MOTIONTYPE_ROUNDKICK) && IsDamageMotion() == false)
 	{
@@ -1554,7 +1565,7 @@ void CEnemy::CollisionPlayer(CMotion *pPlayerMotion,CPlayer *pPlayer)
 		if (pSphere != nullptr && pSphere->Collision(&ChestSphere, &FootRSphere))
 		{
 			// どの攻撃モーションがでるか判定
-			SelectDamageMotion(m_nParrySuccess, playerFootR);
+			SelectDamageMotion(nParrySuccess, playerFootR);
 		}
 	}
 
@@ -1575,7 +1586,7 @@ void CEnemy::CollisionPlayer(CMotion *pPlayerMotion,CPlayer *pPlayer)
 		if (pSphere != nullptr && pSphere->Collision(&ChestSphere, &HandRSphere))
 		{
 			// どの攻撃モーションがでるか判定
-			SelectDamageMotion(m_nParrySuccess, playerHandR);
+			SelectDamageMotion(nParrySuccess, playerHandR);
 		}
 	}
 }

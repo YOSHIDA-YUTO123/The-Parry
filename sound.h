@@ -26,7 +26,11 @@ public:
 	// サウンドの種類
 	typedef enum
 	{
-		SOUND_LABEL_ONE = 0,	// 
+		SOUND_LABEL_PARRYPARFECT = 0,	// パリィパーフェクト
+		SOUND_LABEL_PARRYNORMAL,		// パリィ普通
+		SOUND_LABEL_PARRYWEAK,			// パリィ微妙
+		SOUND_LABEL_ROAR,				// 咆哮
+		SOUND_LABEL_EXPLOSION,			// 爆発
 		SOUND_LABEL_MAX
 	} SOUND_LABEL;
 
@@ -57,7 +61,11 @@ private:
 	// サウンドの情報
 	SOUND_INFO m_aSoundInfo[SOUND_LABEL_MAX] = 
 	{
-		{"data/BGM/titlebgm.wav", -1},    // タイトル
+		{"data/SE/parryParfect.wav", 0},  // パリィパーフェクト
+		{"data/SE/parryNormal.wav", 0},   // 普通
+		{"data/SE/parryWeak.wav", 0},     // 微妙
+		{"data/SE/roar.wav", 0},		  // 咆哮
+		{"data/SE/explosion.wav", 0},	  // 爆発
 	};				
 };
 #endif

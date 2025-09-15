@@ -11,12 +11,21 @@
 #include "score.h"
 #include"manager.h"
 #include"renderer.h"
+#include"math.h"
+
+using namespace math;	// 名前空間mathの使用	
+using namespace Const;	// 名前空間Constを使用する
+
+//*************************************************
+// 定数宣言
+//*************************************************
+const int MAX_SCORE = 999999999;	// 最大のスコア
+const int MIN_SCORE = 0;			// 最小のスコア
 
 //*************************************************
 // 静的メンバ変数の宣言
 //*************************************************
 CNumber* CScore::m_apNumber[MAX_DIGIT] = {};	// ナンバーオブジェクトへのポインタ
-using namespace Const;							// 名前空間Constを使用する
 
 //=================================================
 // コンストラクタ
@@ -91,14 +100,7 @@ void CScore::Uninit(void)
 void CScore::Update(void)
 {
 	// スコアの制限
-	if (m_nScore >= MAX_SCORE)
-	{
-		m_nScore = MAX_SCORE;
-	}
-	else if (m_nScore <= MIN_SCORE)
-	{
-		m_nScore = MIN_SCORE;
-	}
+	m_nScore = Clamp(m_nScore, MIN_SCORE, MAX_SCORE);
 
 	for (int nCnt = 0; nCnt < MAX_DIGIT; nCnt++)
 	{

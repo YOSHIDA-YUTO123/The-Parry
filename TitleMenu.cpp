@@ -133,7 +133,7 @@ void CTitleMenu::Update(void)
 		CObject2D::SetSize(Size);
 
 		// ˆÊ’u‚ÌÝ’è
-		pTitleManager->SetPosition(D3DXVECTOR3(pos.x - Size.x * 1.5f, pos.y, pos.z));
+		pTitleManager->SetPosition(D3DXVECTOR3(pos.x - Size.x * 1.3f, pos.y, pos.z));
 	}
 	else
 	{

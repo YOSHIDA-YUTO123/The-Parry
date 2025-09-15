@@ -94,6 +94,7 @@ public:
 	void ChangeState(std::shared_ptr<CTrainingEnemyState> pNewState);
 	RESULT GetAttackResult(void);
 	void CollisionPlayerAttack(void);
+	void SelectDamageMotion(int success, const D3DXVECTOR3 ImpactPos);
 private:
 	bool CollisionPlayer(void);
 	std::unique_ptr<CColliderCapsule> m_pCapsule; // カプセルコライダー

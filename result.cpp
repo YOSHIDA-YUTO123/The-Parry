@@ -19,6 +19,10 @@
 #include "ResultMenu.h"
 #include "game.h"
 #include "timer.h"
+#include"light.h"
+#include"player.h"
+#include "ResultPlayer.h"
+#include "bird.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -81,7 +85,6 @@ void CResultWin::Uninit(void)
 	{
 		m_pCamera->Uninit();
 		m_pCamera.reset();
-		m_pCamera = nullptr;
 	}
 }
 
@@ -146,6 +149,33 @@ HRESULT CResultLose::Init(void)
 	// リザルトマネージャーの生成
 	CResultMenuManager::Create();
 
+	// カメラクラスの定義
+	m_pCamera = make_unique<CCamera>();
+	m_pCamera->Init();
+	m_pCamera->SetCamera(D3DXVECTOR3(0.0f, 200.0f, -400.0f), VEC3_NULL, D3DXVECTOR3(D3DX_PI * 0.65f, 0.0f, 0.0f));
+
+	// ライトの取得
+	CLight* pLight = CManager::GetLight();
+	pLight->Init();
+
+	// ポイントライトの設定処理
+	pLight->SetPoint(D3DXVECTOR3(0.0f, 300.0f, 0.0f), 400.0f, D3DCOLOR_RGBA(255, 255, 255, 255), D3DCOLOR_RGBA(255, 255, 255, 255));
+
+	// フィールドの生成
+	CMeshField::Create(VEC3_NULL, 48, 48, D3DXVECTOR2(5000.0f, 5000.0f));
+
+	// プレイヤーの生成
+	CResultPlayer::Create(VEC3_NULL, VEC3_NULL);
+
+	// 鳥の生成
+	CBird::Create(D3DXVECTOR3(100.0f, 0.0f, 0.0f),false);
+
+	// 鳥の生成
+	CBird::Create(D3DXVECTOR3(-100.0f, 0.0f, 0.0f), false);
+
+	// 鳥の生成
+	CBird::Create(D3DXVECTOR3(-100.0f, 0.0f, -80.0f), false);
+
 	return S_OK;
 }
 
@@ -154,7 +184,12 @@ HRESULT CResultLose::Init(void)
 //===================================================
 void CResultLose::Uninit(void)
 {
-
+	// カメラの破棄
+	if (m_pCamera != nullptr)
+	{
+		m_pCamera->Uninit();
+		m_pCamera.reset();
+	}
 }
 
 //===================================================
@@ -170,5 +205,10 @@ void CResultLose::Update(void)
 //===================================================
 void CResultLose::Draw(void)
 {
-
+	// カメラの破棄
+	if (m_pCamera != nullptr)
+	{
+		// カメラの設定処理
+		m_pCamera->SetCamera();
+	}
 }

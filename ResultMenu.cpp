@@ -334,18 +334,23 @@ void CResultMenuManager::Create(void)
 		m_pInstance = new CResultMenuManager;
 		m_pInstance->Init();
 
-		// 背景の生成
-		CBackGround::Create(D3DXVECTOR3(640.0f, 360.0f, 0.0f), D3DXVECTOR2(640.0f, 360.0f), WHITE, CBackGround::TYPE_RESULT);
 
+		//// メニューの生成
+		//for (int nCnt = MENU::MENU_RETRY; nCnt <= MENU::MENU_QUIT; nCnt++)
+		//{
+		//	// メニュー型にキャスト
+		//	MENU menu = static_cast<MENU>(nCnt);
+
+		// 2Dオブジェクトの生成
+		CObject2D::Create(300.0f, 100.0f, D3DXVECTOR3(640.0f, 100.0f, 0.0f))->SetTextureID("data/TEXTURE/result/result_gameOver.png");
+
+		//	// メニューの生成
+		//	CResultMenu::Create(D3DXVECTOR3(300.0f + nCnt * 200.0f, 500.0f, 0.0f), D3DXVECTOR2(150.0f, 100.0f), menu);
+		//}
+		 
 		// メニューの生成
-		for (int nCnt = MENU::MENU_RETRY; nCnt <= MENU::MENU_QUIT; nCnt++)
-		{
-			// メニュー型にキャスト
-			MENU menu = static_cast<MENU>(nCnt);
-
-			// メニューの生成
-			CResultMenu::Create(D3DXVECTOR3(640.0f, 260.0f + nCnt * 200.0f, 0.0f), D3DXVECTOR2(150.0f, 100.0f), menu);
-		}
+		CResultMenu::Create(D3DXVECTOR3(400.0f, 500.0f, 0.0f), D3DXVECTOR2(150.0f, 100.0f), MENU::MENU_RETRY);
+		CResultMenu::Create(D3DXVECTOR3(900.0f, 500.0f, 0.0f), D3DXVECTOR2(150.0f, 100.0f), MENU::MENU_QUIT);
 	}
 }
 
@@ -378,19 +383,19 @@ void CResultMenuManager::Update(void)
 	// パッドの取得
 	CInputJoypad* pJoypad = CManager::GetInputJoypad();
 
-	if (pKeyboard->GetTrigger(DIK_DOWN) || pJoypad->GetTrigger(pJoypad->JOYKEY_DOWN))
+	if (pKeyboard->GetTrigger(DIK_RIGHT) || pJoypad->GetTrigger(pJoypad->JOYKEY_RIGHT))
 	{
 		// 次のメニューへ
 		m_Menu = static_cast<CResultMenu::MENU>(m_Menu + 1);
 	}
-	else if (pKeyboard->GetTrigger(DIK_UP) || pJoypad->GetTrigger(pJoypad->JOYKEY_UP))
+	else if (pKeyboard->GetTrigger(DIK_LEFT) || pJoypad->GetTrigger(pJoypad->JOYKEY_LEFT))
 	{
 		// 次のメニューへ
 		m_Menu = static_cast<CResultMenu::MENU>(m_Menu - 1);
 	}
 
 	// 範囲の制限
-	m_Menu = Clamp(m_Menu, CResultMenu::MENU_RETRY, CResultMenu::MENU_QUIT);
+	m_Menu = Wrap(m_Menu, CResultMenu::MENU_RETRY, CResultMenu::MENU_QUIT);
 }
 
 //===================================================

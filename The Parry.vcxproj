@@ -170,6 +170,7 @@
     <ClCompile Include="ExplosionArea.cpp" />
     <ClCompile Include="FadeEffect.cpp" />
     <ClCompile Include="GameCamera.cpp" />
+    <ClCompile Include="GateUI.cpp" />
     <ClCompile Include="gear.cpp" />
     <ClCompile Include="mark.cpp" />
     <ClCompile Include="Object3DAnim.cpp" />
@@ -183,6 +184,7 @@
     <ClCompile Include="ParticleTornado.cpp" />
     <ClCompile Include="ResultCamera.cpp" />
     <ClCompile Include="ResultMenu.cpp" />
+    <ClCompile Include="ResultPlayer.cpp" />
     <ClCompile Include="RevengeGage.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="TitleCamera.cpp" />
@@ -276,6 +278,7 @@
     <ClInclude Include="ExplosionArea.h" />
     <ClInclude Include="FadeEffect.h" />
     <ClInclude Include="GameCamera.h" />
+    <ClInclude Include="GateUI.h" />
     <ClInclude Include="gear.h" />
     <ClInclude Include="mark.h" />
     <ClInclude Include="Object3DAnim.h" />
@@ -289,6 +292,7 @@
     <ClInclude Include="ParticleTornado.h" />
     <ClInclude Include="ResultCamera.h" />
     <ClInclude Include="ResultMenu.h" />
+    <ClInclude Include="ResultPlayer.h" />
     <ClInclude Include="RevengeGage.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="TitleCamera.h" />

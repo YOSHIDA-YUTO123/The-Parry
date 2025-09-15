@@ -183,6 +183,7 @@ private:
 	CObserver<float>* m_pStaminaObserver;			// スタミナオブザーバークラスへのポインタ
 	CObserver<float>* m_pRevengeObserver;			// 反撃オブザーバークラスへのポインタ
 	D3DXVECTOR3 m_posOld;							// 前回の位置
+	PARRY m_ParryResult;							// パリィの結果
 	float m_fStamina;								// スタミナ
 	float m_fRevengeValue;							// 反撃ゲージ量
 	int m_nParryTime;								// パリィの有効時間
