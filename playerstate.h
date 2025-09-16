@@ -48,6 +48,7 @@ public:
 		ID_MAX
 	};
 
+	CPlayerState();
 	CPlayerState(ID Id);
 	virtual ~CPlayerState();
 	virtual void Init(void) override {};
@@ -93,12 +94,24 @@ private:
 class CPlayerDamage : public CPlayerState
 {
 public:
+
+	// âπÇÃéÌóﬁ
+	typedef enum
+	{
+		TYPE_NORMAL = 0,
+		TYPE_SPIKE,
+		TYPE_MAX
+	}TYPE;
+
+	CPlayerDamage();
 	CPlayerDamage(int nDamage);
 	~CPlayerDamage();
 	void Init(void) override;
 	void Update(void) override;
+	void SetSound(const TYPE type) { m_type = type; }
 private:
-	int m_nDamage;
+	TYPE m_type;	// éÌóﬁ
+	int m_nDamage;	// É_ÉÅÅ\ÉWó 
 };
 
 //***************************************************
@@ -120,6 +133,7 @@ private:
 class CPlayerAvoid : public CPlayerState
 {
 public:
+	CPlayerAvoid();
 	CPlayerAvoid(const float fSpeed);
 	~CPlayerAvoid();
 	void Init(void) override;

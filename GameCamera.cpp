@@ -330,6 +330,7 @@ void CGameCamera::UpdateShake(void)
 	float fRangeMin = static_cast<float>(m_nShakeRange);
 
 	posRWk.x = posR.x + static_cast<float>(rand() % nRangeMax) - fRangeMin;
+	//posRWk.y = posR.y + static_cast<float>(rand() % nRangeMax) - fRangeMin;
 	posRWk.z = posR.z + static_cast<float>(rand() % nRangeMax) - fRangeMin;
 
 	// ’‹“_‚Ìİ’è

@@ -323,6 +323,10 @@ MOTIONSET
 	LOOP = 1			# ループするかどうか[0:ループしない / 1:ループする]
 	NUM_KEY = 6			# キーの総数
 
+	NUM_FRAME = 2
+	START_FRAME = 18 80
+	END_FRAME = 18 80
+
 	KEYSET				# --- << KEY : 0 / 6 >> --- 
 		FRAME = 15
 		KEY # ----- [ 0 ] -----

@@ -1282,12 +1282,24 @@ bool CPlayer::CollisionObstacle(D3DXVECTOR3* pPos)
 		if (type != CObstacle::TYPE_TNT_BARREL)
 		{
 			if (mode == CScene::MODE_GAME)
-			{
+			{			
+				// ダメージ状態の生成
+				auto pDamageState = make_shared<CPlayerDamage>(3);
+
+				// 音の設定
+				pDamageState->SetSound(CPlayerDamage::TYPE_SPIKE);
+
 				// ダメージ状態にする
-				ChangeState(make_shared<CPlayerDamage>(3));
+				ChangeState(pDamageState);
 			}
 			else if (mode == CScene::MODE_TUTORIAL)
 			{
+				// ダメージ状態の生成
+				auto pDamageState = make_shared<CPlayerDamage>(0);
+
+				// 音の設定
+				pDamageState->SetSound(CPlayerDamage::TYPE_SPIKE);
+
 				// ダメージ状態にする
 				ChangeState(make_shared<CPlayerDamage>(0));
 			}
@@ -1520,7 +1532,7 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos)
 		if (pSound != nullptr)
 		{
 			// パリィ
-			pSound->PlaySoundA(CSound::SOUND_LABEL_PARRYPARFECT);
+			pSound->Play(CSound::SOUND_LABEL_PARRYPARFECT);
 		}
 
 		// パーフェクト回数を増やす
@@ -1538,7 +1550,7 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos)
 		if (pSound != nullptr)
 		{
 			// パリィ
-			pSound->PlaySoundA(CSound::SOUND_LABEL_PARRYNORMAL);
+			pSound->Play(CSound::SOUND_LABEL_PARRYNORMAL);
 		}
 
 		// 普通回数を増やす
@@ -1556,7 +1568,7 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos)
 		if (pSound != nullptr)
 		{
 			// パリィ
-			pSound->PlaySoundA(CSound::SOUND_LABEL_PARRYWEAK);
+			pSound->Play(CSound::SOUND_LABEL_PARRYWEAK);
 		}
 
 		// 弱い回数を増やす
@@ -1706,6 +1718,12 @@ bool CPlayer::IsMove(CMotion *pMotion)
 	// 反撃状態だったら移動できない
 	if (motiontype == MOTIONTYPE_ROUNDKICK) return false;
 	
+	// 反撃状態だったら移動できない
+	if (motiontype == MOTIONTYPE_REVENGE) return false;
+
+	// 反撃状態だったら移動できない
+	if (motiontype == MOTIONTYPE_REVENGEATTACK) return false;
+
 	// 構え状態だったら移動できない
 	if (pMotion->IsEventFrame(1,35, MOTIONTYPE_STANCE)) return false;
 	
@@ -1730,6 +1748,12 @@ bool CPlayer::IsStance(CMotion* pMotion)
 	// 回避状態だったら
 	if (motiontype == MOTIONTYPE_AVOID) return false;
 	
+	// 反撃状態だったら移動できない
+	if (motiontype == MOTIONTYPE_REVENGE) return false;
+
+	// 反撃状態だったら移動できない
+	if (motiontype == MOTIONTYPE_REVENGEATTACK) return false;
+
 	return true;
 }
 
@@ -1753,6 +1777,12 @@ bool CPlayer::IsAvoid(CMotion* pMotion)
 	// ジャンプ中は回避できない
 	if (motiontype == MOTIONTYPE_JUMP) return false;
 	
+	// 反撃状態だったら移動できない
+	if (motiontype == MOTIONTYPE_REVENGE) return false;
+
+	// 反撃状態だったら移動できない
+	if (motiontype == MOTIONTYPE_REVENGEATTACK) return false;
+
 	// スタミナが消費分無かったら
 	if (m_fStamina < AVOID_STAMINA) return false;
 	

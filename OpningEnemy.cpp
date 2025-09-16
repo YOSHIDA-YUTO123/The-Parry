@@ -9,17 +9,18 @@
 // インクルードファイル
 //***************************************************
 #include "OpningEnemy.h"
-#include"enemy.h"
-#include"transform.h"
-#include"opening.h"
-#include"meshfield.h"
-#include"OpeningCamera.h"
-#include"motion.h"
-#include"dust.h"
-#include"manager.h"
-#include"renderer.h"
-#include"fade.h"
-#include"game.h"
+#include "enemy.h"
+#include "transform.h"
+#include "opening.h"
+#include "meshfield.h"
+#include "OpeningCamera.h"
+#include "motion.h"
+#include "dust.h"
+#include "manager.h"
+#include "renderer.h"
+#include "fade.h"
+#include "game.h"
+#include "sound.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std;   // 名前空間stdを使用
@@ -178,6 +179,15 @@ void COpeningEnemy::Update(void)
 	// 叫びの63f目になったら
 	if (pMotion->IsEventFrame(63,63,CEnemy::MOTIONTYPE_ROAR))
 	{
+		// 音の取得
+		CSound* pSound = CManager::GetSound();
+
+		if (pSound != nullptr)
+		{
+			// 咆哮
+			pSound->Play(CSound::SOUND_LABEL_ROAR);
+		}
+
 		// カメラの揺れの設定
 		pCamera->SetShake(180, 30);
 

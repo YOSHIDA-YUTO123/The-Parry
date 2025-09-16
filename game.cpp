@@ -11,32 +11,33 @@
 #include "game.h"
 #include "meshfield.h"
 #include "dome.h"
-#include"cylinder.h"
-#include"player.h"
-#include"objectX.h"
-#include"enemy.h"
-#include"Obstacle.h"
+#include "cylinder.h"
+#include "player.h"
+#include "objectX.h"
+#include "enemy.h"
+#include "Obstacle.h"
 #include "manager.h"
-#include"input.h"
-#include"result.h"
-#include"fade.h"
+#include "input.h"
+#include "result.h"
+#include "fade.h"
 #include "debugproc.h"
 #include "Gage.h"
 #include "Observer.h"
-#include"GageFrame.h"
+#include "GageFrame.h"
 #include "pause.h"
-#include"GameCamera.h"
-#include"light.h"
+#include "GameCamera.h"
+#include "light.h"
 #include "RevengeGage.h"
 #include "block.h"
 #include "BlockManager.h"
 #include "obstaclemanager.h"
-#include"LoadManager.h"
+#include "LoadManager.h"
 #include "Object3DAnim.h"
 #include "ParryEffect.h"
 #include "bird.h"
 #include "BirdManager.h"
 #include "gear.h"
+#include "sound.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -134,6 +135,15 @@ HRESULT CGame::Init(void)
 	// 歯車の生成
 	CGear::Create(D3DXVECTOR3(-2700.0f,2100.0f,-155.0f));
 
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	if (pSound != nullptr)
+	{
+		// 音の再生
+		pSound->Play(CSound::SOUND_LABEL_GAME_BGM, 0.5f);
+	}
+
 	//// パリィエフェクトの生成
 	//CParryEffect::Create(D3DXVECTOR3(0.0f,200.0f,0.0f), D3DXVECTOR3(150.0f, 150.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 5, 2, 4, true);
 
@@ -147,6 +157,15 @@ HRESULT CGame::Init(void)
 //===================================================
 void CGame::Uninit(void)
 {
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	if (pSound != nullptr)
+	{
+		// 音の停止
+		pSound->StopSound();
+	}
+
 	m_pMeshField = nullptr;
 	m_pCylinder = nullptr;
 	m_pPlayer = nullptr;

@@ -68,6 +68,7 @@ public:
 		ID_MAX
 	};
 
+	CEnemyState();
 	CEnemyState(ID Id);
 	virtual ~CEnemyState();
 	virtual void Init(void) {};
@@ -105,6 +106,7 @@ private:
 class CEnemyIdle : public CEnemyState
 {
 public:
+	CEnemyIdle();
 	CEnemyIdle(int nNextCount);
 	~CEnemyIdle();
 	void Init(void) override;

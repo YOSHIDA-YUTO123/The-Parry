@@ -18,7 +18,7 @@
 //#include"game.h"
 #include"opening.h"
 #include "tutorial.h"
-
+#include "sound.h"
 using namespace math;  // 名前空間mathを使用
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -231,6 +231,15 @@ void CTitleStart::Update(void)
 	{
 		if (pKeyboard->GetTrigger(DIK_RETURN) || pJoypad->GetTrigger(pJoypad->JOYKEY_A))
 		{
+			// 音の取得
+			CSound* pSound = CManager::GetSound();
+
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_ENTER);
+			}
+
 			// スタートを押した
 			pTitleManager->SetStart(true);
 
@@ -417,19 +426,34 @@ void CTitleMenuManager::Update(void)
 	// パッドの取得
 	CInputJoypad* pJoypad = CManager::GetInputJoypad();
 
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
 	if (pKeyboard->GetTrigger(DIK_DOWN) || pJoypad->GetTrigger(pJoypad->JOYKEY_DOWN))
 	{
+		if (pSound != nullptr)
+		{
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_MENU);
+		}
+
 		// 次のメニューへ
 		m_Menu = static_cast<CTitleMenu::MENU>(m_Menu + 1);
 	}
 	else if (pKeyboard->GetTrigger(DIK_UP) || pJoypad->GetTrigger(pJoypad->JOYKEY_UP))
 	{
+		if (pSound != nullptr)
+		{
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_MENU);
+		}
+
 		// 次のメニューへ
 		m_Menu = static_cast<CTitleMenu::MENU>(m_Menu - 1);
 	}
 
 	// 範囲の制限
-	m_Menu = Clamp(m_Menu, CTitleMenu::MENU_START, CTitleMenu::MENU_QUIT);
+	m_Menu = Wrap(m_Menu, CTitleMenu::MENU_START, CTitleMenu::MENU_QUIT);
 }
 
 //===================================================
@@ -515,6 +539,14 @@ void CTitleTutorial::Update(void)
 	{
 		if (pKeyboard->GetTrigger(DIK_RETURN) || pJoypad->GetTrigger(pJoypad->JOYKEY_A))
 		{
+			// 音の取得
+			CSound* pSound = CManager::GetSound();
+
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_ENTER);
+			}
 			// スタートを押した
 			pTitleManager->SetStart(true);
 

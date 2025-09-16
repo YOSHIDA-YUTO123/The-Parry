@@ -58,10 +58,13 @@ public:
 	// モーションの種類
 	typedef enum
 	{
-		MOTIONTYPE_NEUTRAL = 0,
-		MOTIONTYPE_ACTION,
-		MOTIONTYPE_HIT,
-		MOTIONTYPE_DAMAGE,
+		MOTIONTYPE_NEUTRAL = 0, // ニュートラル
+		MOTIONTYPE_ACTION,		// 攻撃
+		MOTIONTYPE_HIT,			// ヒット
+		MOTIONTYPE_DAMAGE,		// ダメージ
+		MOTIONTYPE_DAMAGES,		// 中ダメージ
+		MOTIONTYPE_DAMAGELS,	// 小ダメージ
+		MOTIONTYPE_COMB_DAMAGE,	// 連続ダメージ
 		MOTIONTYPE_MAX
 	}MOTIONTYPE;
 
@@ -97,6 +100,7 @@ public:
 	void SelectDamageMotion(int success, const D3DXVECTOR3 ImpactPos);
 private:
 	bool CollisionPlayer(void);
+	bool IsDamage(CMotion* pMotion);
 	std::unique_ptr<CColliderCapsule> m_pCapsule; // カプセルコライダー
 	std::unique_ptr<CStateMachine> m_pMachine;	  // 状態マシーン
 	D3DXMATRIX m_SwordMtx;						  // 剣のマトリックス

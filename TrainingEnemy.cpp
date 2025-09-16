@@ -27,6 +27,7 @@
 #include"Orbit.h"
 #include "game.h"
 #include"slow.h"
+#include "sound.h"
 
 using namespace Const;// 名前空間Constを使用
 using namespace std;  // 名前空間stdを使用
@@ -144,7 +145,8 @@ void CTrainingEnemy::Update(void)
 	D3DXVECTOR3 pos = CCharacter3D::GetPosition();
 	D3DXVECTOR3 headPos = CCharacter3D::GetModelPos(MODEL_HEAD);
 
-	if (m_pCapsule != nullptr && pMotion->GetBlendType() != MOTIONTYPE_DAMAGE)
+	// ダメージ状態じゃないなら
+	if (m_pCapsule != nullptr && !IsDamage(pMotion))
 	{
 		// コライダーのデータの取得
 		CColliderCapsule::Data data = m_pCapsule->GetData();
@@ -329,9 +331,18 @@ CTrainingEnemy::RESULT CTrainingEnemy::GetAttackResult(void)
 	// プレイヤーのモーションの取得
 	int playerMotionType = pPlayerMotion->GetBlendType();
 
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
 	// 武器が当たったら
 	if (CollisionPlayer())
 	{
+		if (pSound != nullptr)
+		{
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_PERFECT);
+		}
+
 		if (playerMotionType == pPlayer->MOTIONTYPE_REVENGE)
 		{
 			// パリィした
@@ -451,6 +462,30 @@ bool CTrainingEnemy::CollisionPlayer(void)
 
 	return false;
 }
+
+//===================================================
+// ダメージ状態かどうか
+//===================================================
+bool CTrainingEnemy::IsDamage(CMotion* pMotion)
+{
+	// nullだったら処理しない
+	if (pMotion == nullptr) return false;
+
+	// モーションの種類
+	int nMotionType = pMotion->GetBlendType();
+
+	// モーションの種類がダメージだったら
+	if (nMotionType == MOTIONTYPE_DAMAGE) return true;
+
+	// モーションの種類が中ダメージだったら
+	if (nMotionType == MOTIONTYPE_DAMAGES) return true;
+
+	// モーションの種類が小ダメージだったら
+	if (nMotionType == MOTIONTYPE_DAMAGELS) return true;
+
+	return false;
+}
+
 //===================================================
 // どのダメージモーションが出るか判定
 //===================================================
@@ -469,74 +504,74 @@ void CTrainingEnemy::SelectDamageMotion(int success, const D3DXVECTOR3 ImpactPos
 		break;
 	case CPlayer::PARRY_WEAK:
 	{
-		//// 状態の設定
-		//ChangeState(make_shared<CEnemyDamageS>(1));
+		// ダメージ状態の生成
+		auto pDamageState = make_shared<CTrainingEnemyDamage>();
 
-		//// 位置の取得
-		//D3DXVECTOR3 pos = GetPosition();
+		// ダメージの種類の設定
+		pDamageState->SetType(CTrainingEnemyDamage::TYPE_DAMAGELS);
 
-		//// プレイヤーの位置の取得
-		//D3DXVECTOR3 PlayerPos = pPlayer->GetPosition();
+		// 状態の変更
+		ChangeState(pDamageState);
 
-		//// パーティクルの生成
-		//auto pParticle = CParticle3DNormal::Create(ImpactPos, 10.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
+		D3DXVECTOR3 pos = GetPosition();
 
-		//// パーティクルの設定処理
-		//pParticle->SetParticle(15.0f, 240, 50, 5, 314);
+		// パーティクルの生成
+		CParticleSpark* pSpark = CParticleSpark::Create(ImpactPos, D3DXVECTOR2(3.0f, 40.0f), D3DCOLOR_RGBA(255, 127, 80, 255));
+		pSpark->SetParticle(15.0f, 60, 150, 1, -180);
 
-		//// ボスまでの角度を取得
-		//float fAngle = GetTargetAngle(pos, PlayerPos);
+		pSpark = CParticleSpark::Create(ImpactPos, D3DXVECTOR2(3.0f, 40.0f), D3DCOLOR_RGBA(106, 90, 205, 255));
+		pSpark->SetParticle(15.0f, 60, 150, 1, -180);
 
-		//// 向きの設定
-		//pPlayer->SetAngle(fAngle + D3DX_PI);
+		// プレイヤーの位置の取得
+		D3DXVECTOR3 PlayerPos = pPlayer->GetPosition();
 
-		//// インパクトを生成
-		//auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.6f, 0.8f), ImpactPos, 0.0f, 50.0f);
+		// ボスまでの角度を取得
+		float fAngle = GetTargetAngle(pos, PlayerPos);
 
-		//// サークルの設定処理
-		//pCircle->SetCircle(35.0f, 15.0f, 60, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
+		// 向きの設定
+		pPlayer->SetAngle(fAngle + D3DX_PI);
 
-				// 状態の設定
-		ChangeState(make_shared<CTrainingEnemyDamage>());
+		// インパクトを生成
+		auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.9f), ImpactPos, 30.0f, 50.0f);
+
+		// サークルの設定処理
+		pCircle->SetCircle(15.0f, 1.0f, 30, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
 	}
 	break;
 	case CPlayer::PARRY_NORMAL:
 	{
-		//// 位置の取得
-		//D3DXVECTOR3 pos = GetPosition();
+		// ダメージ状態の生成
+		auto pDamageState = make_shared<CTrainingEnemyDamage>();
 
-		//// プレイヤーの位置の取得
-		//D3DXVECTOR3 PlayerPos = pPlayer->GetPosition();
+		// ダメージの種類の設定
+		pDamageState->SetType(CTrainingEnemyDamage::TYPE_DAMAGES);
 
-		//// パーティクルの生成
-		//auto pParticle = CParticle3DNormal::Create(ImpactPos, 10.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
+		// 状態の変更
+		ChangeState(pDamageState);
 
-		//// パーティクルの設定処理
-		//pParticle->SetParticle(15.0f, 240, 50, 5, 314);
+		D3DXVECTOR3 pos = GetPosition();
 
-		//// ボスまでの角度を取得
-		//float fAngle = GetTargetAngle(pos, PlayerPos);
+		// パーティクルの生成
+		CParticleSpark* pSpark = CParticleSpark::Create(ImpactPos, D3DXVECTOR2(3.0f, 40.0f), D3DCOLOR_RGBA(255, 127, 80, 255));
+		pSpark->SetParticle(15.0f, 60, 150, 1, -180);
 
-		//// 向きの設定
-		//pPlayer->SetAngle(fAngle + D3DX_PI);
+		pSpark = CParticleSpark::Create(ImpactPos, D3DXVECTOR2(3.0f, 40.0f), D3DCOLOR_RGBA(106, 90, 205, 255));
+		pSpark->SetParticle(15.0f, 60, 150, 1, -180);
 
-		////// パリィエフェクトの生成
-		////CParryEffect::Create(ImpactPos, D3DXVECTOR3(150.0f, 150.0f, 0.0f), D3DXVECTOR3(0.0f, fAngle, 0.0f), 5, 3, 4, false, CParryEffect::TYPE_ROUND_KICK);
+		// プレイヤーの位置の取得
+		D3DXVECTOR3 PlayerPos = pPlayer->GetPosition();
 
-		////// パリィエフェクトの生成
-		////CParryEffect::Create(ImpactPos, D3DXVECTOR3(150.0f, 150.0f, 0.0f), D3DXVECTOR3(0.0f, fAngle, 0.0f), 5, 2, 6, false, CParryEffect::TYPE_SPARK);
+		// ボスまでの角度を取得
+		float fAngle = GetTargetAngle(pos, PlayerPos);
 
-		//// インパクトを生成
-		//auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.6f, 0.8f), ImpactPos, 0.0f, 50.0f);
+		// 向きの設定
+		pPlayer->SetAngle(fAngle + D3DX_PI);
 
-		//// サークルの設定処理
-		//pCircle->SetCircle(35.0f, 15.0f, 60, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
+		// インパクトを生成
+		auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.9f), ImpactPos, 30.0f, 50.0f);
 
-		//// 状態の設定
-		//ChangeState(make_shared<CEnemyDamageS>(5));
-
-				// 状態の設定
-		ChangeState(make_shared<CTrainingEnemyDamage>());
+		// サークルの設定処理
+		pCircle->SetCircle(15.0f, 1.0f, 30, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
 	}
 	break;
 	case CPlayer::PARRY_PARFECT:
@@ -544,13 +579,16 @@ void CTrainingEnemy::SelectDamageMotion(int success, const D3DXVECTOR3 ImpactPos
 		// スローモーションの取得
 		CSlow* pSlow = CManager::GetSlow();
 
+		// ダメージ状態の生成
+		auto pDamageState = make_shared<CTrainingEnemyDamage>();
+
+		// ダメージの種類の設定
+		pDamageState->SetType(CTrainingEnemyDamage::TYPE_DAMAGE);
+
 		// 状態の変更
-		ChangeState(make_shared<CTrainingEnemyDamage>());
+		ChangeState(pDamageState);
 
 		D3DXVECTOR3 pos = GetPosition();
-
-		//auto pEffect = CEffect3D::Create(FootR, 100.0f, D3DCOLOR_RGBA(255, 215, 0, 255), CEffect3D::TYPE_HIT);
-		//pEffect->Set(60, VEC3_NULL);
 
 		// パーティクルの生成
 		CParticleSpark* pSpark = CParticleSpark::Create(ImpactPos, D3DXVECTOR2(3.0f, 40.0f), D3DCOLOR_RGBA(255, 127, 80, 255));
@@ -579,9 +617,6 @@ void CTrainingEnemy::SelectDamageMotion(int success, const D3DXVECTOR3 ImpactPos
 			// スローモーション
 			pSlow->Start(60, 12);
 		}
-
-		// 状態の設定
-		ChangeState(make_shared<CTrainingEnemyDamage>());
 	}
 	break;
 	default:

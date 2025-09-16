@@ -19,10 +19,20 @@
 #include "GameCamera.h"
 #include "manager.h"
 #include "tutorial.h"
+#include "sound.h"
 
 using MOTION = CPlayer::MOTIONTYPE; // プレイヤーの列挙型の使用
 using namespace std;				// 名前空間stdの使用
 using namespace Const;				// 名前空間Constの使用
+
+//===================================================
+// コンストラクタ
+//===================================================
+CPlayerState::CPlayerState()
+{
+	m_ID = ID_BASE;
+	m_pPlayer = nullptr;
+}
 
 //===================================================
 // コンストラクタ
@@ -89,6 +99,48 @@ CPlayerMove::~CPlayerMove()
 //===================================================
 void CPlayerMove::Update(void)
 {
+	// プレイヤーの取得
+	auto pPlayer = GetPlayer();
+
+	// 取得できなかったら処理しない
+	if (pPlayer == nullptr) return;
+
+	// モーションの取得
+	CMotion* pMotion = pPlayer->GetMotion();
+
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	// 取得出来たら
+	if (pMotion != nullptr)
+	{
+		// フレームの判定
+		if(pMotion->IsEventFrame(CPlayer::MOTIONTYPE_MOVE,0))
+		{
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_WARK000);
+			}
+		}
+		else if (pMotion->IsEventFrame(CPlayer::MOTIONTYPE_MOVE, 1))
+		{
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_WARK001);
+			}
+		}
+	}
+}
+
+//===================================================
+// コンストラクタ(Damage)
+//===================================================
+CPlayerDamage::CPlayerDamage() : CPlayerState(ID_DAMAGE)
+{
+	m_type = TYPE_NORMAL;
+	m_nDamage = NULL;
 }
 
 //===================================================
@@ -96,6 +148,7 @@ void CPlayerMove::Update(void)
 //===================================================
 CPlayerDamage::CPlayerDamage(int nDamage) : CPlayerState(ID_DAMAGE)
 {
+	m_type = TYPE_NORMAL;
 	m_nDamage = nDamage;
 }
 
@@ -113,6 +166,9 @@ void CPlayerDamage::Init(void)
 {
 	// プレイヤーの取得
 	auto pPlayer = GetPlayer();
+
+	// 取得できなかったら処理しない
+	if (pPlayer == nullptr) return;
 
 	// モーションの取得
 	CMotion* pMotion = pPlayer->GetMotion();
@@ -143,6 +199,16 @@ void CPlayerDamage::Init(void)
 	{
 		// モーションの再生
 		pMotion->SetMotion(MOTION::MOTIONTYPE_DAMAGE, true, 2);
+	}
+
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	// 種類がSPIKEだったら
+	if (pSound != nullptr && m_type == TYPE_SPIKE)
+	{
+		// 音の再生
+		pSound->Play(CSound::SOUND_LABEL_SPIKE);
 	}
 }
 
@@ -205,6 +271,14 @@ void CPlayerDownNeutral::Init(void)
 void CPlayerDownNeutral::Update(void)
 {
 
+}
+
+//===================================================
+// コンストラクタ(回避)
+//===================================================
+CPlayerAvoid::CPlayerAvoid() : CPlayerState(ID_AVOID)
+{
+	m_fSpeed = NULL;
 }
 
 //===================================================
@@ -405,6 +479,9 @@ void CPlayerDash::Update(void)
 	// プレイヤーの取得
 	auto pPlayer = GetPlayer();
 
+	// 取得できなかったら処理しない
+	if (pPlayer == nullptr) return;
+
 	// モーションの取得
 	CMotion* pMotion = pPlayer->GetMotion();
 
@@ -415,31 +492,58 @@ void CPlayerDash::Update(void)
 	float fMoveX = sinf(rot.y) * 2.0f;
 	float fMoveZ = cosf(rot.y) * 2.0f;
 
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
 	if (pMotion != nullptr)
 	{
 		// 10フレーム目になったら
 		if (pMotion->IsEventFrame(10, 10, CPlayer::MOTIONTYPE_DASH))
 		{
 			// 位置の取得
-			D3DXVECTOR3 pos = pPlayer->GetModelPos(11);
+			D3DXVECTOR3 pos = pPlayer->GetModelPos(CPlayer::MODEL_FOOTR);
 
 			// エフェクトの生成
 			auto pEffect = CMoveSmoke::Create(D3DXVECTOR3(pos.x,pos.y,pos.z), 100.0f, WHITE);
 
 			// エフェクトの設定処理
 			pEffect->SetEffect(60, D3DXVECTOR3(fMoveX, 0.0f, fMoveZ));
+
+			//if (pSound != nullptr)
+			//{
+			//	// 音の再生
+			//	pSound->Play(CSound::SOUND_LABEL_WARK000);
+			//}
 		}
 		// 30フレーム目になったら
 		else if (pMotion->IsEventFrame(30, 30, CPlayer::MOTIONTYPE_DASH))
 		{
 			// 位置の取得
-			D3DXVECTOR3 pos = pPlayer->GetModelPos(14);
+			D3DXVECTOR3 pos = pPlayer->GetModelPos(CPlayer::MODEL_FOOTL);
 
 			// エフェクトの生成
 			auto pEffect = CMoveSmoke::Create(D3DXVECTOR3(pos.x, pos.y, pos.z), 100.0f, WHITE);
 
 			// エフェクトの設定処理
 			pEffect->SetEffect(60, D3DXVECTOR3(fMoveX, 0.0f, fMoveZ));
+
+		}
+
+		if (pMotion->IsEventFrame(1, 1, CPlayer::MOTIONTYPE_DASH))
+		{
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_WARK000);
+			}
+		}
+		if (pMotion->IsEventFrame(20, 20, CPlayer::MOTIONTYPE_DASH))
+		{
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_WARK001);
+			}
 		}
 	}
 }
@@ -631,6 +735,15 @@ CPlayerRevengeAttack::~CPlayerRevengeAttack()
 //===================================================
 void CPlayerRevengeAttack::Init(void)
 {
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	if (pSound != nullptr)
+	{
+		// 音の再生
+		pSound->Play(CSound::SOUND_LABEL_SP);
+	}
+
 	// プレイヤーの取得
 	auto pPlayer = GetPlayer();
 
@@ -657,10 +770,16 @@ void CPlayerRevengeAttack::Update(void)
 
 	if (pMotion != nullptr)
 	{
+		// 現在のモードの取得
+		CScene::MODE mode = CManager::GetMode();
+
 		if (pMotion->IsEventFrame(105, 105, CPlayer::MOTIONTYPE_REVENGEATTACK))
 		{
+			// ジャンプの高さ
+			float fJumpHeight = (mode == CScene::MODE_TUTORIAL) ? 2.0f : 10.0f;
+
 			// 少し前に進む
-			pPlayer->GetMovement()->Set(D3DXVECTOR3(0.0f, 10.0f, 0.0f));
+			pPlayer->GetMovement()->Set(D3DXVECTOR3(0.0f, fJumpHeight, 0.0f));
 			pPlayer->GetMovement()->MoveForward(50.0f);
 
 			// 重力を無効化

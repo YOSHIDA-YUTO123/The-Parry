@@ -17,10 +17,15 @@
 #include "LoadManager.h"
 #include "effect.h"
 #include "impact.h"
-#include"Collider.h"
+#include "Collider.h"
+#include "sound.h"
+#include "player.h"
+#include "game.h"
+#include "math.h"
 
 using namespace Const;		// 名前空間Constを使用する
 using namespace std;		// 名前空間stdを使用する
+using namespace math;		// 名前空間mathを使用する
 
 // 匿名の名前空間を使用
 namespace
@@ -29,6 +34,7 @@ namespace
 	constexpr int NUM_SIRCLE = 5;			// メッシュサークルを出す数
 	constexpr float MAX_COLOR = 1.0f;		// 色の最大値
 	constexpr float COLOR_EASE = 0.004f;	// 色のイージング値
+	constexpr float AUDIO_DISTANCE = 1000.0f; // 音の聞こえる距離
 }
 
 //================================================
@@ -1007,6 +1013,27 @@ bool CMeshFieldImpact::Update(CMeshField* pMeshField, const int nNumVtx)
 	// いちばん最初に出す、
 	if (SetImpact != 0 && (m_Info.nCounter % SetImpact == 0 || m_Info.nCounter == 0))
 	{
+		// 音の取得
+		CSound* pSound = CManager::GetSound();
+
+		if (pSound != nullptr)
+		{
+			// プレイヤーの取得
+			CPlayer* pPlayer = CGame::GetPlayer();
+
+			// 位置の取得
+			D3DXVECTOR3 playerPos = pPlayer->GetPosition();
+
+			// 距離を求める
+			float fDistance = GetDistance(playerPos - m_Config.pos);
+
+			// ボリュームの設定
+			float fRateVolume = 1.0f - (fDistance / AUDIO_DISTANCE);
+
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_WARK003, fRateVolume);
+		}
+
 		// 角度を求める
 		float rotY = atan2f(m_pMove->Get().x, m_pMove->Get().z);		
 

@@ -24,6 +24,7 @@
 class CObstacle;
 class CExplosionArea;
 class CColliderCapsule;
+class CTNTBarrel;
 
 //**********************************************
 // 障害物のマネージャークラスの定義
@@ -47,6 +48,7 @@ public:
 	void Update(void);
 	int GetObstacleSize(void);
 	bool CollisionExplotion(CColliderCapsule* pCapsule);
+	bool CollisionImpact(CObstacle* pObstacle);
 private:
 	static constexpr int NUM_TNTPOP_POINT = 4;		// 爆発樽の出現ポイントの数
 	CObstacleManager();

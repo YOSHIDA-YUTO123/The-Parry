@@ -19,6 +19,7 @@
 #include "manager.h"
 #include"math.h"
 #include"transform.h"
+#include "sound.h"
 
 using namespace math; // 名前空間mathの使用
 using namespace std;  // 名前空間stdの使用
@@ -195,8 +196,29 @@ void CTrainingEnemyAction::Update(void)
 		// 攻撃の結果の取得
 		auto result = pEnemy->GetAttackResult();
 
+		// 絶対反撃
+		if (result == CTrainingEnemy::RESULT_SPREVENGE)
+		{
+			// 角度を求める
+			float fAngle = GetTargetAngle(playerPos, pos);
+
+			// 角度を設定
+			pPlayer->SetAngle(fAngle);
+
+			// ヒット状態
+			auto pHitState = make_shared<CTrainingEnemyHit>();
+
+			// 連続ダメージ状態にする
+			pHitState->SetCombDamage();
+
+			// ヒット状態にする
+			pEnemy->ChangeState(pHitState);
+
+			// 状態の変更
+			pPlayer->ChangeState(make_shared<CPlayerRevengeAttack>());
+		}
 		// パリィされた
-		if (result == CTrainingEnemy::RESULT_PARRY)
+		else if (result == CTrainingEnemy::RESULT_PARRY)
 		{
 			// 構えの設定処理
 			pPlayer->SetStance(pos);
@@ -257,12 +279,8 @@ void CTrainingEnemyHit::Init(void)
 	// 取得できなかったら処理しない
 	if (pMotion == nullptr) return;
 
-	// モーションがあるなら
-	if (pMotion != nullptr)
-	{
-		// モーションの再生
-		pMotion->SetMotion(CTrainingEnemy::MOTIONTYPE_HIT, true, 10);
-	}
+	// モーションの再生
+	pMotion->SetMotion(CTrainingEnemy::MOTIONTYPE_HIT, true, 10);	
 }
 
 //================================================
@@ -276,21 +294,37 @@ void CTrainingEnemyHit::Update(void)
 	// モーションクラスの取得
 	CMotion* pMotion = pEnemy->GetMotion();
 
+	// プレイヤーの取得
+	CPlayer* pPlayer = CTutorial::GetPlayer();
+
+	// プレイヤーモーションクラスの取得
+	CMotion* pPlayerMotion = pPlayer->GetMotion();
+
 	// 敵が使われていないなら処理しない
 	if (pEnemy == nullptr) return;
 
 	// 取得できなかったら処理しない
 	if (pMotion == nullptr) return;
 
-	// モーションがあるなら
-	if (pMotion != nullptr)
+	// プレイヤーを取得できなかったら処理しない
+	if (pPlayer == nullptr) return;
+
+	// 連続ダメージ状態だったら
+	if (m_type == TYPE_COMB_DAMAGE)
 	{
-		// モーションが終わったら
-		if (pMotion->IsFinishEndBlend())
+		// プレイヤーのモーションが必殺攻撃の120フレーム目か判定
+		if (pPlayerMotion != nullptr && pPlayerMotion->IsEventFrame(120, 120, CPlayer::MOTIONTYPE_REVENGEATTACK))
 		{
 			// 状態の変更
-			pEnemy->ChangeState(make_shared<CTrainingEnemyIdle>());
+			pEnemy->ChangeState(make_shared<CTrainingEnemyCombDamage>());
 		}
+	}
+
+	// モーションが終わったら
+	if (pMotion->IsFinishEndBlend())
+	{
+		// 状態の変更
+		pEnemy->ChangeState(make_shared<CTrainingEnemyIdle>());
 	}
 }
 
@@ -299,6 +333,7 @@ void CTrainingEnemyHit::Update(void)
 //================================================
 CTrainingEnemyDamage::CTrainingEnemyDamage() : CTrainingEnemyState(ID_DAMAGE)
 {
+	m_type = TYPE_DAMAGES;
 }
 
 //================================================
@@ -325,11 +360,32 @@ void CTrainingEnemyDamage::Init(void)
 	// 取得できなかったら処理しない
 	if (pMotion == nullptr) return;
 
-	// モーションがあるなら
-	if (pMotion != nullptr)
+	// 状態の遷移
+	switch (m_type)
 	{
+	case TYPE_DAMAGELS:
+		// モーションの再生
+		pMotion->SetMotion(CTrainingEnemy::MOTIONTYPE_DAMAGELS, true, 10);
+		break;
+	case TYPE_DAMAGES:
+		// モーションの再生
+		pMotion->SetMotion(CTrainingEnemy::MOTIONTYPE_DAMAGES, true, 10);
+		break;
+	case TYPE_DAMAGE:
 		// モーションの再生
 		pMotion->SetMotion(CTrainingEnemy::MOTIONTYPE_DAMAGE, true, 10);
+		break;
+	default:
+		break;
+	}
+
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	if (pSound != nullptr)
+	{
+		// 音の再生
+		pSound->Play(CSound::SOUND_LABEL_PERFECT);
 	}
 }
 
@@ -359,5 +415,87 @@ void CTrainingEnemyDamage::Update(void)
 			// 状態の変更
 			pEnemy->ChangeState(make_shared<CTrainingEnemyIdle>());
 		}
+	}
+}
+
+//================================================
+// コンストラクタ(連続ダメージ)
+//================================================
+CTrainingEnemyCombDamage::CTrainingEnemyCombDamage() : CTrainingEnemyState(ID_COMB_DAMAGE)
+{
+}
+
+//================================================
+// デストラクタ(連続ダメージ)
+//================================================
+CTrainingEnemyCombDamage::~CTrainingEnemyCombDamage()
+{
+}
+
+//================================================
+// 初期化処理(連続ダメージ)
+//================================================
+void CTrainingEnemyCombDamage::Init(void)
+{
+	// 敵の取得
+	CTrainingEnemy* pEnemy = CTrainingEnemyState::GetEnemy();
+
+	// モーションクラスの取得
+	CMotion* pMotion = pEnemy->GetMotion();
+
+	// 敵が使われていないなら処理しない
+	if (pEnemy == nullptr) return;
+
+	// 取得できなかったら処理しない
+	if (pMotion == nullptr) return;
+
+	// モーションの再生
+	pMotion->SetMotion(CTrainingEnemy::MOTIONTYPE_COMB_DAMAGE, true, 10);
+}
+
+//================================================
+// 更新処理(連続ダメージ)
+//================================================
+void CTrainingEnemyCombDamage::Update(void)
+{
+	// 敵の取得
+	CTrainingEnemy* pEnemy = CTrainingEnemyState::GetEnemy();
+
+	// モーションクラスの取得
+	CMotion* pMotion = pEnemy->GetMotion();
+
+	// 敵が使われていないなら処理しない
+	if (pEnemy == nullptr) return;
+
+	// 取得できなかったら処理しない
+	if (pMotion == nullptr) return;
+
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	if (pMotion->IsEventFrame(CTrainingEnemy::MOTIONTYPE_COMB_DAMAGE))
+	{
+		if (pSound != nullptr)
+		{
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_PERFECT);
+		}
+	}
+	if (pMotion->IsEventFrame(159, 159, CTrainingEnemy::MOTIONTYPE_COMB_DAMAGE))
+	{
+		if (pSound != nullptr)
+		{
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_PERFECT);
+		}
+
+		// ダメージ状態の生成
+		auto pDamageState = make_shared<CTrainingEnemyDamage>();
+
+		// 大ダメージ
+		pDamageState->SetType(CTrainingEnemyDamage::TYPE_DAMAGE);
+
+		// 状態の変更
+		pEnemy->ChangeState(pDamageState);
 	}
 }

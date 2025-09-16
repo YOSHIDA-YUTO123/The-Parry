@@ -22,6 +22,7 @@
 #include"fade.h"
 #include"game.h"
 #include "BirdManager.h"
+#include "Obstacle.h"
 
 using namespace Const; // 名前空間Constの使用
 using namespace std;   // 名前空間stdの使用
@@ -99,11 +100,12 @@ HRESULT COpening::Init(void)
 		// オープニングの鳥
 		pBirdManager->SetOpening();
 	}
-	//// トーチの生成
-	//CObjectX::Create(D3DXVECTOR3(250.0f, 150.0f, 165.0f), "data/MODEL/obj/torch.x", D3DXVECTOR3(-D3DX_PI * 0.15f, 0.0f, 0.0f));
 
-	//// トーチの生成
-	//CObjectX::Create(D3DXVECTOR3(250.0f, 150.0f, -165.0f), "data/MODEL/obj/torch.x", D3DXVECTOR3(D3DX_PI * 0.15f, 0.0f, 0.0f));
+	// スパイクトラップ
+	CSpikeTrap::Create(D3DXVECTOR3(-1540.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), -1);
+
+	// スパイクトラップ
+	CSpikeTrap::Create(D3DXVECTOR3(1540.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), -1);
 
 	return S_OK;
 }
@@ -129,10 +131,13 @@ void COpening::Update(void)
 	// キーボードの取得
 	auto pKeyboard = CManager::GetInputKeyboard();
 
+	// パッドの取得
+	auto pJoyPad = CManager::GetInputJoypad();
+
 	// フェードの取得
 	CFade* pFade = CManager::GetFade();
 
-	if (pKeyboard->GetTrigger(DIK_RETURN))
+	if (pKeyboard->GetTrigger(DIK_RETURN) || pJoyPad->GetTrigger(pJoyPad->JOYKEY_A))
 	{
 		// ゲームシーンへ以降
 		pFade->SetFade(make_unique<CGame>());

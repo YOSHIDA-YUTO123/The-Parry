@@ -337,6 +337,10 @@ MOTIONSET
 	LOOP = 1			# ループするかどうか[0:ループしない / 1:ループする]
 	NUM_KEY = 4			# キーの総数
 
+	NUM_FRAME = 2
+	START_FRAME = 20 65
+	END_FRAME = 20 65
+
 	KEYSET				# --- << KEY : 0 / 4 >> --- 
 		FRAME = 20
 		KEY # ----- [ 0 ] -----
@@ -11390,6 +11394,10 @@ END_MOTIONSET
 MOTIONSET
 	LOOP = 1			# ループするかどうか[0:ループしない / 1:ループする]
 	NUM_KEY = 4			# キーの総数
+	
+	NUM_FRAME = 2
+	START_FRAME = 20 72
+	END_FRAME = 20 72
 
 	KEYSET				# --- << KEY : 0 / 4 >> --- 
 		FRAME = 23
@@ -11731,6 +11739,10 @@ MOTIONSET
 	LOOP = 1			# ループするかどうか[0:ループしない / 1:ループする]
 	NUM_KEY = 4			# キーの総数
 
+	NUM_FRAME = 2
+	START_FRAME = 20 72
+	END_FRAME = 20 72
+
 	KEYSET				# --- << KEY : 0 / 4 >> --- 
 		FRAME = 23
 		KEY # ----- [ 0 ] -----
@@ -12070,6 +12082,10 @@ END_MOTIONSET
 MOTIONSET
 	LOOP = 1			# ループするかどうか[0:ループしない / 1:ループする]
 	NUM_KEY = 4			# キーの総数
+	
+	NUM_FRAME = 5
+	START_FRAME = 1 10 20 30 39
+	END_FRAME = 1 10 20 30 39
 
 	KEYSET				# --- << KEY : 0 / 4 >> --- 
 		FRAME = 10

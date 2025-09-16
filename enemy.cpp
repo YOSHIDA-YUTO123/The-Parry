@@ -579,6 +579,9 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 		return;
 	}
 
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
 	// 成功度の遷移
 	switch (success)
 	{
@@ -612,6 +615,12 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 
 		// サークルの設定処理
 		pCircle->SetCircle(35.0f, 15.0f, 60, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
+
+		if (pSound != nullptr)
+		{
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_WEAK);
+		}
 	}
 		break;
 	case CPlayer::PARRY_NORMAL:
@@ -645,6 +654,12 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 
 		// サークルの設定処理
 		pCircle->SetCircle(35.0f, 15.0f, 60, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
+
+		if (pSound != nullptr)
+		{
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_NORMAL);
+		}
 
 		// 状態の設定
 		ChangeState(make_shared<CEnemyDamageS>(5));
@@ -689,6 +704,12 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 		{
 			// スローモーション
 			pSlow->Start(60, 12);
+		}
+
+		if (pSound != nullptr)
+		{
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_PERFECT);
 		}
 
 		// 状態の設定
@@ -959,7 +980,7 @@ bool CEnemy::CollisionObstacle(D3DXVECTOR3 *pPos)
 		UpdateCollider(*pPos);
 
 		// 障害物と武器の判定
-		if (CollisionObstacleToWepon((*itr)))
+		if (CollisionObstacleToWepon((*itr)) || pObstacleManager->CollisionImpact((*itr)))
 		{
 			// 爆発のエフェクト
 			if (SetTNTEffect((*itr)))
@@ -1056,6 +1077,15 @@ void CEnemy::SetRubble(void)
 
 	// 瓦礫を出す
 	CRubbleManager::SetImpact(WeponPos, 120, NUM_RUBBLE, D3DXVECTOR2(15.0f, 35.0f));
+
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	if (pSound != nullptr)
+	{
+		// 音の再生
+		pSound->Play(CSound::SOUND_LABEL_IMPACT000);
+	}
 }
 
 //===================================================
@@ -1208,39 +1238,47 @@ CEnemy::RESULT CEnemy::WeponAttackResult(CPlayer* pPlayer)
 	// プレイヤーのモーションの取得
 	int playerMotionType = pPlayerMotion->GetBlendType();
 
-	// 武器が当たったら
-	if (CollisionWepon())
+	// 武器が当たって無かったら
+	if (!CollisionWepon()) return RESULT_NONE;
+	
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	if (playerMotionType == pPlayer->MOTIONTYPE_REVENGE)
 	{
-		if (playerMotionType == pPlayer->MOTIONTYPE_REVENGE)
+		// パリィした
+		return RESULT_SPREVENGE;
+	}
+	else if (playerMotionType != pPlayer->MOTIONTYPE_PARRY)
+	{
+		// パリィできるか判定
+		const bool bParry = pPlayer->IsParry(pos);
+
+		// パリィできた
+		if (bParry)
 		{
 			// パリィした
-			return RESULT_SPREVENGE;
+			return RESULT_PARRY;
 		}
-		else if (playerMotionType != pPlayer->MOTIONTYPE_PARRY)
+		// 回避だったら
+		else if (playerMotionType == pPlayer->MOTIONTYPE_AVOID || pPlayerMotion->GetType() == pPlayer->MOTIONTYPE_AVOID)
 		{
-			// パリィできるか判定
-			const bool bParry = pPlayer->IsParry(pos);
-
-			// パリィできた
-			if (bParry)
+			// 回避した
+			return RESULT_AVOID;
+		}
+		// カウンター失敗した
+		else if (bParry == false)
+		{
+			if (pSound != nullptr)
 			{
-				// パリィした
-				return RESULT_PARRY;
+				// ダメージ音(使いまわし)
+				pSound->Play(CSound::SOUND_LABEL_NORMAL);
 			}
-			// 回避だったら
-			else if (playerMotionType == pPlayer->MOTIONTYPE_AVOID || pPlayerMotion->GetType() == pPlayer->MOTIONTYPE_AVOID)
-			{
-				// 回避した
-				return RESULT_AVOID;
-			}
-			// カウンター失敗した
-			else if (bParry == false)
-			{
-				// 当たった
-				return RESULT_HIT;
-			}
+			// 当たった
+			return RESULT_HIT;
 		}
 	}
+	
 	return RESULT_NONE;
 }
 
@@ -1487,7 +1525,7 @@ bool CEnemy::SetTNTEffect(CObstacle* pObstacle)
 	if (pSound != nullptr)
 	{
 		// 爆発
-		pSound->PlaySoundA(CSound::SOUND_LABEL_EXPLOSION);
+		pSound->Play(CSound::SOUND_LABEL_EXPLOSION);
 	}
 
 	// 瓦礫の生成

@@ -21,6 +21,8 @@
 #include"tutorial.h"
 #include"transform.h"
 #include"shadowS.h"
+#include "opening.h"
+#include "explosion.h"
 
 using namespace Const;							// 名前空間Constを使用する
 using namespace std;							// 名前空間stdを使用する
@@ -112,6 +114,11 @@ void CObstacle::Update(void)
 	{
 		// フィールドの取得
 		pField = CTutorial::GetField();
+	}
+	else if (mode == CScene::MODE_OPENING)
+	{
+		// フィールドの取得
+		pField = COpening::GetField();
 	}
 	else if (mode == CScene::MODE_GAME)
 	{
@@ -592,24 +599,34 @@ void CTNTBarrel::LandingShake(const D3DXVECTOR3 pos)
 	// フィールドの取得
 	CMeshField* pMeshField = CGame::GetField();
 
-	if (pMeshField != nullptr)
+	// 取得できなかったら処理しない
+	if (pMeshField == nullptr) return;
+	
+	float fHeight = 0.0f;
+
+	// 地面の着地していたら
+	if (pMeshField->Collision(pos, &fHeight))
 	{
-		float fHeight = 0.0f;
-
-		// 地面の着地していたら
-		if (pMeshField->Collision(pos, &fHeight))
+		// 着地したら
+		if (!m_bLanding)
 		{
-			// 着地したら
-			if (!m_bLanding)
-			{
-				// 揺れる時間
-				m_nShakeTime = 30;
+			// 爆発の生成
+			auto pExplotion = CExplosionManager::SetParam(pos, D3DXVECTOR2(70.0f, 70.0f), D3DXCOLOR(0.6f, 0.6f, 0.6f, 0.8f), 4, 3, 5);
 
-				// 着地した
-				m_bLanding = true;
+			if (pExplotion != nullptr)
+			{
+				// 爆発の生成
+				pExplotion->Create(CExplosion::TYPE_SMOKE, D3DXVECTOR2(10.0f, 1.0f), 4);
 			}
+
+			// 揺れる時間
+			m_nShakeTime = 30;
+
+			// 着地した
+			m_bLanding = true;
 		}
 	}
+	
 
 	if (m_nShakeTime > 0 && m_bLanding)
 	{

@@ -19,6 +19,7 @@
 #include "title.h"
 #include "background.h"
 #include"opening.h"
+#include "sound.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -204,15 +205,8 @@ void CPauseContinue::Update(void)
 		// 色
 		CObject2D::SetColor(D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
 
-		// ENTERキーが押されたら
-		if (pKeyboard->GetTrigger(DIK_RETURN))
-		{
-			// ポーズをオフ
-			pPauseManager->EnablePause(false);
-		}
-
-		// Aボタンが押されたら
-		if (pJoyPad->GetTrigger(pJoyPad->JOYKEY_A))
+		// ENTERキーが押されたら || Aボタンが押されたら
+		if (pKeyboard->GetTrigger(DIK_RETURN) || pJoyPad->GetTrigger(pJoyPad->JOYKEY_A))
 		{
 			// ポーズをオフ
 			pPauseManager->EnablePause(false);
@@ -332,7 +326,7 @@ void CPauseRetry::Update(void)
 			// フェードの取得
 			CFade* pFade = CManager::GetFade();
 
-			pFade->SetFade(make_unique<COpening>());
+			pFade->SetFade(make_unique<CGame>());
 		}
 	}
 	else
@@ -443,17 +437,17 @@ void CPauseQuit::Update(void)
 		CObject2D::SetColor(D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
 
 		// ENTERキーが押されたら
-		if (pKeyboard->GetTrigger(DIK_RETURN))
+		if (pKeyboard->GetTrigger(DIK_RETURN) || pJoyPad->GetTrigger(pJoyPad->JOYKEY_A))
 		{
-			// フェードの取得
-			CFade* pFade = CManager::GetFade();
+			// 音の取得
+			CSound* pSound = CManager::GetSound();
 
-			pFade->SetFade(make_unique<CTitle>());
-		}
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_ENTER);
+			}
 
-		// Aボタンが押されたら
-		if (pJoyPad->GetTrigger(pJoyPad->JOYKEY_A))
-		{
 			// フェードの取得
 			CFade* pFade = CManager::GetFade();
 
@@ -580,33 +574,32 @@ void CPauseManager::SelectMenu(void)
 	// パッドの取得
 	CInputJoypad* pJoyPad = CManager::GetInputJoypad();
 
-	if (pKeyboard != nullptr)
-	{
-		// 上が押されたら
-		if (pKeyboard->GetTrigger(DIK_UP))
-		{
-			// 次の項目へ
-			m_SelectMenu = static_cast<CPause::TYPE>(m_SelectMenu - 1);
-		}
-		// 下が押されたら
-		else if (pKeyboard->GetTrigger(DIK_DOWN))
-		{
-			// 前の項目へ
-			m_SelectMenu = static_cast<CPause::TYPE>(m_SelectMenu + 1);
-		}
-	}
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
 
-	if (pJoyPad != nullptr)
+	if (pKeyboard != nullptr && pJoyPad != nullptr)
 	{
 		// 上が押されたら
-		if (pJoyPad->GetTrigger(pJoyPad->JOYKEY_UP))
+		if (pKeyboard->GetTrigger(DIK_UP) || pJoyPad->GetTrigger(pJoyPad->JOYKEY_UP))
 		{
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_MENU);
+			}
+
 			// 次の項目へ
 			m_SelectMenu = static_cast<CPause::TYPE>(m_SelectMenu - 1);
 		}
 		// 下が押されたら
-		else if (pJoyPad->GetTrigger(pJoyPad->JOYKEY_DOWN))
+		else if (pKeyboard->GetTrigger(DIK_DOWN) || pJoyPad->GetTrigger(pJoyPad->JOYKEY_DOWN))
 		{
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_MENU);
+			}
+
 			// 前の項目へ
 			m_SelectMenu = static_cast<CPause::TYPE>(m_SelectMenu + 1);
 		}

@@ -12,6 +12,8 @@
 #include"bird.h"
 #include"motion.h"
 #include"game.h"
+#include "sound.h"
+#include "manager.h"
 
 //===================================================
 // コンストラクタ
@@ -118,6 +120,17 @@ void CBirdFly::Init(void)
 	// 取得できなかったら処理しない
 	if (pMotion == nullptr) return;
 
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	if (pSound != nullptr)
+	{
+		// 鳥の鳴き声を停止
+		pSound->StopSound(CSound::SOUND_LABEL_BIRDSOUND);
+
+		// 鳥が羽ばたく
+		pSound->Play(CSound::SOUND_LABEL_BIRDFLY);
+	}
 	// モーションの設定
 	pMotion->SetMotion(CBird::MOTIONTYPE_FLY, true, 10);
 }

@@ -35,6 +35,7 @@ public:
 		ID_ACTION,		 // 攻撃
 		ID_HIT,			 // 攻撃ヒット
 		ID_DAMAGE,		 // ダメージ
+		ID_COMB_DAMAGE,	 // 連続ダメージ
 		ID_MAX
 	}ID;
 
@@ -87,12 +88,25 @@ private:
 class CTrainingEnemyHit : public CTrainingEnemyState
 {
 public:
+
+	// モーションの種類
+	typedef enum
+	{
+		TYPE_HIT = 0,
+		TYPE_COMB_DAMAGE,
+		TYPE_MAX
+	}TYPE;
+
 	CTrainingEnemyHit();
 	~CTrainingEnemyHit();
 
 	void Init(void) override;
 	void Update(void) override;
+
+	// 連続ダメージ状態にするかどうか
+	void SetCombDamage(void) { m_type = TYPE_COMB_DAMAGE; }
 private:
+	TYPE m_type; // モーションの種類
 };
 
 //*************************************************
@@ -101,12 +115,37 @@ private:
 class CTrainingEnemyDamage : public CTrainingEnemyState
 {
 public:
+
+	// ダメージモーションの種類
+	typedef enum
+	{
+		TYPE_DAMAGELS = 0,
+		TYPE_DAMAGES,
+		TYPE_DAMAGE,
+		TYPE_MAX
+	}TYPE;
+
 	CTrainingEnemyDamage();
 	~CTrainingEnemyDamage();
 
 	void Init(void) override;
 	void Update(void) override;
+	void SetType(const TYPE type) { m_type = type; }
 private:
+	TYPE m_type; // 種類
 };
 
+//*************************************************
+// 連続ダメージ状態クラスの定義
+//*************************************************
+class CTrainingEnemyCombDamage : public CTrainingEnemyState
+{
+public:
+	CTrainingEnemyCombDamage();
+	~CTrainingEnemyCombDamage();
+
+	void Init(void) override;
+	void Update(void) override;
+private:
+};
 #endif

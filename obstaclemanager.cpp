@@ -14,8 +14,9 @@
 #include <fstream>
 #include "player.h"
 #include "game.h"
-#include"Collider.h"
-#include"ExplosionArea.h"
+#include "Collider.h"
+#include "ExplosionArea.h"
+#include "meshfield.h"
 
 using namespace std; // 名前空間stdを使用
 
@@ -255,5 +256,39 @@ bool CObstacleManager::CollisionExplotion(CColliderCapsule* pCapsule)
 			return true;
 		}
 	}
+	return false;
+}
+
+//==============================================
+// インパクトの当たり判定
+//==============================================
+bool CObstacleManager::CollisionImpact(CObstacle* pObstacle)
+{
+	// メッシュフィールドの取得
+	CMeshField* pMesh = CGame::GetField();
+
+	// 取得できなかったら処理しない
+	if (pMesh == nullptr) return false;
+
+	// nullだったら処理しない
+	if (pObstacle == nullptr) return false;
+
+	// TNTじゃないなら
+	if (pObstacle->GetType() != CObstacle::TYPE_TNT_BARREL) return false;
+
+	// 位置の取得
+	D3DXVECTOR3 pos = pObstacle->GetPosition();
+
+	// インパクトの当たり判定
+	if (pMesh->CollisionImpact(pos, 250.0f, CMeshFieldImpact::OBJ_ENEMY))
+	{
+		return true;
+	}
+	// インパクトの当たり判定
+	else if (pMesh->CollisionImpact(pos, 250.0f, CMeshFieldImpact::OBJ_PLAYER))
+	{
+		return true;
+	}
+
 	return false;
 }

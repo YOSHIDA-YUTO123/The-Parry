@@ -11,13 +11,14 @@
 #include "OpeningCamera.h"
 #include "opening.h"
 #include "FadeEffect.h"
-#include"manager.h"
-#include"light.h"
-#include"LoadManager.h"
-#include<memory>
+#include "manager.h"
+#include "light.h"
+#include "LoadManager.h"
+#include <memory>
 #include "OpningEnemy.h"
-#include"fade.h"
+#include "fade.h"
 #include "tutorial.h"
+#include "sound.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std;   // 名前空間stdを使用
@@ -47,6 +48,15 @@ COpeningCamera::COpeningCamera()
 //===================================================
 COpeningCamera::~COpeningCamera()
 {
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	if (pSound != nullptr)
+	{
+		// 音の再生
+		pSound->StopSound();
+	}
+
 	// 値のクリア
 	m_Info.akey_info.clear();
 }
@@ -68,7 +78,7 @@ HRESULT COpeningCamera::Init(void)
 	// カメラのキーのロード
 	Load();
 
-	m_fMoveShakeSpeed = 0.2f;
+	m_fMoveShakeSpeed = 0.15f;
 
 	return S_OK;
 }
@@ -144,6 +154,18 @@ void COpeningCamera::Update(void)
 
 			// 敵の生成
 			COpeningEnemy::Create(D3DXVECTOR3(0.0f, 2000.0f, -100.0f), 0.0f);
+
+			// 音の取得
+			CSound* pSound = CManager::GetSound();
+
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_BIRDSOUND);
+
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_WIND);
+			}
 
 			// 移動量の設定
 			m_move = D3DXVECTOR3(0.0f, 0.0f, 3.0f);
@@ -373,5 +395,20 @@ void COpeningCamera::UpdateMoveShake(D3DXVECTOR3 *pPosV)
 	// 今の位置
 	float fPosVNow = pPosV->y;
 
-	pPosV->y = fPosVNow + sinf(m_fCounter) * 2.0f;
+	// サインカーブ
+	float Sinf = sinf(m_fCounter);
+
+	// 揺れを設定
+	pPosV->y = fPosVNow + (Sinf * 2.0f);
+
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	if (Sinf <= -0.99f)
+	{
+		if (pSound != nullptr)
+		{
+			pSound->Play(CSound::SOUND_LABEL_WARK000);
+		}
+	}
 }

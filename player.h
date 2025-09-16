@@ -115,11 +115,6 @@ public:
 		MODEL_MAX
 	}MODEL;
 
-	// ƒpƒŠƒB‚Ìî•ñ
-	struct ParryInfo
-	{
-	};
-
 	CPlayer();
 	~CPlayer();
 

@@ -31,6 +31,24 @@ public:
 		SOUND_LABEL_PARRYWEAK,			// パリィ微妙
 		SOUND_LABEL_ROAR,				// 咆哮
 		SOUND_LABEL_EXPLOSION,			// 爆発
+		SOUND_LABEL_WARK000,			// 歩き0
+		SOUND_LABEL_WARK001,			// 歩き1
+		SOUND_LABEL_BIRDSOUND,			// 鳥の鳴き声
+		SOUND_LABEL_BIRDFLY,			// 鳥が飛び立つ
+		SOUND_LABEL_WIND,				// 風
+		SOUND_LABEL_PERFECT,			// パーフェクト
+		SOUND_LABEL_NORMAL,				// 普通
+		SOUND_LABEL_WEAK,				// 弱い
+		SOUND_LABEL_GAME_BGM,			// ゲーム中のBGM
+		SOUND_LABEL_WARK003,			// 敵の足音
+		SOUND_LABEL_SPIKE,				// スパイクトラップにぶつかった音
+		SOUND_LABEL_END_RUSH,			// 突進終了
+		SOUND_LABEL_IMPACT000,			// 衝撃波0
+		SOUND_LABEL_ENEMY_JUMP,			// 敵のジャンプ
+		SOUND_LABEL_SWING,				// 風切り音
+		SOUND_LABEL_SP,					// 必殺技
+		SOUND_LABEL_MENU,				// メニュー選択
+		SOUND_LABEL_ENTER,				// 決定
 		SOUND_LABEL_MAX
 	} SOUND_LABEL;
 
@@ -39,7 +57,8 @@ public:
 
 	HRESULT Init(HWND hWnd);
 	void Uninit(void);
-	HRESULT PlaySound(SOUND_LABEL label);
+	HRESULT Play(SOUND_LABEL label);
+	HRESULT Play(SOUND_LABEL label,const float fVolume);
 	void StopSound(SOUND_LABEL label);
 	void StopSound(void);
 private:
@@ -66,6 +85,24 @@ private:
 		{"data/SE/parryWeak.wav", 0},     // 微妙
 		{"data/SE/roar.wav", 0},		  // 咆哮
 		{"data/SE/explosion.wav", 0},	  // 爆発
+		{"data/SE/wark000.wav", 0},		  // 歩き0
+		{"data/SE/wark001.wav", 0},		  // 歩き1
+		{"data/SE/birdsound.wav", 0},	  // 鳥の鳴き声
+		{"data/SE/BirdFly.wav", 0},		  // 鳥が羽ばたく
+		{"data/SE/wind.wav", 0},		  // 風
+		{"data/SE/perfect.wav", 0},		  // パーフェクト
+		{"data/SE/normal.wav", 0},		  // 普通
+		{"data/SE/weak.wav", 0},		  // 弱い
+		{"data/BGM/game_bgm.wav", -1},	  // ゲーム中のBGM
+		{"data/SE/wark003.wav", 0},		  // 敵の足音
+		{"data/SE/spike.wav", 0},		  // スパイクトラップにぶつかった音
+		{"data/SE/EndRush.wav", 0},		  // 突進終了
+		{"data/SE/Impact000.wav", 0},	  // 衝撃波0
+		{"data/SE/enemyJump.wav", 0},	  // 敵のジャンプ
+		{"data/SE/swing.wav", 0},		  // 風切り音
+		{"data/SE/SP.wav", 0},			  // 必殺技
+		{"data/SE/menu000.wav", 0},		  // メニュー選択
+		{"data/SE/Enter.wav", 0},		  // 決定
 	};				
 };
 #endif

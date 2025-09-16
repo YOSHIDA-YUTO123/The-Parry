@@ -218,7 +218,7 @@ void CSound::Uninit(void)
 //===============================================
 // セグメント再生(再生中なら中止)
 //===============================================
-HRESULT CSound::PlaySound(SOUND_LABEL label)
+HRESULT CSound::Play(SOUND_LABEL label)
 {
 	XAUDIO2_VOICE_STATE xa2state;
 	XAUDIO2_BUFFER buffer;
@@ -250,6 +250,46 @@ HRESULT CSound::PlaySound(SOUND_LABEL label)
 
 	return S_OK;
 }
+
+//===============================================
+// 音の再生(ボリューム設定)
+//===============================================
+HRESULT CSound::Play(SOUND_LABEL label, const float fVolume)
+{
+	XAUDIO2_VOICE_STATE xa2state;
+	XAUDIO2_BUFFER buffer;
+
+	// バッファの値設定
+	memset(&buffer, 0, sizeof(XAUDIO2_BUFFER));
+	buffer.AudioBytes = m_aSizeAudio[label];
+	buffer.pAudioData = m_apDataAudio[label];
+	buffer.Flags = XAUDIO2_END_OF_STREAM;
+	buffer.LoopCount = m_aSoundInfo[label].nCntLoop;
+
+	// 状態取得
+	m_apSourceVoice[label]->GetState(&xa2state);
+
+	if (xa2state.BuffersQueued != 0)
+	{// 再生中
+		// 一時停止
+		m_apSourceVoice[label]->Stop(0);
+
+		// オーディオバッファの削除
+		m_apSourceVoice[label]->FlushSourceBuffers();
+	}
+
+	// オーディオバッファの登録
+	m_apSourceVoice[label]->SubmitSourceBuffer(&buffer);
+
+	// ボリュームの設定
+	m_apSourceVoice[label]->SetVolume(fVolume);
+
+	// 再生
+	m_apSourceVoice[label]->Start(0);
+
+	return S_OK;
+}
+
 //===============================================
 // セグメント停止(ラベル指定)
 //===============================================
