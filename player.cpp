@@ -1527,7 +1527,7 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos)
 	if (m_nParryCounter >= 0 && m_nParryCounter <= 3)
 	{
 		// 反撃ゲージを増やす
-		m_fRevengeValue += 10;
+		m_fRevengeValue += 25;
 
 		if (pSound != nullptr)
 		{
@@ -1545,7 +1545,7 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos)
 	}
 	else if (m_nParryCounter > 3 && m_nParryCounter <= 10)
 	{
-		m_fRevengeValue += 5;
+		m_fRevengeValue += 15;
 
 		if (pSound != nullptr)
 		{
@@ -1563,7 +1563,7 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos)
 	}
 	else if (m_nParryCounter > 10 && m_nParryCounter <= m_nParryTime)
 	{
-		m_fRevengeValue += 3;
+		m_fRevengeValue += 5;
 
 		if (pSound != nullptr)
 		{
@@ -1639,10 +1639,20 @@ void CPlayer::CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos, CMotion
 
 		// 再設定
 		pMeshField->ResetImpact(dir, CMeshFieldImpact::OBJ_PLAYER, playerHandR, D3DXCOLOR(1.0f, 1.0f, 0.5f, 1.0f));
+
+		m_fRevengeValue += 30;
 	}
 	// インパクトの当たり判定
 	else if (bCollision && pMotion->GetBlendType() != MOTIONTYPE_DAMAGE)
 	{
+		// 音の取得
+		CSound* pSound = CManager::GetSound();
+
+		if (pSound != nullptr)
+		{
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_PERFECT);
+		}
 		// 吹き飛び処理
 		BlowOff(ImpactPos, 50.0f, 10.0f);
 
