@@ -1,0 +1,55 @@
+\doxysection{Result\+Score.\+h}
+\hypertarget{_result_score_8h_source}{}\label{_result_score_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ リザルトのスコア\ [ResultScore.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_RESULTSCORE\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_RESULTSCORE\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}object.h"{}}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ 前方宣言}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00022\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_number}{CNumber}};}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//\ リザルトのスコアクラスの定義}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00027\ \textcolor{keyword}{class\ }CResultScore\ :\ \textcolor{keyword}{public}\ CObject}
+\DoxyCodeLine{00028\ \{}
+\DoxyCodeLine{00029\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00030\ \ \ \ \ CResultScore();}
+\DoxyCodeLine{00031\ \ \ \ \ \string~CResultScore();}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keyword}{static}\ CResultScore*\ Create(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ D3DXVECTOR2\ Size,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nScore);}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00039\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ MAX\_DIGIT\ =\ 9;\ \textcolor{comment}{//\ 最大の桁数}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \mbox{\hyperlink{class_c_number}{CNumber}}*\ m\_pNumber[MAX\_DIGIT];\ \ \textcolor{comment}{//\ ナンバークラスへのポインソstring^}}
+\DoxyCodeLine{00043\ \ \ \ \ D3DXVECTOR3\ m\_pos;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 位置}}
+\DoxyCodeLine{00044\ \ \ \ \ D3DXVECTOR2\ m\_Size;\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 大きさ}}
+\DoxyCodeLine{00045\ \ \ \ \ D3DXCOLOR\ m\_col;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 色}}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fAddAlv;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ アルファ値の加算値}}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nScore;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ スコア}}
+\DoxyCodeLine{00048\ \};}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

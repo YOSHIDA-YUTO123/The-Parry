@@ -1,0 +1,77 @@
+\doxysection{model.\+h}
+\hypertarget{model_8h_source}{}\label{model_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ モデル\ [model.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_MODEL\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_MODEL\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}main.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ モデルクラスの定義}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00023\ \textcolor{keyword}{class\ }CModel}
+\DoxyCodeLine{00024\ \{}
+\DoxyCodeLine{00025\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00026\ \ \ \ \ CModel();}
+\DoxyCodeLine{00027\ \ \ \ \ \string~CModel();}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{static}\ CModel*\ Create(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ pModelName);}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ HRESULT\ Init(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ pModelName);}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fAlv);}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{void}\ DrawMultTexture(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{void}\ DrawShadow(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{void}\ SetTextureMT(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ pTextureName);}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ D3DXVECTOR3\ GetPosition(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_pos;\ \}}
+\DoxyCodeLine{00040\ \ \ \ \ D3DXVECTOR3\ GetRotaition(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_rot;\ \}}
+\DoxyCodeLine{00041\ \ \ \ \ D3DXVECTOR3\ GetOffPos(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_offpos;\ \}}
+\DoxyCodeLine{00042\ \ \ \ \ D3DXVECTOR3\ GetOffRot(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_offrot;\ \}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ D3DXVECTOR3\ GetSize(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_Size;\ \}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{void}\ SetPosition(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos)\ \{\ m\_pos\ =\ pos;\ \}}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{void}\ SetRotaition(\textcolor{keyword}{const}\ D3DXVECTOR3\ rot)\ \{\ m\_rot\ =\ rot;\ \}}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{void}\ SetOffPos(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos)\ \{\ m\_offpos\ =\ pos;\ \}}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{void}\ SetOffRot(\textcolor{keyword}{const}\ D3DXVECTOR3\ rot)\ \{\ m\_offrot\ =\ rot;\ \}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{void}\ SetParent(CModel*\ pModel,\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nIdx);}
+\DoxyCodeLine{00052\ \ \ \ \ D3DXMATRIX\ GetMatrixWorld(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_mtxWorld;\ \}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ GetModelName(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_aModelName.c\_str();\ \}}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{void}\ SetModelName(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ pModelName)\ \{\ m\_aModelName\ =\ pModelName;\ \}}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordtype}{void}\ Copy(CModel*\ pModel);\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordtype}{int}\ GetParentID(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_nParentIdx;\ \}}
+\DoxyCodeLine{00058\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00059\ \ \ \ \ D3DXVECTOR3\ m\_Size;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 大きさ}}
+\DoxyCodeLine{00060\ \ \ \ \ D3DXVECTOR3\ m\_offpos;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 基準の位置}}
+\DoxyCodeLine{00061\ \ \ \ \ D3DXVECTOR3\ m\_offrot;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 基準の向き}}
+\DoxyCodeLine{00062\ \ \ \ \ D3DXVECTOR3\ m\_pos;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 位置}}
+\DoxyCodeLine{00063\ \ \ \ \ D3DXVECTOR3\ m\_rot;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 向き}}
+\DoxyCodeLine{00064\ \ \ \ \ D3DXMATRIX\ m\_mtxWorld;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ワールドソ}トリックス}}
+\DoxyCodeLine{00065\ \ \ \ \ CModel*\ m\_pParent;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 親モデルへのポインソstring^}}
+\DoxyCodeLine{00066\ \ \ \ \ std::string\ m\_aModelName;\ \ \ \ \ \ \ \textcolor{comment}{//\ モデルの名前}}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nParentIdx;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 親のインデックス}}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nModelIdx;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ モデルのインデックス}}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nTextureMTIdx;\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ソ}ルチテクスチャのインデックス}}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordtype}{int}*\ m\_pTextureIdx;\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ テクスチャのインデックス}}
+\DoxyCodeLine{00071\ \};}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

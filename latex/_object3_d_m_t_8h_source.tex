@@ -1,0 +1,58 @@
+\doxysection{Object3\+DMT.\+h}
+\hypertarget{_object3_d_m_t_8h_source}{}\label{_object3_d_m_t_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ 3Dポリゴン(ソ}ルチテクスチャ)\ [Object3DMT.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_OBJECT3DMT\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_OBJECT3DMT\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}object.h"{}}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ オブジェクト3DMTクラスの定義}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00022\ \textcolor{keyword}{class\ }CObject3DMT\ :\ \textcolor{keyword}{public}\ CObject}
+\DoxyCodeLine{00023\ \{}
+\DoxyCodeLine{00024\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00025\ \ \ \ \ CObject3DMT();}
+\DoxyCodeLine{00026\ \ \ \ \ \string~CObject3DMT();}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{static}\ CObject3DMT*\ Create(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ rot,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ Size);}
+\DoxyCodeLine{00029\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ SetVtx(\textcolor{keyword}{const}\ D3DXCOLOR\ col);}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ D3DXVECTOR3\ GetPosition(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_pos;\ \}}
+\DoxyCodeLine{00036\ \ \ \ \ D3DXVECTOR3\ GetRotaition(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_rot;\ \}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{void}\ SetPosition(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos)\ \{\ m\_pos\ =\ pos;\ \}}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{void}\ SetRotaition(\textcolor{keyword}{const}\ D3DXVECTOR3\ rot)\ \{\ m\_rot\ =\ rot;\ \}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{void}\ SetTextureID(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ pTexture0,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ pTexture1);}
+\DoxyCodeLine{00042\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ MAX\_TEXTURE\ =\ 2;\ \ \ \textcolor{comment}{//\ テクスチャの数}}
+\DoxyCodeLine{00045\ \ \ \ \ LPDIRECT3DVERTEXBUFFER9\ m\_pVtxBuffer;\ \ \ \textcolor{comment}{//\ 頂貼_へのポインソstring^}}
+\DoxyCodeLine{00046\ \ \ \ \ D3DXMATRIX\ m\_mtxWorld;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ワールドソ}トリックス}}
+\DoxyCodeLine{00047\ \ \ \ \ D3DXVECTOR3\ m\_pos;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 位置}}
+\DoxyCodeLine{00048\ \ \ \ \ D3DXVECTOR3\ m\_rot;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 向き}}
+\DoxyCodeLine{00049\ \ \ \ \ D3DXVECTOR3\ m\_Size;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 大きさ}}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nTextureIdx[MAX\_TEXTURE];\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ テクスチャのインデックス}}
+\DoxyCodeLine{00051\ \};}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

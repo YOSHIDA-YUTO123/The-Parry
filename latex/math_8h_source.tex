@@ -1,0 +1,126 @@
+\doxysection{math.\+h}
+\hypertarget{math_8h_source}{}\label{math_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ 計算\ [math.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_MATH\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_MATH\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}main.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <random>}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ 範囲内に収める}}
+\DoxyCodeLine{00021\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>\ T\ Clamp(\textcolor{keyword}{const}\ T\ value,\ \textcolor{keyword}{const}\ T\ min,\ \textcolor{keyword}{const}\ T\ max)}
+\DoxyCodeLine{00022\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordflow}{if}\ (value\ <\ min)\ \textcolor{keywordflow}{return}\ min;}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordflow}{if}\ (value\ >\ max)\ \textcolor{keywordflow}{return}\ max;}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordflow}{return}\ value;}
+\DoxyCodeLine{00028\ \};}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{comment}{//\ 範囲内にをループする}}
+\DoxyCodeLine{00031\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>\ T\ Wrap(\textcolor{keyword}{const}\ T\ value,\ \textcolor{keyword}{const}\ T\ min,\ \textcolor{keyword}{const}\ T\ max)}
+\DoxyCodeLine{00032\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordflow}{if}\ (value\ <\ min)\ \textcolor{keywordflow}{return}\ max;}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordflow}{if}\ (value\ >\ max)\ \textcolor{keywordflow}{return}\ min;}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordflow}{return}\ value;}
+\DoxyCodeLine{00038\ \};}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{comment}{//\ 角度を正規化する}}
+\DoxyCodeLine{00041\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>\ T\ NormalizeRot(T*\ value)}
+\DoxyCodeLine{00042\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordflow}{if}\ ((*value)\ <\ -\/D3DX\_PI)}
+\DoxyCodeLine{00044\ \ \ \ \ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ (*value)\ +=\ D3DX\_PI\ *\ 2.0f;}
+\DoxyCodeLine{00046\ \ \ \ \ \}}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ ((*value)\ >D3DX\_PI)}
+\DoxyCodeLine{00048\ \ \ \ \ \{}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ (*value)\ +=\ -\/D3DX\_PI\ *\ 2.0f;}
+\DoxyCodeLine{00050\ \ \ \ \ \}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordflow}{return}\ (*value);}
+\DoxyCodeLine{00053\ \};}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{comment}{//\ 目的の角度までの距離を求め正規化する}}
+\DoxyCodeLine{00056\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>\ T\ NormalizeDiffRot(\textcolor{keyword}{const}\ T\ Diff,\ T*\ value)}
+\DoxyCodeLine{00057\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordflow}{if}\ (Diff\ <=\ -\/D3DX\_PI)}
+\DoxyCodeLine{00059\ \ \ \ \ \{}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ (*value)\ +=\ -\/D3DX\_PI\ *\ 2.0f;}
+\DoxyCodeLine{00061\ \ \ \ \ \}}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (Diff\ >=\ D3DX\_PI)}
+\DoxyCodeLine{00063\ \ \ \ \ \{}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ (*value)\ +=\ D3DX\_PI\ *\ 2.0f;}
+\DoxyCodeLine{00065\ \ \ \ \ \}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordflow}{return}\ *value;}
+\DoxyCodeLine{00068\ \};}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{comment}{//\ 目的の値までの補間}}
+\DoxyCodeLine{00071\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>\ T\ LerpDest(\textcolor{keyword}{const}\ T\ dest,\textcolor{keyword}{const}\ T\ value,\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ coef)}
+\DoxyCodeLine{00072\ \{}
+\DoxyCodeLine{00073\ \ \ \ \ T\ out\ =\ value\ +\ (dest\ -\/\ value)\ *\ coef;}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordflow}{return}\ out;}
+\DoxyCodeLine{00076\ \};}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{comment}{//\ 目的の値までの補間}}
+\DoxyCodeLine{00079\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>\ T\ LerpDiff(\textcolor{keyword}{const}\ T\ offset,\ \textcolor{keyword}{const}\ T\ Diff,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fRate)}
+\DoxyCodeLine{00080\ \{}
+\DoxyCodeLine{00081\ \ \ \ \ T\ out\ =\ offset\ +\ (Diff\ *\ fRate);}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordflow}{return}\ out;}
+\DoxyCodeLine{00084\ \};}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{comment}{//\ }}
+\DoxyCodeLine{00087\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>\ \textcolor{keywordtype}{bool}\ IsInRange(\textcolor{keyword}{const}\ T\ value,\textcolor{keyword}{const}\ T\ min,\textcolor{keyword}{const}\ T\ max)}
+\DoxyCodeLine{00088\ \{}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordflow}{if}\ (value\ >=\ min\ \&\&\ value\ <=\ max)}
+\DoxyCodeLine{00090\ \ \ \ \ \{}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00092\ \ \ \ \ \}}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00095\ \};}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \textcolor{comment}{//\ ランソ_ム}}
+\DoxyCodeLine{00098\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>\ T\ Random(\textcolor{keyword}{const}\ T\ min,\ \textcolor{keyword}{const}\ T\ max)}
+\DoxyCodeLine{00099\ \{}
+\DoxyCodeLine{00100\ \ \ \ \ std::random\_device\ rd;}
+\DoxyCodeLine{00101\ \ \ \ \ std::mt19937\ gen(rd());}
+\DoxyCodeLine{00102\ \ \ \ \ std::uniform\_real\_distribution<T>\ dist(min,\ max);}
+\DoxyCodeLine{00103\ \ \ \ \ }
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keywordflow}{return}\ dist(gen);}
+\DoxyCodeLine{00105\ \}}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00108\ \textcolor{comment}{//\ 計算用namespaceの定義}}
+\DoxyCodeLine{00109\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00110\ \textcolor{keyword}{namespace\ }math}
+\DoxyCodeLine{00111\ \{}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keywordtype}{float}\ GetDistance(\textcolor{keyword}{const}\ D3DXVECTOR3\ diff);}
+\DoxyCodeLine{00113\ \ \ \ \ D3DXVECTOR3\ GetVector(\textcolor{keyword}{const}\ D3DXVECTOR3\ dest,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ pos);}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keywordtype}{float}\ GetTargetAngle(\textcolor{keyword}{const}\ D3DXVECTOR3\ dest,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ pos);\ \textcolor{comment}{//\ 目標までの角度の取得}}
+\DoxyCodeLine{00115\ \ \ \ \ D3DXVECTOR3\ GetPositionFromMatrix(\textcolor{keyword}{const}\ D3DXMATRIX\ mtxWorld);\ \ \ \ \ \ \ \ \textcolor{comment}{//\ MATRIXの位置の情報をD3DXVECTOR3圭string^に変換する}}
+\DoxyCodeLine{00116\ \ \ \ \ D3DXQUATERNION\ CreateQuaternion(D3DXQUATERNION*\ pOut,\ D3DXVECTOR3\ axis,\ \textcolor{keywordtype}{float}\ fAngle);\ }
+\DoxyCodeLine{00117\ \ \ \ \ D3DXMATRIX\ SetMatrixRotationQuaternion(D3DXMATRIX*\ pOut,\ D3DXQUATERNION\ quaternion);}
+\DoxyCodeLine{00118\ \ \ \ \ D3DXVECTOR3\ MatrixToEulerXYZ(\textcolor{keyword}{const}\ D3DXMATRIX\ mtxWorld);\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 回転行列をオイラー角に変換}}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

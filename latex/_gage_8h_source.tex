@@ -1,0 +1,113 @@
+\doxysection{Gage.\+h}
+\hypertarget{_gage_8h_source}{}\label{_gage_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ ゲージ\ [gage.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:\ YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_GAGE\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_GAGE\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}object2D.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include<memory>}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ 前方宣言}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00023\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00024\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_observer}{CObserver}};}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_gage_frame}{CGageFrame}};}
+\DoxyCodeLine{00027\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_temporary_gage}{CTemporaryGage}};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00030\ \textcolor{comment}{//\ ゲージクラスの定義}}
+\DoxyCodeLine{00031\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00032\ \textcolor{keyword}{class\ }CGage\ :\ \textcolor{keyword}{public}\ CObject2D}
+\DoxyCodeLine{00033\ \{}
+\DoxyCodeLine{00034\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00035\ \ \ \ \ CGage(\textcolor{keywordtype}{int}\ nPriority\ =\ 6);}
+\DoxyCodeLine{00036\ \ \ \ \ \string~CGage();}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{virtual}\ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override}\ =\ 0;\ \textcolor{comment}{//\ 派生クラスで実装}}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00042\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00043\ \};}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00046\ \textcolor{comment}{//\ HPゲージクラスの定義}}
+\DoxyCodeLine{00047\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00048\ \textcolor{keyword}{class\ }CHpGage\ :\ \textcolor{keyword}{public}\ CGage}
+\DoxyCodeLine{00049\ \{}
+\DoxyCodeLine{00050\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00051\ \ \ \ \ CHpGage();}
+\DoxyCodeLine{00052\ \ \ \ \ \string~CHpGage();}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{static}\ CHpGage*\ Create(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ D3DXVECTOR2\ Size,\ \textcolor{keyword}{const}\ D3DXCOLOR\ col,\textcolor{keyword}{const}\ D3DXCOLOR\ temporaryColor,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nLife,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ bDecRightToLeft);}
+\DoxyCodeLine{00055\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{void}\ SetHp(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nLife)\ \{\ m\_nLife\ =\ nLife;\ \}}
+\DoxyCodeLine{00060\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00061\ \ \ \ \ \mbox{\hyperlink{class_c_temporary_gage}{CTemporaryGage}}*\ m\_pTemporary;\ \textcolor{comment}{//\ 一時的なゲージ}}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nMaxLife;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 最大のHP}}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nLife;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ HP}}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_bDecRightToLeft;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 右から左に減るか判定}}
+\DoxyCodeLine{00065\ \};}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00068\ \textcolor{comment}{//\ ソ_メージ時の一時的なゲージの生成}}
+\DoxyCodeLine{00069\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00070\ \textcolor{keyword}{class\ }CTemporaryGage\ :\ \textcolor{keyword}{public}\ CGage}
+\DoxyCodeLine{00071\ \{}
+\DoxyCodeLine{00072\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00073\ \ \ \ \ CTemporaryGage(\textcolor{keywordtype}{int}\ nPriority\ =\ 5);}
+\DoxyCodeLine{00074\ \ \ \ \ \string~CTemporaryGage();}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordtype}{void}\ SetLength(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fLength)\ \{\ m\_fDestLength\ =\ fLength;\ \}}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordtype}{void}\ SetGage(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ D3DXVECTOR2\ Size,\ \textcolor{keyword}{const}\ D3DXCOLOR\ col,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ bDecRightToLeft);}
+\DoxyCodeLine{00082\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fDestLength;\ \ \ \ \ \textcolor{comment}{//\ 目的の長さ}}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fLength;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 長さ}}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_bDecRightToLeft;\ \ \textcolor{comment}{//\ 右から左に減るか判定}}
+\DoxyCodeLine{00086\ \};}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00089\ \textcolor{comment}{//\ スソstring^ソstring~ナゲージクラスの定義}}
+\DoxyCodeLine{00090\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00091\ \textcolor{keyword}{class\ }CStaminaGage\ :\ \textcolor{keyword}{public}\ CGage}
+\DoxyCodeLine{00092\ \{}
+\DoxyCodeLine{00093\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00094\ \ \ \ \ CStaminaGage();}
+\DoxyCodeLine{00095\ \ \ \ \ \string~CStaminaGage();}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keyword}{static}\ CStaminaGage*\ Create(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ D3DXVECTOR2\ Size,\ \textcolor{keyword}{const}\ D3DXCOLOR\ col,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fStamina);}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordtype}{void}\ Set(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fStamina)\ \{\ m\_fStamina\ =\ fStamina;\ \}\ \textcolor{comment}{//\ スソstring^ソstring~ナゲージの設定処理}}
+\DoxyCodeLine{00104\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fMaxStamina;\ \ \ \ \textcolor{comment}{//\ 最大のスソstring^ソstring~ナ}}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fStamina;\ \ \ \ \ \ \ \textcolor{comment}{//\ 現在のスソstring^ソstring~ナ}}
+\DoxyCodeLine{00107\ \};}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

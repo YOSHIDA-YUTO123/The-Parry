@@ -1,0 +1,108 @@
+\doxysection{Result\+Menu.\+h}
+\hypertarget{_result_menu_8h_source}{}\label{_result_menu_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ リザルトメニュー\ [ResultMenu.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_RESULTMENU\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_RESULTMENU\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}object2D.h"{}}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ リザルトのメニュークラスの定義}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00022\ \textcolor{keyword}{class\ }CResultMenu\ :\ \textcolor{keyword}{public}\ CObject2D}
+\DoxyCodeLine{00023\ \{}
+\DoxyCodeLine{00024\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{comment}{//\ メニューの種類}}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{enum}\ MENU}
+\DoxyCodeLine{00028\ \ \ \ \ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ MENU\_RETRY\ =\ 0,}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ MENU\_QUIT,}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ MENU\_MAX}
+\DoxyCodeLine{00032\ \ \ \ \ \};}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ CResultMenu(\textcolor{keyword}{const}\ MENU\ menu);}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~CResultMenu();}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{static}\ CResultMenu*\ Create(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ D3DXVECTOR2\ Size,\ \textcolor{keyword}{const}\ MENU\ menu);}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{virtual}\ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00042\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00043\ \ \ \ \ MENU\ GetMenu(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_Menu;\ \}}
+\DoxyCodeLine{00044\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00045\ \ \ \ \ MENU\ m\_Menu;\ \textcolor{comment}{//\ メニューの種類}}
+\DoxyCodeLine{00046\ \};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00049\ \textcolor{comment}{//\ リザルトメニュー(リトライ)のクラスの定義}}
+\DoxyCodeLine{00050\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00051\ \textcolor{keyword}{class\ }CResultMenuRetry\ :\ \textcolor{keyword}{public}\ CResultMenu}
+\DoxyCodeLine{00052\ \{}
+\DoxyCodeLine{00053\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ CResultMenuRetry();}
+\DoxyCodeLine{00056\ \ \ \ \ \string~CResultMenuRetry();}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00062\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00063\ \};}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00066\ \textcolor{comment}{//\ リザルトメニュー(終了)のクラスの定義}}
+\DoxyCodeLine{00067\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00068\ \textcolor{keyword}{class\ }CResultMenuQuit\ :\ \textcolor{keyword}{public}\ CResultMenu}
+\DoxyCodeLine{00069\ \{}
+\DoxyCodeLine{00070\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ CResultMenuQuit();}
+\DoxyCodeLine{00073\ \ \ \ \ \string~CResultMenuQuit();}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00079\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00080\ \};}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00083\ \textcolor{comment}{//\ リザルトメニューのソ}ネージャークラスの定義}}
+\DoxyCodeLine{00084\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00085\ \textcolor{keyword}{class\ }CResultMenuManager\ :\ CObject}
+\DoxyCodeLine{00086\ \{}
+\DoxyCodeLine{00087\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00088\ \ \ \ \ \string~CResultMenuManager();}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ Create(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keyword}{static}\ CResultMenuManager*\ GetInstance(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_pInstance;\ \}}
+\DoxyCodeLine{00092\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ CResultMenu::MENU\ GetMenu(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_Menu;\ \}}
+\DoxyCodeLine{00098\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00099\ \ \ \ \ CResultMenuManager();}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keyword}{static}\ CResultMenuManager*\ m\_pInstance;\ \textcolor{comment}{//\ 自分自身の破棄}}
+\DoxyCodeLine{00101\ \ \ \ \ CResultMenu::MENU\ m\_Menu;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ 選択中のメニュー}}
+\DoxyCodeLine{00102\ \};}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

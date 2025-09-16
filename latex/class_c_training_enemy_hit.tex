@@ -1,0 +1,90 @@
+\doxysection{CTraining\+Enemy\+Hit Class Reference}
+\hypertarget{class_c_training_enemy_hit}{}\label{class_c_training_enemy_hit}\index{CTrainingEnemyHit@{CTrainingEnemyHit}}
+Inheritance diagram for CTraining\+Enemy\+Hit\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_c_training_enemy_hit}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_training_enemy_hit_a30dc954c1e1e681acd9361b18ceb7d49}\label{class_c_training_enemy_hit_a30dc954c1e1e681acd9361b18ceb7d49} 
+enum {\bfseries TYPE} \{ {\bfseries TYPE\+\_\+\+HIT} = 0
+, {\bfseries TYPE\+\_\+\+COMB\+\_\+\+DAMAGE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_training_enemy_state}{CTraining\+Enemy\+State}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_training_enemy_state_a2c28723817cf778913feb6a4a523ff04}\label{class_c_training_enemy_state_a2c28723817cf778913feb6a4a523ff04} 
+enum {\bfseries ID} \{ \newline
+{\bfseries ID\+\_\+\+BASE} = 0
+, {\bfseries ID\+\_\+\+IDLE}
+, {\bfseries ID\+\_\+\+ACTION}
+, {\bfseries ID\+\_\+\+HIT}
+, \newline
+{\bfseries ID\+\_\+\+DAMAGE}
+, {\bfseries ID\+\_\+\+COMB\+\_\+\+DAMAGE}
+, {\bfseries ID\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_c_training_enemy_hit_a089a5e6b1d62d922722b671cb08e2bac}{Init}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_training_enemy_hit_a2c70fb53d782dccc2fa0c99df5418184}{Update}} (void) override
+\item 
+\Hypertarget{class_c_training_enemy_hit_a0a8ed54fcacb2e75bcaa90ac7c4258c9}\label{class_c_training_enemy_hit_a0a8ed54fcacb2e75bcaa90ac7c4258c9} 
+void {\bfseries Set\+Comb\+Damage} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_training_enemy_state}{CTraining\+Enemy\+State}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CTraining\+Enemy\+State} (ID Id)
+\item 
+virtual void \mbox{\hyperlink{class_c_training_enemy_state_a75182793627fc8faf26b2369a7c2c688}{Uninit}} (void)
+\item 
+virtual int \mbox{\hyperlink{class_c_training_enemy_state_ac2937cef4eea463321828a6ef8baebe1}{Get\+ID}} (void) const
+\item 
+void {\bfseries Set\+Owner} (\mbox{\hyperlink{class_c_training_enemy}{CTraining\+Enemy}} \texorpdfstring{$\ast$}{*}p\+Enemy)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_training_enemy_state}{CTraining\+Enemy\+State}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_c_training_enemy}{CTraining\+Enemy}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Enemy} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_training_enemy_hit_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_training_enemy_hit_a089a5e6b1d62d922722b671cb08e2bac}\index{CTrainingEnemyHit@{CTrainingEnemyHit}!Init@{Init}}
+\index{Init@{Init}!CTrainingEnemyHit@{CTrainingEnemyHit}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_training_enemy_hit_a089a5e6b1d62d922722b671cb08e2bac} 
+void CTraining\+Enemy\+Hit\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_training_enemy_state}{CTraining\+Enemy\+State}}.
+
+\Hypertarget{class_c_training_enemy_hit_a2c70fb53d782dccc2fa0c99df5418184}\index{CTrainingEnemyHit@{CTrainingEnemyHit}!Update@{Update}}
+\index{Update@{Update}!CTrainingEnemyHit@{CTrainingEnemyHit}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_training_enemy_hit_a2c70fb53d782dccc2fa0c99df5418184} 
+void CTraining\+Enemy\+Hit\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_training_enemy_state}{CTraining\+Enemy\+State}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Training\+Enemy\+State.\+h\item 
+Training\+Enemy\+State.\+cpp\end{DoxyCompactItemize}

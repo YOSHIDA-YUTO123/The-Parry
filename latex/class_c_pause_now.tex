@@ -1,0 +1,154 @@
+\doxysection{CPause\+Now Class Reference}
+\hypertarget{class_c_pause_now}{}\label{class_c_pause_now}\index{CPauseNow@{CPauseNow}}
+Inheritance diagram for CPause\+Now\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_c_pause_now}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+HRESULT \mbox{\hyperlink{class_c_pause_now_ab31fca4c73b112b927dc09de3215f9c5}{Init}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_pause_now_a35251d26c5193d1d0c7e81abd31ab90d}{Uninit}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_pause_now_a57d051d3d2c0ca1600d09bb3d8d547ae}{Update}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_pause_now_a6ca52c60184a96644eb63dad2e0087b9}{Draw}} (void) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object2_d}{CObject2D}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject2D} (int n\+Priority=7)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\item 
+D3\+DXVECTOR2 {\bfseries Get\+Size} (void) const
+\item 
+void {\bfseries Set\+Position} (const D3\+DXVECTOR3 pos)
+\item 
+void {\bfseries Set\+Rotaition} (const D3\+DXVECTOR3 rot)
+\item 
+void {\bfseries Set\+Vtx} (const D3\+DXCOLOR col)
+\item 
+void {\bfseries Set\+Size} (const D3\+DXVECTOR2 Size)
+\item 
+void {\bfseries Set\+Size} (const float f\+Width, const float f\+Height)
+\item 
+void {\bfseries Set\+Size} (const float left\+Width, const float right\+Wdth, const float top\+Height, const float buttom)
+\item 
+void {\bfseries Update\+Vertex} (void)
+\item 
+void {\bfseries Set\+Color} (const D3\+DXCOLOR col)
+\item 
+void {\bfseries Set\+Texture\+ID} (const char \texorpdfstring{$\ast$}{*}p\+Texture\+Name=NULL)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_pause_now_a805fbbd003ac7552c963477e65e6ad0d}\label{class_c_pause_now_a805fbbd003ac7552c963477e65e6ad0d} 
+static \mbox{\hyperlink{class_c_pause_now}{CPause\+Now}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const D3\+DXVECTOR2 Size)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object2_d}{CObject2D}}}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_c_object2_d}{CObject2D}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const float f\+Width, const float f\+Height, const D3\+DXVECTOR3 pos, const D3\+DXVECTOR3 rot=Const\+::\+VEC3\+\_\+\+NULL)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_pause_now_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_pause_now_a6ca52c60184a96644eb63dad2e0087b9}\index{CPauseNow@{CPauseNow}!Draw@{Draw}}
+\index{Draw@{Draw}!CPauseNow@{CPauseNow}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_pause_now_a6ca52c60184a96644eb63dad2e0087b9} 
+void CPause\+Now\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object2_d}{CObject2D}}.
+
+\Hypertarget{class_c_pause_now_ab31fca4c73b112b927dc09de3215f9c5}\index{CPauseNow@{CPauseNow}!Init@{Init}}
+\index{Init@{Init}!CPauseNow@{CPauseNow}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_pause_now_ab31fca4c73b112b927dc09de3215f9c5} 
+HRESULT CPause\+Now\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object2_d}{CObject2D}}.
+
+\Hypertarget{class_c_pause_now_a35251d26c5193d1d0c7e81abd31ab90d}\index{CPauseNow@{CPauseNow}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CPauseNow@{CPauseNow}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_pause_now_a35251d26c5193d1d0c7e81abd31ab90d} 
+void CPause\+Now\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object2_d}{CObject2D}}.
+
+\Hypertarget{class_c_pause_now_a57d051d3d2c0ca1600d09bb3d8d547ae}\index{CPauseNow@{CPauseNow}!Update@{Update}}
+\index{Update@{Update}!CPauseNow@{CPauseNow}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_pause_now_a57d051d3d2c0ca1600d09bb3d8d547ae} 
+void CPause\+Now\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object2_d}{CObject2D}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+pause.\+h\item 
+pause.\+cpp\end{DoxyCompactItemize}

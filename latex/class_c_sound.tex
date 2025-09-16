@@ -1,0 +1,65 @@
+\doxysection{CSound Class Reference}
+\hypertarget{class_c_sound}{}\label{class_c_sound}\index{CSound@{CSound}}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_sound_a6c727d4e58011d2a549633ecdd09d63c}\label{class_c_sound_a6c727d4e58011d2a549633ecdd09d63c} 
+enum {\bfseries SOUND\+\_\+\+LABEL} \{ \newline
+{\bfseries SOUND\+\_\+\+LABEL\+\_\+\+PARRYPARFECT} = 0
+, {\bfseries SOUND\+\_\+\+LABEL\+\_\+\+PARRYNORMAL}
+, {\bfseries SOUND\+\_\+\+LABEL\+\_\+\+PARRYWEAK}
+, {\bfseries SOUND\+\_\+\+LABEL\+\_\+\+ROAR}
+, \newline
+{\bfseries SOUND\+\_\+\+LABEL\+\_\+\+EXPLOSION}
+, {\bfseries SOUND\+\_\+\+LABEL\+\_\+\+WARK000}
+, {\bfseries SOUND\+\_\+\+LABEL\+\_\+\+WARK001}
+, {\bfseries SOUND\+\_\+\+LABEL\+\_\+\+BIRDSOUND}
+, \newline
+{\bfseries SOUND\+\_\+\+LABEL\+\_\+\+BIRDFLY}
+, {\bfseries SOUND\+\_\+\+LABEL\+\_\+\+WIND}
+, {\bfseries SOUND\+\_\+\+LABEL\+\_\+\+PERFECT}
+, {\bfseries SOUND\+\_\+\+LABEL\+\_\+\+NORMAL}
+, \newline
+{\bfseries SOUND\+\_\+\+LABEL\+\_\+\+WEAK}
+, {\bfseries SOUND\+\_\+\+LABEL\+\_\+\+GAME\+\_\+\+BGM}
+, {\bfseries SOUND\+\_\+\+LABEL\+\_\+\+WARK003}
+, {\bfseries SOUND\+\_\+\+LABEL\+\_\+\+SPIKE}
+, \newline
+{\bfseries SOUND\+\_\+\+LABEL\+\_\+\+END\+\_\+\+RUSH}
+, {\bfseries SOUND\+\_\+\+LABEL\+\_\+\+IMPACT000}
+, {\bfseries SOUND\+\_\+\+LABEL\+\_\+\+ENEMY\+\_\+\+JUMP}
+, {\bfseries SOUND\+\_\+\+LABEL\+\_\+\+SWING}
+, \newline
+{\bfseries SOUND\+\_\+\+LABEL\+\_\+\+SP}
+, {\bfseries SOUND\+\_\+\+LABEL\+\_\+\+MENU}
+, {\bfseries SOUND\+\_\+\+LABEL\+\_\+\+ENTER}
+, {\bfseries SOUND\+\_\+\+LABEL\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_sound_a8d922c112346f6d5c5836a30cc327960}\label{class_c_sound_a8d922c112346f6d5c5836a30cc327960} 
+HRESULT {\bfseries Init} (HWND h\+Wnd)
+\item 
+\Hypertarget{class_c_sound_a9c2d9a8319e7d7c9c7c18fd3a99f2a28}\label{class_c_sound_a9c2d9a8319e7d7c9c7c18fd3a99f2a28} 
+void {\bfseries Uninit} (void)
+\item 
+\Hypertarget{class_c_sound_ac3f9d8c796ec49c7dbb41db02fdeefe2}\label{class_c_sound_ac3f9d8c796ec49c7dbb41db02fdeefe2} 
+HRESULT {\bfseries Play} (SOUND\+\_\+\+LABEL label)
+\item 
+\Hypertarget{class_c_sound_a8a7bad5033893830d9db3745252497d8}\label{class_c_sound_a8a7bad5033893830d9db3745252497d8} 
+HRESULT {\bfseries Play} (SOUND\+\_\+\+LABEL label, const float f\+Volume)
+\item 
+\Hypertarget{class_c_sound_a5a3f99d07270453ee1bae1136f3e3be5}\label{class_c_sound_a5a3f99d07270453ee1bae1136f3e3be5} 
+void {\bfseries Stop\+Sound} (SOUND\+\_\+\+LABEL label)
+\item 
+\Hypertarget{class_c_sound_af2c53fef29fd25dbea4a7a9e17765670}\label{class_c_sound_af2c53fef29fd25dbea4a7a9e17765670} 
+void {\bfseries Stop\+Sound} (void)
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+sound.\+h\item 
+sound.\+cpp\end{DoxyCompactItemize}

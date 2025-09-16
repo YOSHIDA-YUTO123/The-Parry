@@ -1,0 +1,59 @@
+\doxysection{CCollision\+FOV Class Reference}
+\hypertarget{class_c_collision_f_o_v}{}\label{class_c_collision_f_o_v}\index{CCollisionFOV@{CCollisionFOV}}
+Inheritance diagram for CCollision\+FOV\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_c_collision_f_o_v}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_collision_f_o_v_a080720093628fa5b32732c985c728d91}\label{class_c_collision_f_o_v_a080720093628fa5b32732c985c728d91} 
+bool {\bfseries Collision} (const D3\+DXVECTOR3 otherpos, \mbox{\hyperlink{class_c_collider_f_o_v}{CCollider\+FOV}} \texorpdfstring{$\ast$}{*}p\+FOV)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_collision}{CCollision}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CCollision} (TYPE type)
+\item 
+void {\bfseries Set\+Pos} (const D3\+DXVECTOR3 pos)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_collision_f_o_v_ae098b2ff4dcc079b4c35fbe7c7532cf1}\label{class_c_collision_f_o_v_ae098b2ff4dcc079b4c35fbe7c7532cf1} 
+static void {\bfseries Create} (void)
+\item 
+\Hypertarget{class_c_collision_f_o_v_a865e303f314389c97c387a1b2ce68e7b}\label{class_c_collision_f_o_v_a865e303f314389c97c387a1b2ce68e7b} 
+static \mbox{\hyperlink{class_c_collision_f_o_v}{CCollision\+FOV}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Instance} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_collision}{CCollision}}}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_c_collision}{CCollision}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const TYPE type)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_collision}{CCollision}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_collision_a6ae898afb7321e4cfb0c3705ac07ccac}\label{class_c_collision_a6ae898afb7321e4cfb0c3705ac07ccac} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+AABB} = 0
+, {\bfseries TYPE\+\_\+\+SPHERE}
+, {\bfseries TYPE\+\_\+\+FOV}
+, {\bfseries TYPE\+\_\+\+CAPSULE}
+, \newline
+{\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Collision.\+h\item 
+Collision.\+cpp\end{DoxyCompactItemize}

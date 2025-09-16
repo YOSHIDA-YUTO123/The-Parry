@@ -1,0 +1,112 @@
+\doxysection{CEnemy\+End\+Rush Class Reference}
+\hypertarget{class_c_enemy_end_rush}{}\label{class_c_enemy_end_rush}\index{CEnemyEndRush@{CEnemyEndRush}}
+Inheritance diagram for CEnemy\+End\+Rush\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_c_enemy_end_rush}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_enemy_end_rush_aab257ac79a7abc56b902963ea4a83455}\label{class_c_enemy_end_rush_aab257ac79a7abc56b902963ea4a83455} 
+{\bfseries CEnemy\+End\+Rush} (const float f\+Inertia)
+\item 
+void \mbox{\hyperlink{class_c_enemy_end_rush_a8e562549e890a42301554780e77a1e6d}{Init}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_enemy_end_rush_a13dbf6c4d7a2c91c7f8392ac3688d227}{Update}} (void) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_enemy_state}{CEnemy\+State}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CEnemy\+State} (ID Id)
+\item 
+virtual void \mbox{\hyperlink{class_c_enemy_state_a289413c48284f2326b9bfd94f9e8d491}{Uninit}} (void)
+\item 
+virtual int \mbox{\hyperlink{class_c_enemy_state_aa6c36c45fd506766ac8f745471f15e17}{Get\+ID}} (void) const
+\item 
+void {\bfseries Set\+Owner} (\mbox{\hyperlink{class_c_enemy}{CEnemy}} \texorpdfstring{$\ast$}{*}p\+Enemy)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_enemy_state}{CEnemy\+State}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_enemy_state_af3e7578c92f591f4d1ca34114376c3f4}\label{class_c_enemy_state_af3e7578c92f591f4d1ca34114376c3f4} 
+enum {\bfseries ID} \{ \newline
+{\bfseries ID\+\_\+\+BASE} = 0
+, {\bfseries ID\+\_\+\+IDLE}
+, {\bfseries ID\+\_\+\+MOVE}
+, {\bfseries ID\+\_\+\+BACKSTEP}
+, \newline
+{\bfseries ID\+\_\+\+LANDING}
+, {\bfseries ID\+\_\+\+SMASH}
+, {\bfseries ID\+\_\+\+IMPACT}
+, {\bfseries ID\+\_\+\+DAMAGEL}
+, \newline
+{\bfseries ID\+\_\+\+ROAR}
+, {\bfseries ID\+\_\+\+DASH}
+, {\bfseries ID\+\_\+\+SPIN}
+, {\bfseries ID\+\_\+\+HIT}
+, \newline
+{\bfseries ID\+\_\+\+DAMAGES}
+, {\bfseries ID\+\_\+\+GUARD}
+, {\bfseries ID\+\_\+\+STEP}
+, {\bfseries ID\+\_\+\+SWING}
+, \newline
+{\bfseries ID\+\_\+\+JUMPATTACK}
+, {\bfseries ID\+\_\+\+DEATH}
+, {\bfseries ID\+\_\+\+DOWN}
+, {\bfseries ID\+\_\+\+AWAY}
+, \newline
+{\bfseries ID\+\_\+\+SUPER\+\_\+\+HIT}
+, {\bfseries ID\+\_\+\+COMBO\+\_\+\+DAMAGE}
+, {\bfseries ID\+\_\+\+RIGHT\+\_\+\+MOVE}
+, {\bfseries ID\+\_\+\+LEFT\+\_\+\+MOVE}
+, \newline
+{\bfseries ID\+\_\+\+RUSH}
+, {\bfseries ID\+\_\+\+ENDRUSH}
+, {\bfseries ID\+\_\+\+BACKKICK}
+, {\bfseries ID\+\_\+\+LOOK\+\_\+\+BACKL}
+, \newline
+{\bfseries ID\+\_\+\+LOOK\+\_\+\+BACKR}
+, {\bfseries ID\+\_\+\+SWEEP\+\_\+\+RIGHT}
+, {\bfseries ID\+\_\+\+SWEEP\+\_\+\+LEFT}
+, {\bfseries ID\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_enemy_state}{CEnemy\+State}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_c_enemy}{CEnemy}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Enemy} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_enemy_end_rush_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_enemy_end_rush_a8e562549e890a42301554780e77a1e6d}\index{CEnemyEndRush@{CEnemyEndRush}!Init@{Init}}
+\index{Init@{Init}!CEnemyEndRush@{CEnemyEndRush}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_enemy_end_rush_a8e562549e890a42301554780e77a1e6d} 
+void CEnemy\+End\+Rush\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_enemy_state}{CEnemy\+State}}.
+
+\Hypertarget{class_c_enemy_end_rush_a13dbf6c4d7a2c91c7f8392ac3688d227}\index{CEnemyEndRush@{CEnemyEndRush}!Update@{Update}}
+\index{Update@{Update}!CEnemyEndRush@{CEnemyEndRush}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_enemy_end_rush_a13dbf6c4d7a2c91c7f8392ac3688d227} 
+void CEnemy\+End\+Rush\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_enemy_state}{CEnemy\+State}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Enemy\+State.\+h\item 
+Enemy\+State.\+cpp\end{DoxyCompactItemize}

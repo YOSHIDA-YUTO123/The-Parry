@@ -1,0 +1,59 @@
+\doxysection{fade.\+h}
+\hypertarget{fade_8h_source}{}\label{fade_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ フェード処理\ [fade.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_FADE\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_FADE\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}main.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include"{}object2D.h"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include<memory>}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_scene}{CScene}};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ フェードクラスの定義}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00026\ \textcolor{keyword}{class\ }CFade}
+\DoxyCodeLine{00027\ \{}
+\DoxyCodeLine{00028\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00030\ \ \ \ \ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ FADE\_NONE\ =\ 0,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ フェードなしの状態}}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ FADE\_IN,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ フェードインの状態}}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ FADE\_OUT,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ フェードアウトの状態}}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ FAFE\_MAX}
+\DoxyCodeLine{00035\ \ \ \ \ \}FADE;}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \string~CFade();}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{static}\ CFade*\ Create(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{void}\ SetFade(std::unique\_ptr<CScene>\ pNewScene,\textcolor{keyword}{const}\ D3DXCOLOR\ col\ =\ D3DXCOLOR(0.0f,\ 0.0f,\ 0.0f,\ 0.0f));}
+\DoxyCodeLine{00041\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00045\ \ \ \ \ FADE\ GetState(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \ m\_Fade;\ \}}
+\DoxyCodeLine{00046\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00047\ \ \ \ \ CFade();}
+\DoxyCodeLine{00048\ \ \ \ \ FADE\ m\_Fade;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ フェード}}
+\DoxyCodeLine{00049\ \ \ \ \ LPDIRECT3DVERTEXBUFFER9\ m\_pVtxBuffer;\ \ \ \textcolor{comment}{//\ 頂貼_バッファへのポインソstring^}}
+\DoxyCodeLine{00050\ \ \ \ \ D3DXCOLOR\ m\_col;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ フェードの色}}
+\DoxyCodeLine{00051\ \ \ \ \ std::unique\_ptr<CScene>\ m\_pScene;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ シーンのポインソstring^}}
+\DoxyCodeLine{00052\ \};}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

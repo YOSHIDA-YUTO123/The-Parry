@@ -1,0 +1,52 @@
+\doxysection{texture\+Manager.\+h}
+\hypertarget{texture_manager_8h_source}{}\label{texture_manager_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//==============================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ テクスチャソ}ネージャー\ [textureManager.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//==============================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//**********************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//**********************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_TEXTUREMANAGER\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_TEXTUREMANAGER\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//**********************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//**********************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}main.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}object.h"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include<vector>}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{comment}{//**********************************************}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ テクスチャのソ}ネージャークラスの定義}}
+\DoxyCodeLine{00023\ \textcolor{comment}{//**********************************************}}
+\DoxyCodeLine{00024\ \textcolor{keyword}{class\ }CTextureManager}
+\DoxyCodeLine{00025\ \{}
+\DoxyCodeLine{00026\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00027\ \ \ \ \ CTextureManager();}
+\DoxyCodeLine{00028\ \ \ \ \ \string~CTextureManager();}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{int}\ Register(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ pFilename);}
+\DoxyCodeLine{00031\ \ \ \ \ LPDIRECT3DTEXTURE9\ GetAdress(\textcolor{keywordtype}{int}\ nIdx);}
+\DoxyCodeLine{00032\ \ \ \ \ HRESULT\ Load(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ UnLoad(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00034\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{comment}{//\ テクスチャの情報の定義}}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{struct\ }TextureInfo}
+\DoxyCodeLine{00038\ \ \ \ \ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ LPDIRECT3DTEXTURE9\ pTexture;\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ テクスチャへのポインソstring^}}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ filepath[Const::MAX\_WORD];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ファイルパス}}
+\DoxyCodeLine{00041\ \ \ \ \ \};\ }
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ std::vector<TextureInfo>\ m\_apTextureInfo;\ \ \ \ \textcolor{comment}{//\ テクスチャの情報}}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ m\_nNumAll;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ テクスチャの番号}}
+\DoxyCodeLine{00045\ \};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

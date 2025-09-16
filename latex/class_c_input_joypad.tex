@@ -1,0 +1,123 @@
+\doxysection{CInput\+Joypad Class Reference}
+\hypertarget{class_c_input_joypad}{}\label{class_c_input_joypad}\index{CInputJoypad@{CInputJoypad}}
+Inheritance diagram for CInput\+Joypad\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_c_input_joypad}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_input_joypad_ae6ef4999c15f8f177dfdabf02daa916b}\label{class_c_input_joypad_ae6ef4999c15f8f177dfdabf02daa916b} 
+enum {\bfseries JOYKEY} \{ \newline
+{\bfseries JOYKEY\+\_\+\+UP} = 0
+, {\bfseries JOYKEY\+\_\+\+DOWN}
+, {\bfseries JOYKEY\+\_\+\+LEFT}
+, {\bfseries JOYKEY\+\_\+\+RIGHT}
+, \newline
+{\bfseries JOYKEY\+\_\+\+START}
+, {\bfseries JOYKEY\+\_\+\+BAKC}
+, {\bfseries JOYKEY\+\_\+\+LEFT\+\_\+\+THUMB}
+, {\bfseries JOYKEY\+\_\+\+RIGHT\+\_\+\+THUMB}
+, \newline
+{\bfseries JOYKEY\+\_\+\+LEFT\+\_\+\+SHOULDER}
+, {\bfseries JOYKEY\+\_\+\+RIGHT\+\_\+\+SHOULDER}
+, {\bfseries JOYKEY\+\_\+\+L2}
+, {\bfseries JOYKEY\+\_\+\+R2}
+, \newline
+{\bfseries JOYKEY\+\_\+A}
+, {\bfseries JOYKEY\+\_\+B}
+, {\bfseries JOYKEY\+\_\+X}
+, {\bfseries JOYKEY\+\_\+Y}
+, \newline
+{\bfseries JOYKEY\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_input_joypad_aea9a5cac06251cf21c898981dcb954c8}\label{class_c_input_joypad_aea9a5cac06251cf21c898981dcb954c8} 
+HRESULT {\bfseries Init} (void)
+\item 
+void \mbox{\hyperlink{class_c_input_joypad_ade83c4cc0c11c01b2101bdc9f2b0a8fb}{Uninit}} (void)
+\item 
+void \mbox{\hyperlink{class_c_input_joypad_abc4dddcc2fe435828de1a5a593e25e73}{Update}} (void)
+\item 
+\Hypertarget{class_c_input_joypad_a3efa4c1e2a2029f2a03b44c46b4af906}\label{class_c_input_joypad_a3efa4c1e2a2029f2a03b44c46b4af906} 
+bool {\bfseries Get\+Press} (JOYKEY key)
+\item 
+\Hypertarget{class_c_input_joypad_a33a46877c20a9e0918f8f3bd77f7b6a4}\label{class_c_input_joypad_a33a46877c20a9e0918f8f3bd77f7b6a4} 
+bool {\bfseries Get\+Trigger} (JOYKEY key)
+\item 
+\Hypertarget{class_c_input_joypad_a8d47f623c5a60620e0675a8d964180f6}\label{class_c_input_joypad_a8d47f623c5a60620e0675a8d964180f6} 
+bool {\bfseries Get\+Release} (JOYKEY key)
+\item 
+\Hypertarget{class_c_input_joypad_a10069c0745b97300d0b996d259c8b679}\label{class_c_input_joypad_a10069c0745b97300d0b996d259c8b679} 
+bool {\bfseries Get\+Repeat} (JOYKEY key, const int n\+Max\+Cnt)
+\item 
+\Hypertarget{class_c_input_joypad_afe4a08bfe0604c3848e219f0be7aefd0}\label{class_c_input_joypad_afe4a08bfe0604c3848e219f0be7aefd0} 
+bool {\bfseries Get\+Joy\+StickL} (void)
+\item 
+\Hypertarget{class_c_input_joypad_a678038f9c0e888997445655d68edf8b5}\label{class_c_input_joypad_a678038f9c0e888997445655d68edf8b5} 
+bool {\bfseries Get\+Joy\+StickR} (void)
+\item 
+\Hypertarget{class_c_input_joypad_a5f0eecfb2e412f1bc9eeb8ea61a4e1da}\label{class_c_input_joypad_a5f0eecfb2e412f1bc9eeb8ea61a4e1da} 
+XINPUT\+\_\+\+STATE \texorpdfstring{$\ast$}{*} {\bfseries Get\+Joy\+Stick\+Angle} (void)
+\item 
+\Hypertarget{class_c_input_joypad_adbb38cfdb74e33c9d058446b8d286dfe}\label{class_c_input_joypad_adbb38cfdb74e33c9d058446b8d286dfe} 
+bool {\bfseries Get\+Press\+Any\+Button} (void)
+\item 
+\Hypertarget{class_c_input_joypad_a9316fd65950b98378a3f33d4c1937b64}\label{class_c_input_joypad_a9316fd65950b98378a3f33d4c1937b64} 
+bool {\bfseries Get\+Trigger\+Trigger} (JOYKEY Trigger)
+\item 
+\Hypertarget{class_c_input_joypad_a1cfd36a0084033e572380dbca25ed4ac}\label{class_c_input_joypad_a1cfd36a0084033e572380dbca25ed4ac} 
+bool {\bfseries Get\+Trigger\+Press} (JOYKEY Trigger)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_input}{CInput}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual HRESULT {\bfseries Init} (HINSTANCE h\+Instance)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Attributes inherited from \mbox{\hyperlink{class_c_input}{CInput}}}
+\begin{DoxyCompactItemize}
+\item 
+LPDIRECTINPUTDEVICE8 {\bfseries m\+\_\+p\+Device}
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Protected Attributes inherited from \mbox{\hyperlink{class_c_input}{CInput}}}
+\begin{DoxyCompactItemize}
+\item 
+static LPDIRECTINPUT8 {\bfseries m\+\_\+p\+Input} = NULL
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_input_joypad_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_input_joypad_ade83c4cc0c11c01b2101bdc9f2b0a8fb}\index{CInputJoypad@{CInputJoypad}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CInputJoypad@{CInputJoypad}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_input_joypad_ade83c4cc0c11c01b2101bdc9f2b0a8fb} 
+void CInput\+Joypad\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_input}{CInput}}.
+
+\Hypertarget{class_c_input_joypad_abc4dddcc2fe435828de1a5a593e25e73}\index{CInputJoypad@{CInputJoypad}!Update@{Update}}
+\index{Update@{Update}!CInputJoypad@{CInputJoypad}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_input_joypad_abc4dddcc2fe435828de1a5a593e25e73} 
+void CInput\+Joypad\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_input}{CInput}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+input.\+h\item 
+input.\+cpp\end{DoxyCompactItemize}

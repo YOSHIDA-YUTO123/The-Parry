@@ -1,0 +1,193 @@
+\doxysection{CTNTBarrel Class Reference}
+\hypertarget{class_c_t_n_t_barrel}{}\label{class_c_t_n_t_barrel}\index{CTNTBarrel@{CTNTBarrel}}
+Inheritance diagram for CTNTBarrel\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=4.000000cm]{class_c_t_n_t_barrel}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+HRESULT \mbox{\hyperlink{class_c_t_n_t_barrel_a4c678905790586a30d21537fbf9766fc}{Init}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_t_n_t_barrel_ad2f06cb65a192eaa66ccf6b15ef27f6c}{Uninit}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_t_n_t_barrel_adf4c789b42313a7fc440bcf704979727}{Update}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_t_n_t_barrel_aab5d9c9ef6a6b5600985b0d6f62eaf30}{Draw}} (void) override
+\item 
+bool \mbox{\hyperlink{class_c_t_n_t_barrel_a007532a213256964d36b1747baaf743d}{Collision}} (\mbox{\hyperlink{class_c_collider_a_a_b_b}{CCollider\+AABB}} \texorpdfstring{$\ast$}{*}p\+Collider, D3\+DXVECTOR3 \texorpdfstring{$\ast$}{*}push\+Pos) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_obstacle}{CObstacle}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObstacle} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object_x}{CObjectX}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObjectX} (int n\+Priority=2)
+\item 
+void {\bfseries Draw} (const float Diffuse)
+\item 
+void {\bfseries Draw\+Shadow} (void)
+\item 
+void {\bfseries Set\+Up\+Matrix} (const D3\+DXVECTOR3 Scal=D3\+DXVECTOR3(1.\+0f, 1.\+0f, 1.\+0f))
+\item 
+void {\bfseries Set\+Up\+Matrix} (const D3\+DXMATRIX mtx\+Rot, const D3\+DXMATRIX mtx\+Trans, const D3\+DXVECTOR3 Scal=D3\+DXVECTOR3(1.\+0f, 1.\+0f, 1.\+0f))
+\item 
+void {\bfseries Set\+Up\+Draw} (void)
+\item 
+void {\bfseries Set\+Texture\+MT} (const char \texorpdfstring{$\ast$}{*}p\+Texture\+Name)
+\item 
+HRESULT {\bfseries Load\+Model} (const char \texorpdfstring{$\ast$}{*}p\+XFile\+Name)
+\item 
+void {\bfseries Set\+Position} (const D3\+DXVECTOR3 pos)
+\item 
+\mbox{\hyperlink{class_c_rotation}{CRotation}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Rotation} (void)
+\item 
+D3\+DXMATRIX {\bfseries Get\+Matrix} (void) const
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Size} (void)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_t_n_t_barrel_a24360b8f76ff2e4bff79359c93987bc1}\label{class_c_t_n_t_barrel_a24360b8f76ff2e4bff79359c93987bc1} 
+static \mbox{\hyperlink{class_c_t_n_t_barrel}{CTNTBarrel}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const D3\+DXVECTOR3 Dest\+Pos)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object_x}{CObjectX}}}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_c_object_x}{CObjectX}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const char \texorpdfstring{$\ast$}{*}p\+Model\+Name, const D3\+DXVECTOR3 rot)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_obstacle}{CObstacle}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_obstacle_a226de5d04fe4c57139bf0ee0ef498584}\label{class_c_obstacle_a226de5d04fe4c57139bf0ee0ef498584} 
+enum {\bfseries TYPE} \{ {\bfseries TYPE\+\_\+\+SPIKE\+\_\+\+TRAP} = 0
+, {\bfseries TYPE\+\_\+\+TNT\+\_\+\+BARREL}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_obstacle}{CObstacle}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_c_collider_a_a_b_b}{CCollider\+AABB}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Collider} (void)
+\item 
+void {\bfseries Create\+Collider} (void)
+\item 
+\mbox{\hyperlink{class_c_velocity}{CVelocity}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Move} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_t_n_t_barrel_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_t_n_t_barrel_a007532a213256964d36b1747baaf743d}\index{CTNTBarrel@{CTNTBarrel}!Collision@{Collision}}
+\index{Collision@{Collision}!CTNTBarrel@{CTNTBarrel}}
+\doxysubsubsection{\texorpdfstring{Collision()}{Collision()}}
+{\footnotesize\ttfamily \label{class_c_t_n_t_barrel_a007532a213256964d36b1747baaf743d} 
+bool CTNTBarrel\+::\+Collision (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_c_collider_a_a_b_b}{CCollider\+AABB}} \texorpdfstring{$\ast$}{*}}]{p\+Collider}{, }\item[{D3\+DXVECTOR3 \texorpdfstring{$\ast$}{*}}]{push\+Pos}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_obstacle}{CObstacle}}.
+
+\Hypertarget{class_c_t_n_t_barrel_aab5d9c9ef6a6b5600985b0d6f62eaf30}\index{CTNTBarrel@{CTNTBarrel}!Draw@{Draw}}
+\index{Draw@{Draw}!CTNTBarrel@{CTNTBarrel}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_t_n_t_barrel_aab5d9c9ef6a6b5600985b0d6f62eaf30} 
+void CTNTBarrel\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_obstacle}{CObstacle}}.
+
+\Hypertarget{class_c_t_n_t_barrel_a4c678905790586a30d21537fbf9766fc}\index{CTNTBarrel@{CTNTBarrel}!Init@{Init}}
+\index{Init@{Init}!CTNTBarrel@{CTNTBarrel}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_t_n_t_barrel_a4c678905790586a30d21537fbf9766fc} 
+HRESULT CTNTBarrel\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_obstacle}{CObstacle}}.
+
+\Hypertarget{class_c_t_n_t_barrel_ad2f06cb65a192eaa66ccf6b15ef27f6c}\index{CTNTBarrel@{CTNTBarrel}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CTNTBarrel@{CTNTBarrel}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_t_n_t_barrel_ad2f06cb65a192eaa66ccf6b15ef27f6c} 
+void CTNTBarrel\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_obstacle}{CObstacle}}.
+
+\Hypertarget{class_c_t_n_t_barrel_adf4c789b42313a7fc440bcf704979727}\index{CTNTBarrel@{CTNTBarrel}!Update@{Update}}
+\index{Update@{Update}!CTNTBarrel@{CTNTBarrel}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_t_n_t_barrel_adf4c789b42313a7fc440bcf704979727} 
+void CTNTBarrel\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_obstacle}{CObstacle}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Obstacle.\+h\item 
+Obstacle.\+cpp\end{DoxyCompactItemize}

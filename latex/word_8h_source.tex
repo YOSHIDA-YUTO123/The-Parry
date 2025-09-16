@@ -1,0 +1,81 @@
+\doxysection{word.\+h}
+\hypertarget{word_8h_source}{}\label{word_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ 文字を操作する処理\ [word.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:\ YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_WORD\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_WORD\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}main.h"{}}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ ワードクラスの定義}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00022\ \textcolor{keyword}{class\ }CWord}
+\DoxyCodeLine{00023\ \{}
+\DoxyCodeLine{00024\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{comment}{//\ 文字の種類}}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00028\ \ \ \ \ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ WORD\_A\ =\ 0,}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ WORD\_B,}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ WORD\_C,}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ WORD\_D,}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ WORD\_E,}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ WORD\_F,}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ WORD\_G,}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ WORD\_H,}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ WORD\_I,}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ WORD\_J,}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ WORD\_K,}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ WORD\_L,}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ WORD\_M,}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ WORD\_N,}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ WORD\_O,}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ WORD\_P,}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ WORD\_Q,}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ WORD\_R,}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ WORD\_S,}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ WORD\_T,}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ WORD\_U,}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ WORD\_V,}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ WORD\_W,}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ WORD\_X,}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ WORD\_Y,}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ WORD\_Z,}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ WORD\_MAX}
+\DoxyCodeLine{00056\ \ \ \ \ \}WORD;}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ CWord();}
+\DoxyCodeLine{00059\ \ \ \ \ \string~CWord();}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ HRESULT\ Init(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nPosX,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nPosY,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fWidth,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fHeight);}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordtype}{void}\ SetSize(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fWIdth,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fHeight);}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{void}\ SetPos(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos);}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{void}\ SetUV(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nNum);}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{void}\ SetColor(\textcolor{keyword}{const}\ D3DXCOLOR\ col);}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{void}\ SetTextureID(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ pFileName);}
+\DoxyCodeLine{00070\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00071\ \ \ \ \ LPDIRECT3DVERTEXBUFFER9\ m\_pVtxBuffer;\ \ \ \textcolor{comment}{//\ 頂貼_へのポインソstring^}}
+\DoxyCodeLine{00072\ \ \ \ \ D3DXVECTOR3\ m\_pos;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 位置}}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fWidth,\ m\_fHeight;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 幅、高さ}}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nTextureIdx;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ テクスチャのインデックス}}
+\DoxyCodeLine{00075\ \};}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

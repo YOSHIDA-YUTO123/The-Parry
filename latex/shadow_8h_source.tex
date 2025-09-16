@@ -1,0 +1,57 @@
+\doxysection{shadow.\+h}
+\hypertarget{shadow_8h_source}{}\label{shadow_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ 影\ [shadow.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:\ YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_SHADOW\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_SHADOW\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}main.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include"{}object3D.h"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include<memory>}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ 前方宣言}}
+\DoxyCodeLine{00023\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00024\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_rotation}{CRotation}};}
+\DoxyCodeLine{00025\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_size3_d}{CSize3D}};}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00028\ \textcolor{comment}{//\ 影クラスの定義}}
+\DoxyCodeLine{00029\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00030\ \textcolor{keyword}{class\ }CShadow}
+\DoxyCodeLine{00031\ \{}
+\DoxyCodeLine{00032\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00033\ \ \ \ \ CShadow();}
+\DoxyCodeLine{00034\ \ \ \ \ \string~CShadow();}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{static}\ std::unique\_ptr<CShadow>\ Create(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fWidth,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fHeight,\textcolor{keyword}{const}\ D3DXCOLOR\ col);}
+\DoxyCodeLine{00036\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keyword}{const}\ D3DXVECTOR3\ player,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fWidth,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fHeight,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fMaxHeight,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fAlv);}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{comment}{//\ 影の設定}}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{void}\ SetFieldAngle(D3DXVECTOR3\ Nor,\ D3DXVECTOR3\ up);}
+\DoxyCodeLine{00043\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00044\ \ \ \ \ std::unique\_ptr<CRotation>\ m\_pRot;\ \textcolor{comment}{//\ 向きクラスのポインソstring^}}
+\DoxyCodeLine{00045\ \ \ \ \ std::unique\_ptr<CSize3D>\ m\_pSize;\ \ \textcolor{comment}{//\ 大きさクラス}}
+\DoxyCodeLine{00046\ \ \ \ \ LPDIRECT3DVERTEXBUFFER9\ m\_pVtxBuffer;\ \textcolor{comment}{//\ 頂貼_バッファ}}
+\DoxyCodeLine{00047\ \ \ \ \ D3DXVECTOR3\ m\_pos;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 位置}}
+\DoxyCodeLine{00048\ \ \ \ \ D3DXMATRIX\ m\_mtxWorld;\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ワールドソ}トリックス}}
+\DoxyCodeLine{00049\ \ \ \ \ D3DXCOLOR\ m\_col;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 色}}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nTextureIdx;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ テクスチャのID}}
+\DoxyCodeLine{00051\ \};}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

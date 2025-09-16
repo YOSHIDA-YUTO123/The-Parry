@@ -1,0 +1,130 @@
+\doxysection{Collider.\+h}
+\hypertarget{_collider_8h_source}{}\label{_collider_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ コライソ_ー\ [collider.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:\ YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_COLLIDER\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_COLLIDER\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}main.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include<memory>}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ コライソ_ークラスの定義}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00023\ \textcolor{keyword}{class\ }CCollider}
+\DoxyCodeLine{00024\ \{}
+\DoxyCodeLine{00025\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00026\ \ \ \ \ CCollider();}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~CCollider();}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{void}\ SetPosition(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos)\ \{\ m\_pos\ =\ pos;\ \}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ D3DXVECTOR3\ GetPos(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_pos;\ \}}
+\DoxyCodeLine{00031\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00032\ \ \ \ \ D3DXVECTOR3\ m\_pos;\ \textcolor{comment}{//\ 位置}}
+\DoxyCodeLine{00033\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00034\ \};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00037\ \textcolor{comment}{//\ AABBのコライソ_ークラスの定義}}
+\DoxyCodeLine{00038\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00039\ \textcolor{keyword}{class\ }CColliderAABB\ :\ \textcolor{keyword}{public}\ CCollider}
+\DoxyCodeLine{00040\ \{}
+\DoxyCodeLine{00041\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{comment}{//\ 当たり判定に必要なデーソstring^(前回の位置,大きさ...)}}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_c_collider_a_a_b_b_1_1_data}{Data}}}
+\DoxyCodeLine{00045\ \ \ \ \ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ D3DXVECTOR3\ posOld;\ \textcolor{comment}{//\ 前回の位置}}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ D3DXVECTOR3\ Size;\ \ \ \textcolor{comment}{//\ 大きさ}}
+\DoxyCodeLine{00048\ \ \ \ \ \};}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ CColliderAABB();}
+\DoxyCodeLine{00051\ \ \ \ \ \string~CColliderAABB();}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keyword}{static}\ std::unique\_ptr<CColliderAABB>\ Create(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ posOld,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ Size);}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{static}\ CColliderAABB\ CreateCollider(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ posOld,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ Size);}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{void}\ UpdateData(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ posOld);}
+\DoxyCodeLine{00055\ \ \ \ \ \mbox{\hyperlink{struct_c_collider_a_a_b_b_1_1_data}{Data}}\ GetData(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_Data;\ \}}
+\DoxyCodeLine{00056\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00057\ \ \ \ \ Data\ m\_Data;\ \textcolor{comment}{//\ デーソstring^}}
+\DoxyCodeLine{00058\ \};}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00061\ \textcolor{comment}{//\ Sphereのコライソ_ークラスの定義}}
+\DoxyCodeLine{00062\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00063\ \textcolor{keyword}{class\ }CColliderSphere\ :\ \textcolor{keyword}{public}\ CCollider}
+\DoxyCodeLine{00064\ \{}
+\DoxyCodeLine{00065\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00066\ \ \ \ \ CColliderSphere();}
+\DoxyCodeLine{00067\ \ \ \ \ \string~CColliderSphere();}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{static}\ std::unique\_ptr<CColliderSphere>\ Create(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fRadius);}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{static}\ CColliderSphere\ CreateCollider(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fRadius);}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordtype}{float}\ GetRadius(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_fRadius;\ \}}
+\DoxyCodeLine{00071\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fRadius;\ \ \ \ \textcolor{comment}{//\ 半径}}
+\DoxyCodeLine{00073\ \};}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00076\ \textcolor{comment}{//\ FOVのコライソ_ークラスの定義}}
+\DoxyCodeLine{00077\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00078\ \textcolor{keyword}{class\ }CColliderFOV\ :\ \textcolor{keyword}{public}\ CCollider}
+\DoxyCodeLine{00079\ \{}
+\DoxyCodeLine{00080\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_c_collider_f_o_v_1_1_data}{Data}}}
+\DoxyCodeLine{00083\ \ \ \ \ \{}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ fLength;\ \ \ \ \ \ \textcolor{comment}{//\ 視界の長さ}}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ fNowAngle;\ \ \ \ \textcolor{comment}{//\ 今の角度}}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ fAngleLeft;\ \ \ \textcolor{comment}{//\ 視野左}}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ fAngleRight;\ \ \textcolor{comment}{//\ 視野右}}
+\DoxyCodeLine{00088\ \ \ \ \ \};}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ CColliderFOV();}
+\DoxyCodeLine{00091\ \ \ \ \ \string~CColliderFOV();}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keyword}{static}\ std::unique\_ptr<CColliderFOV>\ Create(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fAngle,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fAngleLeft,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fAngleRight,\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fLength);}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keyword}{static}\ CColliderFOV\ CreateCollider(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fAngle,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fAngleLeft,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fAngleRight,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fLength);}
+\DoxyCodeLine{00094\ \ \ \ \ \mbox{\hyperlink{struct_c_collider_f_o_v_1_1_data}{Data}}\ GetData(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_Data;\ \}}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordtype}{void}\ UpdateData(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fNowAngle)\ \{\ m\_Data.fNowAngle\ =\ fNowAngle;\ \}}
+\DoxyCodeLine{00096\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00097\ \ \ \ \ \mbox{\hyperlink{struct_c_collider_f_o_v_1_1_data}{Data}}\ m\_Data;\ \textcolor{comment}{//\ デーソstring^}}
+\DoxyCodeLine{00098\ \};}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00101\ \textcolor{comment}{//\ カプセルコライソ_ークラスの定義}}
+\DoxyCodeLine{00102\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00103\ \textcolor{keyword}{class\ }CColliderCapsule\ :\ \textcolor{keyword}{public}\ CCollider}
+\DoxyCodeLine{00104\ \{}
+\DoxyCodeLine{00105\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{comment}{//\ 当たり判定のデーソstring^}}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_c_collider_capsule_1_1_data}{Data}}}
+\DoxyCodeLine{00109\ \ \ \ \ \{}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ D3DXVECTOR3\ StartPos;\ \textcolor{comment}{//\ 始貼_}}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ D3DXVECTOR3\ EndPos;\ \textcolor{comment}{//\ 終貼_}}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ fRadius;\ \ \ \ \ \ \textcolor{comment}{//\ 半径}}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ nID;\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 自分の番号}}
+\DoxyCodeLine{00114\ \ \ \ \ \};}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ CColliderCapsule();}
+\DoxyCodeLine{00117\ \ \ \ \ \string~CColliderCapsule();}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keyword}{static}\ std::unique\_ptr<CColliderCapsule>\ Create(\textcolor{keyword}{const}\ D3DXVECTOR3\ StartPos,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ EndPos,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fRadius,\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nID);}
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keyword}{static}\ CColliderCapsule\ CreateCollider(\textcolor{keyword}{const}\ D3DXVECTOR3\ StartPos,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ EndPos,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fRadius);}
+\DoxyCodeLine{00120\ \ \ \ \ \mbox{\hyperlink{struct_c_collider_capsule_1_1_data}{Data}}\ GetData(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_Data;\ \}}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keywordtype}{void}\ UpdateData(\textcolor{keyword}{const}\ Data\ data);}
+\DoxyCodeLine{00122\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00123\ \ \ \ \ Data\ m\_Data;\ \textcolor{comment}{//\ デーソstring^}}
+\DoxyCodeLine{00124\ \};}
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

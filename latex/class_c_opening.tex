@@ -1,0 +1,123 @@
+\doxysection{COpening Class Reference}
+\hypertarget{class_c_opening}{}\label{class_c_opening}\index{COpening@{COpening}}
+Inheritance diagram for COpening\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_c_opening}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_opening_a1ca862e093710c8cb805dfaed41fd253}\label{class_c_opening_a1ca862e093710c8cb805dfaed41fd253} 
+enum {\bfseries STATE} \{ {\bfseries STATE\+\_\+\+NORMAL} = 0
+, {\bfseries STATE\+\_\+\+FADEOUT}
+, {\bfseries STATE\+\_\+\+FADEIN}
+, {\bfseries STATE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_scene}{CScene}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_scene_ac89c656e1679c326e23527fd48d9861d}\label{class_c_scene_ac89c656e1679c326e23527fd48d9861d} 
+enum {\bfseries MODE} \{ \newline
+{\bfseries MODE\+\_\+\+TITLE} = 0
+, {\bfseries MODE\+\_\+\+EDIT}
+, {\bfseries MODE\+\_\+\+TUTORIAL}
+, {\bfseries MODE\+\_\+\+OPENING}
+, \newline
+{\bfseries MODE\+\_\+\+GAME}
+, {\bfseries MODE\+\_\+\+RESULT}
+, {\bfseries MODE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+HRESULT \mbox{\hyperlink{class_c_opening_a8b3e600cb68580e2ed6c5b0fddef2778}{Init}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_opening_a105bea743f2baaa73e9e72a4afee554e}{Uninit}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_opening_a395e64fbd3dd7eb2dd6d6c612acc3bfc}{Update}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_opening_a862e69c70793d588a2dcfb4dd9c0b6fc}{Draw}} (void) override
+\item 
+\Hypertarget{class_c_opening_a9022908357c0f24def4d1a056c65affa}\label{class_c_opening_a9022908357c0f24def4d1a056c65affa} 
+void {\bfseries Enable\+Tutorial} (const bool b\+Tutorial)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_scene}{CScene}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CScene} (MODE mode)
+\item 
+MODE {\bfseries Get\+Mode} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_opening_a45d93790922d15c7ded175aed672097a}\label{class_c_opening_a45d93790922d15c7ded175aed672097a} 
+static void {\bfseries Set\+State} (const STATE state)
+\item 
+\Hypertarget{class_c_opening_ad3436e73f073d7c42a103f7381973a42}\label{class_c_opening_ad3436e73f073d7c42a103f7381973a42} 
+static \mbox{\hyperlink{class_c_fade_effect}{CFade\+Effect}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Fade\+Effect} (void)
+\item 
+\Hypertarget{class_c_opening_a3d009c95293fc74b4286343766f856c1}\label{class_c_opening_a3d009c95293fc74b4286343766f856c1} 
+static STATE {\bfseries Get\+State} (void)
+\item 
+\Hypertarget{class_c_opening_aa1740798fac06964f717a6ca4e8ba455}\label{class_c_opening_aa1740798fac06964f717a6ca4e8ba455} 
+static \mbox{\hyperlink{class_c_opening_camera}{COpening\+Camera}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Camera} (void)
+\item 
+\Hypertarget{class_c_opening_a40105a519f93573cd20e4c6ec714e2ab}\label{class_c_opening_a40105a519f93573cd20e4c6ec714e2ab} 
+static \mbox{\hyperlink{class_c_mesh_field}{CMesh\+Field}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Field} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_opening_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_opening_a862e69c70793d588a2dcfb4dd9c0b6fc}\index{COpening@{COpening}!Draw@{Draw}}
+\index{Draw@{Draw}!COpening@{COpening}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_opening_a862e69c70793d588a2dcfb4dd9c0b6fc} 
+void COpening\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_scene}{CScene}}.
+
+\Hypertarget{class_c_opening_a8b3e600cb68580e2ed6c5b0fddef2778}\index{COpening@{COpening}!Init@{Init}}
+\index{Init@{Init}!COpening@{COpening}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_opening_a8b3e600cb68580e2ed6c5b0fddef2778} 
+HRESULT COpening\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_scene}{CScene}}.
+
+\Hypertarget{class_c_opening_a105bea743f2baaa73e9e72a4afee554e}\index{COpening@{COpening}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!COpening@{COpening}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_opening_a105bea743f2baaa73e9e72a4afee554e} 
+void COpening\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_scene}{CScene}}.
+
+\Hypertarget{class_c_opening_a395e64fbd3dd7eb2dd6d6c612acc3bfc}\index{COpening@{COpening}!Update@{Update}}
+\index{Update@{Update}!COpening@{COpening}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_opening_a395e64fbd3dd7eb2dd6d6c612acc3bfc} 
+void COpening\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_scene}{CScene}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+opening.\+h\item 
+opening.\+cpp\end{DoxyCompactItemize}

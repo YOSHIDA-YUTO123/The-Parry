@@ -1,0 +1,54 @@
+\doxysection{Effect\+Spark.\+h}
+\hypertarget{_effect_spark_8h_source}{}\label{_effect_spark_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ 火花エフェクト\ [EffectSpark.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ EFFECTSPARK\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ EFFECTSPARK\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}billboard.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include<memory>}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ 前方宣言}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00023\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_velocity}{CVelocity}};}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ 火花エフェクトクラスの定義}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00028\ \textcolor{keyword}{class\ }CEffectSpark\ :\ \textcolor{keyword}{public}\ CObjectBillboard}
+\DoxyCodeLine{00029\ \{}
+\DoxyCodeLine{00030\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00031\ \ \ \ \ CEffectSpark();}
+\DoxyCodeLine{00032\ \ \ \ \ \string~CEffectSpark();}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{static}\ CEffectSpark*\ Create(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ D3DXVECTOR2\ Size,\ \textcolor{keyword}{const}\ D3DXCOLOR\ col);}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{void}\ SetParam(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nLife,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ move,\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fGravity);}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00041\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00042\ \ \ \ \ std::unique\_ptr<CVelocity>\ m\_pMove;\ \textcolor{comment}{//\ 移動量}}
+\DoxyCodeLine{00043\ \ \ \ \ D3DXCOLOR\ m\_col;\ \ \ \ \textcolor{comment}{//\ 色}}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fDecAlv;\ \ \ \ \textcolor{comment}{//\ アルファ値の減少スピード}}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fGravity;\ \ \ \textcolor{comment}{//\ 重力}}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nLife;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ 寿命}}
+\DoxyCodeLine{00047\ \};}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

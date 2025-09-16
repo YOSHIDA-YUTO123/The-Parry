@@ -1,0 +1,170 @@
+\doxysection{CFade\+Effect Class Reference}
+\hypertarget{class_c_fade_effect}{}\label{class_c_fade_effect}\index{CFadeEffect@{CFadeEffect}}
+Inheritance diagram for CFade\+Effect\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_c_fade_effect}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_fade_effect_ae860a165d183ca97762b9d93a779a0c6}\label{class_c_fade_effect_ae860a165d183ca97762b9d93a779a0c6} 
+enum {\bfseries FADE} \{ {\bfseries FADE\+\_\+\+NONE} = 0
+, {\bfseries FADE\+\_\+\+IN}
+, {\bfseries FADE\+\_\+\+OUT}
+, {\bfseries FAFE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+HRESULT \mbox{\hyperlink{class_c_fade_effect_aa120e8397213d92f1b04705a1bf25870}{Init}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_fade_effect_a48fb8c64c101f126bb1a76d116a357bb}{Uninit}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_fade_effect_a0a100e283044fbd69bf7638a760a65e7}{Update}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_fade_effect_a37469c93dc7173962e9593cc21f9652e}{Draw}} (void) override
+\item 
+\Hypertarget{class_c_fade_effect_ac08b48f567738f52e7ffaf064718d55b}\label{class_c_fade_effect_ac08b48f567738f52e7ffaf064718d55b} 
+void {\bfseries Set\+State} (FADE fade)
+\item 
+\Hypertarget{class_c_fade_effect_a0116c936f4a0515fb8debbf39f6248c2}\label{class_c_fade_effect_a0116c936f4a0515fb8debbf39f6248c2} 
+FADE {\bfseries Get\+State} (void) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object2_d}{CObject2D}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject2D} (int n\+Priority=7)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\item 
+D3\+DXVECTOR2 {\bfseries Get\+Size} (void) const
+\item 
+void {\bfseries Set\+Position} (const D3\+DXVECTOR3 pos)
+\item 
+void {\bfseries Set\+Rotaition} (const D3\+DXVECTOR3 rot)
+\item 
+void {\bfseries Set\+Vtx} (const D3\+DXCOLOR col)
+\item 
+void {\bfseries Set\+Size} (const D3\+DXVECTOR2 Size)
+\item 
+void {\bfseries Set\+Size} (const float f\+Width, const float f\+Height)
+\item 
+void {\bfseries Set\+Size} (const float left\+Width, const float right\+Wdth, const float top\+Height, const float buttom)
+\item 
+void {\bfseries Update\+Vertex} (void)
+\item 
+void {\bfseries Set\+Color} (const D3\+DXCOLOR col)
+\item 
+void {\bfseries Set\+Texture\+ID} (const char \texorpdfstring{$\ast$}{*}p\+Texture\+Name=NULL)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_fade_effect_ae57cbb872afcb25c8a0548b297e89ed5}\label{class_c_fade_effect_ae57cbb872afcb25c8a0548b297e89ed5} 
+static \mbox{\hyperlink{class_c_fade_effect}{CFade\+Effect}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const FADE fade)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object2_d}{CObject2D}}}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_c_object2_d}{CObject2D}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const float f\+Width, const float f\+Height, const D3\+DXVECTOR3 pos, const D3\+DXVECTOR3 rot=Const\+::\+VEC3\+\_\+\+NULL)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_fade_effect_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_fade_effect_a37469c93dc7173962e9593cc21f9652e}\index{CFadeEffect@{CFadeEffect}!Draw@{Draw}}
+\index{Draw@{Draw}!CFadeEffect@{CFadeEffect}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_fade_effect_a37469c93dc7173962e9593cc21f9652e} 
+void CFade\+Effect\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object2_d}{CObject2D}}.
+
+\Hypertarget{class_c_fade_effect_aa120e8397213d92f1b04705a1bf25870}\index{CFadeEffect@{CFadeEffect}!Init@{Init}}
+\index{Init@{Init}!CFadeEffect@{CFadeEffect}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_fade_effect_aa120e8397213d92f1b04705a1bf25870} 
+HRESULT CFade\+Effect\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object2_d}{CObject2D}}.
+
+\Hypertarget{class_c_fade_effect_a48fb8c64c101f126bb1a76d116a357bb}\index{CFadeEffect@{CFadeEffect}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CFadeEffect@{CFadeEffect}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_fade_effect_a48fb8c64c101f126bb1a76d116a357bb} 
+void CFade\+Effect\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object2_d}{CObject2D}}.
+
+\Hypertarget{class_c_fade_effect_a0a100e283044fbd69bf7638a760a65e7}\index{CFadeEffect@{CFadeEffect}!Update@{Update}}
+\index{Update@{Update}!CFadeEffect@{CFadeEffect}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_fade_effect_a0a100e283044fbd69bf7638a760a65e7} 
+void CFade\+Effect\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object2_d}{CObject2D}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Fade\+Effect.\+h\item 
+Fade\+Effect.\+cpp\end{DoxyCompactItemize}

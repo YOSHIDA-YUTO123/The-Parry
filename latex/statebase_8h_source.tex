@@ -1,0 +1,54 @@
+\doxysection{statebase.\+h}
+\hypertarget{statebase_8h_source}{}\label{statebase_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ 状態パソstring^ーン基盤\ [statebase.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:\ YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_STATEBASE\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_STATEBASE\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}mesh.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include<memory>}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ 状態クラスの定義}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00023\ \textcolor{keyword}{class\ }CStateBase}
+\DoxyCodeLine{00024\ \{}
+\DoxyCodeLine{00025\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00026\ \ \ \ \ CStateBase();}
+\DoxyCodeLine{00027\ \ \ \ \ \string~CStateBase();}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Init(\textcolor{keywordtype}{void})\ =\ 0;}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ =\ 0;}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ =\ 0;}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetID(\textcolor{keywordtype}{void})\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00032\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00033\ \};}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00036\ \textcolor{comment}{//\ 状態ソ}シーンクラスの定義}}
+\DoxyCodeLine{00037\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00038\ \textcolor{keyword}{class\ }CStateMachine}
+\DoxyCodeLine{00039\ \{}
+\DoxyCodeLine{00040\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00041\ \ \ \ \ CStateMachine();}
+\DoxyCodeLine{00042\ \ \ \ \ \string~CStateMachine();}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{void}\ Change(std::shared\_ptr<CStateBase>\ pNewState);}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00045\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00046\ \ \ \ \ std::shared\_ptr<CStateBase>\ m\_pNowState;\ \textcolor{comment}{//\ 現在の状態ポインソstring^}}
+\DoxyCodeLine{00047\ \};}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

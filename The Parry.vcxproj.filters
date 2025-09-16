@@ -665,9 +665,6 @@
     <ClInclude Include="RevengeGage.h">
       <Filter>ヘッダー ファイル\number</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleTornado.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="opening.h">
       <Filter>ヘッダー ファイル\scene</Filter>
     </ClInclude>
@@ -742,6 +739,9 @@
     </ClInclude>
     <ClInclude Include="ResultScore.h">
       <Filter>ヘッダー ファイル\number</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleTornado.h">
+      <Filter>ヘッダー ファイル\objectBillboard\particle</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

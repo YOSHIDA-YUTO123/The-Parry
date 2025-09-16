@@ -1,0 +1,117 @@
+\doxysection{game.\+h}
+\hypertarget{game_8h_source}{}\label{game_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ ゲームシーン\ [game.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_GAME\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_GAME\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}main.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}scene.h"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include<memory>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include<string>}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00023\ \textcolor{comment}{//\ 前方宣言}}
+\DoxyCodeLine{00024\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00025\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_mesh_field}{CMeshField}};}
+\DoxyCodeLine{00026\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_player}{CPlayer}};}
+\DoxyCodeLine{00027\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_mesh_cylinder}{CMeshCylinder}};}
+\DoxyCodeLine{00028\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_pause_manager}{CPauseManager}};}
+\DoxyCodeLine{00029\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_game_camera}{CGameCamera}};}
+\DoxyCodeLine{00030\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_load_manager}{CLoadManager}};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00033\ \textcolor{comment}{//\ ゲームクラスの定義}}
+\DoxyCodeLine{00034\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00035\ \textcolor{keyword}{class\ }CGame\ :\ \textcolor{keyword}{public}\ CScene}
+\DoxyCodeLine{00036\ \{}
+\DoxyCodeLine{00037\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{comment}{//\ ゲームの状態}}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{enum}\ STATE}
+\DoxyCodeLine{00041\ \ \ \ \ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ STATE\_NORMAL\ =\ 0,}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ STATE\_END,}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ STATE\_MAX}
+\DoxyCodeLine{00045\ \ \ \ \ \};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{comment}{//\ リザルトの種類}}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{enum}\ RESULTTYPE}
+\DoxyCodeLine{00049\ \ \ \ \ \{}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ RESULTTYPE\_WIN\ =\ 0,}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ RESULTTYPE\_LOSE,}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ RESULTTYPE\_MAX}
+\DoxyCodeLine{00053\ \ \ \ \ \};}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ CGame();}
+\DoxyCodeLine{00056\ \ \ \ \ \string~CGame();}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SetState(\textcolor{keyword}{const}\ STATE\ state)\ \{\ m\_state\ =\ state;\ \}}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SetResult(\textcolor{keyword}{const}\ RESULTTYPE\ type)\ \{\ m\_ResultType\ =\ type;\ \}}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{class_c_mesh_field}{CMeshField}}*\ GetField(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_pMeshField;\ \}}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{class_c_player}{CPlayer}}*\ GetPlayer(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_pPlayer;\ \}}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{class_c_mesh_cylinder}{CMeshCylinder}}*\ GetCylinder(\textcolor{keywordtype}{void})\{\ \textcolor{keywordflow}{return}\ m\_pCylinder;\ \}}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{class_c_game_camera}{CGameCamera}}*\ GetCamera(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_pCamera;\ \}}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{static}\ STATE\ GetState(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_state;\ \}}
+\DoxyCodeLine{00070\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordtype}{void}\ Load(\textcolor{keywordtype}{void});\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ゲームのロード}}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordtype}{void}\ LoadObstacle(std::fstream\&\ file,\ std::string\ line,\ \mbox{\hyperlink{class_c_load_manager}{CLoadManager}}*\ pLoad);}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordtype}{void}\ LoadCharacter(std::fstream\&\ file,\ std::string\ line,\ \mbox{\hyperlink{class_c_load_manager}{CLoadManager}}*\ pLoad);}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keywordtype}{void}\ PlayerConfig(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nLife,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fSpeed,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ ShadowScal,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ Size,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fAngle);}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordtype}{void}\ EnemyConfig(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nLife,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fSpeed,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ ShadowScal,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ Size,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fAngle);}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keyword}{static}\ STATE\ m\_state;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ゲームの状態}}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{class_c_mesh_field}{CMeshField}}*\ m\_pMeshField;\ \ \textcolor{comment}{//\ メッシュフィールドへのポインソstring^}}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{class_c_player}{CPlayer}}*\ m\_pPlayer;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ プレイヤークラスへのポインソstring^}}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{class_c_mesh_cylinder}{CMeshCylinder}}*\ m\_pCylinder;\ \textcolor{comment}{//\ メッシュシリンソ_ーへのポインソstring^}}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{class_c_game_camera}{CGameCamera}}*\ m\_pCamera;\ \ \ \ \ \ \ \textcolor{comment}{//\ ゲームカメラクラスへのポインソstring^}}
+\DoxyCodeLine{00082\ \ \ \ \ \mbox{\hyperlink{class_c_pause_manager}{CPauseManager}}*\ m\_pPauseManager;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ ポーズソ}ネージャークラスへのポインソstring^}}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keyword}{static}\ RESULTTYPE\ m\_ResultType;\ \ \ \ \ \textcolor{comment}{//\ リザルトの種類}}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nCounterState;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 状態のカウンソstring^ー}}
+\DoxyCodeLine{00085\ \};}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00088\ \textcolor{comment}{//\ ゲームのソ}ネージャークラスの定義}}
+\DoxyCodeLine{00089\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00090\ \textcolor{keyword}{class\ }CGameManager}
+\DoxyCodeLine{00091\ \{}
+\DoxyCodeLine{00092\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00093\ \ \ \ \ \string~CGameManager();}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordtype}{void}\ Init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ Create(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keyword}{static}\ CGameManager*\ GetInstance(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_pInstance.get();\ \}}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keywordtype}{int}\ GetTime(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_pInstance-\/>m\_nGameTime;\ \}}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordtype}{void}\ SavePlayerInfo(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nPerfect,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nNormal,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nWeak);}
+\DoxyCodeLine{00103\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00104\ \ \ \ \ CGameManager();}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keyword}{static}\ std::unique\_ptr<CGameManager>\ m\_pInstance;\ \textcolor{comment}{//\ 自分のインスソstring^ンス}}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nCounter;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ カウンソstring^ー}}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nGameTime;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ゲームの経過時間}}
+\DoxyCodeLine{00109\ \};}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00112\ }
+
+\end{DoxyCode}

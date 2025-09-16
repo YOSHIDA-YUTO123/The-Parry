@@ -1,0 +1,86 @@
+\doxysection{CInput\+Mouse Class Reference}
+\hypertarget{class_c_input_mouse}{}\label{class_c_input_mouse}\index{CInputMouse@{CInputMouse}}
+Inheritance diagram for CInput\+Mouse\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_c_input_mouse}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_input_mouse_af671fb067a31f56537383e729198b041}\label{class_c_input_mouse_af671fb067a31f56537383e729198b041} 
+HRESULT {\bfseries Init} (HWND h\+Wnd)
+\item 
+void \mbox{\hyperlink{class_c_input_mouse_af88d540ade452931bc6aed401a26a1d0}{Uninit}} (void)
+\item 
+void \mbox{\hyperlink{class_c_input_mouse_a1a6aaacd51eaf8b84538135f859476f0}{Update}} (void)
+\item 
+\Hypertarget{class_c_input_mouse_a88ce649ead5f5c64e060648683391589}\label{class_c_input_mouse_a88ce649ead5f5c64e060648683391589} 
+bool {\bfseries On\+Mouse\+Press} (int button\+\_\+type)
+\item 
+\Hypertarget{class_c_input_mouse_a37e91cff93fa206af6ff70d4ee05c200}\label{class_c_input_mouse_a37e91cff93fa206af6ff70d4ee05c200} 
+bool {\bfseries On\+Mouse\+Trigger\+Down} (int button\+\_\+type)
+\item 
+\Hypertarget{class_c_input_mouse_a2f0efd7e8a35226832387165d9384cae}\label{class_c_input_mouse_a2f0efd7e8a35226832387165d9384cae} 
+bool {\bfseries On\+Mouse\+Trigger\+Up} (int button\+\_\+type)
+\item 
+\Hypertarget{class_c_input_mouse_ac59df2f7f10844160ca315fe60191015}\label{class_c_input_mouse_ac59df2f7f10844160ca315fe60191015} 
+bool {\bfseries On\+Mouse\+Repet} (int button\+\_\+type, const int n\+Max\+Cnt)
+\item 
+\Hypertarget{class_c_input_mouse_a661769a436b5d67f9d315bfc0ec931b7}\label{class_c_input_mouse_a661769a436b5d67f9d315bfc0ec931b7} 
+D3\+DXVECTOR2 {\bfseries Get\+Velocity} (void)
+\item 
+\Hypertarget{class_c_input_mouse_af42b5c6638ad0eee83375972b4c3fcdb}\label{class_c_input_mouse_af42b5c6638ad0eee83375972b4c3fcdb} 
+D3\+DXVECTOR2 {\bfseries Get\+Old\+Velocity} (void)
+\item 
+\Hypertarget{class_c_input_mouse_a59e2fc530685851f6fe1af44cfc9b6a9}\label{class_c_input_mouse_a59e2fc530685851f6fe1af44cfc9b6a9} 
+int {\bfseries Get\+Mouse\+Weel} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_input}{CInput}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual HRESULT {\bfseries Init} (HINSTANCE h\+Instance)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Attributes inherited from \mbox{\hyperlink{class_c_input}{CInput}}}
+\begin{DoxyCompactItemize}
+\item 
+LPDIRECTINPUTDEVICE8 {\bfseries m\+\_\+p\+Device}
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Protected Attributes inherited from \mbox{\hyperlink{class_c_input}{CInput}}}
+\begin{DoxyCompactItemize}
+\item 
+static LPDIRECTINPUT8 {\bfseries m\+\_\+p\+Input} = NULL
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_input_mouse_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_input_mouse_af88d540ade452931bc6aed401a26a1d0}\index{CInputMouse@{CInputMouse}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CInputMouse@{CInputMouse}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_input_mouse_af88d540ade452931bc6aed401a26a1d0} 
+void CInput\+Mouse\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_input}{CInput}}.
+
+\Hypertarget{class_c_input_mouse_a1a6aaacd51eaf8b84538135f859476f0}\index{CInputMouse@{CInputMouse}!Update@{Update}}
+\index{Update@{Update}!CInputMouse@{CInputMouse}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_input_mouse_a1a6aaacd51eaf8b84538135f859476f0} 
+void CInput\+Mouse\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_input}{CInput}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+input.\+h\item 
+input.\+cpp\end{DoxyCompactItemize}

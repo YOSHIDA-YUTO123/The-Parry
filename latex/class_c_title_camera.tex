@@ -1,0 +1,105 @@
+\doxysection{CTitle\+Camera Class Reference}
+\hypertarget{class_c_title_camera}{}\label{class_c_title_camera}\index{CTitleCamera@{CTitleCamera}}
+Inheritance diagram for CTitle\+Camera\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_c_title_camera}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+HRESULT \mbox{\hyperlink{class_c_title_camera_a51420e046b2e6dc163c71c4062342ee0}{Init}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_title_camera_a0ccf6c594eb8baa5acb59b3b4f569fbf}{Uninit}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_title_camera_a80aeb01e662880e6edec5eaeba81f01c}{Update}} (void) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_camera}{CCamera}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Set\+Camera} (void)
+\item 
+void {\bfseries Set\+Camera} (const D3\+DXVECTOR3 posV, const D3\+DXVECTOR3 posR, const D3\+DXVECTOR3 rot)
+\item 
+void {\bfseries Mouse\+Wheel} (void)
+\item 
+void {\bfseries Mouse\+View} (void)
+\item 
+void {\bfseries Pad\+View} (void)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Rotaition} (void) const
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+PosV} (void) const
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+PosR} (void) const
+\item 
+void {\bfseries Set\+Rot} (const D3\+DXVECTOR3 rot)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_camera}{CCamera}}}
+\begin{DoxyCompactItemize}
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Dest\+PosV} (void) const
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Dest\+PosR} (void) const
+\item 
+float {\bfseries Get\+Distance} (void) const
+\item 
+void {\bfseries Set\+PosR} (const D3\+DXVECTOR3 posR)
+\item 
+void {\bfseries Set\+PosV} (const D3\+DXVECTOR3 posV)
+\item 
+void {\bfseries Set\+Dest\+PosV} (const D3\+DXVECTOR3 destpos)
+\item 
+void {\bfseries Set\+Dest\+PosR} (const D3\+DXVECTOR3 destpos)
+\item 
+void {\bfseries Set\+Distance} (const float f\+Distance)
+\item 
+void {\bfseries Update\+PositionV} (void)
+\item 
+void {\bfseries Update\+PositionR} (void)
+\item 
+void {\bfseries Lerp\+Pos} (const D3\+DXVECTOR3 pos\+RDest, const D3\+DXVECTOR3 pos\+VDest, const float f\+Coef)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_title_camera_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_title_camera_a51420e046b2e6dc163c71c4062342ee0}\index{CTitleCamera@{CTitleCamera}!Init@{Init}}
+\index{Init@{Init}!CTitleCamera@{CTitleCamera}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_title_camera_a51420e046b2e6dc163c71c4062342ee0} 
+HRESULT CTitle\+Camera\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_camera}{CCamera}}.
+
+\Hypertarget{class_c_title_camera_a0ccf6c594eb8baa5acb59b3b4f569fbf}\index{CTitleCamera@{CTitleCamera}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CTitleCamera@{CTitleCamera}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_title_camera_a0ccf6c594eb8baa5acb59b3b4f569fbf} 
+void CTitle\+Camera\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_camera}{CCamera}}.
+
+\Hypertarget{class_c_title_camera_a80aeb01e662880e6edec5eaeba81f01c}\index{CTitleCamera@{CTitleCamera}!Update@{Update}}
+\index{Update@{Update}!CTitleCamera@{CTitleCamera}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_title_camera_a80aeb01e662880e6edec5eaeba81f01c} 
+void CTitle\+Camera\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_camera}{CCamera}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Title\+Camera.\+h\item 
+Title\+Camera.\+cpp\end{DoxyCompactItemize}

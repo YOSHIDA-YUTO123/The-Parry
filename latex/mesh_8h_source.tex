@@ -1,0 +1,77 @@
+\doxysection{mesh.\+h}
+\hypertarget{mesh_8h_source}{}\label{mesh_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ メッシュ\ [mesh.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:\ YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_MESH\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_MESH\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}main.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include"{}object.h"{}}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ メッシュクラスの定義}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00023\ \textcolor{keyword}{class\ }CMesh\ :\ \textcolor{keyword}{public}\ CObject\ }
+\DoxyCodeLine{00024\ \{}
+\DoxyCodeLine{00025\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00026\ \ \ \ \ CMesh(\textcolor{keywordtype}{int}\ nPriority\ =\ 4);}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~CMesh();}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{virtual}\ HRESULT\ Init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ =\ 0;}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{void}\ SetUpDraw(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{int}\ GetSegH(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_nSegmentH;\ \}}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{int}\ GetSegV(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_nSegmentV;\ \}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ D3DXVECTOR3\ GetPosition(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_pos;\ \}}
+\DoxyCodeLine{00038\ \ \ \ \ D3DXVECTOR3\ NormalizeNormal(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nIdx);}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{void}\ SetPosition(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos)\ \{\ m\_pos\ =\ pos;\ \}}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{void}\ SetRotation(\textcolor{keyword}{const}\ D3DXVECTOR3\ rot)\ \{\ m\_rot\ =\ rot;\ \}}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{void}\ UpdatePosition(\textcolor{keyword}{const}\ D3DXVECTOR3\ speed)\ \{\ m\_pos\ +=\ speed;\ \}}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{void}\ UpdateRotation(\textcolor{keyword}{const}\ D3DXVECTOR3\ speed)\ \{\ m\_rot\ +=\ speed;\ \}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{void}\ SetVtxBuffer(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nIdx,\textcolor{keyword}{const}\ D3DXVECTOR2\ tex,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ nor\ =\ \{\ 0.0f,1.0f,0.0f\ \},\ \textcolor{keyword}{const}\ D3DXCOLOR\ col\ =\ Const::WHITE);}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{void}\ SetIndexBuffer(\textcolor{keyword}{const}\ WORD\ Idx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nCnt);}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{void}\ SetTextureID(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ pTextureName\ =\ NULL);}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{void}\ SetVtxElement(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vertex,\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ polygon,\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ index);}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{void}\ SetSegment(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nSegH,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nSegV);}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{void}\ SetMatrix(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ D3DXVECTOR3\ GetVtxPos(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nIdx);}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{int}\ GetIndex(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nIdx);}
+\DoxyCodeLine{00053\ \ \ \ \ D3DXCOLOR\ GetColor(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nIdx);}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{void}\ SetVtxPos(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nIdx);}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordtype}{void}\ SetNormal(\textcolor{keyword}{const}\ D3DXVECTOR3\ nor,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nIdx);}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordtype}{void}\ SetVtxColor(\textcolor{keyword}{const}\ D3DXCOLOR\ col,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nIdx);}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{void}\ SetTexture(\textcolor{keyword}{const}\ D3DXVECTOR2\ tex,\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nIdx);}
+\DoxyCodeLine{00059\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00060\ \ \ \ \ LPDIRECT3DVERTEXBUFFER9\ m\_pVtxBuffMesh;\ \textcolor{comment}{//\ 頂貼_バッファへのポインソstring^}}
+\DoxyCodeLine{00061\ \ \ \ \ LPDIRECT3DINDEXBUFFER9\ m\_pIdxBuffMesh;\ \ \textcolor{comment}{//\ インデックスバッファへのポインソstring^}}
+\DoxyCodeLine{00062\ \ \ \ \ D3DXVECTOR3\ m\_pos;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 位置}}
+\DoxyCodeLine{00063\ \ \ \ \ D3DXVECTOR3\ m\_rot;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 向き}}
+\DoxyCodeLine{00064\ \ \ \ \ D3DXMATRIX\ m\_mtxWorld;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ワールドソ}トリックス}}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nSegmentH;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 横の分割数}}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nSegmentV;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 縦の分割数}}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nIdexTexture;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ テクスチャのインデックス}}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nNumVtx;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 頂貼_数}}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nNumPolygon;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ポリゴン数}}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nNumIndex;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ インデックスバッファ}}
+\DoxyCodeLine{00071\ \};}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,42 @@
+\doxysection{Load\+Manager.\+h}
+\hypertarget{_load_manager_8h_source}{}\label{_load_manager_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ ロードソ}ネージャー\ [LoadManager.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_LOADMANAGER\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_LOADMANAGER\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}main.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include<iostream>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include<fstream>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include<string>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include<sstream>}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include<vector>}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//\ ロードのソ}ネージャークラスの定義}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00027\ \textcolor{keyword}{class\ }CLoadManager}
+\DoxyCodeLine{00028\ \{}
+\DoxyCodeLine{00029\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00030\ \ \ \ \ CLoadManager();}
+\DoxyCodeLine{00031\ \ \ \ \ \string~CLoadManager();}
+\DoxyCodeLine{00032\ \ \ \ \ std::istringstream\ SetInputvalue(std::string\ input);\ \textcolor{comment}{//\ =\ から先の数値を取り出す処理}}
+\DoxyCodeLine{00033\ \ \ \ \ std::string\ GetString(std::string\ input);\ \ \ \ \ \ \textcolor{comment}{//\ std::stringから文字列を取り出す処理}}
+\DoxyCodeLine{00034\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00035\ \};}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

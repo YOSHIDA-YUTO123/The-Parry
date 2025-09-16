@@ -1,0 +1,157 @@
+\doxysection{Collision.\+h}
+\hypertarget{_collision_8h_source}{}\label{_collision_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ 当たり判定 [collision.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:\ YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_COLLISION\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_COLLISION\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}main.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include"{}object.h"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include<memory>}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ 前方宣言}}
+\DoxyCodeLine{00023\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00024\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_collider_a_a_b_b}{CColliderAABB}};}
+\DoxyCodeLine{00025\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_collider}{CCollider}};}
+\DoxyCodeLine{00026\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_collider_sphere}{CColliderSphere}};}
+\DoxyCodeLine{00027\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_collider_f_o_v}{CColliderFOV}};}
+\DoxyCodeLine{00028\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_collider_capsule}{CColliderCapsule}};}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00031\ \textcolor{comment}{//\ 当たり判定のクラスの定義}}
+\DoxyCodeLine{00032\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00033\ \textcolor{keyword}{class\ }CCollision}
+\DoxyCodeLine{00034\ \{}
+\DoxyCodeLine{00035\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00038\ \ \ \ \ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ TYPE\_AABB\ =\ 0,}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ TYPE\_SPHERE,}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ TYPE\_FOV,}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ TYPE\_CAPSULE,}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ TYPE\_MAX}
+\DoxyCodeLine{00044\ \ \ \ \ \}TYPE;}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ CCollision(TYPE\ type);}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~CCollision();}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{static}\ CCollision*\ Create(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\textcolor{keyword}{const}\ TYPE\ type);}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{void}\ SetPos(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos)\ \{\ m\_pos\ =\ pos;\ \}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ D3DXVECTOR3\ GetPosition(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_pos;\ \}}
+\DoxyCodeLine{00054\ \ \ \ \ TYPE\ GetType(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_type;\ \}}
+\DoxyCodeLine{00055\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00056\ \ \ \ \ D3DXVECTOR3\ m\_pos;\ \textcolor{comment}{//\ 位置}}
+\DoxyCodeLine{00057\ \ \ \ \ TYPE\ m\_type;\ \ \ \ \ \ \ \textcolor{comment}{//\ 当たり判定の種類}}
+\DoxyCodeLine{00058\ \};}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00061\ \textcolor{comment}{//\ 当たり判定AABBクラス}}
+\DoxyCodeLine{00062\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00063\ \textcolor{keyword}{class\ }CCollisionAABB\ :\ \textcolor{keyword}{public}\ CCollision}
+\DoxyCodeLine{00064\ \{}
+\DoxyCodeLine{00065\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{comment}{//\ 面の種類}}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00069\ \ \ \ \ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ FACE\_ALL\ =\ 0,}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ FACE\_RIGHT,}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ FACE\_LEFT,}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ FACE\_FRONT,}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ FACE\_BACK,}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ FACE\_MAX}
+\DoxyCodeLine{00076\ \ \ \ \ \}FACE;}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ \string~CCollisionAABB();}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ Create(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keyword}{static}\ CCollisionAABB*\ GetInstance(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_pAABB.get();\ \}}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordtype}{bool}\ Collision(\mbox{\hyperlink{class_c_collider_a_a_b_b}{CColliderAABB}}*\ pMyBox,\ \mbox{\hyperlink{class_c_collider_a_a_b_b}{CColliderAABB}}*\ pTargetBox,\ D3DXVECTOR3*\ pushPos\ =\ \textcolor{keyword}{nullptr},\textcolor{keywordtype}{int}\ *pFace\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00082\ \ \ \ \ D3DXVECTOR3\ GetPushPos(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_pushPos;\ \}}
+\DoxyCodeLine{00083\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00084\ \ \ \ \ CCollisionAABB();}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keyword}{static}\ std::unique\_ptr<CCollisionAABB>\ m\_pAABB;\ \textcolor{comment}{//\ 自分のインスソstring^ンス}}
+\DoxyCodeLine{00086\ \ \ \ \ D3DXVECTOR3\ m\_pushPos;}
+\DoxyCodeLine{00087\ \};}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00090\ \textcolor{comment}{//\ 当たり判定(噂string~)クラス}}
+\DoxyCodeLine{00091\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00092\ \textcolor{keyword}{class\ }CCollisionSphere\ :\ \textcolor{keyword}{public}\ CCollision}
+\DoxyCodeLine{00093\ \{}
+\DoxyCodeLine{00094\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00095\ \ \ \ \ \string~CCollisionSphere();}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{comment}{//\ コライソ_ーの作成処理}}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ Create(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keyword}{static}\ CCollisionSphere*\ GetInstance(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_pSphere.get();\ \}}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordtype}{bool}\ Collision(\mbox{\hyperlink{class_c_collider_sphere}{CColliderSphere}}*\ myCollider,\ \mbox{\hyperlink{class_c_collider_sphere}{CColliderSphere}}*\ otherCollider);}
+\DoxyCodeLine{00101\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00102\ \ \ \ \ CCollisionSphere();}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keyword}{static}\ std::unique\_ptr<CCollisionSphere>\ m\_pSphere;\ \textcolor{comment}{//\ 自分のインスソstring^ンス}}
+\DoxyCodeLine{00104\ \};}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00107\ \textcolor{comment}{//\ 当たり判定(視界)クラス}}
+\DoxyCodeLine{00108\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00109\ \textcolor{keyword}{class\ }CCollisionFOV\ :\ \textcolor{keyword}{public}\ CCollision}
+\DoxyCodeLine{00110\ \{}
+\DoxyCodeLine{00111\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00112\ \ \ \ \ \string~CCollisionFOV();}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ Create(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keyword}{static}\ CCollisionFOV*\ GetInstance(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_pFOV.get();\ \}}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keywordtype}{bool}\ Collision(\textcolor{keyword}{const}\ D3DXVECTOR3\ otherpos,\ \mbox{\hyperlink{class_c_collider_f_o_v}{CColliderFOV}}*\ pFOV);}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{comment}{//CCollisionFOV\ CreateCollider(const\ D3DXVECTOR3\ pos,\ const\ float\ fAngle,\ const\ float\ fAngleLeft,\ const\ float\ fAngleRight);}}
+\DoxyCodeLine{00118\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00119\ \ \ \ \ CCollisionFOV();}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keyword}{static}\ std::unique\_ptr<CCollisionFOV>\ m\_pFOV;\ \textcolor{comment}{//\ 自分のインスソstring^ンス}}
+\DoxyCodeLine{00121\ \};}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00124\ \textcolor{comment}{//\ 当たり判定(カプセル)クラス}}
+\DoxyCodeLine{00125\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00126\ \textcolor{keyword}{class\ }CCollisionCapsule\ :\ \textcolor{keyword}{public}\ CCollision}
+\DoxyCodeLine{00127\ \{}
+\DoxyCodeLine{00128\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00129\ \ \ \ \ \string~CCollisionCapsule();}
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ Create(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{keyword}{static}\ CCollisionCapsule*\ GetInstance(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_pCapsule.get();\ \}}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keywordtype}{bool}\ Collision(\mbox{\hyperlink{class_c_collider_capsule}{CColliderCapsule}}*\ myCapsule,\ \mbox{\hyperlink{class_c_collider_capsule}{CColliderCapsule}}*\ otherCapsule,\ D3DXVECTOR3*\ NearPos1\ =\ \textcolor{keyword}{nullptr},\ D3DXVECTOR3*\ NearPos2\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keywordtype}{bool}\ CollisionSphere(\mbox{\hyperlink{class_c_collider_capsule}{CColliderCapsule}}*\ pCapsule,\ \mbox{\hyperlink{class_c_collider_sphere}{CColliderSphere}}*\ pSphere);}
+\DoxyCodeLine{00135\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00136\ \ \ \ \ CCollisionCapsule();}
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{keywordtype}{float}\ ClosestPtSegmentSegment(D3DXVECTOR3\ Start1,\ D3DXVECTOR3\ End1,\ D3DXVECTOR3\ Start2,\ D3DXVECTOR3\ End2,\ \textcolor{keywordtype}{float}*\ pParam1,\ \textcolor{keywordtype}{float}*\ pParam2,\ D3DXVECTOR3*\ c1osestPos1,\ D3DXVECTOR3*\ c1osestPos2);}
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{keyword}{static}\ std::unique\_ptr<\ CCollisionCapsule>\ m\_pCapsule;}
+\DoxyCodeLine{00139\ \};}
+\DoxyCodeLine{00140\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00141\ \textcolor{comment}{//\ 当たり判定のソ}ネージャークラスの定義}}
+\DoxyCodeLine{00142\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00143\ \textcolor{keyword}{class\ }CCollisionManager}
+\DoxyCodeLine{00144\ \{}
+\DoxyCodeLine{00145\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00146\ \ \ \ \ \string~CCollisionManager();}
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ CreateAll(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00149\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00150\ \ \ \ \ CCollisionManager();}
+\DoxyCodeLine{00151\ \};}
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,52 @@
+\doxysection{impact.\+h}
+\hypertarget{impact_8h_source}{}\label{impact_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ メッシュインパクト\ [impact.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:\ YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_IMPACT\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_IMPACT\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}mesh.h"{}}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ メッシュサークル(平面)クラスの定義}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00022\ \textcolor{keyword}{class\ }CMeshCircle\ :\ \textcolor{keyword}{public}\ CMesh}
+\DoxyCodeLine{00023\ \{}
+\DoxyCodeLine{00024\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ CMeshCircle();}
+\DoxyCodeLine{00027\ \ \ \ \ \string~CMeshCircle();}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{static}\ CMeshCircle*\ Create(\textcolor{keyword}{const}\ D3DXCOLOR\ col,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fInRadius,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fOutRadius,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nSegH\ =\ 32);}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{void}\ SetCircle(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fHeight,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fSpeed,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nLife,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ bField,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ rot\ =\ Const::VEC3\_NULL);}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00036\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{void}\ SetVtx(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nSegH,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ InRadius,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ OutRadius);\ \ \textcolor{comment}{//\ 頂貼_の設定}}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fHeight;\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 高さ}}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fSpeed;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 速さ}}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fInRadius;\ \ \ \ \ \ \ \textcolor{comment}{//\ 内側の半径}}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fOutRadius;\ \ \ \ \ \ \textcolor{comment}{//\ 外側の半径}}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nLife;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 寿命}}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_bFiledCollision;\ \ \textcolor{comment}{//\ 地面の高さに合わせるかどうか}}
+\DoxyCodeLine{00044\ \ \ \ \ D3DXCOLOR\ m\_Incol,\ m\_Outcol;\ \textcolor{comment}{//\ 色}}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fDecAlv;\ \ \ \ \textcolor{comment}{//\ α値の減少スピード}}
+\DoxyCodeLine{00046\ \};}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

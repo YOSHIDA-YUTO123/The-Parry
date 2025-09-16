@@ -1,0 +1,162 @@
+\doxysection{CMove\+Smoke Class Reference}
+\hypertarget{class_c_move_smoke}{}\label{class_c_move_smoke}\index{CMoveSmoke@{CMoveSmoke}}
+Inheritance diagram for CMove\+Smoke\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=4.000000cm]{class_c_move_smoke}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+HRESULT \mbox{\hyperlink{class_c_move_smoke_a4962ced3566e621b5fd29c33855074e9}{Init}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_move_smoke_a51a7b309b3c35629e46493ae86553ba4}{Uninit}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_move_smoke_abf74a13c422aaa87455799bf8b9cd8ab}{Update}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_move_smoke_ab8a16aa02ff311a49b87f1a62aa1eda7}{Draw}} (void) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_effect3_d_anim}{CEffect3\+DAnim}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Set\+Effect} (const D3\+DXVECTOR3 pos, const float f\+Radius, const D3\+DXCOLOR col)
+\item 
+void {\bfseries Set\+Effect} (const int n\+Life, const D3\+DXVECTOR3 move)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_billboard_animation}{CBillboard\+Animation}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CBillboard\+Animation} (int n\+Priority=4)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\item 
+D3\+DXVECTOR2 {\bfseries Get\+Size} (void) const
+\item 
+void {\bfseries Set\+Anim} (const int n\+Anim\+Speed, const int U, const int V, const bool b\+Loop)
+\item 
+void {\bfseries Set\+Position} (const D3\+DXVECTOR3 pos)
+\item 
+void {\bfseries Set\+Size} (const D3\+DXVECTOR2 size)
+\item 
+void {\bfseries Set\+Texture\+Vtx} (const D3\+DXVECTOR2 tex, const D3\+DXVECTOR2 offtex)
+\item 
+void {\bfseries Set\+Color} (const D3\+DXCOLOR col)
+\item 
+void {\bfseries Set\+Texture\+ID} (const char \texorpdfstring{$\ast$}{*}p\+Texture\+Name)
+\item 
+void {\bfseries Update\+Vertex\+Pos} (const D3\+DXVECTOR3 pos)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_move_smoke_a7dc66a9587fd148b3a652c35c89d3310}\label{class_c_move_smoke_a7dc66a9587fd148b3a652c35c89d3310} 
+static \mbox{\hyperlink{class_c_move_smoke}{CMove\+Smoke}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const float f\+Radius, const D3\+DXCOLOR col)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_effect3_d_anim}{CEffect3\+DAnim}}}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_c_effect3_d_anim}{CEffect3\+DAnim}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const float f\+Radius, const D3\+DXCOLOR col)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_billboard_animation}{CBillboard\+Animation}}}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_c_billboard_animation}{CBillboard\+Animation}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const D3\+DXVECTOR2 Size, const int n\+Speed, const int U, const int V, const bool b\+Loop)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_move_smoke_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_move_smoke_ab8a16aa02ff311a49b87f1a62aa1eda7}\index{CMoveSmoke@{CMoveSmoke}!Draw@{Draw}}
+\index{Draw@{Draw}!CMoveSmoke@{CMoveSmoke}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_move_smoke_ab8a16aa02ff311a49b87f1a62aa1eda7} 
+void CMove\+Smoke\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_effect3_d_anim}{CEffect3\+DAnim}}.
+
+\Hypertarget{class_c_move_smoke_a4962ced3566e621b5fd29c33855074e9}\index{CMoveSmoke@{CMoveSmoke}!Init@{Init}}
+\index{Init@{Init}!CMoveSmoke@{CMoveSmoke}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_move_smoke_a4962ced3566e621b5fd29c33855074e9} 
+HRESULT CMove\+Smoke\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_effect3_d_anim}{CEffect3\+DAnim}}.
+
+\Hypertarget{class_c_move_smoke_a51a7b309b3c35629e46493ae86553ba4}\index{CMoveSmoke@{CMoveSmoke}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CMoveSmoke@{CMoveSmoke}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_move_smoke_a51a7b309b3c35629e46493ae86553ba4} 
+void CMove\+Smoke\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_effect3_d_anim}{CEffect3\+DAnim}}.
+
+\Hypertarget{class_c_move_smoke_abf74a13c422aaa87455799bf8b9cd8ab}\index{CMoveSmoke@{CMoveSmoke}!Update@{Update}}
+\index{Update@{Update}!CMoveSmoke@{CMoveSmoke}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_move_smoke_abf74a13c422aaa87455799bf8b9cd8ab} 
+void CMove\+Smoke\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_effect3_d_anim}{CEffect3\+DAnim}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Move\+Smoke.\+h\item 
+Move\+Smoke.\+cpp\end{DoxyCompactItemize}

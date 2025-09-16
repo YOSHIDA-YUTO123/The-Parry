@@ -1,0 +1,137 @@
+\doxysection{CBird\+Manager Class Reference}
+\hypertarget{class_c_bird_manager}{}\label{class_c_bird_manager}\index{CBirdManager@{CBirdManager}}
+Inheritance diagram for CBird\+Manager\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_c_bird_manager}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_bird_manager_a3fc7912349ecb8f4d34cf88e3f20535c}\label{class_c_bird_manager_a3fc7912349ecb8f4d34cf88e3f20535c} 
+void {\bfseries Add\+Bird\+List} (\mbox{\hyperlink{class_c_bird}{CBird}} \texorpdfstring{$\ast$}{*}p\+Bird)
+\item 
+\Hypertarget{class_c_bird_manager_a35143ec22284bd3f5a3d75f067d1958a}\label{class_c_bird_manager_a35143ec22284bd3f5a3d75f067d1958a} 
+void {\bfseries Erase} (\mbox{\hyperlink{class_c_bird}{CBird}} \texorpdfstring{$\ast$}{*}p\+Bird)
+\item 
+HRESULT \mbox{\hyperlink{class_c_bird_manager_a26cbf9b1dbce618942859d1389784b90}{Init}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_bird_manager_abe597879c88b137b0ac547ba1d84aa3a}{Uninit}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_bird_manager_a51ea9089c2ef80ff1f2350dcb4b977a6}{Update}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_bird_manager_a4eba09cee76cff43ad2dfac6b67e520c}{Draw}} (void) override
+\item 
+\Hypertarget{class_c_bird_manager_aea67a259849bcdbc06cce88cb6189d38}\label{class_c_bird_manager_aea67a259849bcdbc06cce88cb6189d38} 
+bool {\bfseries Check\+Distance} (const D3\+DXVECTOR3 other\+Pos, const float f\+Radius)
+\item 
+\Hypertarget{class_c_bird_manager_a3e0826a2c229d37d5dbc2dae28116e7f}\label{class_c_bird_manager_a3e0826a2c229d37d5dbc2dae28116e7f} 
+void {\bfseries Set\+Opening} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_bird_manager_a566360f8dd2378745bad96f6d16764af}\label{class_c_bird_manager_a566360f8dd2378745bad96f6d16764af} 
+static void {\bfseries Create} (void)
+\item 
+\Hypertarget{class_c_bird_manager_aac874dc07c1d350b6914184077c6b394}\label{class_c_bird_manager_aac874dc07c1d350b6914184077c6b394} 
+static \mbox{\hyperlink{class_c_bird_manager}{CBird\+Manager}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Instance} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_bird_manager_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_bird_manager_a4eba09cee76cff43ad2dfac6b67e520c}\index{CBirdManager@{CBirdManager}!Draw@{Draw}}
+\index{Draw@{Draw}!CBirdManager@{CBirdManager}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_bird_manager_a4eba09cee76cff43ad2dfac6b67e520c} 
+void CBird\+Manager\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_bird_manager_a26cbf9b1dbce618942859d1389784b90}\index{CBirdManager@{CBirdManager}!Init@{Init}}
+\index{Init@{Init}!CBirdManager@{CBirdManager}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_bird_manager_a26cbf9b1dbce618942859d1389784b90} 
+HRESULT CBird\+Manager\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_bird_manager_abe597879c88b137b0ac547ba1d84aa3a}\index{CBirdManager@{CBirdManager}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CBirdManager@{CBirdManager}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_bird_manager_abe597879c88b137b0ac547ba1d84aa3a} 
+void CBird\+Manager\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_bird_manager_a51ea9089c2ef80ff1f2350dcb4b977a6}\index{CBirdManager@{CBirdManager}!Update@{Update}}
+\index{Update@{Update}!CBirdManager@{CBirdManager}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_bird_manager_a51ea9089c2ef80ff1f2350dcb4b977a6} 
+void CBird\+Manager\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Bird\+Manager.\+h\item 
+Bird\+Manager.\+cpp\end{DoxyCompactItemize}

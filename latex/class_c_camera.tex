@@ -1,0 +1,89 @@
+\doxysection{CCamera Class Reference}
+\hypertarget{class_c_camera}{}\label{class_c_camera}\index{CCamera@{CCamera}}
+Inheritance diagram for CCamera\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_c_camera}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_camera_a260a1ee1ef85377b83a0b27d5da3e1a4}\label{class_c_camera_a260a1ee1ef85377b83a0b27d5da3e1a4} 
+virtual HRESULT {\bfseries Init} (void)
+\item 
+\Hypertarget{class_c_camera_ab1707df0b34f294616824b09193fd32a}\label{class_c_camera_ab1707df0b34f294616824b09193fd32a} 
+virtual void {\bfseries Uninit} (void)
+\item 
+\Hypertarget{class_c_camera_a9797694b71f697fdbd15518f9f51556a}\label{class_c_camera_a9797694b71f697fdbd15518f9f51556a} 
+virtual void {\bfseries Update} (void)
+\item 
+\Hypertarget{class_c_camera_aff134debdbcf7333f29c2e7bf3d89612}\label{class_c_camera_aff134debdbcf7333f29c2e7bf3d89612} 
+void {\bfseries Set\+Camera} (void)
+\item 
+\Hypertarget{class_c_camera_ac12286dc79853f7fc27b4b1a13fa61b0}\label{class_c_camera_ac12286dc79853f7fc27b4b1a13fa61b0} 
+void {\bfseries Set\+Camera} (const D3\+DXVECTOR3 posV, const D3\+DXVECTOR3 posR, const D3\+DXVECTOR3 rot)
+\item 
+\Hypertarget{class_c_camera_a6f5afc1d72b4c2e883fb4c33cea43609}\label{class_c_camera_a6f5afc1d72b4c2e883fb4c33cea43609} 
+void {\bfseries Mouse\+Wheel} (void)
+\item 
+\Hypertarget{class_c_camera_af6dadd3f81e4fd603e7a9b12cf6eb934}\label{class_c_camera_af6dadd3f81e4fd603e7a9b12cf6eb934} 
+void {\bfseries Mouse\+View} (void)
+\item 
+\Hypertarget{class_c_camera_a0823b29ac0a01325870a0ffd9c7031b0}\label{class_c_camera_a0823b29ac0a01325870a0ffd9c7031b0} 
+void {\bfseries Pad\+View} (void)
+\item 
+\Hypertarget{class_c_camera_ac17a07f961b808138ab8315cfe37611e}\label{class_c_camera_ac17a07f961b808138ab8315cfe37611e} 
+D3\+DXVECTOR3 {\bfseries Get\+Rotaition} (void) const
+\item 
+\Hypertarget{class_c_camera_a77f189d7aded080837908d76493e4f03}\label{class_c_camera_a77f189d7aded080837908d76493e4f03} 
+D3\+DXVECTOR3 {\bfseries Get\+PosV} (void) const
+\item 
+\Hypertarget{class_c_camera_a9485ce37dfcfbe8191f50cda6755b403}\label{class_c_camera_a9485ce37dfcfbe8191f50cda6755b403} 
+D3\+DXVECTOR3 {\bfseries Get\+PosR} (void) const
+\item 
+\Hypertarget{class_c_camera_a6c9e14a474f07c8246cce3e45f40065a}\label{class_c_camera_a6c9e14a474f07c8246cce3e45f40065a} 
+void {\bfseries Set\+Rot} (const D3\+DXVECTOR3 rot)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_camera_a89867c40fbf8ab18a792406eac0cad84}\label{class_c_camera_a89867c40fbf8ab18a792406eac0cad84} 
+D3\+DXVECTOR3 {\bfseries Get\+Dest\+PosV} (void) const
+\item 
+\Hypertarget{class_c_camera_a0eb017fd5f6a3f66d3f534cccece599f}\label{class_c_camera_a0eb017fd5f6a3f66d3f534cccece599f} 
+D3\+DXVECTOR3 {\bfseries Get\+Dest\+PosR} (void) const
+\item 
+\Hypertarget{class_c_camera_ae671a4d466afbf01777f2b92ce7431bb}\label{class_c_camera_ae671a4d466afbf01777f2b92ce7431bb} 
+float {\bfseries Get\+Distance} (void) const
+\item 
+\Hypertarget{class_c_camera_ab3418d2b484537d2b0421a3b8bc4b6c0}\label{class_c_camera_ab3418d2b484537d2b0421a3b8bc4b6c0} 
+void {\bfseries Set\+PosR} (const D3\+DXVECTOR3 posR)
+\item 
+\Hypertarget{class_c_camera_a1ae048d0de623e2c6d40620809df0662}\label{class_c_camera_a1ae048d0de623e2c6d40620809df0662} 
+void {\bfseries Set\+PosV} (const D3\+DXVECTOR3 posV)
+\item 
+\Hypertarget{class_c_camera_a4876fdc9bba92688973b2857aa57b8c6}\label{class_c_camera_a4876fdc9bba92688973b2857aa57b8c6} 
+void {\bfseries Set\+Dest\+PosV} (const D3\+DXVECTOR3 destpos)
+\item 
+\Hypertarget{class_c_camera_aea10d66d6d1cbad8e2f648fada2d7154}\label{class_c_camera_aea10d66d6d1cbad8e2f648fada2d7154} 
+void {\bfseries Set\+Dest\+PosR} (const D3\+DXVECTOR3 destpos)
+\item 
+\Hypertarget{class_c_camera_ad081b31fecfa7ad92c13a844c7717043}\label{class_c_camera_ad081b31fecfa7ad92c13a844c7717043} 
+void {\bfseries Set\+Distance} (const float f\+Distance)
+\item 
+\Hypertarget{class_c_camera_ab150837b081f7339aded61a81b2ac0f4}\label{class_c_camera_ab150837b081f7339aded61a81b2ac0f4} 
+void {\bfseries Update\+PositionV} (void)
+\item 
+\Hypertarget{class_c_camera_adc88b20779e8045853baf37151c8d49d}\label{class_c_camera_adc88b20779e8045853baf37151c8d49d} 
+void {\bfseries Update\+PositionR} (void)
+\item 
+\Hypertarget{class_c_camera_ac9dea1f6e6d15def4b190bd18ddc91cc}\label{class_c_camera_ac9dea1f6e6d15def4b190bd18ddc91cc} 
+void {\bfseries Lerp\+Pos} (const D3\+DXVECTOR3 pos\+RDest, const D3\+DXVECTOR3 pos\+VDest, const float f\+Coef)
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+camera.\+h\item 
+camera.\+cpp\end{DoxyCompactItemize}

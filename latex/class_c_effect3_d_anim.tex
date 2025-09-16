@@ -1,0 +1,156 @@
+\doxysection{CEffect3\+DAnim Class Reference}
+\hypertarget{class_c_effect3_d_anim}{}\label{class_c_effect3_d_anim}\index{CEffect3DAnim@{CEffect3DAnim}}
+Inheritance diagram for CEffect3\+DAnim\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=4.000000cm]{class_c_effect3_d_anim}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_effect3_d_anim_ad1f9da1b3823662ecf0ea3e7ddb0c0f1}\label{class_c_effect3_d_anim_ad1f9da1b3823662ecf0ea3e7ddb0c0f1} 
+void {\bfseries Set\+Effect} (const D3\+DXVECTOR3 pos, const float f\+Radius, const D3\+DXCOLOR col)
+\item 
+\Hypertarget{class_c_effect3_d_anim_a0ef9c71a6aaf07fa4b82b5eff0dff5b8}\label{class_c_effect3_d_anim_a0ef9c71a6aaf07fa4b82b5eff0dff5b8} 
+void {\bfseries Set\+Effect} (const int n\+Life, const D3\+DXVECTOR3 move)
+\item 
+virtual HRESULT \mbox{\hyperlink{class_c_effect3_d_anim_adf711c831f70170a9c4c14efe426c155}{Init}} (void) override
+\item 
+virtual void \mbox{\hyperlink{class_c_effect3_d_anim_ab084ecbb32fb40a6f4acaf39c20ef583}{Uninit}} (void) override
+\item 
+virtual void \mbox{\hyperlink{class_c_effect3_d_anim_a140667e77c41d8c93f9aee49544b4b30}{Update}} (void) override
+\item 
+virtual void \mbox{\hyperlink{class_c_effect3_d_anim_ac7e571dbd59bc105a7eb084f23213f39}{Draw}} (void) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_billboard_animation}{CBillboard\+Animation}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CBillboard\+Animation} (int n\+Priority=4)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\item 
+D3\+DXVECTOR2 {\bfseries Get\+Size} (void) const
+\item 
+void {\bfseries Set\+Anim} (const int n\+Anim\+Speed, const int U, const int V, const bool b\+Loop)
+\item 
+void {\bfseries Set\+Position} (const D3\+DXVECTOR3 pos)
+\item 
+void {\bfseries Set\+Size} (const D3\+DXVECTOR2 size)
+\item 
+void {\bfseries Set\+Texture\+Vtx} (const D3\+DXVECTOR2 tex, const D3\+DXVECTOR2 offtex)
+\item 
+void {\bfseries Set\+Color} (const D3\+DXCOLOR col)
+\item 
+void {\bfseries Set\+Texture\+ID} (const char \texorpdfstring{$\ast$}{*}p\+Texture\+Name)
+\item 
+void {\bfseries Update\+Vertex\+Pos} (const D3\+DXVECTOR3 pos)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_effect3_d_anim_a9f15188373c8ee78d1137c17131bf9de}\label{class_c_effect3_d_anim_a9f15188373c8ee78d1137c17131bf9de} 
+static \mbox{\hyperlink{class_c_effect3_d_anim}{CEffect3\+DAnim}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const float f\+Radius, const D3\+DXCOLOR col)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_billboard_animation}{CBillboard\+Animation}}}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_c_billboard_animation}{CBillboard\+Animation}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const D3\+DXVECTOR2 Size, const int n\+Speed, const int U, const int V, const bool b\+Loop)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_effect3_d_anim_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_effect3_d_anim_ac7e571dbd59bc105a7eb084f23213f39}\index{CEffect3DAnim@{CEffect3DAnim}!Draw@{Draw}}
+\index{Draw@{Draw}!CEffect3DAnim@{CEffect3DAnim}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_effect3_d_anim_ac7e571dbd59bc105a7eb084f23213f39} 
+void CEffect3\+DAnim\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_billboard_animation}{CBillboard\+Animation}}.
+
+\Hypertarget{class_c_effect3_d_anim_adf711c831f70170a9c4c14efe426c155}\index{CEffect3DAnim@{CEffect3DAnim}!Init@{Init}}
+\index{Init@{Init}!CEffect3DAnim@{CEffect3DAnim}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_effect3_d_anim_adf711c831f70170a9c4c14efe426c155} 
+HRESULT CEffect3\+DAnim\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_billboard_animation}{CBillboard\+Animation}}.
+
+\Hypertarget{class_c_effect3_d_anim_ab084ecbb32fb40a6f4acaf39c20ef583}\index{CEffect3DAnim@{CEffect3DAnim}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CEffect3DAnim@{CEffect3DAnim}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_effect3_d_anim_ab084ecbb32fb40a6f4acaf39c20ef583} 
+void CEffect3\+DAnim\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_billboard_animation}{CBillboard\+Animation}}.
+
+\Hypertarget{class_c_effect3_d_anim_a140667e77c41d8c93f9aee49544b4b30}\index{CEffect3DAnim@{CEffect3DAnim}!Update@{Update}}
+\index{Update@{Update}!CEffect3DAnim@{CEffect3DAnim}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_effect3_d_anim_a140667e77c41d8c93f9aee49544b4b30} 
+void CEffect3\+DAnim\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_billboard_animation}{CBillboard\+Animation}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Effect\+Anim.\+h\item 
+Effect\+Anim.\+cpp\end{DoxyCompactItemize}

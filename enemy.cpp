@@ -49,7 +49,6 @@ constexpr float SHADOW_SIZE = 150.0f;			// 影の大きさ
 constexpr float ROCKON_HEIGHT = 100.0f;			// ロックオン時の見る場所
 constexpr float INERTIA = 0.25f;				// 慣性
 constexpr float RUSH_EFFECT_POS = -350.0f;		// 突進エフェクトの位置
-
 constexpr int NUM_RUBBLE = 16;					// 瓦礫を出す数
 constexpr int NUM_MATRIX = 8;					// 武器につけるマトリックスの数
 constexpr int NEXT_ACTION_TIME = 300;			// 次の行動の抽選までの時間
@@ -570,17 +569,23 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 	// ランダムな数値の選出
 	int random = rand() % 100;
 
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
 	// 30%の確率でガードする
 	if (random <= 30 && success != CPlayer::PARRY_PARFECT)
 	{
+		if (pSound != nullptr)
+		{
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_WEAK);
+		}
+
 		// ガードする
 		ChangeState(make_shared<CEnemyGuard>(ImpactPos,2));
 
 		return;
 	}
-
-	// 音の取得
-	CSound* pSound = CManager::GetSound();
 
 	// 成功度の遷移
 	switch (success)

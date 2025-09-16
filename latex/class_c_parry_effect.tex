@@ -1,0 +1,158 @@
+\doxysection{CParry\+Effect Class Reference}
+\hypertarget{class_c_parry_effect}{}\label{class_c_parry_effect}\index{CParryEffect@{CParryEffect}}
+Inheritance diagram for CParry\+Effect\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_c_parry_effect}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_parry_effect_a8bd4c8e1389de42c8435e170ee184226}\label{class_c_parry_effect_a8bd4c8e1389de42c8435e170ee184226} 
+enum {\bfseries TYPE} \{ {\bfseries TYPE\+\_\+\+PARRY} = 0
+, {\bfseries TYPE\+\_\+\+ROUND\+\_\+\+KICK}
+, {\bfseries TYPE\+\_\+\+SPARK}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+HRESULT \mbox{\hyperlink{class_c_parry_effect_adc65fd7e8f4f35db51f7c1c9dab55177}{Init}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_parry_effect_a884e9fec318b988606601c2eef7320d2}{Uninit}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_parry_effect_a991158349376bc9eaa7895652bd36e81}{Update}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_parry_effect_a4dbd1e3b5c40737537ca2b43ee852315}{Draw}} (void) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object3_d_anim}{CObject3\+DAnim}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject3\+DAnim} (const int n\+Priority=5)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Rotaition} (void) const
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Size} (void) const
+\item 
+void {\bfseries Set\+Position} (const D3\+DXVECTOR3 pos)
+\item 
+void {\bfseries Set\+Rotaition} (const D3\+DXVECTOR3 rot)
+\item 
+void {\bfseries Set\+Size} (const D3\+DXVECTOR3 Size)
+\item 
+void {\bfseries Set\+Texture\+ID} (const char \texorpdfstring{$\ast$}{*}p\+Texture\+Name)
+\item 
+void {\bfseries Set\+Param} (const int n\+SegX, const int n\+SegY, const int n\+Speed, const bool b\+Loop)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_parry_effect_acef00c7cfa86f2a7362e58fb44ca4264}\label{class_c_parry_effect_acef00c7cfa86f2a7362e58fb44ca4264} 
+static \mbox{\hyperlink{class_c_parry_effect}{CParry\+Effect}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const D3\+DXVECTOR3 Size, const D3\+DXVECTOR3 rot, const int n\+SegX, const int n\+SegY, const int n\+Speed, const bool b\+Loop, const TYPE type)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object3_d_anim}{CObject3\+DAnim}}}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_c_object3_d_anim}{CObject3\+DAnim}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const D3\+DXVECTOR3 Size, const int n\+SegX, const int n\+SegY, const int n\+Speed)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_parry_effect_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_parry_effect_a4dbd1e3b5c40737537ca2b43ee852315}\index{CParryEffect@{CParryEffect}!Draw@{Draw}}
+\index{Draw@{Draw}!CParryEffect@{CParryEffect}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_parry_effect_a4dbd1e3b5c40737537ca2b43ee852315} 
+void CParry\+Effect\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object3_d_anim}{CObject3\+DAnim}}.
+
+\Hypertarget{class_c_parry_effect_adc65fd7e8f4f35db51f7c1c9dab55177}\index{CParryEffect@{CParryEffect}!Init@{Init}}
+\index{Init@{Init}!CParryEffect@{CParryEffect}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_parry_effect_adc65fd7e8f4f35db51f7c1c9dab55177} 
+HRESULT CParry\+Effect\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object3_d_anim}{CObject3\+DAnim}}.
+
+\Hypertarget{class_c_parry_effect_a884e9fec318b988606601c2eef7320d2}\index{CParryEffect@{CParryEffect}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CParryEffect@{CParryEffect}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_parry_effect_a884e9fec318b988606601c2eef7320d2} 
+void CParry\+Effect\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object3_d_anim}{CObject3\+DAnim}}.
+
+\Hypertarget{class_c_parry_effect_a991158349376bc9eaa7895652bd36e81}\index{CParryEffect@{CParryEffect}!Update@{Update}}
+\index{Update@{Update}!CParryEffect@{CParryEffect}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_parry_effect_a991158349376bc9eaa7895652bd36e81} 
+void CParry\+Effect\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object3_d_anim}{CObject3\+DAnim}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Parry\+Effect.\+h\item 
+Parry\+Effect.\+cpp\end{DoxyCompactItemize}

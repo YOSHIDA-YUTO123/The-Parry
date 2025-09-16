@@ -1,0 +1,151 @@
+\doxysection{pause.\+h}
+\hypertarget{pause_8h_source}{}\label{pause_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ ポーズ\ [pause.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:\ YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_PAUSE\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_PAUSE\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}object2D.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ ポーズクラスの定義}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00023\ \textcolor{keyword}{class\ }CPause\ :\ \textcolor{keyword}{public}\ CObject2D}
+\DoxyCodeLine{00024\ \{}
+\DoxyCodeLine{00025\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{comment}{//\ ポーズのメニュー}}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{enum}\ TYPE}
+\DoxyCodeLine{00029\ \ \ \ \ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ TYPE\_CONTINUE\ =\ 0,\ \textcolor{comment}{//\ コンテニュー}}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ TYPE\_RETRY,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ リトライ}}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ TYPE\_QUIT,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ やめる}}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ TYPE\_MAX}
+\DoxyCodeLine{00034\ \ \ \ \ \};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~CPause();}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{static}\ CPause*\ Create(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ D3DXVECTOR2\ Size,\textcolor{keyword}{const}\ TYPE\ type);}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{virtual}\ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override}\ =\ 0;}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00046\ \ \ \ \ CPause(\textcolor{keyword}{const}\ TYPE\ type);}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ D3DXVECTOR2\ GetBaseSize(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_BaseSize;\ \}}
+\DoxyCodeLine{00049\ \ \ \ \ TYPE\ GetType(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_Type;\ \}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{void}\ SetBaseSize(\textcolor{keyword}{const}\ D3DXVECTOR2\ Size)\ \{\ m\_BaseSize\ =\ Size;\ \}}
+\DoxyCodeLine{00052\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00053\ \ \ \ \ TYPE\ m\_Type;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ポーズのメニュー}}
+\DoxyCodeLine{00054\ \ \ \ \ D3DXVECTOR2\ m\_BaseSize;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 基準の大きさ}}
+\DoxyCodeLine{00055\ \};}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00058\ \textcolor{comment}{//\ ポーズ(コンテニュー)クラスの定義}}
+\DoxyCodeLine{00059\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00060\ \textcolor{keyword}{class\ }CPauseContinue\ :\ \textcolor{keyword}{public}\ CPause}
+\DoxyCodeLine{00061\ \{}
+\DoxyCodeLine{00062\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00063\ \ \ \ \ CPauseContinue();}
+\DoxyCodeLine{00064\ \ \ \ \ \string~CPauseContinue();}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00070\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00071\ \};}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00074\ \textcolor{comment}{//\ ポーズ(リトライ)クラスの定義}}
+\DoxyCodeLine{00075\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00076\ \textcolor{keyword}{class\ }CPauseRetry\ :\ \textcolor{keyword}{public}\ CPause}
+\DoxyCodeLine{00077\ \{}
+\DoxyCodeLine{00078\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00079\ \ \ \ \ CPauseRetry();}
+\DoxyCodeLine{00080\ \ \ \ \ \string~CPauseRetry();}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00086\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00087\ \};}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00090\ \textcolor{comment}{//\ ポーズ(やめる)クラスの定義}}
+\DoxyCodeLine{00091\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00092\ \textcolor{keyword}{class\ }CPauseQuit\ :\ \textcolor{keyword}{public}\ CPause}
+\DoxyCodeLine{00093\ \{}
+\DoxyCodeLine{00094\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00095\ \ \ \ \ CPauseQuit();}
+\DoxyCodeLine{00096\ \ \ \ \ \string~CPauseQuit();}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00102\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00103\ \};}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00106\ \textcolor{comment}{//\ ポーズのソ}ネージャークラスの定義}}
+\DoxyCodeLine{00107\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00108\ \textcolor{keyword}{class\ }CPauseManager}
+\DoxyCodeLine{00109\ \{}
+\DoxyCodeLine{00110\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00111\ \ \ \ \ \string~CPauseManager();}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keyword}{static}\ CPauseManager*\ GetInstance(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_pInstance.get();\ \}}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ Create(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keywordtype}{void}\ EnablePause(\textcolor{keywordtype}{void});\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 引数なし}}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keywordtype}{void}\ EnablePause(\textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ bPause)\ \{\ m\_bPause\ =\ bPause;\ \}\ \textcolor{comment}{//\ 引数あり}}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keywordtype}{void}\ SelectMenu(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ GetPause(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_bPause;\ \}}
+\DoxyCodeLine{00120\ \ \ \ \ CPause::TYPE\ GetSelectMenu(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_SelectMenu;\ \}}
+\DoxyCodeLine{00121\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00122\ \ \ \ \ CPauseManager();}
+\DoxyCodeLine{00123\ \ \ \ \ CPause::TYPE\ m\_SelectMenu;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ポーズのメニューの選択}}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keyword}{static}\ std::unique\_ptr<CPauseManager>\ m\_pInstance;\ \textcolor{comment}{//\ 自分のインスソstring^ンス}}
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ m\_bPause;\ \textcolor{comment}{//\ ポーズ状態かどうか}}
+\DoxyCodeLine{00126\ \};}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00129\ \textcolor{comment}{//\ ポーズ(ポーズ中)のクラスの定義}}
+\DoxyCodeLine{00130\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00131\ \textcolor{keyword}{class\ }CPauseNow\ :\ \textcolor{keyword}{public}\ CObject2D}
+\DoxyCodeLine{00132\ \{}
+\DoxyCodeLine{00133\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00134\ \ \ \ \ CPauseNow();}
+\DoxyCodeLine{00135\ \ \ \ \ \string~CPauseNow();}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{keyword}{static}\ CPauseNow*\ Create(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ D3DXVECTOR2\ Size);}
+\DoxyCodeLine{00138\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00142\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00143\ \ \ \ \ D3DXVECTOR2\ m\_BaseSize;\ \textcolor{comment}{//\ 元の大きさ}}
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fCounter;\ \ \ \ \ \ \ \textcolor{comment}{//\ カウンソstring^ー}}
+\DoxyCodeLine{00145\ \};}
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

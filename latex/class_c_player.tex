@@ -1,0 +1,371 @@
+\doxysection{CPlayer Class Reference}
+\hypertarget{class_c_player}{}\label{class_c_player}\index{CPlayer@{CPlayer}}
+Inheritance diagram for CPlayer\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_c_player}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_player_a9ad2fc94d71a16cfcbce21afb56dd97b}\label{class_c_player_a9ad2fc94d71a16cfcbce21afb56dd97b} 
+enum {\bfseries MOTIONTYPE} \{ \newline
+{\bfseries MOTIONTYPE\+\_\+\+NEUTRAL} = 0
+, {\bfseries MOTIONTYPE\+\_\+\+MOVE}
+, {\bfseries MOTIONTYPE\+\_\+\+PARRY}
+, {\bfseries MOTIONTYPE\+\_\+\+JUMP}
+, \newline
+{\bfseries MOTIONTYPE\+\_\+\+LANDING}
+, {\bfseries MOTIONTYPE\+\_\+\+DASH}
+, {\bfseries MOTIONTYPE\+\_\+\+DAMAGE}
+, {\bfseries MOTIONTYPE\+\_\+\+PUNCH}
+, \newline
+{\bfseries MOTIONTYPE\+\_\+\+DOWN\+\_\+\+NEUTRAL}
+, {\bfseries MOTIONTYPE\+\_\+\+AVOID}
+, {\bfseries MOTIONTYPE\+\_\+\+ROUNDKICK}
+, {\bfseries MOTIONTYPE\+\_\+\+STANCE}
+, \newline
+{\bfseries MOTIONTYPE\+\_\+\+REVENGE}
+, {\bfseries MOTIONTYPE\+\_\+\+REVENGEATTACK}
+, {\bfseries MOTIONTYPE\+\_\+\+MAX}
+ \}
+\item 
+\Hypertarget{class_c_player_a0acb1de5b339b4336dd7a9399a1f46e2}\label{class_c_player_a0acb1de5b339b4336dd7a9399a1f46e2} 
+enum {\bfseries PARRY} \{ \newline
+{\bfseries PARRY\+\_\+\+MISS} = 0
+, {\bfseries PARRY\+\_\+\+WEAK}
+, {\bfseries PARRY\+\_\+\+NORMAL}
+, {\bfseries PARRY\+\_\+\+PARFECT}
+, \newline
+{\bfseries PARRY\+\_\+\+MAX}
+ \}
+\item 
+\Hypertarget{class_c_player_a09105e88a58f02800d030fedc1070c63}\label{class_c_player_a09105e88a58f02800d030fedc1070c63} 
+enum {\bfseries OBSERVER} \{ {\bfseries OBSERVER\+\_\+\+HP} = 0
+, {\bfseries OBSERVER\+\_\+\+STAMINA}
+, {\bfseries OBSERVER\+\_\+\+SPECAL}
+, {\bfseries OBSERVER\+\_\+\+MAX}
+ \}
+\item 
+\Hypertarget{class_c_player_a1e6ebf7ec02bae4ee847990fc068ba90}\label{class_c_player_a1e6ebf7ec02bae4ee847990fc068ba90} 
+enum {\bfseries MODEL} \{ \newline
+{\bfseries MODEL\+\_\+\+WAIST} = 0
+, {\bfseries MODEL\+\_\+\+CHEST}
+, {\bfseries MODEL\+\_\+\+HEAD}
+, {\bfseries MODEL\+\_\+\+ARMUR}
+, \newline
+{\bfseries MODEL\+\_\+\+ARMFR}
+, {\bfseries MODEL\+\_\+\+HANDR}
+, {\bfseries MODEL\+\_\+\+ARMUL}
+, {\bfseries MODEL\+\_\+\+ARMFL}
+, \newline
+{\bfseries MODEL\+\_\+\+HANDL}
+, {\bfseries MODEL\+\_\+\+LEGUR}
+, {\bfseries MODEL\+\_\+\+LEGDR}
+, {\bfseries MODEL\+\_\+\+FOOTR}
+, \newline
+{\bfseries MODEL\+\_\+\+LEGUL}
+, {\bfseries MODEL\+\_\+\+LEGDL}
+, {\bfseries MODEL\+\_\+\+FOOTL}
+, {\bfseries MODEL\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_character3_d}{CCharacter3D}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_character3_d_a2f18b0a573aa86a26defff62128100b4}\label{class_c_character3_d_a2f18b0a573aa86a26defff62128100b4} 
+enum {\bfseries STATE} \{ \newline
+{\bfseries STATE\+\_\+\+NORMAL} = 0
+, {\bfseries STATE\+\_\+\+MOVE}
+, {\bfseries STATE\+\_\+\+ACTION}
+, {\bfseries STATE\+\_\+\+DAMAGE}
+, \newline
+{\bfseries STATE\+\_\+\+DEATH}
+, {\bfseries STATE\+\_\+\+MAX}
+ \}
+\item 
+\Hypertarget{class_c_character3_d_a090994e96b00e7a9cc6e1bd0012f1283}\label{class_c_character3_d_a090994e96b00e7a9cc6e1bd0012f1283} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+TRAININGENEMY}
+, \newline
+{\bfseries TYPE\+\_\+\+BIRD}
+, {\bfseries TYPE\+\_\+\+TITLEPLAYER}
+, {\bfseries TYPE\+\_\+\+OPENING\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+HRESULT \mbox{\hyperlink{class_c_player_a07c42354992367ae080e3e81af9df3bf}{Init}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_player_a57910c7de6c6fa34b22d1e15cf540933}{Uninit}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_player_a08be6cba0a99dce8ca5748864d80b8e0}{Update}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_player_a5281c7fa2dcd58b50e463a55a9923a49}{Draw}} (void) override
+\item 
+\Hypertarget{class_c_player_ab8c865f5f280ce45fe990f831e26903d}\label{class_c_player_ab8c865f5f280ce45fe990f831e26903d} 
+void {\bfseries Set\+Position} (const D3\+DXVECTOR3 pos)
+\item 
+\Hypertarget{class_c_player_a0c5a93c98fce0836b85094e4277d2450}\label{class_c_player_a0c5a93c98fce0836b85094e4277d2450} 
+void {\bfseries Change\+State} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_c_player_state}{CPlayer\+State}} $>$ p\+New\+State)
+\item 
+\Hypertarget{class_c_player_a51acd8097e790c02501b9067888af478}\label{class_c_player_a51acd8097e790c02501b9067888af478} 
+void {\bfseries Set\+Hit\+Stop} (const int n\+Time)
+\item 
+\Hypertarget{class_c_player_a84963d982706d21656932e05c754462f}\label{class_c_player_a84963d982706d21656932e05c754462f} 
+\mbox{\hyperlink{class_c_collider_sphere}{CCollider\+Sphere}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Sphere\+Collider} (void)
+\item 
+\Hypertarget{class_c_player_a41f8940221cb2a6797fe38601187a96c}\label{class_c_player_a41f8940221cb2a6797fe38601187a96c} 
+\mbox{\hyperlink{class_c_collider_a_a_b_b}{CCollider\+AABB}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+AABB} (void)
+\item 
+\Hypertarget{class_c_player_a32d1a43059c1c163ad8d1a088e7f763b}\label{class_c_player_a32d1a43059c1c163ad8d1a088e7f763b} 
+\mbox{\hyperlink{class_c_player_movement}{CPlayer\+Movement}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Movement} (void)
+\item 
+\Hypertarget{class_c_player_a4a576a2c25e014a7ac55b37341e8ea44}\label{class_c_player_a4a576a2c25e014a7ac55b37341e8ea44} 
+\mbox{\hyperlink{class_c_collider_capsule}{CCollider\+Capsule}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Capsule\+Collider} (void)
+\item 
+\Hypertarget{class_c_player_a4d55ab988c90d97da3e6e4b63ccb2bb7}\label{class_c_player_a4d55ab988c90d97da3e6e4b63ccb2bb7} 
+void {\bfseries Set\+Hp\+Observer} (\mbox{\hyperlink{class_c_observer}{CObserver}}$<$ int $>$ \texorpdfstring{$\ast$}{*}p\+Observer)
+\item 
+\Hypertarget{class_c_player_ab4595ffd7da4e802e6993c72fb5c4a5d}\label{class_c_player_ab4595ffd7da4e802e6993c72fb5c4a5d} 
+void {\bfseries Set\+Stamina\+Observer} (\mbox{\hyperlink{class_c_observer}{CObserver}}$<$ float $>$ \texorpdfstring{$\ast$}{*}p\+Observer)
+\item 
+\Hypertarget{class_c_player_a225082c9f80c6a70778ec77f806ebc01}\label{class_c_player_a225082c9f80c6a70778ec77f806ebc01} 
+void {\bfseries Set\+Revenge\+Observer} (\mbox{\hyperlink{class_c_observer}{CObserver}}$<$ float $>$ \texorpdfstring{$\ast$}{*}p\+Observer)
+\item 
+\Hypertarget{class_c_player_ae9ac32ac8156f145028f7a232e895a6f}\label{class_c_player_ae9ac32ac8156f145028f7a232e895a6f} 
+int {\bfseries Success\+Parry} (void)
+\item 
+\Hypertarget{class_c_player_a5ea6defc7f14713494ad9b76d0af977b}\label{class_c_player_a5ea6defc7f14713494ad9b76d0af977b} 
+void {\bfseries Blow\+Off} (const D3\+DXVECTOR3 attacker, const float blow\+Off, const float jump)
+\item 
+\Hypertarget{class_c_player_af9804e133621099da03ec53e810e3772}\label{class_c_player_af9804e133621099da03ec53e810e3772} 
+bool {\bfseries Is\+Parry} (const D3\+DXVECTOR3 pos)
+\item 
+\Hypertarget{class_c_player_a84a3dc7bdf7fa6a20ad760832561e9cd}\label{class_c_player_a84a3dc7bdf7fa6a20ad760832561e9cd} 
+void {\bfseries Set\+Angle} (const float angleY)
+\item 
+\Hypertarget{class_c_player_a443296785e24a1fbbb8b417206f97dbc}\label{class_c_player_a443296785e24a1fbbb8b417206f97dbc} 
+bool {\bfseries Collision\+Obstacle} (D3\+DXVECTOR3 \texorpdfstring{$\ast$}{*}p\+Pos)
+\item 
+\Hypertarget{class_c_player_a0520994dc2d4349a796cddd4382544e5}\label{class_c_player_a0520994dc2d4349a796cddd4382544e5} 
+void {\bfseries Orbit} (const int n\+SegH, const D3\+DXCOLOR col)
+\item 
+\Hypertarget{class_c_player_a56811b7f11865bbab7d62387c83e0e00}\label{class_c_player_a56811b7f11865bbab7d62387c83e0e00} 
+void {\bfseries Delete\+Orbit} (void)
+\item 
+\Hypertarget{class_c_player_aabc9e728c80d7cd6b6b12b632c16493b}\label{class_c_player_aabc9e728c80d7cd6b6b12b632c16493b} 
+void {\bfseries Set\+Stance} (const D3\+DXVECTOR3 enemy\+Pos)
+\item 
+\Hypertarget{class_c_player_ab45d7ff315fa114dcb2a62d603804009}\label{class_c_player_ab45d7ff315fa114dcb2a62d603804009} 
+void {\bfseries Set\+Stamina} (const float f\+Stamina)
+\item 
+bool \mbox{\hyperlink{class_c_player_abae9db269cbc40c4d43cf79fbce52978}{Collision\+AABB}} (\mbox{\hyperlink{class_c_collider_a_a_b_b}{CCollider\+AABB}} \texorpdfstring{$\ast$}{*}p\+AABB)
+\begin{DoxyCompactList}\small\item\em ãÈå\`{}ÇÃîªíË \end{DoxyCompactList}\item 
+\Hypertarget{class_c_player_afffff6d2aeb1a70aa264ba8adeccb588}\label{class_c_player_afffff6d2aeb1a70aa264ba8adeccb588} 
+bool {\bfseries Collision\+Capsule} (\mbox{\hyperlink{class_c_collider_capsule}{CCollider\+Capsule}} \texorpdfstring{$\ast$}{*}p\+Capsule, const bool b\+Push=true)
+\item 
+\Hypertarget{class_c_player_a3d77cac983646fb36352055a1deb6fe8}\label{class_c_player_a3d77cac983646fb36352055a1deb6fe8} 
+void {\bfseries Set\+Revenge\+Effect} (void)
+\item 
+\Hypertarget{class_c_player_aadf9a3838bb2a6f0ee5c959ad43d35cf}\label{class_c_player_aadf9a3838bb2a6f0ee5c959ad43d35cf} 
+void {\bfseries Enable\+Gravity} (const bool b\+Enable)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_character3_d}{CCharacter3D}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CCharacter3D} (const TYPE type)
+\item 
+void {\bfseries Draw} (const float f\+Avl)
+\item 
+void {\bfseries Draw\+MT} (void)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+\mbox{\hyperlink{class_c_motion}{CMotion}} \texorpdfstring{$\ast$}{*} {\bfseries Load\+Motion} (const char \texorpdfstring{$\ast$}{*}p\+File\+Name, const int n\+Num\+Motion)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Size} (void) const
+\item 
+\mbox{\hyperlink{class_c_rotation}{CRotation}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Rotaition} (void) const
+\item 
+STATE {\bfseries Get\+State} (void)
+\item 
+\mbox{\hyperlink{class_c_motion}{CMotion}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Motion} (void)
+\item 
+float {\bfseries Get\+Speed} (void)
+\item 
+int {\bfseries Get\+Life} (void) const
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Model\+Pos} (const int n\+Idx)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Model\+Rot} (const int n\+Idx)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Model\+Size} (const int n\+Idx)
+\item 
+D3\+DXMATRIX {\bfseries Get\+Parent} (const int n\+Idx) const
+\item 
+void {\bfseries Set\+Position} (const D3\+DXVECTOR3 pos)
+\item 
+void {\bfseries Set\+Character} (const int n\+Life, const float f\+Speed, const D3\+DXVECTOR3 Shadow\+Scal, const D3\+DXVECTOR3 Size)
+\item 
+void {\bfseries Set\+Model\+MT} (const char \texorpdfstring{$\ast$}{*}p\+Texture\+Name)
+\item 
+void {\bfseries Copy} (\mbox{\hyperlink{class_c_character3_d}{CCharacter3D}} \texorpdfstring{$\ast$}{*}p\+Character)
+\item 
+bool {\bfseries Get\+Alive} (void)
+\item 
+void {\bfseries Set\+State} (const STATE state, const int n\+Time)
+\item 
+void {\bfseries Delete\+Shadow} (void)
+\item 
+bool {\bfseries Hit} (int n\+Damage)
+\item 
+bool {\bfseries Hit\+Stop} (void)
+\item 
+void {\bfseries Set\+Hit\+Stop} (const int n\+Time)
+\item 
+void {\bfseries Update\+Motion} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_player_ad28f521f8901e56333de6a861d253352}\label{class_c_player_ad28f521f8901e56333de6a861d253352} 
+static \mbox{\hyperlink{class_c_player}{CPlayer}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const int n\+Life, const float f\+Speed, const D3\+DXVECTOR3 Shadow\+Scal, const D3\+DXVECTOR3 Size, const D3\+DXVECTOR3 pos=Const\+::\+VEC3\+\_\+\+NULL, const D3\+DXVECTOR3 rot=Const\+::\+VEC3\+\_\+\+NULL)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_player_ac722e0a486c560c8ff45d57622c69055}\label{class_c_player_ac722e0a486c560c8ff45d57622c69055} 
+static constexpr float {\bfseries MAX\+\_\+\+STAMINA} = 100.\+0f
+\item 
+\Hypertarget{class_c_player_a21a2aee0087fe2b593caa65beb3306f1}\label{class_c_player_a21a2aee0087fe2b593caa65beb3306f1} 
+static constexpr float {\bfseries MAX\+\_\+\+REVENGE} = 100.\+0f
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_character3_d}{CCharacter3D}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Set\+Character} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_player_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_player_abae9db269cbc40c4d43cf79fbce52978}\index{CPlayer@{CPlayer}!CollisionAABB@{CollisionAABB}}
+\index{CollisionAABB@{CollisionAABB}!CPlayer@{CPlayer}}
+\doxysubsubsection{\texorpdfstring{CollisionAABB()}{CollisionAABB()}}
+{\footnotesize\ttfamily \label{class_c_player_abae9db269cbc40c4d43cf79fbce52978} 
+bool CPlayer\+::\+Collision\+AABB (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_c_collider_a_a_b_b}{CCollider\+AABB}} \texorpdfstring{$\ast$}{*}}]{p\+AABB}{}\end{DoxyParamCaption})}
+
+
+
+ãÈå\`{}ÇÃîªíË 
+
+
+\begin{DoxyParams}{Parameters}
+{\em param1} & AABBÇÃÉ\+RÉâÉ\+CÉ\+\_\+Å\mbox{[} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+è’ìÀÇµÇΩÇ©Ç«Ç§Ç© 
+\end{DoxyReturn}
+\Hypertarget{class_c_player_a5281c7fa2dcd58b50e463a55a9923a49}\index{CPlayer@{CPlayer}!Draw@{Draw}}
+\index{Draw@{Draw}!CPlayer@{CPlayer}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_player_a5281c7fa2dcd58b50e463a55a9923a49} 
+void CPlayer\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_character3_d}{CCharacter3D}}.
+
+\Hypertarget{class_c_player_a07c42354992367ae080e3e81af9df3bf}\index{CPlayer@{CPlayer}!Init@{Init}}
+\index{Init@{Init}!CPlayer@{CPlayer}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_player_a07c42354992367ae080e3e81af9df3bf} 
+HRESULT CPlayer\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_character3_d}{CCharacter3D}}.
+
+\Hypertarget{class_c_player_a57910c7de6c6fa34b22d1e15cf540933}\index{CPlayer@{CPlayer}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CPlayer@{CPlayer}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_player_a57910c7de6c6fa34b22d1e15cf540933} 
+void CPlayer\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_character3_d}{CCharacter3D}}.
+
+\Hypertarget{class_c_player_a08be6cba0a99dce8ca5748864d80b8e0}\index{CPlayer@{CPlayer}!Update@{Update}}
+\index{Update@{Update}!CPlayer@{CPlayer}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_player_a08be6cba0a99dce8ca5748864d80b8e0} 
+void CPlayer\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_character3_d}{CCharacter3D}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+player.\+h\item 
+player.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,186 @@
+\doxysection{CZone\+Effect3D Class Reference}
+\hypertarget{class_c_zone_effect3_d}{}\label{class_c_zone_effect3_d}\index{CZoneEffect3D@{CZoneEffect3D}}
+Inheritance diagram for CZone\+Effect3D\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=4.000000cm]{class_c_zone_effect3_d}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+HRESULT \mbox{\hyperlink{class_c_zone_effect3_d_a10dc2630fc40348a1d1aaca4f6dc592f}{Init}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_zone_effect3_d_a9e2af5f4eece52e5daf5076abfeb5c80}{Uninit}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_zone_effect3_d_aa45da9dd73c1d417f7acc8bd04810b4e}{Update}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_zone_effect3_d_a8620c60caa8a77b426a123904b7e480e}{Draw}} (void) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_effect3_d}{CEffect3D}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CEffect3D} (int n\+Priority=4)
+\item 
+void {\bfseries Set} (const int n\+Life, const D3\+DXVECTOR3 move)
+\item 
+\mbox{\hyperlink{class_c_velocity}{CVelocity}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Velocity} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object_billboard}{CObject\+Billboard}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject\+Billboard} (int n\+Priority=4)
+\item 
+void {\bfseries Set\+Matrix} (const D3\+DXMATRIX mtx\+Rot, const D3\+DXMATRIX mtx\+Trans)
+\item 
+void {\bfseries Set\+Up\+Draw} (void)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\item 
+D3\+DXVECTOR2 {\bfseries Get\+Size} (void) const
+\item 
+void {\bfseries Set\+Position} (const D3\+DXVECTOR3 pos)
+\item 
+void {\bfseries Set\+Size} (const D3\+DXVECTOR2 size)
+\item 
+void {\bfseries Set\+Color} (const D3\+DXCOLOR col)
+\item 
+void {\bfseries Set\+Texture\+ID} (const char \texorpdfstring{$\ast$}{*}p\+Texture\+Name)
+\item 
+void {\bfseries Update\+Vertex\+Pos} (const D3\+DXVECTOR3 pos)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_zone_effect3_d_ac6e1fc71629af2878249d6bf6e2466ab}\label{class_c_zone_effect3_d_ac6e1fc71629af2878249d6bf6e2466ab} 
+static \mbox{\hyperlink{class_c_zone_effect3_d}{CZone\+Effect3D}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const float f\+Radius, const D3\+DXCOLOR col)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_effect3_d}{CEffect3D}}}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_c_effect3_d}{CEffect3D}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const float f\+Radius, const D3\+DXCOLOR col, const TYPE type)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object_billboard}{CObject\+Billboard}}}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_c_object_billboard}{CObject\+Billboard}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const D3\+DXVECTOR2 size, const char \texorpdfstring{$\ast$}{*}p\+Texture\+Name)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_effect3_d}{CEffect3D}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_effect3_d_a3cf2bf45f5e0ef7c6253d03a4044f38a}\label{class_c_effect3_d_a3cf2bf45f5e0ef7c6253d03a4044f38a} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NORAML} = 0
+, {\bfseries TYPE\+\_\+\+HIT}
+, {\bfseries TYPE\+\_\+\+FIRE}
+, {\bfseries TYPE\+\_\+\+ZONE}
+, \newline
+{\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_effect3_d}{CEffect3D}}}
+\begin{DoxyCompactItemize}
+\item 
+HRESULT {\bfseries Set\+Up} (const D3\+DXVECTOR3 pos, const float f\+Radius, const D3\+DXCOLOR col)
+\item 
+\mbox{\hyperlink{struct_c_effect3_d_1_1_data}{Data}} {\bfseries Get\+Data} (void) const
+\item 
+void {\bfseries Set\+Data} (const \mbox{\hyperlink{struct_c_effect3_d_1_1_data}{Data}} data)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_zone_effect3_d_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_zone_effect3_d_a8620c60caa8a77b426a123904b7e480e}\index{CZoneEffect3D@{CZoneEffect3D}!Draw@{Draw}}
+\index{Draw@{Draw}!CZoneEffect3D@{CZoneEffect3D}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_zone_effect3_d_a8620c60caa8a77b426a123904b7e480e} 
+void CZone\+Effect3\+D\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_effect3_d}{CEffect3D}}.
+
+\Hypertarget{class_c_zone_effect3_d_a10dc2630fc40348a1d1aaca4f6dc592f}\index{CZoneEffect3D@{CZoneEffect3D}!Init@{Init}}
+\index{Init@{Init}!CZoneEffect3D@{CZoneEffect3D}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_zone_effect3_d_a10dc2630fc40348a1d1aaca4f6dc592f} 
+HRESULT CZone\+Effect3\+D\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_effect3_d}{CEffect3D}}.
+
+\Hypertarget{class_c_zone_effect3_d_a9e2af5f4eece52e5daf5076abfeb5c80}\index{CZoneEffect3D@{CZoneEffect3D}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CZoneEffect3D@{CZoneEffect3D}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_zone_effect3_d_a9e2af5f4eece52e5daf5076abfeb5c80} 
+void CZone\+Effect3\+D\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_effect3_d}{CEffect3D}}.
+
+\Hypertarget{class_c_zone_effect3_d_aa45da9dd73c1d417f7acc8bd04810b4e}\index{CZoneEffect3D@{CZoneEffect3D}!Update@{Update}}
+\index{Update@{Update}!CZoneEffect3D@{CZoneEffect3D}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_zone_effect3_d_aa45da9dd73c1d417f7acc8bd04810b4e} 
+void CZone\+Effect3\+D\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_effect3_d}{CEffect3D}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Zone\+Effect.\+h\item 
+Zone\+Effect.\+cpp\end{DoxyCompactItemize}

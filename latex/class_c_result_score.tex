@@ -1,0 +1,122 @@
+\doxysection{CResult\+Score Class Reference}
+\hypertarget{class_c_result_score}{}\label{class_c_result_score}\index{CResultScore@{CResultScore}}
+Inheritance diagram for CResult\+Score\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_c_result_score}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+HRESULT \mbox{\hyperlink{class_c_result_score_a960052e47bbde515dbe3c05e90622aa0}{Init}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_result_score_a1324c95b48d8cbd68098d5d006dd50d5}{Uninit}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_result_score_a66ab97b163f98e91471144f750bd4ac5}{Update}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_result_score_abd66c81df53b905e4cb7b9ca5c372977}{Draw}} (void) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_result_score_ae9e07a9963d6a234c83d719d36fcbb3b}\label{class_c_result_score_ae9e07a9963d6a234c83d719d36fcbb3b} 
+static \mbox{\hyperlink{class_c_result_score}{CResult\+Score}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const D3\+DXVECTOR2 Size, const int n\+Score)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_result_score_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_result_score_abd66c81df53b905e4cb7b9ca5c372977}\index{CResultScore@{CResultScore}!Draw@{Draw}}
+\index{Draw@{Draw}!CResultScore@{CResultScore}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_result_score_abd66c81df53b905e4cb7b9ca5c372977} 
+void CResult\+Score\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_result_score_a960052e47bbde515dbe3c05e90622aa0}\index{CResultScore@{CResultScore}!Init@{Init}}
+\index{Init@{Init}!CResultScore@{CResultScore}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_result_score_a960052e47bbde515dbe3c05e90622aa0} 
+HRESULT CResult\+Score\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_result_score_a1324c95b48d8cbd68098d5d006dd50d5}\index{CResultScore@{CResultScore}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CResultScore@{CResultScore}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_result_score_a1324c95b48d8cbd68098d5d006dd50d5} 
+void CResult\+Score\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_result_score_a66ab97b163f98e91471144f750bd4ac5}\index{CResultScore@{CResultScore}!Update@{Update}}
+\index{Update@{Update}!CResultScore@{CResultScore}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_result_score_a66ab97b163f98e91471144f750bd4ac5} 
+void CResult\+Score\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Result\+Score.\+h\item 
+Result\+Score.\+cpp\end{DoxyCompactItemize}

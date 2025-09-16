@@ -1,0 +1,50 @@
+\doxysection{CMesh\+Field\+Impact Class Reference}
+\hypertarget{class_c_mesh_field_impact}{}\label{class_c_mesh_field_impact}\index{CMeshFieldImpact@{CMeshFieldImpact}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_c_mesh_field_impact_1_1_config}{Config}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_mesh_field_impact_ac72a4752fa1622bfe82357fc67f51139}\label{class_c_mesh_field_impact_ac72a4752fa1622bfe82357fc67f51139} 
+enum {\bfseries OBJ} \{ {\bfseries OBJ\+\_\+\+NONE} = 0
+, {\bfseries OBJ\+\_\+\+PLAYER}
+, {\bfseries OBJ\+\_\+\+ENEMY}
+, {\bfseries OBJ\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_mesh_field_impact_acf074b3327b42fea71a6f0738b57dc36}\label{class_c_mesh_field_impact_acf074b3327b42fea71a6f0738b57dc36} 
+void {\bfseries Uninit} (void)
+\item 
+\Hypertarget{class_c_mesh_field_impact_a2209441e663ff4342fa61c869c72494f}\label{class_c_mesh_field_impact_a2209441e663ff4342fa61c869c72494f} 
+bool {\bfseries Update} (\mbox{\hyperlink{class_c_mesh_field}{CMesh\+Field}} \texorpdfstring{$\ast$}{*}p\+Mesh\+Field, const int n\+Num\+Vtx)
+\item 
+\Hypertarget{class_c_mesh_field_impact_aeb371788d6534ec748abefbcdaa5fcfb}\label{class_c_mesh_field_impact_aeb371788d6534ec748abefbcdaa5fcfb} 
+bool {\bfseries Collision} (const D3\+DXVECTOR3 pos, const float f\+Radius, const OBJ my\+Obj, D3\+DXVECTOR3 \texorpdfstring{$\ast$}{*}p\+First\+Pos=nullptr, D3\+DXVECTOR3 \texorpdfstring{$\ast$}{*}p\+Impact\+Pos=nullptr)
+\item 
+\Hypertarget{class_c_mesh_field_impact_af0822b066f7b0a89d49ed6f0cfdc7b8f}\label{class_c_mesh_field_impact_af0822b066f7b0a89d49ed6f0cfdc7b8f} 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\item 
+\Hypertarget{class_c_mesh_field_impact_a1056f0962bf09b82d2bfd5cd489823ea}\label{class_c_mesh_field_impact_a1056f0962bf09b82d2bfd5cd489823ea} 
+D3\+DXVECTOR3 {\bfseries Get\+First\+Pos} (void) const
+\item 
+\Hypertarget{class_c_mesh_field_impact_a9134136ca005ef5416d91b7bbc6aa58e}\label{class_c_mesh_field_impact_a9134136ca005ef5416d91b7bbc6aa58e} 
+void {\bfseries Reset} (D3\+DXVECTOR3 dir, const OBJ obj, const D3\+DXVECTOR3 First\+Pos, const D3\+DXCOLOR Circlecol)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_mesh_field_impact_af2795c151397e74da585a9b6ce96f25e}\label{class_c_mesh_field_impact_af2795c151397e74da585a9b6ce96f25e} 
+static \mbox{\hyperlink{class_c_mesh_field_impact}{CMesh\+Field\+Impact}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (\mbox{\hyperlink{struct_c_mesh_field_impact_1_1_config}{Config}} config)
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+meshfield.\+h\item 
+meshfield.\+cpp\end{DoxyCompactItemize}

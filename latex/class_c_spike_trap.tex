@@ -1,0 +1,193 @@
+\doxysection{CSpike\+Trap Class Reference}
+\hypertarget{class_c_spike_trap}{}\label{class_c_spike_trap}\index{CSpikeTrap@{CSpikeTrap}}
+Inheritance diagram for CSpike\+Trap\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=4.000000cm]{class_c_spike_trap}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+HRESULT \mbox{\hyperlink{class_c_spike_trap_a61f3364aaeb8948b8585030ae6da2cec}{Init}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_spike_trap_ac01ba652cc287e83905c02328dfd3210}{Uninit}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_spike_trap_a063853899323722684b9b79c6d7dfd0d}{Update}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_spike_trap_a2b72b0ed8ccf610c126fba38a25f6b6f}{Draw}} (void) override
+\item 
+bool \mbox{\hyperlink{class_c_spike_trap_add08af4f38053ff37f13457eed2608e7}{Collision}} (\mbox{\hyperlink{class_c_collider_a_a_b_b}{CCollider\+AABB}} \texorpdfstring{$\ast$}{*}p\+Collider, D3\+DXVECTOR3 \texorpdfstring{$\ast$}{*}push\+Pos) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_obstacle}{CObstacle}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObstacle} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object_x}{CObjectX}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObjectX} (int n\+Priority=2)
+\item 
+void {\bfseries Draw} (const float Diffuse)
+\item 
+void {\bfseries Draw\+Shadow} (void)
+\item 
+void {\bfseries Set\+Up\+Matrix} (const D3\+DXVECTOR3 Scal=D3\+DXVECTOR3(1.\+0f, 1.\+0f, 1.\+0f))
+\item 
+void {\bfseries Set\+Up\+Matrix} (const D3\+DXMATRIX mtx\+Rot, const D3\+DXMATRIX mtx\+Trans, const D3\+DXVECTOR3 Scal=D3\+DXVECTOR3(1.\+0f, 1.\+0f, 1.\+0f))
+\item 
+void {\bfseries Set\+Up\+Draw} (void)
+\item 
+void {\bfseries Set\+Texture\+MT} (const char \texorpdfstring{$\ast$}{*}p\+Texture\+Name)
+\item 
+HRESULT {\bfseries Load\+Model} (const char \texorpdfstring{$\ast$}{*}p\+XFile\+Name)
+\item 
+void {\bfseries Set\+Position} (const D3\+DXVECTOR3 pos)
+\item 
+\mbox{\hyperlink{class_c_rotation}{CRotation}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Rotation} (void)
+\item 
+D3\+DXMATRIX {\bfseries Get\+Matrix} (void) const
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Size} (void)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_spike_trap_a9d12bd556dbca881d07cf509fa0856b3}\label{class_c_spike_trap_a9d12bd556dbca881d07cf509fa0856b3} 
+static \mbox{\hyperlink{class_c_spike_trap}{CSpike\+Trap}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const D3\+DXVECTOR3 rot, const int n\+Damage\+Face)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object_x}{CObjectX}}}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_c_object_x}{CObjectX}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const char \texorpdfstring{$\ast$}{*}p\+Model\+Name, const D3\+DXVECTOR3 rot)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_obstacle}{CObstacle}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_obstacle_a226de5d04fe4c57139bf0ee0ef498584}\label{class_c_obstacle_a226de5d04fe4c57139bf0ee0ef498584} 
+enum {\bfseries TYPE} \{ {\bfseries TYPE\+\_\+\+SPIKE\+\_\+\+TRAP} = 0
+, {\bfseries TYPE\+\_\+\+TNT\+\_\+\+BARREL}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_obstacle}{CObstacle}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_c_collider_a_a_b_b}{CCollider\+AABB}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Collider} (void)
+\item 
+void {\bfseries Create\+Collider} (void)
+\item 
+\mbox{\hyperlink{class_c_velocity}{CVelocity}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Move} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_spike_trap_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_spike_trap_add08af4f38053ff37f13457eed2608e7}\index{CSpikeTrap@{CSpikeTrap}!Collision@{Collision}}
+\index{Collision@{Collision}!CSpikeTrap@{CSpikeTrap}}
+\doxysubsubsection{\texorpdfstring{Collision()}{Collision()}}
+{\footnotesize\ttfamily \label{class_c_spike_trap_add08af4f38053ff37f13457eed2608e7} 
+bool CSpike\+Trap\+::\+Collision (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_c_collider_a_a_b_b}{CCollider\+AABB}} \texorpdfstring{$\ast$}{*}}]{p\+Collider}{, }\item[{D3\+DXVECTOR3 \texorpdfstring{$\ast$}{*}}]{push\+Pos}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_obstacle}{CObstacle}}.
+
+\Hypertarget{class_c_spike_trap_a2b72b0ed8ccf610c126fba38a25f6b6f}\index{CSpikeTrap@{CSpikeTrap}!Draw@{Draw}}
+\index{Draw@{Draw}!CSpikeTrap@{CSpikeTrap}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_spike_trap_a2b72b0ed8ccf610c126fba38a25f6b6f} 
+void CSpike\+Trap\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_obstacle}{CObstacle}}.
+
+\Hypertarget{class_c_spike_trap_a61f3364aaeb8948b8585030ae6da2cec}\index{CSpikeTrap@{CSpikeTrap}!Init@{Init}}
+\index{Init@{Init}!CSpikeTrap@{CSpikeTrap}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_spike_trap_a61f3364aaeb8948b8585030ae6da2cec} 
+HRESULT CSpike\+Trap\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_obstacle}{CObstacle}}.
+
+\Hypertarget{class_c_spike_trap_ac01ba652cc287e83905c02328dfd3210}\index{CSpikeTrap@{CSpikeTrap}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CSpikeTrap@{CSpikeTrap}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_spike_trap_ac01ba652cc287e83905c02328dfd3210} 
+void CSpike\+Trap\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_obstacle}{CObstacle}}.
+
+\Hypertarget{class_c_spike_trap_a063853899323722684b9b79c6d7dfd0d}\index{CSpikeTrap@{CSpikeTrap}!Update@{Update}}
+\index{Update@{Update}!CSpikeTrap@{CSpikeTrap}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_spike_trap_a063853899323722684b9b79c6d7dfd0d} 
+void CSpike\+Trap\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_obstacle}{CObstacle}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Obstacle.\+h\item 
+Obstacle.\+cpp\end{DoxyCompactItemize}

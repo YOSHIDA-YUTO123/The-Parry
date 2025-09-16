@@ -1,0 +1,113 @@
+\doxysection{sound.\+h}
+\hypertarget{sound_8h_source}{}\label{sound_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ サウンド処理\ [sound.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//=================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_SOUND\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_SOUND\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}main.h"{}}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ サウンドクラスの定義}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00022\ \textcolor{keyword}{class\ }CSound}
+\DoxyCodeLine{00023\ \{}
+\DoxyCodeLine{00024\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{comment}{//\ サウンドの種類}}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00028\ \ \ \ \ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ SOUND\_LABEL\_PARRYPARFECT\ =\ 0,\ \ \ \textcolor{comment}{//\ パリィパーフェクト}}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ SOUND\_LABEL\_PARRYNORMAL,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ パリィ普通}}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ SOUND\_LABEL\_PARRYWEAK,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ パリィ微妙}}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ SOUND\_LABEL\_ROAR,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 咆哮}}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ SOUND\_LABEL\_EXPLOSION,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 爆発}}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ SOUND\_LABEL\_WARK000,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 歩き0}}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ SOUND\_LABEL\_WARK001,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 歩き1}}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ SOUND\_LABEL\_BIRDSOUND,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 鳥の鳴き声}}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ SOUND\_LABEL\_BIRDFLY,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 鳥が飛び立つ}}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ SOUND\_LABEL\_WIND,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 風}}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ SOUND\_LABEL\_PERFECT,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ パーフェクト}}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ SOUND\_LABEL\_NORMAL,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 普通}}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ SOUND\_LABEL\_WEAK,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 弱い}}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ SOUND\_LABEL\_GAME\_BGM,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ゲーム中のBGM}}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ SOUND\_LABEL\_WARK003,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 敵の足音}}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ SOUND\_LABEL\_SPIKE,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ スパイクトラップにぶつかった音}}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ SOUND\_LABEL\_END\_RUSH,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 突進終了}}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ SOUND\_LABEL\_IMPACT000,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 衝撃波0}}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ SOUND\_LABEL\_ENEMY\_JUMP,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 敵のジャンプ}}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ SOUND\_LABEL\_SWING,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 風切り音}}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ SOUND\_LABEL\_SP,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 必殺技}}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ SOUND\_LABEL\_MENU,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ メニュー選択}}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ SOUND\_LABEL\_ENTER,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 決定}}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ SOUND\_LABEL\_MAX}
+\DoxyCodeLine{00053\ \ \ \ \ \}\ SOUND\_LABEL;}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ CSound();}
+\DoxyCodeLine{00056\ \ \ \ \ \string~CSound();}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ HRESULT\ Init(HWND\ hWnd);}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00060\ \ \ \ \ HRESULT\ Play(SOUND\_LABEL\ label);}
+\DoxyCodeLine{00061\ \ \ \ \ HRESULT\ Play(SOUND\_LABEL\ label,\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fVolume);}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordtype}{void}\ StopSound(SOUND\_LABEL\ label);}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{void}\ StopSound(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00064\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00065\ \ \ \ \ HRESULT\ CheckChunk(HANDLE\ hFile,\ DWORD\ format,\ DWORD*\ pChunkSize,\ DWORD*\ pChunkDataPosition);}
+\DoxyCodeLine{00066\ \ \ \ \ HRESULT\ ReadChunkData(HANDLE\ hFile,\ \textcolor{keywordtype}{void}*\ pBuffer,\ DWORD\ dwBuffersize,\ DWORD\ dwBufferoffset);}
+\DoxyCodeLine{00067\ \ \ \ \ IXAudio2*\ m\_pXAudio2;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ XAudio2オブジェクトへのインソstring^ーフェイス}}
+\DoxyCodeLine{00068\ \ \ \ \ IXAudio2MasteringVoice*\ m\_pMasteringVoice;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ソ}スソstring^ーソ{イス}}
+\DoxyCodeLine{00069\ \ \ \ \ IXAudio2SourceVoice*\ m\_apSourceVoice[SOUND\_LABEL\_MAX];\ \ \textcolor{comment}{//\ ソ(\backslash\)ースソ{イス}}
+\DoxyCodeLine{00070\ \ \ \ \ BYTE*\ m\_apDataAudio[SOUND\_LABEL\_MAX];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ オーディオデーソstring^}}
+\DoxyCodeLine{00071\ \ \ \ \ DWORD\ m\_aSizeAudio[SOUND\_LABEL\_MAX];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ オーディオデーソstring^サイズ}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{comment}{//\ サウンド情報構(\backslash\)造体の定義}}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keyword}{struct\ }SOUND\_INFO}
+\DoxyCodeLine{00075\ \ \ \ \ \{}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ pFilename;\ \ \textcolor{comment}{//\ ファイル名}}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ nCntLoop;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ループカウント}}
+\DoxyCodeLine{00078\ \ \ \ \ \};}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{comment}{//\ サウンドの情報}}
+\DoxyCodeLine{00081\ \ \ \ \ SOUND\_INFO\ m\_aSoundInfo[SOUND\_LABEL\_MAX]\ =\ }
+\DoxyCodeLine{00082\ \ \ \ \ \{}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}data/SE/parryParfect.wav"{}},\ 0\},\ \ \textcolor{comment}{//\ パリィパーフェクト}}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}data/SE/parryNormal.wav"{}},\ 0\},\ \ \ \textcolor{comment}{//\ 普通}}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}data/SE/parryWeak.wav"{}},\ 0\},\ \ \ \ \ \textcolor{comment}{//\ 微妙}}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}data/SE/roar.wav"{}},\ 0\},\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 咆哮}}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}data/SE/explosion.wav"{}},\ 0\},\ \ \ \ \ \textcolor{comment}{//\ 爆発}}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}data/SE/wark000.wav"{}},\ 0\},\ \ \ \ \ \ \ \textcolor{comment}{//\ 歩き0}}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}data/SE/wark001.wav"{}},\ 0\},\ \ \ \ \ \ \ \textcolor{comment}{//\ 歩き1}}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}data/SE/birdsound.wav"{}},\ 0\},\ \ \ \ \ \textcolor{comment}{//\ 鳥の鳴き声}}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}data/SE/BirdFly.wav"{}},\ 0\},\ \ \ \ \ \ \ \textcolor{comment}{//\ 鳥が羽ばたく}}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}data/SE/wind.wav"{}},\ 0\},\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 風}}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}data/SE/perfect.wav"{}},\ 0\},\ \ \ \ \ \ \ \textcolor{comment}{//\ パーフェクト}}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}data/SE/normal.wav"{}},\ 0\},\ \ \ \ \ \ \ \ \textcolor{comment}{//\ 普通}}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}data/SE/weak.wav"{}},\ 0\},\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 弱い}}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}data/BGM/game\_bgm.wav"{}},\ -\/1\},\ \ \ \ \textcolor{comment}{//\ ゲーム中のBGM}}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}data/SE/wark003.wav"{}},\ 0\},\ \ \ \ \ \ \ \textcolor{comment}{//\ 敵の足音}}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}data/SE/spike.wav"{}},\ 0\},\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ スパイクトラップにぶつかった音}}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}data/SE/EndRush.wav"{}},\ 0\},\ \ \ \ \ \ \ \textcolor{comment}{//\ 突進終了}}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}data/SE/Impact000.wav"{}},\ 0\},\ \ \ \ \ \textcolor{comment}{//\ 衝撃波0}}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}data/SE/enemyJump.wav"{}},\ 0\},\ \ \ \ \ \textcolor{comment}{//\ 敵のジャンプ}}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}data/SE/swing.wav"{}},\ 0\},\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 風切り音}}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}data/SE/SP.wav"{}},\ 0\},\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 必殺技}}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}data/SE/menu000.wav"{}},\ 0\},\ \ \ \ \ \ \ \textcolor{comment}{//\ メニュー選択}}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}data/SE/Enter.wav"{}},\ 0\},\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 決定}}
+\DoxyCodeLine{00106\ \ \ \ \ \};\ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00107\ \};}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

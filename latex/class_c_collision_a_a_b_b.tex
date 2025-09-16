@@ -1,0 +1,75 @@
+\doxysection{CCollision\+AABB Class Reference}
+\hypertarget{class_c_collision_a_a_b_b}{}\label{class_c_collision_a_a_b_b}\index{CCollisionAABB@{CCollisionAABB}}
+Inheritance diagram for CCollision\+AABB\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_c_collision_a_a_b_b}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_collision_a_a_b_b_af9c5a5997407d627cebc312b374612d7}\label{class_c_collision_a_a_b_b_af9c5a5997407d627cebc312b374612d7} 
+enum {\bfseries FACE} \{ \newline
+{\bfseries FACE\+\_\+\+ALL} = 0
+, {\bfseries FACE\+\_\+\+RIGHT}
+, {\bfseries FACE\+\_\+\+LEFT}
+, {\bfseries FACE\+\_\+\+FRONT}
+, \newline
+{\bfseries FACE\+\_\+\+BACK}
+, {\bfseries FACE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_collision}{CCollision}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_collision_a6ae898afb7321e4cfb0c3705ac07ccac}\label{class_c_collision_a6ae898afb7321e4cfb0c3705ac07ccac} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+AABB} = 0
+, {\bfseries TYPE\+\_\+\+SPHERE}
+, {\bfseries TYPE\+\_\+\+FOV}
+, {\bfseries TYPE\+\_\+\+CAPSULE}
+, \newline
+{\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_collision_a_a_b_b_a596c9076c31d51ca64ec5dc26963f13d}\label{class_c_collision_a_a_b_b_a596c9076c31d51ca64ec5dc26963f13d} 
+bool {\bfseries Collision} (\mbox{\hyperlink{class_c_collider_a_a_b_b}{CCollider\+AABB}} \texorpdfstring{$\ast$}{*}p\+My\+Box, \mbox{\hyperlink{class_c_collider_a_a_b_b}{CCollider\+AABB}} \texorpdfstring{$\ast$}{*}p\+Target\+Box, D3\+DXVECTOR3 \texorpdfstring{$\ast$}{*}push\+Pos=nullptr, int \texorpdfstring{$\ast$}{*}p\+Face=nullptr)
+\item 
+\Hypertarget{class_c_collision_a_a_b_b_a8c8a1f4f5ad005964ea58695f10ab7f0}\label{class_c_collision_a_a_b_b_a8c8a1f4f5ad005964ea58695f10ab7f0} 
+D3\+DXVECTOR3 {\bfseries Get\+Push\+Pos} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_collision}{CCollision}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CCollision} (TYPE type)
+\item 
+void {\bfseries Set\+Pos} (const D3\+DXVECTOR3 pos)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_collision_a_a_b_b_a82b2d20fbca31b2333e41bce7383c90e}\label{class_c_collision_a_a_b_b_a82b2d20fbca31b2333e41bce7383c90e} 
+static void {\bfseries Create} (void)
+\item 
+\Hypertarget{class_c_collision_a_a_b_b_a986eae2b5e14b639f5ab4a298ad39f29}\label{class_c_collision_a_a_b_b_a986eae2b5e14b639f5ab4a298ad39f29} 
+static \mbox{\hyperlink{class_c_collision_a_a_b_b}{CCollision\+AABB}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Instance} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_collision}{CCollision}}}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_c_collision}{CCollision}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const TYPE type)
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Collision.\+h\item 
+Collision.\+cpp\end{DoxyCompactItemize}

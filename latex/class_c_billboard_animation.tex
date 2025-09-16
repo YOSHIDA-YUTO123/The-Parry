@@ -1,0 +1,152 @@
+\doxysection{CBillboard\+Animation Class Reference}
+\hypertarget{class_c_billboard_animation}{}\label{class_c_billboard_animation}\index{CBillboardAnimation@{CBillboardAnimation}}
+Inheritance diagram for CBillboard\+Animation\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=4.000000cm]{class_c_billboard_animation}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_billboard_animation_a1fadb9032e07d9422ffa48e483a5d6d5}\label{class_c_billboard_animation_a1fadb9032e07d9422ffa48e483a5d6d5} 
+{\bfseries CBillboard\+Animation} (int n\+Priority=4)
+\item 
+virtual HRESULT \mbox{\hyperlink{class_c_billboard_animation_a08bb1e0b0c4bd80d1cd2e51659041ba9}{Init}} (void)
+\item 
+virtual void \mbox{\hyperlink{class_c_billboard_animation_a8a83574f5b06ef9ccab74a3e9fb1669f}{Uninit}} (void)
+\item 
+virtual void \mbox{\hyperlink{class_c_billboard_animation_a40e71c29afcb286b81a7db05f5b95d32}{Update}} (void)
+\item 
+virtual void \mbox{\hyperlink{class_c_billboard_animation_ae491f57add6af59f1d7afc61c5021100}{Draw}} (void)
+\item 
+\Hypertarget{class_c_billboard_animation_a5093f194d6f1cf5fd96636d645851eeb}\label{class_c_billboard_animation_a5093f194d6f1cf5fd96636d645851eeb} 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\item 
+\Hypertarget{class_c_billboard_animation_a2b3ea59c1250cdd5909cb7d7108fde9e}\label{class_c_billboard_animation_a2b3ea59c1250cdd5909cb7d7108fde9e} 
+D3\+DXVECTOR2 {\bfseries Get\+Size} (void) const
+\item 
+\Hypertarget{class_c_billboard_animation_a22ac21317456bfbd1e1221da7efa4d9d}\label{class_c_billboard_animation_a22ac21317456bfbd1e1221da7efa4d9d} 
+void {\bfseries Set\+Anim} (const int n\+Anim\+Speed, const int U, const int V, const bool b\+Loop)
+\item 
+\Hypertarget{class_c_billboard_animation_ad3f34599e54a46d7a573dc4246e01216}\label{class_c_billboard_animation_ad3f34599e54a46d7a573dc4246e01216} 
+void {\bfseries Set\+Position} (const D3\+DXVECTOR3 pos)
+\item 
+\Hypertarget{class_c_billboard_animation_aca5e9361e17b02b52098ed15e071956c}\label{class_c_billboard_animation_aca5e9361e17b02b52098ed15e071956c} 
+void {\bfseries Set\+Size} (const D3\+DXVECTOR2 size)
+\item 
+\Hypertarget{class_c_billboard_animation_a2016e65734a99b81b60a041af03b63b6}\label{class_c_billboard_animation_a2016e65734a99b81b60a041af03b63b6} 
+void {\bfseries Set\+Texture\+Vtx} (const D3\+DXVECTOR2 tex, const D3\+DXVECTOR2 offtex)
+\item 
+\Hypertarget{class_c_billboard_animation_a878bef9e5da9e9c2324f8bbefa87d169}\label{class_c_billboard_animation_a878bef9e5da9e9c2324f8bbefa87d169} 
+void {\bfseries Set\+Color} (const D3\+DXCOLOR col)
+\item 
+\Hypertarget{class_c_billboard_animation_a7fd6145439e90480c033cc88935e67db}\label{class_c_billboard_animation_a7fd6145439e90480c033cc88935e67db} 
+void {\bfseries Set\+Texture\+ID} (const char \texorpdfstring{$\ast$}{*}p\+Texture\+Name)
+\item 
+\Hypertarget{class_c_billboard_animation_a494b5714db90946d6e6d36c14f44d7ae}\label{class_c_billboard_animation_a494b5714db90946d6e6d36c14f44d7ae} 
+void {\bfseries Update\+Vertex\+Pos} (const D3\+DXVECTOR3 pos)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_billboard_animation_abe0faa060e7b9afc0da1a35179476fdf}\label{class_c_billboard_animation_abe0faa060e7b9afc0da1a35179476fdf} 
+static \mbox{\hyperlink{class_c_billboard_animation}{CBillboard\+Animation}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const D3\+DXVECTOR2 Size, const int n\+Speed, const int U, const int V, const bool b\+Loop)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_billboard_animation_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_billboard_animation_ae491f57add6af59f1d7afc61c5021100}\index{CBillboardAnimation@{CBillboardAnimation}!Draw@{Draw}}
+\index{Draw@{Draw}!CBillboardAnimation@{CBillboardAnimation}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_billboard_animation_ae491f57add6af59f1d7afc61c5021100} 
+void CBillboard\+Animation\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_billboard_animation_a08bb1e0b0c4bd80d1cd2e51659041ba9}\index{CBillboardAnimation@{CBillboardAnimation}!Init@{Init}}
+\index{Init@{Init}!CBillboardAnimation@{CBillboardAnimation}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_billboard_animation_a08bb1e0b0c4bd80d1cd2e51659041ba9} 
+HRESULT CBillboard\+Animation\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_billboard_animation_a8a83574f5b06ef9ccab74a3e9fb1669f}\index{CBillboardAnimation@{CBillboardAnimation}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CBillboardAnimation@{CBillboardAnimation}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_billboard_animation_a8a83574f5b06ef9ccab74a3e9fb1669f} 
+void CBillboard\+Animation\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_billboard_animation_a40e71c29afcb286b81a7db05f5b95d32}\index{CBillboardAnimation@{CBillboardAnimation}!Update@{Update}}
+\index{Update@{Update}!CBillboardAnimation@{CBillboardAnimation}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_billboard_animation_a40e71c29afcb286b81a7db05f5b95d32} 
+void CBillboard\+Animation\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+billboard\+Anim.\+h\item 
+billboard\+Anim.\+cpp\end{DoxyCompactItemize}

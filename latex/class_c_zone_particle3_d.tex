@@ -1,0 +1,141 @@
+\doxysection{CZone\+Particle3D Class Reference}
+\hypertarget{class_c_zone_particle3_d}{}\label{class_c_zone_particle3_d}\index{CZoneParticle3D@{CZoneParticle3D}}
+Inheritance diagram for CZone\+Particle3D\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_c_zone_particle3_d}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+HRESULT \mbox{\hyperlink{class_c_zone_particle3_d_af12c447d822b4563ff8a38e1dcbb40c5}{Init}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_zone_particle3_d_a3f8ce4f672aabc73e89e2c01bbf906df}{Uninit}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_zone_particle3_d_a791a53f692fce4957336210176464947}{Update}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_zone_particle3_d_afffb50e8c140ae4fb6e41641fb01ea94}{Draw}} (void) override
+\item 
+\Hypertarget{class_c_zone_particle3_d_a001f624f0c3ed24f572c055c4d73a6c2}\label{class_c_zone_particle3_d_a001f624f0c3ed24f572c055c4d73a6c2} 
+void {\bfseries Set\+Zone} (D3\+DXVECTOR3 Dest\+Pos, const int n\+Random\+Pos\+Range)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_particle3_d}{CParticle3D}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Set\+Particle} (const float f\+Speed, const int n\+Life, const int n\+Num\+Particle, const int n\+Time, const int n\+Angle)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_zone_particle3_d_af4abcc5f2669c33d851877fd9d63f6f4}\label{class_c_zone_particle3_d_af4abcc5f2669c33d851877fd9d63f6f4} 
+static \mbox{\hyperlink{class_c_zone_particle3_d}{CZone\+Particle3D}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const float f\+Radius, const D3\+DXCOLOR col)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_particle3_d}{CParticle3D}}}
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries Get\+Max\+Life} (void) const
+\item 
+void {\bfseries Set\+Max\+Life} (const int n\+Max\+Life)
+\item 
+void {\bfseries Set\+Info} (const \mbox{\hyperlink{struct_c_particle3_d_1_1_info}{Info}} info)
+\item 
+\mbox{\hyperlink{struct_c_particle3_d_1_1_info}{Info}} {\bfseries Get\+Info} (void) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_zone_particle3_d_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_zone_particle3_d_afffb50e8c140ae4fb6e41641fb01ea94}\index{CZoneParticle3D@{CZoneParticle3D}!Draw@{Draw}}
+\index{Draw@{Draw}!CZoneParticle3D@{CZoneParticle3D}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_zone_particle3_d_afffb50e8c140ae4fb6e41641fb01ea94} 
+void CZone\+Particle3\+D\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_particle3_d}{CParticle3D}}.
+
+\Hypertarget{class_c_zone_particle3_d_af12c447d822b4563ff8a38e1dcbb40c5}\index{CZoneParticle3D@{CZoneParticle3D}!Init@{Init}}
+\index{Init@{Init}!CZoneParticle3D@{CZoneParticle3D}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_zone_particle3_d_af12c447d822b4563ff8a38e1dcbb40c5} 
+HRESULT CZone\+Particle3\+D\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_particle3_d}{CParticle3D}}.
+
+\Hypertarget{class_c_zone_particle3_d_a3f8ce4f672aabc73e89e2c01bbf906df}\index{CZoneParticle3D@{CZoneParticle3D}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CZoneParticle3D@{CZoneParticle3D}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_zone_particle3_d_a3f8ce4f672aabc73e89e2c01bbf906df} 
+void CZone\+Particle3\+D\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_particle3_d}{CParticle3D}}.
+
+\Hypertarget{class_c_zone_particle3_d_a791a53f692fce4957336210176464947}\index{CZoneParticle3D@{CZoneParticle3D}!Update@{Update}}
+\index{Update@{Update}!CZoneParticle3D@{CZoneParticle3D}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_zone_particle3_d_a791a53f692fce4957336210176464947} 
+void CZone\+Particle3\+D\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_particle3_d}{CParticle3D}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Zone\+Particle.\+h\item 
+Zone\+Particle.\+cpp\end{DoxyCompactItemize}

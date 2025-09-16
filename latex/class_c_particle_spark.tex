@@ -1,0 +1,138 @@
+\doxysection{CParticle\+Spark Class Reference}
+\hypertarget{class_c_particle_spark}{}\label{class_c_particle_spark}\index{CParticleSpark@{CParticleSpark}}
+Inheritance diagram for CParticle\+Spark\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_c_particle_spark}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+HRESULT \mbox{\hyperlink{class_c_particle_spark_ab2d0fee796ebf86d3313bd6596a7edde}{Init}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_particle_spark_a4673be4963b16021eb0c80e66d32474b}{Uninit}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_particle_spark_a5e489232cda56360c7a804460f3e4021}{Update}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_particle_spark_a33e86a148fb973f8e21c28500d75858d}{Draw}} (void) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_particle3_d}{CParticle3D}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Set\+Particle} (const float f\+Speed, const int n\+Life, const int n\+Num\+Particle, const int n\+Time, const int n\+Angle)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_particle_spark_ad8b7a698306955a0997d25e0fd035f5b}\label{class_c_particle_spark_ad8b7a698306955a0997d25e0fd035f5b} 
+static \mbox{\hyperlink{class_c_particle_spark}{CParticle\+Spark}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const D3\+DXVECTOR2 Size, const D3\+DXCOLOR col)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_particle3_d}{CParticle3D}}}
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries Get\+Max\+Life} (void) const
+\item 
+void {\bfseries Set\+Max\+Life} (const int n\+Max\+Life)
+\item 
+void {\bfseries Set\+Info} (const \mbox{\hyperlink{struct_c_particle3_d_1_1_info}{Info}} info)
+\item 
+\mbox{\hyperlink{struct_c_particle3_d_1_1_info}{Info}} {\bfseries Get\+Info} (void) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_particle_spark_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_particle_spark_a33e86a148fb973f8e21c28500d75858d}\index{CParticleSpark@{CParticleSpark}!Draw@{Draw}}
+\index{Draw@{Draw}!CParticleSpark@{CParticleSpark}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_particle_spark_a33e86a148fb973f8e21c28500d75858d} 
+void CParticle\+Spark\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_particle3_d}{CParticle3D}}.
+
+\Hypertarget{class_c_particle_spark_ab2d0fee796ebf86d3313bd6596a7edde}\index{CParticleSpark@{CParticleSpark}!Init@{Init}}
+\index{Init@{Init}!CParticleSpark@{CParticleSpark}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_particle_spark_ab2d0fee796ebf86d3313bd6596a7edde} 
+HRESULT CParticle\+Spark\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_particle3_d}{CParticle3D}}.
+
+\Hypertarget{class_c_particle_spark_a4673be4963b16021eb0c80e66d32474b}\index{CParticleSpark@{CParticleSpark}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CParticleSpark@{CParticleSpark}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_particle_spark_a4673be4963b16021eb0c80e66d32474b} 
+void CParticle\+Spark\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_particle3_d}{CParticle3D}}.
+
+\Hypertarget{class_c_particle_spark_a5e489232cda56360c7a804460f3e4021}\index{CParticleSpark@{CParticleSpark}!Update@{Update}}
+\index{Update@{Update}!CParticleSpark@{CParticleSpark}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_particle_spark_a5e489232cda56360c7a804460f3e4021} 
+void CParticle\+Spark\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_particle3_d}{CParticle3D}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Particle\+Spark.\+h\item 
+Particle\+Spark.\+cpp\end{DoxyCompactItemize}

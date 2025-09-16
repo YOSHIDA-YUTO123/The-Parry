@@ -1,0 +1,92 @@
+\doxysection{CBird\+State Class Reference}
+\hypertarget{class_c_bird_state}{}\label{class_c_bird_state}\index{CBirdState@{CBirdState}}
+Inheritance diagram for CBird\+State\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_c_bird_state}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_bird_state_a84bd2fb80dbe2d8fd1393ed2dee4dee8}\label{class_c_bird_state_a84bd2fb80dbe2d8fd1393ed2dee4dee8} 
+enum {\bfseries ID} \{ {\bfseries ID\+\_\+\+BASE} = 0
+, {\bfseries ID\+\_\+\+IDLE}
+, {\bfseries ID\+\_\+\+FLY}
+, {\bfseries ID\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_bird_state_af346bc0ecc3eb641595baa028dc3d221}\label{class_c_bird_state_af346bc0ecc3eb641595baa028dc3d221} 
+{\bfseries CBird\+State} (ID Id)
+\item 
+virtual void \mbox{\hyperlink{class_c_bird_state_a2dbbf184e51dfe9b33f95636f7222e5a}{Init}} (void)
+\item 
+virtual void \mbox{\hyperlink{class_c_bird_state_ad78522a13cb060bdd95fde368a1c7c6c}{Update}} (void)
+\item 
+virtual void \mbox{\hyperlink{class_c_bird_state_a58d51c46ef43b9852db24d60af437aff}{Uninit}} (void)
+\item 
+virtual int \mbox{\hyperlink{class_c_bird_state_a1a0cd76a414da05e5e712dc977aac591}{Get\+ID}} (void) const
+\item 
+\Hypertarget{class_c_bird_state_ad55f27f119ad0d56797f7adc9323aad0}\label{class_c_bird_state_ad55f27f119ad0d56797f7adc9323aad0} 
+void {\bfseries Set\+Owner} (\mbox{\hyperlink{class_c_bird}{CBird}} \texorpdfstring{$\ast$}{*}p\+Bird)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_bird_state_a25266b4bef91f140f6ad43058ff9d71e}\label{class_c_bird_state_a25266b4bef91f140f6ad43058ff9d71e} 
+\mbox{\hyperlink{class_c_bird}{CBird}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Bird} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_bird_state_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_bird_state_a1a0cd76a414da05e5e712dc977aac591}\index{CBirdState@{CBirdState}!GetID@{GetID}}
+\index{GetID@{GetID}!CBirdState@{CBirdState}}
+\doxysubsubsection{\texorpdfstring{GetID()}{GetID()}}
+{\footnotesize\ttfamily \label{class_c_bird_state_a1a0cd76a414da05e5e712dc977aac591} 
+virtual int CBird\+State\+::\+Get\+ID (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_state_base}{CState\+Base}}.
+
+\Hypertarget{class_c_bird_state_a2dbbf184e51dfe9b33f95636f7222e5a}\index{CBirdState@{CBirdState}!Init@{Init}}
+\index{Init@{Init}!CBirdState@{CBirdState}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_bird_state_a2dbbf184e51dfe9b33f95636f7222e5a} 
+virtual void CBird\+State\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_state_base}{CState\+Base}}.
+
+\Hypertarget{class_c_bird_state_a58d51c46ef43b9852db24d60af437aff}\index{CBirdState@{CBirdState}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CBirdState@{CBirdState}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_bird_state_a58d51c46ef43b9852db24d60af437aff} 
+virtual void CBird\+State\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_state_base}{CState\+Base}}.
+
+\Hypertarget{class_c_bird_state_ad78522a13cb060bdd95fde368a1c7c6c}\index{CBirdState@{CBirdState}!Update@{Update}}
+\index{Update@{Update}!CBirdState@{CBirdState}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_bird_state_ad78522a13cb060bdd95fde368a1c7c6c} 
+virtual void CBird\+State\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_state_base}{CState\+Base}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Bird\+State.\+h\item 
+Bird\+State.\+cpp\end{DoxyCompactItemize}

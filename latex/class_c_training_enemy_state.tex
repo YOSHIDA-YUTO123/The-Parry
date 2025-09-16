@@ -1,0 +1,97 @@
+\doxysection{CTraining\+Enemy\+State Class Reference}
+\hypertarget{class_c_training_enemy_state}{}\label{class_c_training_enemy_state}\index{CTrainingEnemyState@{CTrainingEnemyState}}
+Inheritance diagram for CTraining\+Enemy\+State\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=1.759162cm]{class_c_training_enemy_state}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_training_enemy_state_a2c28723817cf778913feb6a4a523ff04}\label{class_c_training_enemy_state_a2c28723817cf778913feb6a4a523ff04} 
+enum {\bfseries ID} \{ \newline
+{\bfseries ID\+\_\+\+BASE} = 0
+, {\bfseries ID\+\_\+\+IDLE}
+, {\bfseries ID\+\_\+\+ACTION}
+, {\bfseries ID\+\_\+\+HIT}
+, \newline
+{\bfseries ID\+\_\+\+DAMAGE}
+, {\bfseries ID\+\_\+\+COMB\+\_\+\+DAMAGE}
+, {\bfseries ID\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_training_enemy_state_a86be168e288c6bfc374f6149655e69c8}\label{class_c_training_enemy_state_a86be168e288c6bfc374f6149655e69c8} 
+{\bfseries CTraining\+Enemy\+State} (ID Id)
+\item 
+virtual void \mbox{\hyperlink{class_c_training_enemy_state_adea68271e9bb20fc83dd22412ffcc73d}{Init}} (void)
+\item 
+virtual void \mbox{\hyperlink{class_c_training_enemy_state_a3bd0bc7d1df7b65a13c3434793f34564}{Update}} (void)
+\item 
+virtual void \mbox{\hyperlink{class_c_training_enemy_state_a75182793627fc8faf26b2369a7c2c688}{Uninit}} (void)
+\item 
+virtual int \mbox{\hyperlink{class_c_training_enemy_state_ac2937cef4eea463321828a6ef8baebe1}{Get\+ID}} (void) const
+\item 
+\Hypertarget{class_c_training_enemy_state_ac158bd168eec9bccf00800cbab81d66f}\label{class_c_training_enemy_state_ac158bd168eec9bccf00800cbab81d66f} 
+void {\bfseries Set\+Owner} (\mbox{\hyperlink{class_c_training_enemy}{CTraining\+Enemy}} \texorpdfstring{$\ast$}{*}p\+Enemy)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_training_enemy_state_ad395510f33dfa1db53b0fa47e20130c6}\label{class_c_training_enemy_state_ad395510f33dfa1db53b0fa47e20130c6} 
+\mbox{\hyperlink{class_c_training_enemy}{CTraining\+Enemy}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Enemy} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_training_enemy_state_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_training_enemy_state_ac2937cef4eea463321828a6ef8baebe1}\index{CTrainingEnemyState@{CTrainingEnemyState}!GetID@{GetID}}
+\index{GetID@{GetID}!CTrainingEnemyState@{CTrainingEnemyState}}
+\doxysubsubsection{\texorpdfstring{GetID()}{GetID()}}
+{\footnotesize\ttfamily \label{class_c_training_enemy_state_ac2937cef4eea463321828a6ef8baebe1} 
+virtual int CTraining\+Enemy\+State\+::\+Get\+ID (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_state_base}{CState\+Base}}.
+
+\Hypertarget{class_c_training_enemy_state_adea68271e9bb20fc83dd22412ffcc73d}\index{CTrainingEnemyState@{CTrainingEnemyState}!Init@{Init}}
+\index{Init@{Init}!CTrainingEnemyState@{CTrainingEnemyState}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_training_enemy_state_adea68271e9bb20fc83dd22412ffcc73d} 
+virtual void CTraining\+Enemy\+State\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_state_base}{CState\+Base}}.
+
+\Hypertarget{class_c_training_enemy_state_a75182793627fc8faf26b2369a7c2c688}\index{CTrainingEnemyState@{CTrainingEnemyState}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CTrainingEnemyState@{CTrainingEnemyState}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_training_enemy_state_a75182793627fc8faf26b2369a7c2c688} 
+virtual void CTraining\+Enemy\+State\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_state_base}{CState\+Base}}.
+
+\Hypertarget{class_c_training_enemy_state_a3bd0bc7d1df7b65a13c3434793f34564}\index{CTrainingEnemyState@{CTrainingEnemyState}!Update@{Update}}
+\index{Update@{Update}!CTrainingEnemyState@{CTrainingEnemyState}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_training_enemy_state_a3bd0bc7d1df7b65a13c3434793f34564} 
+virtual void CTraining\+Enemy\+State\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_state_base}{CState\+Base}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Training\+Enemy\+State.\+h\item 
+Training\+Enemy\+State.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,167 @@
+\doxysection{CGage\+Frame Class Reference}
+\hypertarget{class_c_gage_frame}{}\label{class_c_gage_frame}\index{CGageFrame@{CGageFrame}}
+Inheritance diagram for CGage\+Frame\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_c_gage_frame}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_gage_frame_aa54b44ac6120d1a5db392bdcfec4927b}\label{class_c_gage_frame_aa54b44ac6120d1a5db392bdcfec4927b} 
+enum {\bfseries TYPE} \{ {\bfseries TYPE\+\_\+\+HP\+\_\+\+PLAYER} = 0
+, {\bfseries TYPE\+\_\+\+HP\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+STAMINA}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_gage_frame_a275a13a8d68cd870a243b5848d2963b1}\label{class_c_gage_frame_a275a13a8d68cd870a243b5848d2963b1} 
+{\bfseries CGage\+Frame} (int n\+Priority=4)
+\item 
+HRESULT \mbox{\hyperlink{class_c_gage_frame_ae6e4f20b2c4a23831080fa66d2869368}{Init}} (void)
+\item 
+void \mbox{\hyperlink{class_c_gage_frame_a6b2ee9ac73343a66c77044682145d92d}{Uninit}} (void)
+\item 
+void \mbox{\hyperlink{class_c_gage_frame_a78750d0510d86a35e5f3eca0e9098d44}{Update}} (void)
+\item 
+void \mbox{\hyperlink{class_c_gage_frame_ae446504b5c819b2de475c5ecf0fe0501}{Draw}} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object2_d}{CObject2D}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject2D} (int n\+Priority=7)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\item 
+D3\+DXVECTOR2 {\bfseries Get\+Size} (void) const
+\item 
+void {\bfseries Set\+Position} (const D3\+DXVECTOR3 pos)
+\item 
+void {\bfseries Set\+Rotaition} (const D3\+DXVECTOR3 rot)
+\item 
+void {\bfseries Set\+Vtx} (const D3\+DXCOLOR col)
+\item 
+void {\bfseries Set\+Size} (const D3\+DXVECTOR2 Size)
+\item 
+void {\bfseries Set\+Size} (const float f\+Width, const float f\+Height)
+\item 
+void {\bfseries Set\+Size} (const float left\+Width, const float right\+Wdth, const float top\+Height, const float buttom)
+\item 
+void {\bfseries Update\+Vertex} (void)
+\item 
+void {\bfseries Set\+Color} (const D3\+DXCOLOR col)
+\item 
+void {\bfseries Set\+Texture\+ID} (const char \texorpdfstring{$\ast$}{*}p\+Texture\+Name=NULL)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_gage_frame_a9a442ac96786f95227aed683490b78dd}\label{class_c_gage_frame_a9a442ac96786f95227aed683490b78dd} 
+static \mbox{\hyperlink{class_c_gage_frame}{CGage\+Frame}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const D3\+DXVECTOR2 Size, const TYPE type)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object2_d}{CObject2D}}}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_c_object2_d}{CObject2D}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const float f\+Width, const float f\+Height, const D3\+DXVECTOR3 pos, const D3\+DXVECTOR3 rot=Const\+::\+VEC3\+\_\+\+NULL)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_gage_frame_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_gage_frame_ae446504b5c819b2de475c5ecf0fe0501}\index{CGageFrame@{CGageFrame}!Draw@{Draw}}
+\index{Draw@{Draw}!CGageFrame@{CGageFrame}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_gage_frame_ae446504b5c819b2de475c5ecf0fe0501} 
+void CGage\+Frame\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object2_d}{CObject2D}}.
+
+\Hypertarget{class_c_gage_frame_ae6e4f20b2c4a23831080fa66d2869368}\index{CGageFrame@{CGageFrame}!Init@{Init}}
+\index{Init@{Init}!CGageFrame@{CGageFrame}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_gage_frame_ae6e4f20b2c4a23831080fa66d2869368} 
+HRESULT CGage\+Frame\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object2_d}{CObject2D}}.
+
+\Hypertarget{class_c_gage_frame_a6b2ee9ac73343a66c77044682145d92d}\index{CGageFrame@{CGageFrame}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CGageFrame@{CGageFrame}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_gage_frame_a6b2ee9ac73343a66c77044682145d92d} 
+void CGage\+Frame\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object2_d}{CObject2D}}.
+
+\Hypertarget{class_c_gage_frame_a78750d0510d86a35e5f3eca0e9098d44}\index{CGageFrame@{CGageFrame}!Update@{Update}}
+\index{Update@{Update}!CGageFrame@{CGageFrame}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_gage_frame_a78750d0510d86a35e5f3eca0e9098d44} 
+void CGage\+Frame\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object2_d}{CObject2D}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Gage\+Frame.\+h\item 
+Gage\+Frame.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,122 @@
+\doxysection{CTest\+Word Class Reference}
+\hypertarget{class_c_test_word}{}\label{class_c_test_word}\index{CTestWord@{CTestWord}}
+Inheritance diagram for CTest\+Word\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_c_test_word}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+HRESULT \mbox{\hyperlink{class_c_test_word_aa4a6ef3e5fbbda5e9c30785f1196c90c}{Init}} (void)
+\item 
+void \mbox{\hyperlink{class_c_test_word_aed9763f681bfb12c28e62abec941a9c3}{Uninit}} (void)
+\item 
+void \mbox{\hyperlink{class_c_test_word_a527ac2ee8c17bd50c60cad107f62cf8c}{Update}} (void)
+\item 
+void \mbox{\hyperlink{class_c_test_word_a2baca81157bf10368e24c8eefbd67ded}{Draw}} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_test_word_a606f1f3dd6d4e4c647b40cc52d2ab9c5}\label{class_c_test_word_a606f1f3dd6d4e4c647b40cc52d2ab9c5} 
+static \mbox{\hyperlink{class_c_test_word}{CTest\+Word}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const int n\+Word, const D3\+DXVECTOR3 pos, const float f\+Width, const float f\+Height)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_test_word_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_test_word_a2baca81157bf10368e24c8eefbd67ded}\index{CTestWord@{CTestWord}!Draw@{Draw}}
+\index{Draw@{Draw}!CTestWord@{CTestWord}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_test_word_a2baca81157bf10368e24c8eefbd67ded} 
+void CTest\+Word\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_test_word_aa4a6ef3e5fbbda5e9c30785f1196c90c}\index{CTestWord@{CTestWord}!Init@{Init}}
+\index{Init@{Init}!CTestWord@{CTestWord}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_test_word_aa4a6ef3e5fbbda5e9c30785f1196c90c} 
+HRESULT CTest\+Word\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_test_word_aed9763f681bfb12c28e62abec941a9c3}\index{CTestWord@{CTestWord}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CTestWord@{CTestWord}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_test_word_aed9763f681bfb12c28e62abec941a9c3} 
+void CTest\+Word\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_test_word_a527ac2ee8c17bd50c60cad107f62cf8c}\index{CTestWord@{CTestWord}!Update@{Update}}
+\index{Update@{Update}!CTestWord@{CTestWord}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_test_word_a527ac2ee8c17bd50c60cad107f62cf8c} 
+void CTest\+Word\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+testword.\+h\item 
+testword.\+cpp\end{DoxyCompactItemize}

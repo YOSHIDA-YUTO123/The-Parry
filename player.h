@@ -119,7 +119,6 @@ public:
 	~CPlayer();
 
 	static CPlayer* Create(const int nLife, const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size, const D3DXVECTOR3 pos = Const::VEC3_NULL, const D3DXVECTOR3 rot = Const::VEC3_NULL);
-	void Load(void); // モーションのロード
 
 	HRESULT Init(void) override;
 	void Uninit(void) override;
@@ -130,7 +129,6 @@ public:
 
 	void ChangeState(std::shared_ptr<CPlayerState> pNewState);
 	void SetHitStop(const int nTime) { CCharacter3D::SetHitStop(nTime); }
-	void UpdateAvoid(void);	 // 回避の更新処理
 
 	// ゲッター
 	CColliderSphere* GetSphereCollider(void) { return m_pSphere.get(); }
@@ -154,11 +152,15 @@ public:
 	void SetStance(const D3DXVECTOR3 enemyPos);		  // 構えモーションの設定
 	void SetStamina(const float fStamina);
 
+	/**
+	* @brief 矩形の判定
+	* @param AABBのコライダー
+	* @return 衝突したかどうか
+	*/
 	bool CollisionAABB(CColliderAABB* pAABB);
 	bool CollisionCapsule(CColliderCapsule* pCapsule,const bool bPush = true);
-	void SetRevengeEffect(void); // 絶対反撃のエフェクトの設定
+	void SetRevengeEffect(void);					// 絶対反撃のエフェクトの設定
 	void EnableGravity(const bool bEnable) { m_bGravity = bEnable; } // 重力の判定の設定
-
 private:
 	void CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos, CMotion* pMotion); // インパクトの当たり判定
 	bool IsMove(CMotion* pMotion);		// 移動できるか判定

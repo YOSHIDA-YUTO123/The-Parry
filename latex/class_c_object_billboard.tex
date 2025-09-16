@@ -1,0 +1,152 @@
+\doxysection{CObject\+Billboard Class Reference}
+\hypertarget{class_c_object_billboard}{}\label{class_c_object_billboard}\index{CObjectBillboard@{CObjectBillboard}}
+Inheritance diagram for CObject\+Billboard\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=4.000000cm]{class_c_object_billboard}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_billboard_a09a246cbe5d4816e8f2a55ee73447487}\label{class_c_object_billboard_a09a246cbe5d4816e8f2a55ee73447487} 
+{\bfseries CObject\+Billboard} (int n\+Priority=4)
+\item 
+virtual HRESULT \mbox{\hyperlink{class_c_object_billboard_ae83ab6a855b33c6e6288bc7cb92e1497}{Init}} (void) override
+\item 
+virtual void \mbox{\hyperlink{class_c_object_billboard_ac053a10e6f8dff7b403113033d7f9df4}{Uninit}} (void) override
+\item 
+virtual void \mbox{\hyperlink{class_c_object_billboard_a96eae53a33bb99956ad0b0f68512fc88}{Update}} (void) override
+\item 
+virtual void \mbox{\hyperlink{class_c_object_billboard_a9433c5013502d765154aa6ae61d69b55}{Draw}} (void) override
+\item 
+\Hypertarget{class_c_object_billboard_afc0f103b53be74229134ad6ffb7fc083}\label{class_c_object_billboard_afc0f103b53be74229134ad6ffb7fc083} 
+void {\bfseries Set\+Matrix} (const D3\+DXMATRIX mtx\+Rot, const D3\+DXMATRIX mtx\+Trans)
+\item 
+\Hypertarget{class_c_object_billboard_ab3a7a3d738e1059b92e20709184c95e2}\label{class_c_object_billboard_ab3a7a3d738e1059b92e20709184c95e2} 
+void {\bfseries Set\+Up\+Draw} (void)
+\item 
+\Hypertarget{class_c_object_billboard_a6a63f2aaa74b9c80f79e585f69d8a348}\label{class_c_object_billboard_a6a63f2aaa74b9c80f79e585f69d8a348} 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\item 
+\Hypertarget{class_c_object_billboard_af37d2b9f993a807cfc20776205413d12}\label{class_c_object_billboard_af37d2b9f993a807cfc20776205413d12} 
+D3\+DXVECTOR2 {\bfseries Get\+Size} (void) const
+\item 
+\Hypertarget{class_c_object_billboard_a1e7c00ffd530c2b8d25f7a60bb4fe98e}\label{class_c_object_billboard_a1e7c00ffd530c2b8d25f7a60bb4fe98e} 
+void {\bfseries Set\+Position} (const D3\+DXVECTOR3 pos)
+\item 
+\Hypertarget{class_c_object_billboard_a4dc78d8bb20033e1f41fb717bdb027ad}\label{class_c_object_billboard_a4dc78d8bb20033e1f41fb717bdb027ad} 
+void {\bfseries Set\+Size} (const D3\+DXVECTOR2 size)
+\item 
+\Hypertarget{class_c_object_billboard_a591aa9c0a12053a2d8175197a1a1c921}\label{class_c_object_billboard_a591aa9c0a12053a2d8175197a1a1c921} 
+void {\bfseries Set\+Color} (const D3\+DXCOLOR col)
+\item 
+\Hypertarget{class_c_object_billboard_a47ffaa5c754f74a28ec21631cf44c788}\label{class_c_object_billboard_a47ffaa5c754f74a28ec21631cf44c788} 
+void {\bfseries Set\+Texture\+ID} (const char \texorpdfstring{$\ast$}{*}p\+Texture\+Name)
+\item 
+\Hypertarget{class_c_object_billboard_a817e0e2c24f87fd902b2c8fe60ccfc62}\label{class_c_object_billboard_a817e0e2c24f87fd902b2c8fe60ccfc62} 
+void {\bfseries Update\+Vertex\+Pos} (const D3\+DXVECTOR3 pos)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_billboard_a33448bd2f1019b0b418fcece2b216e19}\label{class_c_object_billboard_a33448bd2f1019b0b418fcece2b216e19} 
+static \mbox{\hyperlink{class_c_object_billboard}{CObject\+Billboard}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const D3\+DXVECTOR2 size, const char \texorpdfstring{$\ast$}{*}p\+Texture\+Name)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_object_billboard_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_object_billboard_a9433c5013502d765154aa6ae61d69b55}\index{CObjectBillboard@{CObjectBillboard}!Draw@{Draw}}
+\index{Draw@{Draw}!CObjectBillboard@{CObjectBillboard}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_object_billboard_a9433c5013502d765154aa6ae61d69b55} 
+void CObject\+Billboard\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_object_billboard_ae83ab6a855b33c6e6288bc7cb92e1497}\index{CObjectBillboard@{CObjectBillboard}!Init@{Init}}
+\index{Init@{Init}!CObjectBillboard@{CObjectBillboard}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_object_billboard_ae83ab6a855b33c6e6288bc7cb92e1497} 
+HRESULT CObject\+Billboard\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_object_billboard_ac053a10e6f8dff7b403113033d7f9df4}\index{CObjectBillboard@{CObjectBillboard}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CObjectBillboard@{CObjectBillboard}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_object_billboard_ac053a10e6f8dff7b403113033d7f9df4} 
+void CObject\+Billboard\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_object_billboard_a96eae53a33bb99956ad0b0f68512fc88}\index{CObjectBillboard@{CObjectBillboard}!Update@{Update}}
+\index{Update@{Update}!CObjectBillboard@{CObjectBillboard}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_object_billboard_a96eae53a33bb99956ad0b0f68512fc88} 
+void CObject\+Billboard\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+billboard.\+h\item 
+billboard.\+cpp\end{DoxyCompactItemize}

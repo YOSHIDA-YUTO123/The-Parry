@@ -1,0 +1,156 @@
+\doxysection{Training\+Enemy\+State.\+h}
+\hypertarget{_training_enemy_state_8h_source}{}\label{_training_enemy_state_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ 練習用の敵の状態 [TrainingEnemyState.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:\ YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_TRAININGENEMYSTATE\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_TRAININGENEMYSTATE\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}statebase.h"{}}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ 前方宣言}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00022\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_training_enemy}{CTrainingEnemy}};}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//\ 練習用の敵の状態のクラスの定義}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00027\ \textcolor{keyword}{class\ }CTrainingEnemyState\ :\ \textcolor{keyword}{public}\ CStateBase}
+\DoxyCodeLine{00028\ \{}
+\DoxyCodeLine{00029\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{comment}{//\ IDの種類}}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00032\ \ \ \ \ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ ID\_BASE\ =\ 0,\ \ \ \ \ \textcolor{comment}{//\ 無し}}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ ID\_IDLE,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 通常状態}}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ ID\_ACTION,\ \ \ \ \ \ \ \textcolor{comment}{//\ 攻撃}}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ ID\_HIT,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 攻撃ヒット}}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ ID\_DAMAGE,\ \ \ \ \ \ \ \textcolor{comment}{//\ ソ_メージ}}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ ID\_COMB\_DAMAGE,\ \ \textcolor{comment}{//\ 連続ソ_メージ}}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ ID\_MAX}
+\DoxyCodeLine{00040\ \ \ \ \ \}ID;}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ CTrainingEnemyState(ID\ Id);}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~CTrainingEnemyState();}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Init(\textcolor{keywordtype}{void})\ \{\};}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \{\};}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \{\};}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetID(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_ID;\ \}}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{void}\ SetOwner(\mbox{\hyperlink{class_c_training_enemy}{CTrainingEnemy}}*\ pEnemy)\ \{\ m\_pEnemy\ =\ pEnemy;\ \}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00051\ \ \ \ \ \mbox{\hyperlink{class_c_training_enemy}{CTrainingEnemy}}*\ GetEnemy(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_pEnemy;\ \}}
+\DoxyCodeLine{00052\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00053\ \ \ \ \ \mbox{\hyperlink{class_c_training_enemy}{CTrainingEnemy}}*\ m\_pEnemy;\ \textcolor{comment}{//\ 敵クラスへのポインソstring^}}
+\DoxyCodeLine{00054\ \ \ \ \ ID\ m\_ID;\ \textcolor{comment}{//\ IDの取得}}
+\DoxyCodeLine{00055\ \};}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00058\ \textcolor{comment}{//\ 通常状態クラスの定義}}
+\DoxyCodeLine{00059\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00060\ \textcolor{keyword}{class\ }CTrainingEnemyIdle\ :\ \textcolor{keyword}{public}\ CTrainingEnemyState}
+\DoxyCodeLine{00061\ \{}
+\DoxyCodeLine{00062\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00063\ \ \ \ \ CTrainingEnemyIdle();}
+\DoxyCodeLine{00064\ \ \ \ \ \string~CTrainingEnemyIdle();}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{void}\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00068\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00069\ \};}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00072\ \textcolor{comment}{//\ 攻撃状態クラスの定義}}
+\DoxyCodeLine{00073\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00074\ \textcolor{keyword}{class\ }CTrainingEnemyAction\ :\ \textcolor{keyword}{public}\ CTrainingEnemyState}
+\DoxyCodeLine{00075\ \{}
+\DoxyCodeLine{00076\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00077\ \ \ \ \ CTrainingEnemyAction();}
+\DoxyCodeLine{00078\ \ \ \ \ \string~CTrainingEnemyAction();}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordtype}{void}\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00082\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00083\ \};}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00086\ \textcolor{comment}{//\ 攻撃ヒット状態クラスの定義}}
+\DoxyCodeLine{00087\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00088\ \textcolor{keyword}{class\ }CTrainingEnemyHit\ :\ \textcolor{keyword}{public}\ CTrainingEnemyState}
+\DoxyCodeLine{00089\ \{}
+\DoxyCodeLine{00090\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{comment}{//\ モーションの種類}}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00094\ \ \ \ \ \{}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ TYPE\_HIT\ =\ 0,}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ TYPE\_COMB\_DAMAGE,}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ TYPE\_MAX}
+\DoxyCodeLine{00098\ \ \ \ \ \}TYPE;}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ CTrainingEnemyHit();}
+\DoxyCodeLine{00101\ \ \ \ \ \string~CTrainingEnemyHit();}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordtype}{void}\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{comment}{//\ 連続ソ_メージ状態にするかどうか}}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keywordtype}{void}\ SetCombDamage(\textcolor{keywordtype}{void})\ \{\ m\_type\ =\ TYPE\_COMB\_DAMAGE;\ \}}
+\DoxyCodeLine{00108\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00109\ \ \ \ \ TYPE\ m\_type;\ \textcolor{comment}{//\ モーションの種類}}
+\DoxyCodeLine{00110\ \};}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00113\ \textcolor{comment}{//\ ソ_メージ状態クラスの定義}}
+\DoxyCodeLine{00114\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00115\ \textcolor{keyword}{class\ }CTrainingEnemyDamage\ :\ \textcolor{keyword}{public}\ CTrainingEnemyState}
+\DoxyCodeLine{00116\ \{}
+\DoxyCodeLine{00117\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{comment}{//\ ソ_メージモーションの種類}}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00121\ \ \ \ \ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ TYPE\_DAMAGELS\ =\ 0,}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ TYPE\_DAMAGES,}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ TYPE\_DAMAGE,}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ TYPE\_MAX}
+\DoxyCodeLine{00126\ \ \ \ \ \}TYPE;}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \ \ CTrainingEnemyDamage();}
+\DoxyCodeLine{00129\ \ \ \ \ \string~CTrainingEnemyDamage();}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{keywordtype}{void}\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keywordtype}{void}\ SetType(\textcolor{keyword}{const}\ TYPE\ type)\ \{\ m\_type\ =\ type;\ \}}
+\DoxyCodeLine{00134\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00135\ \ \ \ \ TYPE\ m\_type;\ \textcolor{comment}{//\ 種類}}
+\DoxyCodeLine{00136\ \};}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00139\ \textcolor{comment}{//\ 連続ソ_メージ状態クラスの定義}}
+\DoxyCodeLine{00140\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00141\ \textcolor{keyword}{class\ }CTrainingEnemyCombDamage\ :\ \textcolor{keyword}{public}\ CTrainingEnemyState}
+\DoxyCodeLine{00142\ \{}
+\DoxyCodeLine{00143\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00144\ \ \ \ \ CTrainingEnemyCombDamage();}
+\DoxyCodeLine{00145\ \ \ \ \ \string~CTrainingEnemyCombDamage();}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keywordtype}{void}\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00149\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00150\ \};}
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

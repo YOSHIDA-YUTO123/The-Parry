@@ -1,0 +1,180 @@
+\doxysection{CObstacle Class Reference}
+\hypertarget{class_c_obstacle}{}\label{class_c_obstacle}\index{CObstacle@{CObstacle}}
+Inheritance diagram for CObstacle\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=4.000000cm]{class_c_obstacle}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_obstacle_a226de5d04fe4c57139bf0ee0ef498584}\label{class_c_obstacle_a226de5d04fe4c57139bf0ee0ef498584} 
+enum {\bfseries TYPE} \{ {\bfseries TYPE\+\_\+\+SPIKE\+\_\+\+TRAP} = 0
+, {\bfseries TYPE\+\_\+\+TNT\+\_\+\+BARREL}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_obstacle_ad187953a1c89d5faa7a8c67c91d2c4c4}\label{class_c_obstacle_ad187953a1c89d5faa7a8c67c91d2c4c4} 
+{\bfseries CObstacle} (const TYPE type)
+\item 
+virtual HRESULT \mbox{\hyperlink{class_c_obstacle_af26a29533f720930b495a343c37d1aed}{Init}} (void) override
+\item 
+virtual void \mbox{\hyperlink{class_c_obstacle_a137970e68d918c60cfb4df54945a0c89}{Uninit}} (void) override
+\item 
+virtual void \mbox{\hyperlink{class_c_obstacle_a25900f03938014ba6204b3dde21fe449}{Update}} (void) override
+\item 
+virtual void \mbox{\hyperlink{class_c_obstacle_ae6bbcbac07dfd19b0c9ceacb0d503df1}{Draw}} (void) override
+\item 
+\Hypertarget{class_c_obstacle_aa03d1f82e5005a70f2d58bb4f9cfa56e}\label{class_c_obstacle_aa03d1f82e5005a70f2d58bb4f9cfa56e} 
+virtual bool {\bfseries Collision} (\mbox{\hyperlink{class_c_collider_a_a_b_b}{CCollider\+AABB}} \texorpdfstring{$\ast$}{*}p\+Collider, D3\+DXVECTOR3 \texorpdfstring{$\ast$}{*}push\+Pos)=0
+\item 
+\Hypertarget{class_c_obstacle_a2a84a1e1c498f8ecde3f6e8235c25b1e}\label{class_c_obstacle_a2a84a1e1c498f8ecde3f6e8235c25b1e} 
+TYPE {\bfseries Get\+Type} (void) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object_x}{CObjectX}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObjectX} (int n\+Priority=2)
+\item 
+void {\bfseries Draw} (const float Diffuse)
+\item 
+void {\bfseries Draw\+Shadow} (void)
+\item 
+void {\bfseries Set\+Up\+Matrix} (const D3\+DXVECTOR3 Scal=D3\+DXVECTOR3(1.\+0f, 1.\+0f, 1.\+0f))
+\item 
+void {\bfseries Set\+Up\+Matrix} (const D3\+DXMATRIX mtx\+Rot, const D3\+DXMATRIX mtx\+Trans, const D3\+DXVECTOR3 Scal=D3\+DXVECTOR3(1.\+0f, 1.\+0f, 1.\+0f))
+\item 
+void {\bfseries Set\+Up\+Draw} (void)
+\item 
+void {\bfseries Set\+Texture\+MT} (const char \texorpdfstring{$\ast$}{*}p\+Texture\+Name)
+\item 
+HRESULT {\bfseries Load\+Model} (const char \texorpdfstring{$\ast$}{*}p\+XFile\+Name)
+\item 
+void {\bfseries Set\+Position} (const D3\+DXVECTOR3 pos)
+\item 
+\mbox{\hyperlink{class_c_rotation}{CRotation}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Rotation} (void)
+\item 
+D3\+DXMATRIX {\bfseries Get\+Matrix} (void) const
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Size} (void)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_obstacle_a9be814367dd041fdc9b44e5df32f407f}\label{class_c_obstacle_a9be814367dd041fdc9b44e5df32f407f} 
+\mbox{\hyperlink{class_c_collider_a_a_b_b}{CCollider\+AABB}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Collider} (void)
+\item 
+\Hypertarget{class_c_obstacle_a1291114c337353f94cd1942a4ef6d4cc}\label{class_c_obstacle_a1291114c337353f94cd1942a4ef6d4cc} 
+void {\bfseries Create\+Collider} (void)
+\item 
+\Hypertarget{class_c_obstacle_a75a9091dd7b4bc0d9fc655cf29a77495}\label{class_c_obstacle_a75a9091dd7b4bc0d9fc655cf29a77495} 
+\mbox{\hyperlink{class_c_velocity}{CVelocity}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Move} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object_x}{CObjectX}}}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_c_object_x}{CObjectX}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const char \texorpdfstring{$\ast$}{*}p\+Model\+Name, const D3\+DXVECTOR3 rot)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_obstacle_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_obstacle_ae6bbcbac07dfd19b0c9ceacb0d503df1}\index{CObstacle@{CObstacle}!Draw@{Draw}}
+\index{Draw@{Draw}!CObstacle@{CObstacle}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_obstacle_ae6bbcbac07dfd19b0c9ceacb0d503df1} 
+void CObstacle\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object_x}{CObjectX}}.
+
+\Hypertarget{class_c_obstacle_af26a29533f720930b495a343c37d1aed}\index{CObstacle@{CObstacle}!Init@{Init}}
+\index{Init@{Init}!CObstacle@{CObstacle}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_obstacle_af26a29533f720930b495a343c37d1aed} 
+HRESULT CObstacle\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object_x}{CObjectX}}.
+
+\Hypertarget{class_c_obstacle_a137970e68d918c60cfb4df54945a0c89}\index{CObstacle@{CObstacle}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CObstacle@{CObstacle}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_obstacle_a137970e68d918c60cfb4df54945a0c89} 
+void CObstacle\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object_x}{CObjectX}}.
+
+\Hypertarget{class_c_obstacle_a25900f03938014ba6204b3dde21fe449}\index{CObstacle@{CObstacle}!Update@{Update}}
+\index{Update@{Update}!CObstacle@{CObstacle}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_obstacle_a25900f03938014ba6204b3dde21fe449} 
+void CObstacle\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object_x}{CObjectX}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Obstacle.\+h\item 
+Obstacle.\+cpp\end{DoxyCompactItemize}

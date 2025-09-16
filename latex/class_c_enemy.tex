@@ -1,0 +1,371 @@
+\doxysection{CEnemy Class Reference}
+\hypertarget{class_c_enemy}{}\label{class_c_enemy}\index{CEnemy@{CEnemy}}
+Inheritance diagram for CEnemy\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_c_enemy}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_enemy_ae590f3c4e2b9d6b35a413e1fd02a6652}\label{class_c_enemy_ae590f3c4e2b9d6b35a413e1fd02a6652} 
+enum {\bfseries MOTIONTYPE} \{ \newline
+{\bfseries MOTIONTYPE\+\_\+\+NEUTRAL} = 0
+, {\bfseries MOTIONTYPE\+\_\+\+MOVE}
+, {\bfseries MOTIONTYPE\+\_\+\+SMASH}
+, {\bfseries MOTIONTYPE\+\_\+\+JUMP}
+, \newline
+{\bfseries MOTIONTYPE\+\_\+\+LANDING}
+, {\bfseries MOTIONTYPE\+\_\+\+DAMAGEL}
+, {\bfseries MOTIONTYPE\+\_\+\+IMPACT}
+, {\bfseries MOTIONTYPE\+\_\+\+ROAR}
+, \newline
+{\bfseries MOTIONTYPE\+\_\+\+DASH}
+, {\bfseries MOTIONTYPE\+\_\+\+SPIN}
+, {\bfseries MOTIONTYPE\+\_\+\+HIT}
+, {\bfseries MOTIONTYPE\+\_\+\+DAMAGES}
+, \newline
+{\bfseries MOTIONTYPE\+\_\+\+GUARD}
+, {\bfseries MOTIONTYPE\+\_\+\+STEP}
+, {\bfseries MOTIONTYPE\+\_\+\+SWING}
+, {\bfseries MOTIONTYPE\+\_\+\+JUMPATTACK}
+, \newline
+{\bfseries MOTIONTYPE\+\_\+\+DEATH}
+, {\bfseries MOTIONTYPE\+\_\+\+DOWN}
+, {\bfseries MOTIONTYPE\+\_\+\+SUPER\+\_\+\+HIT}
+, {\bfseries MOTIONTYPE\+\_\+\+COMBODAMAGE}
+, \newline
+{\bfseries MOTIONTYPE\+\_\+\+RIGHTMOVE}
+, {\bfseries MOTIONTYPE\+\_\+\+LEFTMOVE}
+, {\bfseries MOTIONTYPE\+\_\+\+RUSH}
+, {\bfseries MOTIONTYPE\+\_\+\+END\+\_\+\+RUSH}
+, \newline
+{\bfseries MOTIONTYPE\+\_\+\+BACKKICK}
+, {\bfseries MOTIONTYPE\+\_\+\+START\+\_\+\+RUSH}
+, {\bfseries MOTIONTYPE\+\_\+\+LOOK\+\_\+\+BACKL}
+, {\bfseries MOTIONTYPE\+\_\+\+LOOK\+\_\+\+BACKR}
+, \newline
+{\bfseries MOTIONTYPE\+\_\+\+SWEEP\+\_\+\+RIGHT}
+, {\bfseries MOTIONTYPE\+\_\+\+SWEEP\+\_\+\+LEFT}
+, {\bfseries MOTIONTYPE\+\_\+\+MAX}
+ \}
+\item 
+\Hypertarget{class_c_enemy_a52e780278c7013e4fd0b3f255a89da24}\label{class_c_enemy_a52e780278c7013e4fd0b3f255a89da24} 
+enum {\bfseries RESULT} \{ \newline
+{\bfseries RESULT\+\_\+\+NONE} = 0
+, {\bfseries RESULT\+\_\+\+PARRY}
+, {\bfseries RESULT\+\_\+\+AVOID}
+, {\bfseries RESULT\+\_\+\+HIT}
+, \newline
+{\bfseries RESULT\+\_\+\+SPREVENGE}
+, {\bfseries RESULT\+\_\+\+MAX}
+ \}
+\item 
+\Hypertarget{class_c_enemy_a666485b939e108f2f39dbc0c284295f2}\label{class_c_enemy_a666485b939e108f2f39dbc0c284295f2} 
+enum {\bfseries MODEL} \{ \newline
+{\bfseries MODEL\+\_\+\+NONE} = -\/1
+, {\bfseries MODEL\+\_\+\+WAIST}
+, {\bfseries MODEL\+\_\+\+CHEST}
+, {\bfseries MODEL\+\_\+\+HEAD}
+, \newline
+{\bfseries MODEL\+\_\+\+ARMUR}
+, {\bfseries MODEL\+\_\+\+ARMFR}
+, {\bfseries MODEL\+\_\+\+HANDR}
+, {\bfseries MODEL\+\_\+\+ARMUL}
+, \newline
+{\bfseries MODEL\+\_\+\+ARMFL}
+, {\bfseries MODEL\+\_\+\+HANDL}
+, {\bfseries MODEL\+\_\+\+LEGUR}
+, {\bfseries MODEL\+\_\+\+LEGDR}
+, \newline
+{\bfseries MODEL\+\_\+\+FOOTR}
+, {\bfseries MODEL\+\_\+\+LEGUL}
+, {\bfseries MODEL\+\_\+\+LEGDL}
+, {\bfseries MODEL\+\_\+\+FOOTL}
+, \newline
+{\bfseries MODEL\+\_\+\+WEPON}
+, {\bfseries MODEL\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_character3_d}{CCharacter3D}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_character3_d_a2f18b0a573aa86a26defff62128100b4}\label{class_c_character3_d_a2f18b0a573aa86a26defff62128100b4} 
+enum {\bfseries STATE} \{ \newline
+{\bfseries STATE\+\_\+\+NORMAL} = 0
+, {\bfseries STATE\+\_\+\+MOVE}
+, {\bfseries STATE\+\_\+\+ACTION}
+, {\bfseries STATE\+\_\+\+DAMAGE}
+, \newline
+{\bfseries STATE\+\_\+\+DEATH}
+, {\bfseries STATE\+\_\+\+MAX}
+ \}
+\item 
+\Hypertarget{class_c_character3_d_a090994e96b00e7a9cc6e1bd0012f1283}\label{class_c_character3_d_a090994e96b00e7a9cc6e1bd0012f1283} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+TRAININGENEMY}
+, \newline
+{\bfseries TYPE\+\_\+\+BIRD}
+, {\bfseries TYPE\+\_\+\+TITLEPLAYER}
+, {\bfseries TYPE\+\_\+\+OPENING\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+HRESULT \mbox{\hyperlink{class_c_enemy_a714afb70be90d861a1206911525a7887}{Init}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_enemy_a2e89b0bc976d4d6ce3004db008795fd3}{Uninit}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_enemy_a8c03e118d48ca4377dd9af71a87fc31d}{Update}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_enemy_a1e2fc9a1da5153a0eb79e49072435735}{Draw}} (void) override
+\item 
+\Hypertarget{class_c_enemy_a9a3caa7150dabfc500d63d6a9d65e6c5}\label{class_c_enemy_a9a3caa7150dabfc500d63d6a9d65e6c5} 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void)
+\item 
+\Hypertarget{class_c_enemy_ae1b4ea735003c8823a58a4129b178bfb}\label{class_c_enemy_ae1b4ea735003c8823a58a4129b178bfb} 
+\mbox{\hyperlink{class_c_enemy_movement}{CEnemy\+Movement}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Movement} (void)
+\item 
+\Hypertarget{class_c_enemy_a0a7036ce067394e79d211a99843b9ab2}\label{class_c_enemy_a0a7036ce067394e79d211a99843b9ab2} 
+void {\bfseries Select\+Damage\+Motion} (int success, const D3\+DXVECTOR3 Impact\+Pos)
+\item 
+\Hypertarget{class_c_enemy_ad7f17f8eac3363fac5212c7da921c254}\label{class_c_enemy_ad7f17f8eac3363fac5212c7da921c254} 
+bool {\bfseries Is\+Damage\+Motion} (void)
+\item 
+\Hypertarget{class_c_enemy_add4ae095761e94c0eb59ad5b949dab68}\label{class_c_enemy_add4ae095761e94c0eb59ad5b949dab68} 
+bool {\bfseries Collision\+Wepon} (void)
+\item 
+\Hypertarget{class_c_enemy_a6c900de4e2d2713a787d1cfafb1359b1}\label{class_c_enemy_a6c900de4e2d2713a787d1cfafb1359b1} 
+void {\bfseries Chase\+Player} (float chase\+Scal, const float speed\+Scal=1.\+0f)
+\item 
+\Hypertarget{class_c_enemy_a302b213673bb3f5a331f0e380abd9947}\label{class_c_enemy_a302b213673bb3f5a331f0e380abd9947} 
+void {\bfseries Angle\+To\+Player} (void)
+\item 
+\Hypertarget{class_c_enemy_a87a55e56d70751e608755d8a4ed18ac6}\label{class_c_enemy_a87a55e56d70751e608755d8a4ed18ac6} 
+bool {\bfseries Check\+Distane} (const float f\+Radius)
+\item 
+\Hypertarget{class_c_enemy_aade8a01f65c3095d307044a39a67ad8c}\label{class_c_enemy_aade8a01f65c3095d307044a39a67ad8c} 
+void {\bfseries Orbit} (const int n\+SegH, const D3\+DXCOLOR col)
+\item 
+\Hypertarget{class_c_enemy_a62f4bb5758ac3950c52d3eb0a2dc1224}\label{class_c_enemy_a62f4bb5758ac3950c52d3eb0a2dc1224} 
+void {\bfseries Delete\+Orbit} (void)
+\item 
+\Hypertarget{class_c_enemy_ae347d1903635c0b031c28004797e0244}\label{class_c_enemy_ae347d1903635c0b031c28004797e0244} 
+void {\bfseries Change\+State} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_c_enemy_state}{CEnemy\+State}} $>$ p\+New\+State)
+\item 
+\Hypertarget{class_c_enemy_af4744a5511be1f34669522c73c89b1e2}\label{class_c_enemy_af4744a5511be1f34669522c73c89b1e2} 
+bool {\bfseries Collision\+Obstacle} (D3\+DXVECTOR3 \texorpdfstring{$\ast$}{*}p\+Pos)
+\item 
+\Hypertarget{class_c_enemy_a889304e12e03fcdb22b7ae5d90f99a4c}\label{class_c_enemy_a889304e12e03fcdb22b7ae5d90f99a4c} 
+void {\bfseries Set\+Observer} (\mbox{\hyperlink{class_c_observer}{CObserver}}$<$ int $>$ \texorpdfstring{$\ast$}{*}p\+Observer)
+\item 
+\Hypertarget{class_c_enemy_a946f834c88c5ccd3742efbafd283e803}\label{class_c_enemy_a946f834c88c5ccd3742efbafd283e803} 
+void {\bfseries Set\+Hit\+Stop} (const int n\+Time)
+\item 
+\Hypertarget{class_c_enemy_ac10db35df88400fea8fc1b8d1138fb90}\label{class_c_enemy_ac10db35df88400fea8fc1b8d1138fb90} 
+void {\bfseries Set\+Rubble} (void)
+\item 
+\Hypertarget{class_c_enemy_ad6340a6f2cb77c34aee1e00a91a6c9c6}\label{class_c_enemy_ad6340a6f2cb77c34aee1e00a91a6c9c6} 
+void {\bfseries Hit} (const int n\+Damage)
+\item 
+\Hypertarget{class_c_enemy_a05131b206fbced0953ea5f118e830dde}\label{class_c_enemy_a05131b206fbced0953ea5f118e830dde} 
+void {\bfseries Move\+Smoke} (void)
+\item 
+\Hypertarget{class_c_enemy_a3e6ca874e403a27c06367676b9672867}\label{class_c_enemy_a3e6ca874e403a27c06367676b9672867} 
+void {\bfseries Set\+Angle} (const float f\+Angle)
+\item 
+\Hypertarget{class_c_enemy_a5783c7538936b7043f1499a506296b80}\label{class_c_enemy_a5783c7538936b7043f1499a506296b80} 
+bool {\bfseries Collision\+FOV} (const D3\+DXVECTOR3 pos)
+\item 
+\Hypertarget{class_c_enemy_a9ce17b6db0bb8af2ac1fc814802fde72}\label{class_c_enemy_a9ce17b6db0bb8af2ac1fc814802fde72} 
+bool {\bfseries Collision\+FOV} (const D3\+DXVECTOR3 Targetpos, const float f\+Left\+Angle, const float f\+Right\+Angle)
+\item 
+\Hypertarget{class_c_enemy_ac79dca56d91ef77cc231ecc5d09dcf05}\label{class_c_enemy_ac79dca56d91ef77cc231ecc5d09dcf05} 
+void {\bfseries Rush\+Effect} (void)
+\item 
+\Hypertarget{class_c_enemy_a7216e968e14beb95d668f178dbcdb60e}\label{class_c_enemy_a7216e968e14beb95d668f178dbcdb60e} 
+\mbox{\hyperlink{class_c_enemy_state_manager}{CEnemy\+State\+Manager}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+State\+Manager} (void)
+\item 
+\Hypertarget{class_c_enemy_aef305c62606e46a4efff54d03be12beb}\label{class_c_enemy_aef305c62606e46a4efff54d03be12beb} 
+RESULT {\bfseries Wepon\+Attack\+Result} (\mbox{\hyperlink{class_c_player}{CPlayer}} \texorpdfstring{$\ast$}{*}p\+Player)
+\item 
+\Hypertarget{class_c_enemy_a763d8e2fdf9d1ae3af96967508b4b331}\label{class_c_enemy_a763d8e2fdf9d1ae3af96967508b4b331} 
+RESULT {\bfseries Attack\+Result} (\mbox{\hyperlink{class_c_player}{CPlayer}} \texorpdfstring{$\ast$}{*}p\+Player, const MODEL model, const float f\+Radius)
+\item 
+\Hypertarget{class_c_enemy_abb246b13ac1f5ee3e2547c665c2543d6}\label{class_c_enemy_abb246b13ac1f5ee3e2547c665c2543d6} 
+void {\bfseries Set\+Inertia} (const float f\+Inertia)
+\item 
+\Hypertarget{class_c_enemy_a3c1c4e218d56664bef218df46c134763}\label{class_c_enemy_a3c1c4e218d56664bef218df46c134763} 
+bool {\bfseries Check\+Obstacle\+Distance} (const float f\+Range)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_character3_d}{CCharacter3D}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CCharacter3D} (const TYPE type)
+\item 
+void {\bfseries Draw} (const float f\+Avl)
+\item 
+void {\bfseries Draw\+MT} (void)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+\mbox{\hyperlink{class_c_motion}{CMotion}} \texorpdfstring{$\ast$}{*} {\bfseries Load\+Motion} (const char \texorpdfstring{$\ast$}{*}p\+File\+Name, const int n\+Num\+Motion)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Size} (void) const
+\item 
+\mbox{\hyperlink{class_c_rotation}{CRotation}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Rotaition} (void) const
+\item 
+STATE {\bfseries Get\+State} (void)
+\item 
+\mbox{\hyperlink{class_c_motion}{CMotion}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Motion} (void)
+\item 
+float {\bfseries Get\+Speed} (void)
+\item 
+int {\bfseries Get\+Life} (void) const
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Model\+Pos} (const int n\+Idx)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Model\+Rot} (const int n\+Idx)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Model\+Size} (const int n\+Idx)
+\item 
+D3\+DXMATRIX {\bfseries Get\+Parent} (const int n\+Idx) const
+\item 
+void {\bfseries Set\+Position} (const D3\+DXVECTOR3 pos)
+\item 
+void {\bfseries Set\+Character} (const int n\+Life, const float f\+Speed, const D3\+DXVECTOR3 Shadow\+Scal, const D3\+DXVECTOR3 Size)
+\item 
+void {\bfseries Set\+Model\+MT} (const char \texorpdfstring{$\ast$}{*}p\+Texture\+Name)
+\item 
+void {\bfseries Copy} (\mbox{\hyperlink{class_c_character3_d}{CCharacter3D}} \texorpdfstring{$\ast$}{*}p\+Character)
+\item 
+bool {\bfseries Get\+Alive} (void)
+\item 
+void {\bfseries Set\+State} (const STATE state, const int n\+Time)
+\item 
+void {\bfseries Delete\+Shadow} (void)
+\item 
+bool {\bfseries Hit} (int n\+Damage)
+\item 
+bool {\bfseries Hit\+Stop} (void)
+\item 
+void {\bfseries Set\+Hit\+Stop} (const int n\+Time)
+\item 
+void {\bfseries Update\+Motion} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_enemy_af9ce062200b26eb98fb3917cd1d5022d}\label{class_c_enemy_af9ce062200b26eb98fb3917cd1d5022d} 
+static \mbox{\hyperlink{class_c_enemy}{CEnemy}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const int n\+Life, const float f\+Speed, const D3\+DXVECTOR3 Shadow\+Scal, const D3\+DXVECTOR3 Size, const D3\+DXVECTOR3 pos=Const\+::\+VEC3\+\_\+\+NULL, const D3\+DXVECTOR3 rot=Const\+::\+VEC3\+\_\+\+NULL)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_character3_d}{CCharacter3D}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Set\+Character} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_enemy_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_enemy_a1e2fc9a1da5153a0eb79e49072435735}\index{CEnemy@{CEnemy}!Draw@{Draw}}
+\index{Draw@{Draw}!CEnemy@{CEnemy}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_enemy_a1e2fc9a1da5153a0eb79e49072435735} 
+void CEnemy\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_character3_d}{CCharacter3D}}.
+
+\Hypertarget{class_c_enemy_a714afb70be90d861a1206911525a7887}\index{CEnemy@{CEnemy}!Init@{Init}}
+\index{Init@{Init}!CEnemy@{CEnemy}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_enemy_a714afb70be90d861a1206911525a7887} 
+HRESULT CEnemy\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_character3_d}{CCharacter3D}}.
+
+\Hypertarget{class_c_enemy_a2e89b0bc976d4d6ce3004db008795fd3}\index{CEnemy@{CEnemy}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CEnemy@{CEnemy}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_enemy_a2e89b0bc976d4d6ce3004db008795fd3} 
+void CEnemy\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_character3_d}{CCharacter3D}}.
+
+\Hypertarget{class_c_enemy_a8c03e118d48ca4377dd9af71a87fc31d}\index{CEnemy@{CEnemy}!Update@{Update}}
+\index{Update@{Update}!CEnemy@{CEnemy}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_enemy_a8c03e118d48ca4377dd9af71a87fc31d} 
+void CEnemy\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_character3_d}{CCharacter3D}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+enemy.\+h\item 
+enemy.\+cpp\end{DoxyCompactItemize}

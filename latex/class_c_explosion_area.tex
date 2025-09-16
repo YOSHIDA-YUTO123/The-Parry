@@ -1,0 +1,125 @@
+\doxysection{CExplosion\+Area Class Reference}
+\hypertarget{class_c_explosion_area}{}\label{class_c_explosion_area}\index{CExplosionArea@{CExplosionArea}}
+Inheritance diagram for CExplosion\+Area\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_c_explosion_area}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+HRESULT \mbox{\hyperlink{class_c_explosion_area_a91deae0e2a7dedf7bf6ececb01ffbd7d}{Init}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_explosion_area_a3062d9e5feade17f0ccb5d227bed9b9d}{Uninit}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_explosion_area_a0a73fb858be99b51fa7f8fdd1edbc89b}{Update}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_explosion_area_ae6eef91ec0bd411951c78a447310d95a}{Draw}} (void) override
+\item 
+\Hypertarget{class_c_explosion_area_a674c81a436fbc9e6eaa25ea04b9053c0}\label{class_c_explosion_area_a674c81a436fbc9e6eaa25ea04b9053c0} 
+bool {\bfseries Collision} (\mbox{\hyperlink{class_c_collider_capsule}{CCollider\+Capsule}} \texorpdfstring{$\ast$}{*}p\+Capsule)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_explosion_area_ab730ae012aa26ccaa99011a049156c55}\label{class_c_explosion_area_ab730ae012aa26ccaa99011a049156c55} 
+static \mbox{\hyperlink{class_c_explosion_area}{CExplosion\+Area}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_explosion_area_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_explosion_area_ae6eef91ec0bd411951c78a447310d95a}\index{CExplosionArea@{CExplosionArea}!Draw@{Draw}}
+\index{Draw@{Draw}!CExplosionArea@{CExplosionArea}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_explosion_area_ae6eef91ec0bd411951c78a447310d95a} 
+void CExplosion\+Area\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_explosion_area_a91deae0e2a7dedf7bf6ececb01ffbd7d}\index{CExplosionArea@{CExplosionArea}!Init@{Init}}
+\index{Init@{Init}!CExplosionArea@{CExplosionArea}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_explosion_area_a91deae0e2a7dedf7bf6ececb01ffbd7d} 
+HRESULT CExplosion\+Area\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_explosion_area_a3062d9e5feade17f0ccb5d227bed9b9d}\index{CExplosionArea@{CExplosionArea}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CExplosionArea@{CExplosionArea}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_explosion_area_a3062d9e5feade17f0ccb5d227bed9b9d} 
+void CExplosion\+Area\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_explosion_area_a0a73fb858be99b51fa7f8fdd1edbc89b}\index{CExplosionArea@{CExplosionArea}!Update@{Update}}
+\index{Update@{Update}!CExplosionArea@{CExplosionArea}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_explosion_area_a0a73fb858be99b51fa7f8fdd1edbc89b} 
+void CExplosion\+Area\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Explosion\+Area.\+h\item 
+Explosion\+Area.\+cpp\end{DoxyCompactItemize}

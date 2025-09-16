@@ -1,0 +1,69 @@
+\doxysection{object\+X.\+h}
+\hypertarget{object_x_8h_source}{}\label{object_x_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ オブジェクトXファイル\ [objectX.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_OBJECTX\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_OBJECTX\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}main.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include"{}object.h"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include"{}transform.h"{}}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ ソ}クロ定義}}
+\DoxyCodeLine{00023\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ MAX\_MAT\ (256)\ }\textcolor{comment}{//\ ソ}テリアルの数}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ オブジェクトXファイルのクラスの定義}}
+\DoxyCodeLine{00028\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00029\ \textcolor{keyword}{class\ }CObjectX\ :\ \textcolor{keyword}{public}\ CObject}
+\DoxyCodeLine{00030\ \{}
+\DoxyCodeLine{00031\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00032\ \ \ \ \ CObjectX(\textcolor{keywordtype}{int}\ nPriority\ =\ 2);}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~CObjectX();}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{static}\ CObjectX*\ Create(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ pModelName,\textcolor{keyword}{const}\ D3DXVECTOR3\ rot);}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{virtual}\ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ Diffuse);\ \textcolor{comment}{//\ 透明度を変更できる描画処理}}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{void}\ DrawShadow(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{void}\ SetUpMatrix(\textcolor{keyword}{const}\ D3DXVECTOR3\ Scal\ =\ D3DXVECTOR3(1.0f,1.0f,1.0f));}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{void}\ SetUpMatrix(\textcolor{keyword}{const}\ D3DXMATRIX\ mtxRot,\ \textcolor{keyword}{const}\ D3DXMATRIX\ mtxTrans,\textcolor{keyword}{const}\ D3DXVECTOR3\ Scal\ =\ D3DXVECTOR3(1.0f,\ 1.0f,\ 1.0f));}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{void}\ SetUpDraw(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{void}\ SetTextureMT(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ pTextureName);}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ HRESULT\ LoadModel(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ pXFileName);}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{void}\ SetPosition(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos)\ \{\ m\_pos\ =\ pos;\ \}}
+\DoxyCodeLine{00050\ \ \ \ \ \mbox{\hyperlink{class_c_rotation}{CRotation}}*\ GetRotation(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_pRot;\ \}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ D3DXMATRIX\ GetMatrix(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_mtxWorld;\ \}}
+\DoxyCodeLine{00053\ \ \ \ \ D3DXVECTOR3\ GetSize(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00054\ \ \ \ \ D3DXVECTOR3\ GetPosition(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_pos;\ \}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00057\ \ \ \ \ D3DXVECTOR3\ m\_pos;\ \ \ \ \ \ \textcolor{comment}{//\ 位置}}
+\DoxyCodeLine{00058\ \ \ \ \ \mbox{\hyperlink{class_c_rotation}{CRotation}}*\ m\_pRot;\ \ \ \ \ \textcolor{comment}{//\ 向きクラスへのポインソstring^}}
+\DoxyCodeLine{00059\ \ \ \ \ D3DXMATRIX\ m\_mtxWorld;\ \ \textcolor{comment}{//\ ワールドソ}トリックス}}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nModelIdx;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ モデルのインデックス}}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordtype}{int}\ *m\_pTextureIdx;\ \ \ \ \ \textcolor{comment}{//\ テクスチャのインデックス}}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nTextureMT;\ \ \ \ \ \ \ \textcolor{comment}{//\ ソ}ルチテクスチャのインデックス}}
+\DoxyCodeLine{00063\ \};}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

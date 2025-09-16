@@ -1,0 +1,140 @@
+\doxysection{CObject3\+DMT Class Reference}
+\hypertarget{class_c_object3_d_m_t}{}\label{class_c_object3_d_m_t}\index{CObject3DMT@{CObject3DMT}}
+Inheritance diagram for CObject3\+DMT\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_c_object3_d_m_t}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+HRESULT \mbox{\hyperlink{class_c_object3_d_m_t_af46ca99b53739fe635f0a5852620f804}{Init}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_object3_d_m_t_af235606e68d2ff1cb743d328e1b37d1b}{Uninit}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_object3_d_m_t_a4ec4af6fbb2ef1e3032684824a3c72c0}{Update}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_object3_d_m_t_afc52780dffb19771b84e2750c8faf93d}{Draw}} (void) override
+\item 
+\Hypertarget{class_c_object3_d_m_t_ae12628dd44ca1c4f5da635ce1bc35a1f}\label{class_c_object3_d_m_t_ae12628dd44ca1c4f5da635ce1bc35a1f} 
+void {\bfseries Set\+Vtx} (const D3\+DXCOLOR col)
+\item 
+\Hypertarget{class_c_object3_d_m_t_a9a7d8cf5b1fa511ce17d418aa4241dc9}\label{class_c_object3_d_m_t_a9a7d8cf5b1fa511ce17d418aa4241dc9} 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\item 
+\Hypertarget{class_c_object3_d_m_t_ae896ce43b4a8505df3c71013826ad921}\label{class_c_object3_d_m_t_ae896ce43b4a8505df3c71013826ad921} 
+D3\+DXVECTOR3 {\bfseries Get\+Rotaition} (void) const
+\item 
+\Hypertarget{class_c_object3_d_m_t_a40cea8dff30dae476805697e5c5e4e67}\label{class_c_object3_d_m_t_a40cea8dff30dae476805697e5c5e4e67} 
+void {\bfseries Set\+Position} (const D3\+DXVECTOR3 pos)
+\item 
+\Hypertarget{class_c_object3_d_m_t_a05ca5554ca1aad0e7c6dd3aa41143e74}\label{class_c_object3_d_m_t_a05ca5554ca1aad0e7c6dd3aa41143e74} 
+void {\bfseries Set\+Rotaition} (const D3\+DXVECTOR3 rot)
+\item 
+\Hypertarget{class_c_object3_d_m_t_ac9043062a1a1c551b91d1c1e34f116ea}\label{class_c_object3_d_m_t_ac9043062a1a1c551b91d1c1e34f116ea} 
+void {\bfseries Set\+Texture\+ID} (const char \texorpdfstring{$\ast$}{*}p\+Texture0, const char \texorpdfstring{$\ast$}{*}p\+Texture1)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object3_d_m_t_a92daa59daa1713d2948cac9b61c43a80}\label{class_c_object3_d_m_t_a92daa59daa1713d2948cac9b61c43a80} 
+static \mbox{\hyperlink{class_c_object3_d_m_t}{CObject3\+DMT}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const D3\+DXVECTOR3 rot, const D3\+DXVECTOR3 Size)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_object3_d_m_t_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_object3_d_m_t_afc52780dffb19771b84e2750c8faf93d}\index{CObject3DMT@{CObject3DMT}!Draw@{Draw}}
+\index{Draw@{Draw}!CObject3DMT@{CObject3DMT}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_object3_d_m_t_afc52780dffb19771b84e2750c8faf93d} 
+void CObject3\+DMT\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_object3_d_m_t_af46ca99b53739fe635f0a5852620f804}\index{CObject3DMT@{CObject3DMT}!Init@{Init}}
+\index{Init@{Init}!CObject3DMT@{CObject3DMT}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_object3_d_m_t_af46ca99b53739fe635f0a5852620f804} 
+HRESULT CObject3\+DMT\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_object3_d_m_t_af235606e68d2ff1cb743d328e1b37d1b}\index{CObject3DMT@{CObject3DMT}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CObject3DMT@{CObject3DMT}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_object3_d_m_t_af235606e68d2ff1cb743d328e1b37d1b} 
+void CObject3\+DMT\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_object3_d_m_t_a4ec4af6fbb2ef1e3032684824a3c72c0}\index{CObject3DMT@{CObject3DMT}!Update@{Update}}
+\index{Update@{Update}!CObject3DMT@{CObject3DMT}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_object3_d_m_t_a4ec4af6fbb2ef1e3032684824a3c72c0} 
+void CObject3\+DMT\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Object3\+DMT.\+h\item 
+Object3\+DMT.\+cpp\end{DoxyCompactItemize}

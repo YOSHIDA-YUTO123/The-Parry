@@ -1,0 +1,68 @@
+\doxysection{obstaclemanager.\+h}
+\hypertarget{obstaclemanager_8h_source}{}\label{obstaclemanager_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//==============================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ 障害物ソ}ネージャー\ [obstaclemanager.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//==============================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//**********************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//**********************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_OBSTACLEMANAGER\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_OBSTACLEMANAGER\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//**********************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//**********************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}main.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include<list>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include<memory>}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{comment}{//**********************************************}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ 前方宣言}}
+\DoxyCodeLine{00023\ \textcolor{comment}{//**********************************************}}
+\DoxyCodeLine{00024\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_obstacle}{CObstacle}};}
+\DoxyCodeLine{00025\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_explosion_area}{CExplosionArea}};}
+\DoxyCodeLine{00026\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_collider_capsule}{CColliderCapsule}};}
+\DoxyCodeLine{00027\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_t_n_t_barrel}{CTNTBarrel}};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{comment}{//**********************************************}}
+\DoxyCodeLine{00030\ \textcolor{comment}{//\ 障害物のソ}ネージャークラスの定義}}
+\DoxyCodeLine{00031\ \textcolor{comment}{//**********************************************}}
+\DoxyCodeLine{00032\ \textcolor{keyword}{class\ }CObstacleManager}
+\DoxyCodeLine{00033\ \{}
+\DoxyCodeLine{00034\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00035\ \ \ \ \ \string~CObstacleManager();}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ Create(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{static}\ CObstacleManager*\ GetInstance(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00038\ \ \ \ \ std::list\ <CObstacle*>::iterator\ Begin(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00039\ \ \ \ \ std::list\ <CObstacle*>::iterator\ End(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00040\ \ \ \ \ std::list\ <CObstacle*>::iterator\ Erase(std::list<CObstacle*>::iterator\ itr);}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{void}\ Destroy(\mbox{\hyperlink{class_c_obstacle}{CObstacle}}*\ pObstacle);}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{void}\ Clear(\mbox{\hyperlink{class_c_obstacle}{CObstacle}}*\ pObstacle);}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{void}\ AddObstacle(\mbox{\hyperlink{class_c_obstacle}{CObstacle}}\ *pObstacle);}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{void}\ AddExplosion(\mbox{\hyperlink{class_c_explosion_area}{CExplosionArea}}*\ pExplosionArea)\ \{\ m\_apExplosionArea.push\_back(pExplosionArea);\ \}}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{void}\ EraseExplosion(\mbox{\hyperlink{class_c_explosion_area}{CExplosionArea}}*\ pExplosionArea);}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{int}\ GetObstacleSize(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{bool}\ CollisionExplotion(\mbox{\hyperlink{class_c_collider_capsule}{CColliderCapsule}}*\ pCapsule);}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{bool}\ CollisionImpact(\mbox{\hyperlink{class_c_obstacle}{CObstacle}}*\ pObstacle);}
+\DoxyCodeLine{00052\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ NUM\_TNTPOP\_POINT\ =\ 4;\ \ \ \ \ \ \textcolor{comment}{//\ 爆発樽の出現ポイントの数}}
+\DoxyCodeLine{00054\ \ \ \ \ CObstacleManager();}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keyword}{static}\ CObstacleManager*\ m\_pManager;\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 障害物ソ}ネージャーへのポインソstring^}}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keyword}{static}\ std::list\ <CObstacle*>\ m\_apObstacleList;\ \textcolor{comment}{//\ 障害物へのポインソstring^}}
+\DoxyCodeLine{00057\ \ \ \ \ std::list\ <CExplosionArea*>\ m\_apExplosionArea;\ \ \textcolor{comment}{//\ 爆発のエリア}}
+\DoxyCodeLine{00058\ \ \ \ \ D3DXVECTOR3\ m\_Point[NUM\_TNTPOP\_POINT];\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 爆発樽の出現する位置}}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nTNTPopPosID;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 爆発樽の位置のID}}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nPopTime;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ポップする時間}}
+\DoxyCodeLine{00061\ \};}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,211 @@
+\doxysection{COpening\+Enemy Class Reference}
+\hypertarget{class_c_opening_enemy}{}\label{class_c_opening_enemy}\index{COpeningEnemy@{COpeningEnemy}}
+Inheritance diagram for COpening\+Enemy\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_c_opening_enemy}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+HRESULT \mbox{\hyperlink{class_c_opening_enemy_ade59aad8b933586454970fddc996df36}{Init}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_opening_enemy_a3cbf25f8947f74ccc2635e72cdaea041}{Uninit}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_opening_enemy_a9f25b18b8517bb86e7ad27ad83a41fca}{Update}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_opening_enemy_a298ab61739c2857e33df3930f73bca22}{Draw}} (void) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_character3_d}{CCharacter3D}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CCharacter3D} (const TYPE type)
+\item 
+void {\bfseries Draw} (const float f\+Avl)
+\item 
+void {\bfseries Draw\+MT} (void)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+\mbox{\hyperlink{class_c_motion}{CMotion}} \texorpdfstring{$\ast$}{*} {\bfseries Load\+Motion} (const char \texorpdfstring{$\ast$}{*}p\+File\+Name, const int n\+Num\+Motion)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Size} (void) const
+\item 
+\mbox{\hyperlink{class_c_rotation}{CRotation}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Rotaition} (void) const
+\item 
+STATE {\bfseries Get\+State} (void)
+\item 
+\mbox{\hyperlink{class_c_motion}{CMotion}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Motion} (void)
+\item 
+float {\bfseries Get\+Speed} (void)
+\item 
+int {\bfseries Get\+Life} (void) const
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Model\+Pos} (const int n\+Idx)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Model\+Rot} (const int n\+Idx)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Model\+Size} (const int n\+Idx)
+\item 
+D3\+DXMATRIX {\bfseries Get\+Parent} (const int n\+Idx) const
+\item 
+void {\bfseries Set\+Position} (const D3\+DXVECTOR3 pos)
+\item 
+void {\bfseries Set\+Character} (const int n\+Life, const float f\+Speed, const D3\+DXVECTOR3 Shadow\+Scal, const D3\+DXVECTOR3 Size)
+\item 
+void {\bfseries Set\+Model\+MT} (const char \texorpdfstring{$\ast$}{*}p\+Texture\+Name)
+\item 
+void {\bfseries Copy} (\mbox{\hyperlink{class_c_character3_d}{CCharacter3D}} \texorpdfstring{$\ast$}{*}p\+Character)
+\item 
+bool {\bfseries Get\+Alive} (void)
+\item 
+void {\bfseries Set\+State} (const STATE state, const int n\+Time)
+\item 
+void {\bfseries Delete\+Shadow} (void)
+\item 
+bool {\bfseries Hit} (int n\+Damage)
+\item 
+bool {\bfseries Hit\+Stop} (void)
+\item 
+void {\bfseries Set\+Hit\+Stop} (const int n\+Time)
+\item 
+void {\bfseries Update\+Motion} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_opening_enemy_a03d6f4f0e35128460b1dc317534d76eb}\label{class_c_opening_enemy_a03d6f4f0e35128460b1dc317534d76eb} 
+static \mbox{\hyperlink{class_c_opening_enemy}{COpening\+Enemy}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const float f\+Angle)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_character3_d}{CCharacter3D}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_character3_d_a2f18b0a573aa86a26defff62128100b4}\label{class_c_character3_d_a2f18b0a573aa86a26defff62128100b4} 
+enum {\bfseries STATE} \{ \newline
+{\bfseries STATE\+\_\+\+NORMAL} = 0
+, {\bfseries STATE\+\_\+\+MOVE}
+, {\bfseries STATE\+\_\+\+ACTION}
+, {\bfseries STATE\+\_\+\+DAMAGE}
+, \newline
+{\bfseries STATE\+\_\+\+DEATH}
+, {\bfseries STATE\+\_\+\+MAX}
+ \}
+\item 
+\Hypertarget{class_c_character3_d_a090994e96b00e7a9cc6e1bd0012f1283}\label{class_c_character3_d_a090994e96b00e7a9cc6e1bd0012f1283} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+TRAININGENEMY}
+, \newline
+{\bfseries TYPE\+\_\+\+BIRD}
+, {\bfseries TYPE\+\_\+\+TITLEPLAYER}
+, {\bfseries TYPE\+\_\+\+OPENING\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_character3_d}{CCharacter3D}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Set\+Character} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_opening_enemy_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_opening_enemy_a298ab61739c2857e33df3930f73bca22}\index{COpeningEnemy@{COpeningEnemy}!Draw@{Draw}}
+\index{Draw@{Draw}!COpeningEnemy@{COpeningEnemy}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_opening_enemy_a298ab61739c2857e33df3930f73bca22} 
+void COpening\+Enemy\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_character3_d}{CCharacter3D}}.
+
+\Hypertarget{class_c_opening_enemy_ade59aad8b933586454970fddc996df36}\index{COpeningEnemy@{COpeningEnemy}!Init@{Init}}
+\index{Init@{Init}!COpeningEnemy@{COpeningEnemy}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_opening_enemy_ade59aad8b933586454970fddc996df36} 
+HRESULT COpening\+Enemy\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_character3_d}{CCharacter3D}}.
+
+\Hypertarget{class_c_opening_enemy_a3cbf25f8947f74ccc2635e72cdaea041}\index{COpeningEnemy@{COpeningEnemy}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!COpeningEnemy@{COpeningEnemy}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_opening_enemy_a3cbf25f8947f74ccc2635e72cdaea041} 
+void COpening\+Enemy\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_character3_d}{CCharacter3D}}.
+
+\Hypertarget{class_c_opening_enemy_a9f25b18b8517bb86e7ad27ad83a41fca}\index{COpeningEnemy@{COpeningEnemy}!Update@{Update}}
+\index{Update@{Update}!COpeningEnemy@{COpeningEnemy}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_opening_enemy_a9f25b18b8517bb86e7ad27ad83a41fca} 
+void COpening\+Enemy\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_character3_d}{CCharacter3D}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Opning\+Enemy.\+h\item 
+Opning\+Enemy.\+cpp\end{DoxyCompactItemize}

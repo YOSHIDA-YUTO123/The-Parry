@@ -1,0 +1,79 @@
+\doxysection{camera.\+h}
+\hypertarget{camera_8h_source}{}\label{camera_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ カメラ\ [camera.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_CAMERA\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_CAMERA\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}main.h"{}}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ カメラクラスの定義}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00022\ \textcolor{keyword}{class\ }CCamera}
+\DoxyCodeLine{00023\ \{}
+\DoxyCodeLine{00024\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00025\ \ \ \ \ CCamera();}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~CCamera();}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{virtual}\ HRESULT\ Init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{void}\ SetCamera(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ SetCamera(\textcolor{keyword}{const}\ D3DXVECTOR3\ posV,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ posR,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ rot);}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{void}\ MouseWheel(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{void}\ MouseView(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{void}\ PadView(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{comment}{//\ ゲッソstring^ー}}
+\DoxyCodeLine{00039\ \ \ \ \ D3DXVECTOR3\ GetRotaition(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_rot;\ \}}
+\DoxyCodeLine{00040\ \ \ \ \ D3DXVECTOR3\ GetPosV(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_posV;\ \}}
+\DoxyCodeLine{00041\ \ \ \ \ D3DXVECTOR3\ GetPosR(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_posR;\ \}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{comment}{//\ セッソstring^ー}}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{void}\ SetRot(\textcolor{keyword}{const}\ D3DXVECTOR3\ rot)\ \{\ m\_rot\ =\ rot;\ \}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{comment}{//\ ゲッソstring^ー}}
+\DoxyCodeLine{00049\ \ \ \ \ D3DXVECTOR3\ GetDestPosV(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_posVDest;\ \}}
+\DoxyCodeLine{00050\ \ \ \ \ D3DXVECTOR3\ GetDestPosR(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_posRDest;\ \}}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{float}\ GetDistance(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_fDistance;\ \}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{comment}{//\ セッソstring^ー}}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{void}\ SetPosR(\textcolor{keyword}{const}\ D3DXVECTOR3\ posR)\ \{\ m\_posR\ =\ posR;\ \}}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{void}\ SetPosV(\textcolor{keyword}{const}\ D3DXVECTOR3\ posV)\ \{\ m\_posV\ =\ posV;\ \}}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordtype}{void}\ SetDestPosV(\textcolor{keyword}{const}\ D3DXVECTOR3\ destpos)\ \{\ m\_posVDest\ =\ destpos;\ \}}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordtype}{void}\ SetDestPosR(\textcolor{keyword}{const}\ D3DXVECTOR3\ destpos)\ \{\ m\_posRDest\ =\ destpos;\ \}}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{void}\ SetDistance(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fDistance)\ \{\ m\_fDistance\ =\ fDistance;\ \}}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{void}\ UpdatePositionV(\textcolor{keywordtype}{void});\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 視貼_の更新処理}}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{void}\ UpdatePositionR(\textcolor{keywordtype}{void});\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 注視貼_の更新処理}}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordtype}{void}\ LerpPos(\textcolor{keyword}{const}\ D3DXVECTOR3\ posRDest,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ posVDest,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fCoef);\ \ \ \ \textcolor{comment}{//\ 位置を目的の位置に近づける}}
+\DoxyCodeLine{00062\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00063\ \ \ \ \ D3DXMATRIX\ m\_mtxView;\ \ \ \ \ \ \ \textcolor{comment}{//\ ビューソ}トリックス}}
+\DoxyCodeLine{00064\ \ \ \ \ D3DXMATRIX\ m\_mtxProjection;\ \textcolor{comment}{//\ プロジェクションソ}トリックス}}
+\DoxyCodeLine{00065\ \ \ \ \ D3DXVECTOR3\ m\_posV;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 視貼_}}
+\DoxyCodeLine{00066\ \ \ \ \ D3DXVECTOR3\ m\_posR;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 注視貼_}}
+\DoxyCodeLine{00067\ \ \ \ \ D3DXVECTOR3\ m\_vecU;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 上方向ベクトル}}
+\DoxyCodeLine{00068\ \ \ \ \ D3DXVECTOR3\ m\_rot;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 向き}}
+\DoxyCodeLine{00069\ \ \ \ \ D3DXVECTOR3\ m\_posRDest;\ \ \ \ \ \textcolor{comment}{//\ 目的の注視貼_}}
+\DoxyCodeLine{00070\ \ \ \ \ D3DXVECTOR3\ m\_posVDest;\ \ \ \ \ \textcolor{comment}{//\ 目的の視貼_}}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fDistance;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 距離}}
+\DoxyCodeLine{00072\ \};}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,82 @@
+\doxysection{CObject Class Reference}
+\hypertarget{class_c_object}{}\label{class_c_object}\index{CObject@{CObject}}
+Inheritance diagram for CObject\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=12.000000cm]{class_c_object}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a17b08970f386c23cec38dc76050e3012}\label{class_c_object_a17b08970f386c23cec38dc76050e3012} 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+\Hypertarget{class_c_object_ab3be9be9f89890d02757ffe65db53f57}\label{class_c_object_ab3be9be9f89890d02757ffe65db53f57} 
+virtual HRESULT {\bfseries Init} (void)=0
+\item 
+\Hypertarget{class_c_object_a2db19ff6db92514305fc02f5684947a0}\label{class_c_object_a2db19ff6db92514305fc02f5684947a0} 
+virtual void {\bfseries Uninit} (void)=0
+\item 
+\Hypertarget{class_c_object_a1056db15f80c53c6fe1fe1236aa06a6b}\label{class_c_object_a1056db15f80c53c6fe1fe1236aa06a6b} 
+virtual void {\bfseries Update} (void)=0
+\item 
+\Hypertarget{class_c_object_a9652a3b35597838abb84cf7a1346dde4}\label{class_c_object_a9652a3b35597838abb84cf7a1346dde4} 
+virtual void {\bfseries Draw} (void)=0
+\item 
+\Hypertarget{class_c_object_a30b4d707d7e35117b8b9c68b30b3ce9c}\label{class_c_object_a30b4d707d7e35117b8b9c68b30b3ce9c} 
+int {\bfseries Get\+Priority} (void) const
+\item 
+\Hypertarget{class_c_object_a38d5d50106235961302bd4b4236e3843}\label{class_c_object_a38d5d50106235961302bd4b4236e3843} 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+\Hypertarget{class_c_object_a51dcc5929a0f7a08cf6137c8a4177e62}\label{class_c_object_a51dcc5929a0f7a08cf6137c8a4177e62} 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+\Hypertarget{class_c_object_a773009563e6cf608553405ab65190d2e}\label{class_c_object_a773009563e6cf608553405ab65190d2e} 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_ab05165c79dfad409b910fde0b12b05c2}\label{class_c_object_ab05165c79dfad409b910fde0b12b05c2} 
+static void {\bfseries Release\+All} (void)
+\item 
+\Hypertarget{class_c_object_a29d7f199909ddbc4003afd8e78744553}\label{class_c_object_a29d7f199909ddbc4003afd8e78744553} 
+static void {\bfseries Update\+All} (void)
+\item 
+\Hypertarget{class_c_object_a16574de04661ac0a0976c9cdee3d335d}\label{class_c_object_a16574de04661ac0a0976c9cdee3d335d} 
+static void {\bfseries Draw\+All} (void)
+\item 
+\Hypertarget{class_c_object_a0f06d084b208bec35a1aa1923e467e7c}\label{class_c_object_a0f06d084b208bec35a1aa1923e467e7c} 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+\Hypertarget{class_c_object_a075edffcdba3a4b9133f440742758a59}\label{class_c_object_a075edffcdba3a4b9133f440742758a59} 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7d593c27a362e4e92f6613bc2825964e}\label{class_c_object_a7d593c27a362e4e92f6613bc2825964e} 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+object.\+h\item 
+object.\+cpp\end{DoxyCompactItemize}

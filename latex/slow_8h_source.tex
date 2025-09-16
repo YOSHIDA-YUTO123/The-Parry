@@ -1,0 +1,45 @@
+\doxysection{slow.\+h}
+\hypertarget{slow_8h_source}{}\label{slow_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ スローモーション\ [slow.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_SLOW\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_SLOW\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}main.h"{}}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ スロークラスの定義}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00022\ \textcolor{keyword}{class\ }CSlow}
+\DoxyCodeLine{00023\ \{}
+\DoxyCodeLine{00024\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00025\ \ \ \ \ CSlow();}
+\DoxyCodeLine{00026\ \ \ \ \ \string~CSlow();}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{void}\ Start(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nTime,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fLevel);}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{void}\ End(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{float}\ GetLevel(\textcolor{keywordtype}{bool}\ bAdd)\ \{\ \textcolor{keywordflow}{return}\ bAdd\ ?\ m\_fLevel\ :\ (1.0f\ /\ m\_fLevel);\ \}}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{float}\ GetMaxLevel(\textcolor{keywordtype}{bool}\ bAdd)\ \{\ \textcolor{keywordflow}{return}\ bAdd\ ?\ m\_fMaxLevel\ :\ (1.0f\ /\ m\_fMaxLevel);\ \}}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{bool}\ GetState(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_bSlow;\ \}}
+\DoxyCodeLine{00033\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fMaxLevel;\ \ \textcolor{comment}{//\ 最大の能{率(保存用)}}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fLevel;\ \ \ \ \ \textcolor{comment}{//\ スローモーションのレベル(どのくらいおそくなるか)}}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nTime;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ スローモーションの時間}}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nCount;\ \ \ \ \ \ \ \textcolor{comment}{//\ スローモーションのカウンソstring^ー}}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_bSlow;\ \ \ \ \ \ \ \textcolor{comment}{//\ スロー中かどうか}}
+\DoxyCodeLine{00039\ \};}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

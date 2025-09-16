@@ -1,0 +1,81 @@
+\doxysection{Game\+Camera.\+h}
+\hypertarget{_game_camera_8h_source}{}\label{_game_camera_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ ゲームカメラ\ [GameCamera.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_GAMECAMERA\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_GAMECAMERA\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}camera.h"{}}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ ゲームのカメラクラスの定義}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00022\ \textcolor{keyword}{class\ }CGameCamera\ :\ \textcolor{keyword}{public}\ CCamera}
+\DoxyCodeLine{00023\ \{}
+\DoxyCodeLine{00024\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{comment}{//\ カメラの状態の種類}}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00027\ \ \ \ \ \{}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ STATE\_NONE\ =\ 0,\ \textcolor{comment}{//\ 何もなし}}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ STATE\_TRACKING,\ \textcolor{comment}{//\ 追従}}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ STATE\_ROCKON,\ \ \ \textcolor{comment}{//\ ロックオン}}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ STATE\_ZOOMIN,\ \ \ \textcolor{comment}{//\ ズーム}}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ STATE\_SHAKE,\ \ \ \ \textcolor{comment}{//\ カメラの揺れ}}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ STATE\_MAX}
+\DoxyCodeLine{00034\ \ \ \ \ \}STATE;}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{comment}{//\ カメラ追従するオブジェクトの種類}}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00038\ \ \ \ \ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ TRACKOBJ\_PLAYER\ =\ 0,}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ TRACKOBJ\_ENEMY,}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ TRACKOBJ\_MAX}
+\DoxyCodeLine{00042\ \ \ \ \ \}TRACKOBJ;}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ CGameCamera();}
+\DoxyCodeLine{00045\ \ \ \ \ \string~CGameCamera();}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{void}\ SetTracking(\textcolor{keyword}{const}\ D3DXVECTOR3\ posVDest,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ posRDest,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fcoef,\ \textcolor{keyword}{const}\ TRACKOBJ\ obj);}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{void}\ SetZoomIn(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nTime,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fAngle);}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ STATE\ GetState(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_state;\ \}}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{void}\ SetTracking(\textcolor{keyword}{const}\ TRACKOBJ\ obj)\ \{\ m\_TrackObj\ =\ obj;\ \}}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordtype}{void}\ SetState(\textcolor{keyword}{const}\ STATE\ state);}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordtype}{void}\ ResetState(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{void}\ Rockon(D3DXVECTOR3\ playerPos,\ D3DXVECTOR3\ enemyPos,\textcolor{keywordtype}{float}\ fDistance);}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{void}\ ZoomIn(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{void}\ SetShake(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nShakeTime,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nRange);}
+\DoxyCodeLine{00061\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordtype}{void}\ ResetDistance(\textcolor{keywordtype}{void});\ \ \ \textcolor{comment}{//\ 距離のリセット}}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{void}\ UpdateShake(\textcolor{keywordtype}{void});\ \ \ \ \ \textcolor{comment}{//\ カメラの揺れの更新}}
+\DoxyCodeLine{00064\ \ \ \ \ STATE\ m\_state;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ カメラの状態}}
+\DoxyCodeLine{00065\ \ \ \ \ STATE\ m\_Oldstate;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 前の状態}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ TRACKOBJ\ m\_TrackObj;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ 追従するオブジェクトの種類}}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fDistanceBase;\ \ \ \ \ \ \textcolor{comment}{//\ 保存用の距離}}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fDistanceZoom;\ \ \ \ \ \ \textcolor{comment}{//\ ズームする距離}}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fZoomAngleBase;\ \ \ \ \ \textcolor{comment}{//\ ズームの角度の基準}}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nShakeRange;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 揺れの幅}}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nShakeTime;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 振れの時間}}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nZoomTime;\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ズームの時間}}
+\DoxyCodeLine{00074\ \};}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

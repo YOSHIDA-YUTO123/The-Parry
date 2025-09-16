@@ -1,0 +1,175 @@
+\doxysection{CRubble Class Reference}
+\hypertarget{class_c_rubble}{}\label{class_c_rubble}\index{CRubble@{CRubble}}
+Inheritance diagram for CRubble\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_c_rubble}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_rubble_a63ec2c14a0deaa4894ebdf81bb539fc1}\label{class_c_rubble_a63ec2c14a0deaa4894ebdf81bb539fc1} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+ONE} = 0
+, {\bfseries TYPE\+\_\+\+TWO}
+, {\bfseries TYPE\+\_\+\+THREE}
+, {\bfseries TYPE\+\_\+\+FOUR}
+, \newline
+{\bfseries TYPE\+\_\+\+FIVE}
+, {\bfseries TYPE\+\_\+\+SIX}
+, {\bfseries TYPE\+\_\+\+SEVEN}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_rubble_ab2f58781f3c270a6b46d33b098d3efc0}\label{class_c_rubble_ab2f58781f3c270a6b46d33b098d3efc0} 
+{\bfseries CRubble} (int n\+Priority=3)
+\item 
+HRESULT \mbox{\hyperlink{class_c_rubble_ac9df274ed9db4f053e301cb6cd051b98}{Init}} (void)
+\item 
+void \mbox{\hyperlink{class_c_rubble_a57be80008cdabc87851579fc842fed79}{Uninit}} (void)
+\item 
+void \mbox{\hyperlink{class_c_rubble_a4e3ebaa30eedca3c2a23e806c7ebd6f3}{Update}} (void)
+\item 
+void \mbox{\hyperlink{class_c_rubble_ada6acc307a1ec751d2ad2d4d7f671488}{Draw}} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object_x}{CObjectX}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObjectX} (int n\+Priority=2)
+\item 
+void {\bfseries Draw} (const float Diffuse)
+\item 
+void {\bfseries Draw\+Shadow} (void)
+\item 
+void {\bfseries Set\+Up\+Matrix} (const D3\+DXVECTOR3 Scal=D3\+DXVECTOR3(1.\+0f, 1.\+0f, 1.\+0f))
+\item 
+void {\bfseries Set\+Up\+Matrix} (const D3\+DXMATRIX mtx\+Rot, const D3\+DXMATRIX mtx\+Trans, const D3\+DXVECTOR3 Scal=D3\+DXVECTOR3(1.\+0f, 1.\+0f, 1.\+0f))
+\item 
+void {\bfseries Set\+Up\+Draw} (void)
+\item 
+void {\bfseries Set\+Texture\+MT} (const char \texorpdfstring{$\ast$}{*}p\+Texture\+Name)
+\item 
+HRESULT {\bfseries Load\+Model} (const char \texorpdfstring{$\ast$}{*}p\+XFile\+Name)
+\item 
+void {\bfseries Set\+Position} (const D3\+DXVECTOR3 pos)
+\item 
+\mbox{\hyperlink{class_c_rotation}{CRotation}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Rotation} (void)
+\item 
+D3\+DXMATRIX {\bfseries Get\+Matrix} (void) const
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Size} (void)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_rubble_a0fb43cd1be17cd2028af02013da9633e}\label{class_c_rubble_a0fb43cd1be17cd2028af02013da9633e} 
+static \mbox{\hyperlink{class_c_rubble}{CRubble}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const D3\+DXVECTOR3 dir, const int n\+Life, int n\+Type)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object_x}{CObjectX}}}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_c_object_x}{CObjectX}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const char \texorpdfstring{$\ast$}{*}p\+Model\+Name, const D3\+DXVECTOR3 rot)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_rubble_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_rubble_ada6acc307a1ec751d2ad2d4d7f671488}\index{CRubble@{CRubble}!Draw@{Draw}}
+\index{Draw@{Draw}!CRubble@{CRubble}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_rubble_ada6acc307a1ec751d2ad2d4d7f671488} 
+void CRubble\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object_x}{CObjectX}}.
+
+\Hypertarget{class_c_rubble_ac9df274ed9db4f053e301cb6cd051b98}\index{CRubble@{CRubble}!Init@{Init}}
+\index{Init@{Init}!CRubble@{CRubble}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_rubble_ac9df274ed9db4f053e301cb6cd051b98} 
+HRESULT CRubble\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object_x}{CObjectX}}.
+
+\Hypertarget{class_c_rubble_a57be80008cdabc87851579fc842fed79}\index{CRubble@{CRubble}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CRubble@{CRubble}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_rubble_a57be80008cdabc87851579fc842fed79} 
+void CRubble\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object_x}{CObjectX}}.
+
+\Hypertarget{class_c_rubble_a4e3ebaa30eedca3c2a23e806c7ebd6f3}\index{CRubble@{CRubble}!Update@{Update}}
+\index{Update@{Update}!CRubble@{CRubble}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_rubble_a4e3ebaa30eedca3c2a23e806c7ebd6f3} 
+void CRubble\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object_x}{CObjectX}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+dust.\+h\item 
+dust.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,150 @@
+\doxysection{CMark Class Reference}
+\hypertarget{class_c_mark}{}\label{class_c_mark}\index{CMark@{CMark}}
+Inheritance diagram for CMark\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_c_mark}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+HRESULT \mbox{\hyperlink{class_c_mark_a3882209f99b30f28f058cc7605516481}{Init}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_mark_a9bdee0a788a52825096711c37b1870d4}{Uninit}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_mark_a0a7735479dbb530197f0943577c0fb8f}{Update}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_mark_a75e54bd4f76774eb3b11fd8c7428d03d}{Draw}} (void) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object_billboard}{CObject\+Billboard}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject\+Billboard} (int n\+Priority=4)
+\item 
+void {\bfseries Set\+Matrix} (const D3\+DXMATRIX mtx\+Rot, const D3\+DXMATRIX mtx\+Trans)
+\item 
+void {\bfseries Set\+Up\+Draw} (void)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\item 
+D3\+DXVECTOR2 {\bfseries Get\+Size} (void) const
+\item 
+void {\bfseries Set\+Position} (const D3\+DXVECTOR3 pos)
+\item 
+void {\bfseries Set\+Size} (const D3\+DXVECTOR2 size)
+\item 
+void {\bfseries Set\+Color} (const D3\+DXCOLOR col)
+\item 
+void {\bfseries Set\+Texture\+ID} (const char \texorpdfstring{$\ast$}{*}p\+Texture\+Name)
+\item 
+void {\bfseries Update\+Vertex\+Pos} (const D3\+DXVECTOR3 pos)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_mark_a606a03affac31ac2d5c9b57998ad800d}\label{class_c_mark_a606a03affac31ac2d5c9b57998ad800d} 
+static \mbox{\hyperlink{class_c_mark}{CMark}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object_billboard}{CObject\+Billboard}}}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_c_object_billboard}{CObject\+Billboard}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const D3\+DXVECTOR2 size, const char \texorpdfstring{$\ast$}{*}p\+Texture\+Name)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_mark_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_mark_a75e54bd4f76774eb3b11fd8c7428d03d}\index{CMark@{CMark}!Draw@{Draw}}
+\index{Draw@{Draw}!CMark@{CMark}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_mark_a75e54bd4f76774eb3b11fd8c7428d03d} 
+void CMark\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object_billboard}{CObject\+Billboard}}.
+
+\Hypertarget{class_c_mark_a3882209f99b30f28f058cc7605516481}\index{CMark@{CMark}!Init@{Init}}
+\index{Init@{Init}!CMark@{CMark}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_mark_a3882209f99b30f28f058cc7605516481} 
+HRESULT CMark\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object_billboard}{CObject\+Billboard}}.
+
+\Hypertarget{class_c_mark_a9bdee0a788a52825096711c37b1870d4}\index{CMark@{CMark}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CMark@{CMark}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_mark_a9bdee0a788a52825096711c37b1870d4} 
+void CMark\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object_billboard}{CObject\+Billboard}}.
+
+\Hypertarget{class_c_mark_a0a7735479dbb530197f0943577c0fb8f}\index{CMark@{CMark}!Update@{Update}}
+\index{Update@{Update}!CMark@{CMark}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_mark_a0a7735479dbb530197f0943577c0fb8f} 
+void CMark\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object_billboard}{CObject\+Billboard}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+mark.\+h\item 
+mark.\+cpp\end{DoxyCompactItemize}

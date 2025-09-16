@@ -1,0 +1,153 @@
+\doxysection{CRevenge\+UI Class Reference}
+\hypertarget{class_c_revenge_u_i}{}\label{class_c_revenge_u_i}\index{CRevengeUI@{CRevengeUI}}
+Inheritance diagram for CRevenge\+UI\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_c_revenge_u_i}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+HRESULT \mbox{\hyperlink{class_c_revenge_u_i_aff36dd32d5a013834afeceb429856302}{Init}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_revenge_u_i_a6d647c37643b2c2ca2f7b943e19e5ed1}{Uninit}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_revenge_u_i_acfa4aa2b2619e5004a863ae02159e8f1}{Update}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_revenge_u_i_a7fd967d241c31aa3a28b63a41dd95b5a}{Draw}} (void) override
+\item 
+\Hypertarget{class_c_revenge_u_i_a6db06bfd5cda2e6ebd5b4c50d949101a}\label{class_c_revenge_u_i_a6db06bfd5cda2e6ebd5b4c50d949101a} 
+void {\bfseries Set} (const float f\+Value)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object2_d_m_t}{CObject2\+DMT}}}
+\begin{DoxyCompactItemize}
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Rotaition} (void) const
+\item 
+D3\+DXVECTOR2 {\bfseries Get\+Size} (void) const
+\item 
+D3\+DXCOLOR {\bfseries Get\+Color} (void) const
+\item 
+void {\bfseries Set\+Position} (const D3\+DXVECTOR3 pos)
+\item 
+void {\bfseries Set\+Rotaition} (const D3\+DXVECTOR3 rot)
+\item 
+void {\bfseries Set\+Size} (const D3\+DXVECTOR2 Size)
+\item 
+void {\bfseries Set\+Color} (const D3\+DXCOLOR col)
+\item 
+void {\bfseries Set\+Texture\+ID} (const char \texorpdfstring{$\ast$}{*}p\+Texture1, const char \texorpdfstring{$\ast$}{*}p\+Texture2)
+\item 
+void {\bfseries Set\+Texture} (const D3\+DXVECTOR2 tex0, const D3\+DXVECTOR2 tex1, const D3\+DXVECTOR2 tex2, const D3\+DXVECTOR2 tex3, const int n\+Cnt)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_revenge_u_i_a61a17e21831808c1ad6bd9de247fcfdf}\label{class_c_revenge_u_i_a61a17e21831808c1ad6bd9de247fcfdf} 
+static \mbox{\hyperlink{class_c_revenge_u_i}{CRevenge\+UI}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const D3\+DXVECTOR2 Size, const float f\+Value)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object2_d_m_t}{CObject2\+DMT}}}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_c_object2_d_m_t}{CObject2\+DMT}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const D3\+DXVECTOR2 Size)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_revenge_u_i_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_revenge_u_i_a7fd967d241c31aa3a28b63a41dd95b5a}\index{CRevengeUI@{CRevengeUI}!Draw@{Draw}}
+\index{Draw@{Draw}!CRevengeUI@{CRevengeUI}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_revenge_u_i_a7fd967d241c31aa3a28b63a41dd95b5a} 
+void CRevenge\+UI\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object2_d_m_t}{CObject2\+DMT}}.
+
+\Hypertarget{class_c_revenge_u_i_aff36dd32d5a013834afeceb429856302}\index{CRevengeUI@{CRevengeUI}!Init@{Init}}
+\index{Init@{Init}!CRevengeUI@{CRevengeUI}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_revenge_u_i_aff36dd32d5a013834afeceb429856302} 
+HRESULT CRevenge\+UI\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object2_d_m_t}{CObject2\+DMT}}.
+
+\Hypertarget{class_c_revenge_u_i_a6d647c37643b2c2ca2f7b943e19e5ed1}\index{CRevengeUI@{CRevengeUI}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CRevengeUI@{CRevengeUI}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_revenge_u_i_a6d647c37643b2c2ca2f7b943e19e5ed1} 
+void CRevenge\+UI\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object2_d_m_t}{CObject2\+DMT}}.
+
+\Hypertarget{class_c_revenge_u_i_acfa4aa2b2619e5004a863ae02159e8f1}\index{CRevengeUI@{CRevengeUI}!Update@{Update}}
+\index{Update@{Update}!CRevengeUI@{CRevengeUI}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_revenge_u_i_acfa4aa2b2619e5004a863ae02159e8f1} 
+void CRevenge\+UI\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object2_d_m_t}{CObject2\+DMT}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Revenge\+Gage.\+h\item 
+Revenge\+Gage.\+cpp\end{DoxyCompactItemize}

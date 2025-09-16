@@ -1,0 +1,149 @@
+\doxysection{CObject3\+DAnim Class Reference}
+\hypertarget{class_c_object3_d_anim}{}\label{class_c_object3_d_anim}\index{CObject3DAnim@{CObject3DAnim}}
+Inheritance diagram for CObject3\+DAnim\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_c_object3_d_anim}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object3_d_anim_a7e686b5e336cab6360951f0fefaf6a3c}\label{class_c_object3_d_anim_a7e686b5e336cab6360951f0fefaf6a3c} 
+{\bfseries CObject3\+DAnim} (const int n\+Priority=5)
+\item 
+virtual HRESULT \mbox{\hyperlink{class_c_object3_d_anim_ab82ada5a02dbc43074cdf2ca0b7783e0}{Init}} (void) override
+\item 
+virtual void \mbox{\hyperlink{class_c_object3_d_anim_a7564e7d888d7b30305b42527d0a7ab75}{Uninit}} (void) override
+\item 
+virtual void \mbox{\hyperlink{class_c_object3_d_anim_a64a62f0e5803a6166d549fc90ac566c2}{Update}} (void) override
+\item 
+virtual void \mbox{\hyperlink{class_c_object3_d_anim_aa3f5d0d641055f4db0b0a873294d1164}{Draw}} (void) override
+\item 
+\Hypertarget{class_c_object3_d_anim_ae2fb1b47d9b823dc0667e53a0d1b9203}\label{class_c_object3_d_anim_ae2fb1b47d9b823dc0667e53a0d1b9203} 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\item 
+\Hypertarget{class_c_object3_d_anim_a9d88d6ebeadd7aaf232ddce23b787287}\label{class_c_object3_d_anim_a9d88d6ebeadd7aaf232ddce23b787287} 
+D3\+DXVECTOR3 {\bfseries Get\+Rotaition} (void) const
+\item 
+\Hypertarget{class_c_object3_d_anim_ac6553c0a81eedb7a77aa7f177835b6ff}\label{class_c_object3_d_anim_ac6553c0a81eedb7a77aa7f177835b6ff} 
+D3\+DXVECTOR3 {\bfseries Get\+Size} (void) const
+\item 
+\Hypertarget{class_c_object3_d_anim_a7365fb488a2c1f48e4d82944a1c8c30e}\label{class_c_object3_d_anim_a7365fb488a2c1f48e4d82944a1c8c30e} 
+void {\bfseries Set\+Position} (const D3\+DXVECTOR3 pos)
+\item 
+\Hypertarget{class_c_object3_d_anim_a57fae8589815efd59eeb84e10d9714f9}\label{class_c_object3_d_anim_a57fae8589815efd59eeb84e10d9714f9} 
+void {\bfseries Set\+Rotaition} (const D3\+DXVECTOR3 rot)
+\item 
+\Hypertarget{class_c_object3_d_anim_a95cfb8b36073038475291cf7880393c0}\label{class_c_object3_d_anim_a95cfb8b36073038475291cf7880393c0} 
+void {\bfseries Set\+Size} (const D3\+DXVECTOR3 Size)
+\item 
+\Hypertarget{class_c_object3_d_anim_aee6ff93cecf89e50732261e357017e6e}\label{class_c_object3_d_anim_aee6ff93cecf89e50732261e357017e6e} 
+void {\bfseries Set\+Texture\+ID} (const char \texorpdfstring{$\ast$}{*}p\+Texture\+Name)
+\item 
+\Hypertarget{class_c_object3_d_anim_a47acd4336e68e0430aca33ddc0f3bbcf}\label{class_c_object3_d_anim_a47acd4336e68e0430aca33ddc0f3bbcf} 
+void {\bfseries Set\+Param} (const int n\+SegX, const int n\+SegY, const int n\+Speed, const bool b\+Loop)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object3_d_anim_ab1e98f10e3b4b914f210b19e2be8edff}\label{class_c_object3_d_anim_ab1e98f10e3b4b914f210b19e2be8edff} 
+static \mbox{\hyperlink{class_c_object3_d_anim}{CObject3\+DAnim}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const D3\+DXVECTOR3 Size, const int n\+SegX, const int n\+SegY, const int n\+Speed)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_object3_d_anim_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_object3_d_anim_aa3f5d0d641055f4db0b0a873294d1164}\index{CObject3DAnim@{CObject3DAnim}!Draw@{Draw}}
+\index{Draw@{Draw}!CObject3DAnim@{CObject3DAnim}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_object3_d_anim_aa3f5d0d641055f4db0b0a873294d1164} 
+void CObject3\+DAnim\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_object3_d_anim_ab82ada5a02dbc43074cdf2ca0b7783e0}\index{CObject3DAnim@{CObject3DAnim}!Init@{Init}}
+\index{Init@{Init}!CObject3DAnim@{CObject3DAnim}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_object3_d_anim_ab82ada5a02dbc43074cdf2ca0b7783e0} 
+HRESULT CObject3\+DAnim\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_object3_d_anim_a7564e7d888d7b30305b42527d0a7ab75}\index{CObject3DAnim@{CObject3DAnim}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CObject3DAnim@{CObject3DAnim}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_object3_d_anim_a7564e7d888d7b30305b42527d0a7ab75} 
+void CObject3\+DAnim\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_object3_d_anim_a64a62f0e5803a6166d549fc90ac566c2}\index{CObject3DAnim@{CObject3DAnim}!Update@{Update}}
+\index{Update@{Update}!CObject3DAnim@{CObject3DAnim}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_object3_d_anim_a64a62f0e5803a6166d549fc90ac566c2} 
+void CObject3\+DAnim\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Object3\+DAnim.\+h\item 
+Object3\+DAnim.\+cpp\end{DoxyCompactItemize}

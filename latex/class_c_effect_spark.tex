@@ -1,0 +1,153 @@
+\doxysection{CEffect\+Spark Class Reference}
+\hypertarget{class_c_effect_spark}{}\label{class_c_effect_spark}\index{CEffectSpark@{CEffectSpark}}
+Inheritance diagram for CEffect\+Spark\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_c_effect_spark}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_effect_spark_a92c1d8ed6924bf2cebb41390661b3838}\label{class_c_effect_spark_a92c1d8ed6924bf2cebb41390661b3838} 
+void {\bfseries Set\+Param} (const int n\+Life, const D3\+DXVECTOR3 move, const float f\+Gravity)
+\item 
+HRESULT \mbox{\hyperlink{class_c_effect_spark_ac8e596fc0c3bd88ec1f30171b61c3218}{Init}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_effect_spark_accd0e9236372ee6591cfbf40208c57f0}{Uninit}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_effect_spark_a7b814398eb79daa4fb44971a52c82189}{Update}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_effect_spark_afcf48c2eda13542bc060a1696680f62f}{Draw}} (void) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object_billboard}{CObject\+Billboard}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject\+Billboard} (int n\+Priority=4)
+\item 
+void {\bfseries Set\+Matrix} (const D3\+DXMATRIX mtx\+Rot, const D3\+DXMATRIX mtx\+Trans)
+\item 
+void {\bfseries Set\+Up\+Draw} (void)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\item 
+D3\+DXVECTOR2 {\bfseries Get\+Size} (void) const
+\item 
+void {\bfseries Set\+Position} (const D3\+DXVECTOR3 pos)
+\item 
+void {\bfseries Set\+Size} (const D3\+DXVECTOR2 size)
+\item 
+void {\bfseries Set\+Color} (const D3\+DXCOLOR col)
+\item 
+void {\bfseries Set\+Texture\+ID} (const char \texorpdfstring{$\ast$}{*}p\+Texture\+Name)
+\item 
+void {\bfseries Update\+Vertex\+Pos} (const D3\+DXVECTOR3 pos)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_effect_spark_aeb8bf49df9084783451a7818f18da44c}\label{class_c_effect_spark_aeb8bf49df9084783451a7818f18da44c} 
+static \mbox{\hyperlink{class_c_effect_spark}{CEffect\+Spark}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const D3\+DXVECTOR2 Size, const D3\+DXCOLOR col)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object_billboard}{CObject\+Billboard}}}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_c_object_billboard}{CObject\+Billboard}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const D3\+DXVECTOR2 size, const char \texorpdfstring{$\ast$}{*}p\+Texture\+Name)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_effect_spark_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_effect_spark_afcf48c2eda13542bc060a1696680f62f}\index{CEffectSpark@{CEffectSpark}!Draw@{Draw}}
+\index{Draw@{Draw}!CEffectSpark@{CEffectSpark}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_effect_spark_afcf48c2eda13542bc060a1696680f62f} 
+void CEffect\+Spark\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object_billboard}{CObject\+Billboard}}.
+
+\Hypertarget{class_c_effect_spark_ac8e596fc0c3bd88ec1f30171b61c3218}\index{CEffectSpark@{CEffectSpark}!Init@{Init}}
+\index{Init@{Init}!CEffectSpark@{CEffectSpark}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_effect_spark_ac8e596fc0c3bd88ec1f30171b61c3218} 
+HRESULT CEffect\+Spark\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object_billboard}{CObject\+Billboard}}.
+
+\Hypertarget{class_c_effect_spark_accd0e9236372ee6591cfbf40208c57f0}\index{CEffectSpark@{CEffectSpark}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CEffectSpark@{CEffectSpark}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_effect_spark_accd0e9236372ee6591cfbf40208c57f0} 
+void CEffect\+Spark\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object_billboard}{CObject\+Billboard}}.
+
+\Hypertarget{class_c_effect_spark_a7b814398eb79daa4fb44971a52c82189}\index{CEffectSpark@{CEffectSpark}!Update@{Update}}
+\index{Update@{Update}!CEffectSpark@{CEffectSpark}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_effect_spark_a7b814398eb79daa4fb44971a52c82189} 
+void CEffect\+Spark\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object_billboard}{CObject\+Billboard}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Effect\+Spark.\+h\item 
+Effect\+Spark.\+cpp\end{DoxyCompactItemize}

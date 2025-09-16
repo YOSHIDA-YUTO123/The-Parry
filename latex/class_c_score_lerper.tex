@@ -1,0 +1,155 @@
+\doxysection{CScore\+Lerper Class Reference}
+\hypertarget{class_c_score_lerper}{}\label{class_c_score_lerper}\index{CScoreLerper@{CScoreLerper}}
+Inheritance diagram for CScore\+Lerper\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_c_score_lerper}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_score_lerper_ae4dfdb8ebf61d1d3f19c7db8a3486826}\label{class_c_score_lerper_ae4dfdb8ebf61d1d3f19c7db8a3486826} 
+{\bfseries CScore\+Lerper} (int n\+Priority=Const\+::\+NUM\+\_\+\+PRIORITY -\/ 2)
+\item 
+HRESULT \mbox{\hyperlink{class_c_score_lerper_aa264ae007498f69b05849682dcd44cae}{Init}} (void)
+\item 
+void \mbox{\hyperlink{class_c_score_lerper_a2614ac17e8f1ca47b6565e8dbe053461}{Uninit}} (void)
+\item 
+void \mbox{\hyperlink{class_c_score_lerper_a098107136c20f11d6a00aae8bc1cd2ae}{Update}} (void)
+\item 
+void \mbox{\hyperlink{class_c_score_lerper_a20f06241db34d8a2e519cbef25d06606}{Draw}} (void)
+\item 
+\Hypertarget{class_c_score_lerper_acaa3467f38598e0feaddd66bfa15aaf9}\label{class_c_score_lerper_acaa3467f38598e0feaddd66bfa15aaf9} 
+void {\bfseries Set\+Dest\+Score} (const int value, const int n\+Time)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_score}{CScore}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CScore} (int n\+Priority=Const\+::\+NUM\+\_\+\+PRIORITY -\/ 2)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\item 
+D3\+DXVECTOR2 {\bfseries Get\+Size} (void) const
+\item 
+void {\bfseries Set\+Position} (const D3\+DXVECTOR3 pos)
+\item 
+void {\bfseries Set\+Size} (const float f\+Width, const float f\+Height)
+\item 
+void {\bfseries Add\+Score} (const int value)
+\item 
+void {\bfseries Set\+Score} (const int value)
+\item 
+int {\bfseries Get\+Score} (void) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_score}{CScore}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_score_a7ebfbcf21f2f0e58f5626b4e108acf6b}\label{class_c_score_a7ebfbcf21f2f0e58f5626b4e108acf6b} 
+enum {\bfseries TYPE} \{ {\bfseries TYPE\+\_\+\+NORMAL} = 0
+, {\bfseries TYPE\+\_\+\+LERPER}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_score}{CScore}}}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_c_score}{CScore}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const TYPE type, const D3\+DXVECTOR3 pos, const float f\+Width, const float f\+Height)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_score_lerper_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_score_lerper_a20f06241db34d8a2e519cbef25d06606}\index{CScoreLerper@{CScoreLerper}!Draw@{Draw}}
+\index{Draw@{Draw}!CScoreLerper@{CScoreLerper}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_score_lerper_a20f06241db34d8a2e519cbef25d06606} 
+void CScore\+Lerper\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_score}{CScore}}.
+
+\Hypertarget{class_c_score_lerper_aa264ae007498f69b05849682dcd44cae}\index{CScoreLerper@{CScoreLerper}!Init@{Init}}
+\index{Init@{Init}!CScoreLerper@{CScoreLerper}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_score_lerper_aa264ae007498f69b05849682dcd44cae} 
+HRESULT CScore\+Lerper\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_score}{CScore}}.
+
+\Hypertarget{class_c_score_lerper_a2614ac17e8f1ca47b6565e8dbe053461}\index{CScoreLerper@{CScoreLerper}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CScoreLerper@{CScoreLerper}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_score_lerper_a2614ac17e8f1ca47b6565e8dbe053461} 
+void CScore\+Lerper\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_score}{CScore}}.
+
+\Hypertarget{class_c_score_lerper_a098107136c20f11d6a00aae8bc1cd2ae}\index{CScoreLerper@{CScoreLerper}!Update@{Update}}
+\index{Update@{Update}!CScoreLerper@{CScoreLerper}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_score_lerper_a098107136c20f11d6a00aae8bc1cd2ae} 
+void CScore\+Lerper\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_score}{CScore}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+score.\+h\item 
+score.\+cpp\end{DoxyCompactItemize}

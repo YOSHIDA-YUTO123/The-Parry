@@ -135,8 +135,8 @@ public:
 	D3DXVECTOR3 GetPosition(void);
 	CEnemyMovement* GetMovement(void);
 
-	void SelectDamageMotion(int success, const D3DXVECTOR3 ImpactPos);	// どのダメージモーションが出るか判定する関数
-	bool IsDamageMotion(void);				// ダメージモーションかどうか
+	void SelectDamageMotion(int success, const D3DXVECTOR3 ImpactPos); // どのダメージモーションが出るか判定する関数
+	bool IsDamageMotion(void);
 	bool CollisionWepon(void);
 	void ChasePlayer(float chaseScal, const float speedScal = 1.0f);	// プレイヤーを追いかける処理
 	void AngleToPlayer(void);											// プレイヤーの方向を見る処理

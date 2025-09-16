@@ -1,0 +1,167 @@
+\doxysection{meshfield.\+h}
+\hypertarget{meshfield_8h_source}{}\label{meshfield_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ メッシュフィールド\ [meshfield.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:\ YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_MESHFIELD\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_MESHFIELD\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}mesh.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include<vector>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include"{}transform.h"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include"{}Collision.h"{}}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <memory>}\ }
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ 前方宣言}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00026\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_mesh_field}{CMeshField}};}
+\DoxyCodeLine{00027\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_collider_sphere}{CColliderSphere}};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00030\ \textcolor{comment}{//\ メッシュのフィールドのウェーブクラスの定義}}
+\DoxyCodeLine{00031\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00032\ \textcolor{keyword}{class\ }CMeshFieldWave}
+\DoxyCodeLine{00033\ \{}
+\DoxyCodeLine{00034\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{comment}{//\ 波の情報(震源地、内側半径、外側半径、高さ、速さ、係数、発生時間)}}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_c_mesh_field_wave_1_1_config}{Config}}}
+\DoxyCodeLine{00038\ \ \ \ \ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ D3DXVECTOR3\ epicenter;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 波の発生地貼_}}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ fInRadius;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 波の内半径}}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ fOutRadius;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 波の外半径}}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ fHeight;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 波の高さ}}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ fSpeed;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 速さ}}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ fcoef;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 係数}}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ nTime;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 波の発生時間}}
+\DoxyCodeLine{00046\ \ \ \ \ \};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ CMeshFieldWave();}
+\DoxyCodeLine{00049\ \ \ \ \ \string~CMeshFieldWave();}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keyword}{static}\ CMeshFieldWave*\ Create(\mbox{\hyperlink{struct_c_mesh_field_wave_1_1_config}{Config}}\ config);}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{void}\ Init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{bool}\ Update(\mbox{\hyperlink{class_c_mesh_field}{CMeshField}}*\ pMeshField,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nNumVtx);}
+\DoxyCodeLine{00054\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{comment}{//\ 波の情報(アライメント対策)}}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{struct\ }ParamInfo}
+\DoxyCodeLine{00058\ \ \ \ \ \{}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ fStartHeight;\ \ \ \ \ \textcolor{comment}{//\ 最初の高さ}}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ fTime;\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 高さ}}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ nCounter;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 波のカウンソstring^ー}}
+\DoxyCodeLine{00062\ \ \ \ \ \};}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ Config\ m\_Confing;\ \ \ \ \ \ \ \textcolor{comment}{//\ 波のパラメーソstring^}}
+\DoxyCodeLine{00065\ \ \ \ \ ParamInfo\ m\_Info;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 波の情報}}
+\DoxyCodeLine{00066\ \};}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00069\ \textcolor{comment}{//\ メッシュフィールドのインパクトクラスの定義}}
+\DoxyCodeLine{00070\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00071\ \textcolor{keyword}{class\ }CMeshFieldImpact}
+\DoxyCodeLine{00072\ \{}
+\DoxyCodeLine{00073\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{comment}{//\ アソstring^ッカーの種類}}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00077\ \ \ \ \ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ OBJ\_NONE\ =\ 0,}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ OBJ\_PLAYER,}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ OBJ\_ENEMY,}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ OBJ\_MAX}
+\DoxyCodeLine{00082\ \ \ \ \ \}OBJ;}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{comment}{//\ 衝撃波の構(\backslash\)成(位置、発射位置、方向、サークルの色、放ったオブジェクト、当たり判定の半径、高さ、速さ、発生時間)}}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_c_mesh_field_impact_1_1_config}{Config}}}
+\DoxyCodeLine{00086\ \ \ \ \ \{}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ D3DXVECTOR3\ pos;\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 位置}}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ D3DXVECTOR3\ FirstPos;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ 最初の位置}}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ D3DXVECTOR3\ dir;\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 方向}}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ D3DXCOLOR\ Circlecol;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 色}}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ OBJ\ ObjType;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 誰が放った衝撃波か}}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ fRadius;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 半径}}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ fHeight;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 高さ}}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ fSpeed;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 速さ}}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ nTime;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 時間}}
+\DoxyCodeLine{00096\ \ \ \ \ \};}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \ \ \ \ CMeshFieldImpact();}
+\DoxyCodeLine{00099\ \ \ \ \ \string~CMeshFieldImpact();}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keyword}{static}\ CMeshFieldImpact*\ Create(\mbox{\hyperlink{struct_c_mesh_field_impact_1_1_config}{Config}}\ config);}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordtype}{bool}\ Update(\mbox{\hyperlink{class_c_mesh_field}{CMeshField}}*\ pMeshField,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nNumVtx);}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keywordtype}{bool}\ Collision(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fRadius,\ \textcolor{keyword}{const}\ OBJ\ myObj,D3DXVECTOR3\ *pFirstPos\ =\ \textcolor{keyword}{nullptr},D3DXVECTOR3\ *pImpactPos\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00105\ \ \ \ \ D3DXVECTOR3\ GetPosition(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_Config.pos;\ \}}
+\DoxyCodeLine{00106\ \ \ \ \ D3DXVECTOR3\ GetFirstPos(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_Config.FirstPos;\ \}}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keywordtype}{void}\ Reset(D3DXVECTOR3\ dir,\ \textcolor{keyword}{const}\ OBJ\ obj,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ FirstPos,\textcolor{keyword}{const}\ D3DXCOLOR\ Circlecol);}
+\DoxyCodeLine{00108\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{comment}{//\ 衝撃波の情報()}}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keyword}{struct\ }Info}
+\DoxyCodeLine{00112\ \ \ \ \ \{}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ nCounter;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ カウンソstring^ー}}
+\DoxyCodeLine{00114\ \ \ \ \ \};}
+\DoxyCodeLine{00115\ \ \ \ \ \mbox{\hyperlink{struct_c_mesh_field_impact_1_1_config}{Config}}\ m\_Config;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 構(\backslash\)成}}
+\DoxyCodeLine{00116\ \ \ \ \ Info\ m\_Info;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 情報}}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ std::unique\_ptr<CColliderSphere>\ m\_pSphere;\ \textcolor{comment}{//\ 噂string~のコライソ_ー}}
+\DoxyCodeLine{00119\ \ \ \ \ CVelocity*\ m\_pMove;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 移動量クラスへのポインソstring^}}
+\DoxyCodeLine{00120\ \};}
+\DoxyCodeLine{00121\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00122\ \textcolor{comment}{//\ メッシュフィールドクラスの定義}}
+\DoxyCodeLine{00123\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00124\ \textcolor{keyword}{class\ }CMeshField\ :\ \textcolor{keyword}{public}\ CMesh}
+\DoxyCodeLine{00125\ \{}
+\DoxyCodeLine{00126\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00127\ \ \ \ \ CMeshField(\textcolor{keywordtype}{int}\ nPriority\ =\ 2);}
+\DoxyCodeLine{00128\ \ \ \ \ \string~CMeshField();}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keyword}{static}\ CMeshField*\ Create(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nSegH,\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nSegV,\textcolor{keyword}{const}\ D3DXVECTOR2\ Size,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ rot\ =\ Const::VEC3\_NULL);}
+\DoxyCodeLine{00131\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keywordtype}{void}\ SetMeshField(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nSegH,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nSegV,\ \textcolor{keyword}{const}\ \ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ D3DXVECTOR2\ Size);}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{keywordtype}{bool}\ Collision(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keywordtype}{float}*\ pOutHeight);\ \textcolor{comment}{//\ 地面との当たり判定}}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{comment}{//\ インパクトとの当たり判定}}
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keywordtype}{bool}\ CollisionImpact(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fRadius,\ \textcolor{keyword}{const}\ CMeshFieldImpact::OBJ\ myObj,\ D3DXVECTOR3*\ pFirstPos\ =\ \textcolor{keyword}{nullptr},\ D3DXVECTOR3*\ pImpactPos\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \ \ \ \ \textcolor{comment}{//\ インパクトの再設定処理}}
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keywordtype}{void}\ ResetImpact(D3DXVECTOR3\ dir,\ \textcolor{keyword}{const}\ CMeshFieldImpact::OBJ\ obj,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ FirstPos,\ \textcolor{keyword}{const}\ D3DXCOLOR\ Circlecol);}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{keywordtype}{void}\ UpdateNor(\textcolor{keywordtype}{void});\ \textcolor{comment}{//\ 法線の再設定}}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{comment}{//\ ゲッソstring^ー}}
+\DoxyCodeLine{00148\ \ \ \ \ D3DXVECTOR3\ GetNor(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_Nor;\ \}}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{comment}{//\ セッソstring^ー}}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keywordtype}{void}\ SetWave(\mbox{\hyperlink{struct_c_mesh_field_wave_1_1_config}{CMeshFieldWave::Config}}\ config);}
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keywordtype}{void}\ SetImpact(\mbox{\hyperlink{struct_c_mesh_field_impact_1_1_config}{CMeshFieldImpact::Config}}\ config);}
+\DoxyCodeLine{00153\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{comment}{//void\ Load(void);}}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \ \ \ \ std::vector<CMeshFieldWave*>\ m\_apWave;\ \ \ \textcolor{comment}{//\ フィールドの波クラスへのポインソstring^}}
+\DoxyCodeLine{00157\ \ \ \ \ \mbox{\hyperlink{class_c_mesh_field_impact}{CMeshFieldImpact}}*\ m\_apImpact;\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ フィールドのインパクトクラスへのポインソstring^}}
+\DoxyCodeLine{00158\ \ \ \ \ D3DXVECTOR3\ m\_Nor;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 法線}}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fWidth,\ m\_fHeight;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 横幅,高さ}}
+\DoxyCodeLine{00160\ \};}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

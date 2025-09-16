@@ -1,0 +1,50 @@
+\doxysection{CScene Class Reference}
+\hypertarget{class_c_scene}{}\label{class_c_scene}\index{CScene@{CScene}}
+Inheritance diagram for CScene\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=1.777778cm]{class_c_scene}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_scene_ac89c656e1679c326e23527fd48d9861d}\label{class_c_scene_ac89c656e1679c326e23527fd48d9861d} 
+enum {\bfseries MODE} \{ \newline
+{\bfseries MODE\+\_\+\+TITLE} = 0
+, {\bfseries MODE\+\_\+\+EDIT}
+, {\bfseries MODE\+\_\+\+TUTORIAL}
+, {\bfseries MODE\+\_\+\+OPENING}
+, \newline
+{\bfseries MODE\+\_\+\+GAME}
+, {\bfseries MODE\+\_\+\+RESULT}
+, {\bfseries MODE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_scene_a7d279f933a72a984326a693c9c51756f}\label{class_c_scene_a7d279f933a72a984326a693c9c51756f} 
+{\bfseries CScene} (MODE mode)
+\item 
+\Hypertarget{class_c_scene_ab0445d6d6828daa63e749a953fef3840}\label{class_c_scene_ab0445d6d6828daa63e749a953fef3840} 
+MODE {\bfseries Get\+Mode} (void) const
+\item 
+\Hypertarget{class_c_scene_a5bb93f204e2caa916e1d444b2ba5afc4}\label{class_c_scene_a5bb93f204e2caa916e1d444b2ba5afc4} 
+virtual HRESULT {\bfseries Init} (void)=0
+\item 
+\Hypertarget{class_c_scene_ae211ecabf03b526e77e726398cacdf54}\label{class_c_scene_ae211ecabf03b526e77e726398cacdf54} 
+virtual void {\bfseries Uninit} (void)=0
+\item 
+\Hypertarget{class_c_scene_afc275dba9d79f4a05732f3ec7a1d2c13}\label{class_c_scene_afc275dba9d79f4a05732f3ec7a1d2c13} 
+virtual void {\bfseries Update} (void)=0
+\item 
+\Hypertarget{class_c_scene_ac67e685105fd81aef7017fe1c649c7f9}\label{class_c_scene_ac67e685105fd81aef7017fe1c649c7f9} 
+virtual void {\bfseries Draw} (void)=0
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+scene.\+h\item 
+scene.\+cpp\end{DoxyCompactItemize}

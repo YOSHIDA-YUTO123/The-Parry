@@ -1,0 +1,218 @@
+\doxysection{enemy.\+h}
+\hypertarget{enemy_8h_source}{}\label{enemy_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ 敵\ [enemy.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_ENEMY\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_ENEMY\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}main.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include"{}character3D.h"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include<memory>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include<vector>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include<list>}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ 前方宣言}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00026\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_character3_d}{CCharacter3D}};}
+\DoxyCodeLine{00027\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_motion}{CMotion}};}
+\DoxyCodeLine{00028\ \textcolor{keyword}{class\ }CEnemyMotionController;}
+\DoxyCodeLine{00029\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_model}{CModel}};}
+\DoxyCodeLine{00030\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_enemy_state}{CEnemyState}};}
+\DoxyCodeLine{00031\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_enemy_idle}{CEnemyIdle}};}
+\DoxyCodeLine{00032\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_mesh_orbit}{CMeshOrbit}};}
+\DoxyCodeLine{00033\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_state_machine}{CStateMachine}};}
+\DoxyCodeLine{00034\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_object3_d}{CObject3D}};}
+\DoxyCodeLine{00035\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_collider_sphere}{CColliderSphere}};}
+\DoxyCodeLine{00036\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_enemy_movement}{CEnemyMovement}};}
+\DoxyCodeLine{00037\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_collider_a_a_b_b}{CColliderAABB}};}
+\DoxyCodeLine{00038\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_velocity}{CVelocity}};}
+\DoxyCodeLine{00039\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_player}{CPlayer}};}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00042\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_observer}{CObserver}};}
+\DoxyCodeLine{00043\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_collider_capsule}{CColliderCapsule}};}
+\DoxyCodeLine{00044\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_collider_f_o_v}{CColliderFOV}};}
+\DoxyCodeLine{00045\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_enemy_state_manager}{CEnemyStateManager}};}
+\DoxyCodeLine{00046\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_obstacle_manager}{CObstacleManager}};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00049\ \textcolor{comment}{//\ 敵クラスの定義}}
+\DoxyCodeLine{00050\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00051\ \textcolor{keyword}{class\ }CEnemy\ :\ \textcolor{keyword}{public}\ CCharacter3D}
+\DoxyCodeLine{00052\ \{}
+\DoxyCodeLine{00053\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{comment}{//\ モーションの種類}}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00057\ \ \ \ \ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ MOTIONTYPE\_NEUTRAL\ =\ 0,\ \textcolor{comment}{//\ ニュートラル}}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ MOTIONTYPE\_MOVE,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ 移動}}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ MOTIONTYPE\_SMASH,\ \ \ \ \ \ \ \textcolor{comment}{//\ 振り下ろし攻撃}}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ MOTIONTYPE\_JUMP,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ ジャンプ}}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ MOTIONTYPE\_LANDING,\ \ \ \ \ \textcolor{comment}{//\ 着地}}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ MOTIONTYPE\_DAMAGEL,\ \ \ \ \ \textcolor{comment}{//\ 大ソ_メージ}}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ MOTIONTYPE\_IMPACT,\ \ \ \ \ \ \textcolor{comment}{//\ 衝撃波攻撃}}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ MOTIONTYPE\_ROAR,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ 叫び}}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ MOTIONTYPE\_DASH,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ 走り}}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ MOTIONTYPE\_SPIN,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ 回転攻撃}}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ MOTIONTYPE\_HIT,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ カウンソstring^ーが当たった時}}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ MOTIONTYPE\_DAMAGES,\ \ \ \ \ \textcolor{comment}{//\ 小ソ_メージ}}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ MOTIONTYPE\_GUARD,\ \ \ \ \ \ \ \textcolor{comment}{//\ ガード}}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ MOTIONTYPE\_STEP,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ ステップ}}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ MOTIONTYPE\_SWING,\ \ \ \ \ \ \ \textcolor{comment}{//\ スイング攻撃}}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ MOTIONTYPE\_JUMPATTACK,\ \ \textcolor{comment}{//\ ジャンプ攻撃}}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ MOTIONTYPE\_DEATH,\ \ \ \ \ \ \ \textcolor{comment}{//\ 死亡}}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ MOTIONTYPE\_DOWN,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ ソ_ウン}}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ MOTIONTYPE\_SUPER\_HIT,\ \ \ \textcolor{comment}{//\ 特大ヒット}}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ MOTIONTYPE\_COMBODAMAGE,\ \textcolor{comment}{//\ 連続ソ_メージ}}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ MOTIONTYPE\_RIGHTMOVE,\ \ \ \textcolor{comment}{//\ 横歩き(右)}}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ MOTIONTYPE\_LEFTMOVE,\ \ \ \ \textcolor{comment}{//\ 横歩き(左)}}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ MOTIONTYPE\_RUSH,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ 突進攻撃}}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ MOTIONTYPE\_END\_RUSH,\ \ \ \ \textcolor{comment}{//\ 突進攻撃終了}}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ MOTIONTYPE\_BACKKICK,\ \ \ \ \textcolor{comment}{//\ 後ろ蹴り}}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ MOTIONTYPE\_START\_RUSH,\ \ \textcolor{comment}{//\ 突進開始}}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ MOTIONTYPE\_LOOK\_BACKL,\ \ \textcolor{comment}{//\ 後ろを見る(左)}}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ MOTIONTYPE\_LOOK\_BACKR,\ \ \textcolor{comment}{//\ 後ろを見る(右)}}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ MOTIONTYPE\_SWEEP\_RIGHT,\ \textcolor{comment}{//\ 薙ぎ払い(右)}}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ MOTIONTYPE\_SWEEP\_LEFT,\ \ \textcolor{comment}{//\ 薙ぎ払い(左)}}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ MOTIONTYPE\_MAX}
+\DoxyCodeLine{00089\ \ \ \ \ \}MOTIONTYPE;}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{comment}{//\ 攻撃の結果}}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00093\ \ \ \ \ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ RESULT\_NONE\ =\ 0,\ \ \textcolor{comment}{//\ 何も無し}}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ RESULT\_PARRY,\ \ \ \ \ \textcolor{comment}{//\ パリィされた}}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ RESULT\_AVOID,\ \ \ \ \ \textcolor{comment}{//\ 回避された}}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ RESULT\_HIT,\ \ \ \ \ \ \ \textcolor{comment}{//\ 攻撃が当たった}}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ RESULT\_SPREVENGE,\ \textcolor{comment}{//\ 絶対反撃モード\ \ \ \ \ }}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ RESULT\_MAX}
+\DoxyCodeLine{00100\ \ \ \ \ \}RESULT;}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{comment}{//\ モデルの種類}}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00104\ \ \ \ \ \{}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ MODEL\_NONE\ =\ -\/1,\ \textcolor{comment}{//\ モデル無し}}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ MODEL\_WAIST,\ \ \ \ \ \textcolor{comment}{//\ 腰}}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ MODEL\_CHEST,\ \ \ \ \ \textcolor{comment}{//\ 胸}}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ MODEL\_HEAD,\ \ \ \ \ \ \textcolor{comment}{//\ 頭}}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ MODEL\_ARMUR,\ \ \ \ \ \textcolor{comment}{//\ 右上腕}}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ MODEL\_ARMFR,\ \ \ \ \ \textcolor{comment}{//\ 右前腕}}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ MODEL\_HANDR,\ \ \ \ \ \textcolor{comment}{//\ 右手}}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ MODEL\_ARMUL,\ \ \ \ \ \textcolor{comment}{//\ 左上腕}}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ MODEL\_ARMFL,\ \ \ \ \ \textcolor{comment}{//\ 左前腕}}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ MODEL\_HANDL,\ \ \ \ \ \textcolor{comment}{//\ 左手}}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ MODEL\_LEGUR,\ \ \ \ \ \textcolor{comment}{//\ 右太もも}}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ MODEL\_LEGDR,\ \ \ \ \ \textcolor{comment}{//\ 右すね}}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ MODEL\_FOOTR,\ \ \ \ \ \textcolor{comment}{//\ 右足}}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ MODEL\_LEGUL,\ \ \ \ \ \textcolor{comment}{//\ 左太もも}}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ MODEL\_LEGDL,\ \ \ \ \ \textcolor{comment}{//\ 左すね}}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ MODEL\_FOOTL,\ \ \ \ \ \textcolor{comment}{//\ 左足}}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ MODEL\_WEPON,\ \ \ \ \ \textcolor{comment}{//\ 武器}}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ MODEL\_MAX}
+\DoxyCodeLine{00123\ \ \ \ \ \}MODEL;}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \ \ CEnemy();}
+\DoxyCodeLine{00126\ \ \ \ \ \string~CEnemy();}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{keyword}{static}\ CEnemy*\ Create(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nLife,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fSpeed,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ ShadowScal,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ Size,\textcolor{keyword}{const}\ D3DXVECTOR3\ pos\ =\ Const::VEC3\_NULL,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ rot\ =\ Const::VEC3\_NULL);}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \ \ \ \ D3DXVECTOR3\ GetPosition(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00136\ \ \ \ \ \mbox{\hyperlink{class_c_enemy_movement}{CEnemyMovement}}*\ GetMovement(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{keywordtype}{void}\ SelectDamageMotion(\textcolor{keywordtype}{int}\ success,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ ImpactPos);\ \textcolor{comment}{//\ どのソ_メージモーションが出るか判定する関数}}
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keywordtype}{bool}\ IsDamageMotion(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keywordtype}{bool}\ CollisionWepon(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keywordtype}{void}\ ChasePlayer(\textcolor{keywordtype}{float}\ chaseScal,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ speedScal\ =\ 1.0f);\ \ \ \ \textcolor{comment}{//\ プレイヤーを追いかける処理}}
+\DoxyCodeLine{00142\ \ \ \ \ \textcolor{keywordtype}{void}\ AngleToPlayer(\textcolor{keywordtype}{void});\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ プレイヤーの方向を見る処理}}
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keywordtype}{bool}\ CheckDistane(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fRadius);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 距離の判定}}
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keywordtype}{void}\ Orbit(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nSegH,\ \textcolor{keyword}{const}\ D3DXCOLOR\ col);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 軌跡の設定}}
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{keywordtype}{void}\ DeleteOrbit(\textcolor{keywordtype}{void});\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 軌跡の消去}}
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{keywordtype}{void}\ ChangeState(std::shared\_ptr<CEnemyState>\ pNewState);}
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keywordtype}{bool}\ CollisionObstacle(D3DXVECTOR3*\ pPos);}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keywordtype}{void}\ SetObserver(\mbox{\hyperlink{class_c_observer}{CObserver<int>}}*\ pObserver)\ \{\ m\_pObserver\ =\ pObserver;\ \}}
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keywordtype}{void}\ SetHitStop(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nTime);}
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keywordtype}{void}\ SetRubble(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keywordtype}{void}\ Hit(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nDamage);}
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keywordtype}{void}\ MoveSmoke(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keywordtype}{void}\ SetAngle(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fAngle);}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keywordtype}{bool}\ CollisionFOV(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos);}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keywordtype}{bool}\ CollisionFOV(\textcolor{keyword}{const}\ D3DXVECTOR3\ Targetpos,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fLeftAngle,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fRightAngle);}
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keywordtype}{void}\ RushEffect(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \ \ \ \ \mbox{\hyperlink{class_c_enemy_state_manager}{CEnemyStateManager}}*\ GetStateManager(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_pStateManager.get();\ \}}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{comment}{//\ 武器攻撃の結果}}
+\DoxyCodeLine{00161\ \ \ \ \ RESULT\ WeponAttackResult(\mbox{\hyperlink{class_c_player}{CPlayer}}*\ pPlayer);}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{comment}{//\ 攻撃の結果}}
+\DoxyCodeLine{00164\ \ \ \ \ RESULT\ AttackResult(\mbox{\hyperlink{class_c_player}{CPlayer}}*\ pPlayer,\textcolor{keyword}{const}\ MODEL\ model,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fRadius);}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{comment}{//\ 慣性の設定(0.0f\ -\/\ 1.0f)}}
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{keywordtype}{void}\ SetInertia(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fInertia)\ \{\ m\_fInertia\ =\ fInertia;\ \}\ }
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{keywordtype}{bool}\ CheckObstacleDistance(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fRange);}
+\DoxyCodeLine{00170\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{keywordtype}{void}\ CollisionPlayer(\mbox{\hyperlink{class_c_motion}{CMotion}}*\ pPlayerMotion,\ \mbox{\hyperlink{class_c_player}{CPlayer}}*\ pPlayer);}
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{keywordtype}{void}\ SetParent(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nCnt,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ offPos,\ D3DXMATRIX*\ pMatrixOut);}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keywordtype}{void}\ Notify(\textcolor{keywordtype}{void});\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ オブザーバーへの通知処理}}
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{keywordtype}{void}\ UpdateCollider(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos);\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ コライソ_ーの更新}}
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keywordtype}{void}\ Config(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nLife,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fSpeed,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ ShadowScal,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ Size);}
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{keywordtype}{bool}\ CollisionObstacleToWepon(\mbox{\hyperlink{class_c_obstacle}{CObstacle}}*\ pObstacle);\ \ \ \textcolor{comment}{//\ 障害物と武器の当たり判定}}
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{keywordtype}{bool}\ SetTNTEffect(\mbox{\hyperlink{class_c_obstacle}{CObstacle}}*\ pObstacle);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 障害物の爆発の演出}}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \ \ \ \ std::unique\_ptr<CColliderCapsule>\ m\_pCapsule;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ カプセルコライソ_ー}}
+\DoxyCodeLine{00180\ \ \ \ \ std::unique\_ptr<CColliderAABB>\ m\_pAABB;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ AABBのコライソ_ー}}
+\DoxyCodeLine{00181\ \ \ \ \ std::unique\_ptr<CStateMachine>\ m\_pMachine;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 状態ソ}シーン}}
+\DoxyCodeLine{00182\ \ \ \ \ std::unique\_ptr<CColliderSphere>\ m\_pSphere;\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 噂string~の当たり判定クラス}}
+\DoxyCodeLine{00183\ \ \ \ \ std::shared\_ptr<CVelocity>\ m\_pMove;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 移動クラスの生成}}
+\DoxyCodeLine{00184\ \ \ \ \ std::unique\_ptr<CEnemyMovement>\ m\_pMovement;\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 敵の移動制御クラス}}
+\DoxyCodeLine{00185\ \ \ \ \ std::unique\_ptr<CColliderFOV>\ m\_pFOV;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 視界の判定}}
+\DoxyCodeLine{00186\ \ \ \ \ std::unique\_ptr<CEnemyStateManager>\ m\_pStateManager;\ \ \ \ \textcolor{comment}{//\ 状態ソ}ネージャーの生成}}
+\DoxyCodeLine{00187\ \ \ \ \ \mbox{\hyperlink{class_c_observer}{CObserver<int>}}*\ m\_pObserver;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ オブザーバークラスへのポインソstring^}}
+\DoxyCodeLine{00188\ \ \ \ \ \mbox{\hyperlink{class_c_mesh_orbit}{CMeshOrbit}}*\ m\_pOrbit;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 軌跡}}
+\DoxyCodeLine{00189\ \ \ \ \ D3DXMATRIX\ m\_weponMatrix;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 武器のワールドソ}トリックス}}
+\DoxyCodeLine{00190\ \ \ \ \ D3DXMATRIX\ m\_RushEffectMtx;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 突進攻撃のエフェクトのソ}トリックス}}
+\DoxyCodeLine{00191\ \ \ \ \ D3DXVECTOR3\ m\_posOld;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 前回の位置}}
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fInertia;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 慣性}}
+\DoxyCodeLine{00193\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_bSetMatrix;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ワールドソ}トリックスの設定をしたかどうか}}
+\DoxyCodeLine{00194\ \};}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00197\ \textcolor{comment}{//\ 敵の移動処理クラスの定義}}
+\DoxyCodeLine{00198\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00199\ \textcolor{keyword}{class\ }CEnemyMovement}
+\DoxyCodeLine{00200\ \{}
+\DoxyCodeLine{00201\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00202\ \ \ \ \ CEnemyMovement();}
+\DoxyCodeLine{00203\ \ \ \ \ \string~CEnemyMovement();}
+\DoxyCodeLine{00204\ \ \ \ \ \textcolor{keywordtype}{void}\ Init(std::shared\_ptr<CVelocity>\ enemyMove,\ \mbox{\hyperlink{class_c_enemy}{CEnemy}}*\ pEnemy);}
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{keywordtype}{void}\ BlowOff(\textcolor{keyword}{const}\ D3DXVECTOR3\ attacker,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ blowOff,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ jump);\ \ \ \ \ \ \ \ \textcolor{comment}{//\ 吹き飛び関数(戻り値はアソstring^ッカーまでの角度)}}
+\DoxyCodeLine{00206\ \ \ \ \ \textcolor{keywordtype}{void}\ MoveForWard(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fSpeed);}
+\DoxyCodeLine{00207\ \ \ \ \ \textcolor{keywordtype}{void}\ SetMoveDir(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ dir,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fSpeed);\ \textcolor{comment}{//\ 移動方向の設定}}
+\DoxyCodeLine{00208\ \ \ \ \ \textcolor{keywordtype}{void}\ Jump(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fHeight);}
+\DoxyCodeLine{00209\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00210\ \ \ \ \ \mbox{\hyperlink{class_c_enemy}{CEnemy}}*\ m\_pEnemy;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 敵クラスへのポインソstring^}}
+\DoxyCodeLine{00211\ \ \ \ \ std::shared\_ptr<CVelocity>\ m\_pMove;\ \ \ \ \ \textcolor{comment}{//\ 敵の移動制御用変数}}
+\DoxyCodeLine{00212\ \};}
+\DoxyCodeLine{00213\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

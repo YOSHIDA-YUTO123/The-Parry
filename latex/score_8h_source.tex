@@ -1,0 +1,86 @@
+\doxysection{score.\+h}
+\hypertarget{score_8h_source}{}\label{score_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ スコア\ [score.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//=================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_SCORE\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_SCORE\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}main.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include"{}object2D.h"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}number.h"{}}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ スコアクラスの定義}}
+\DoxyCodeLine{00023\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00024\ \textcolor{keyword}{class\ }CScore\ :\ \textcolor{keyword}{public}\ CObject}
+\DoxyCodeLine{00025\ \{}
+\DoxyCodeLine{00026\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{comment}{//\ スコアの種類}}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00030\ \ \ \ \ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ TYPE\_NORMAL\ =\ 0,\ \textcolor{comment}{//\ 普通}}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ TYPE\_LERPER,\ \ \ \ \ \textcolor{comment}{//\ 補間}}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ TYPE\_MAX}
+\DoxyCodeLine{00034\ \ \ \ \ \}TYPE;}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ CScore(\textcolor{keywordtype}{int}\ nPriority\ =\ Const::NUM\_PRIORITY\ -\/\ 2);}
+\DoxyCodeLine{00037\ \ \ \ \ \string~CScore();}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{virtual}\ HRESULT\ Init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ D3DXVECTOR3\ GetPosition(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_pos;\ \}}
+\DoxyCodeLine{00045\ \ \ \ \ D3DXVECTOR2\ GetSize(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ D3DXVECTOR2(m\_fWidth,m\_fHeight);\ \}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{void}\ SetPosition(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos)\ \{\ m\_pos\ =\ pos;\ \}}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{void}\ SetSize(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fWidth,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fHeight);}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{static}\ CScore*\ Create(\textcolor{keyword}{const}\ TYPE\ type,\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fWidth,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fHeight);}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{void}\ AddScore(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ value)\ \{\ m\_nScore\ +=\ value;\ \}}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{void}\ SetScore(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ value)\ \{\ m\_nScore\ =\ value;\ \}}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{int}\ GetScore(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_nScore;\ \}}
+\DoxyCodeLine{00054\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \ MAX\_DIGIT\ =\ 9;\ \ \ \ \textcolor{comment}{//\ 最大の桁数}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{class_c_number}{CNumber}}*\ m\_apNumber[MAX\_DIGIT];\ \ \ \textcolor{comment}{//\ ナンバーオブジェクトへのポインソstring^}}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nScore;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ スコア}}
+\DoxyCodeLine{00059\ \ \ \ \ D3DXVECTOR3\ m\_pos;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 位置\ \ }}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fWidth,\ m\_fHeight;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 幅、高さ}}
+\DoxyCodeLine{00061\ \};}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00064\ \textcolor{comment}{//\ スコアクラス(徐々に補間)の定義}}
+\DoxyCodeLine{00065\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00066\ \textcolor{keyword}{class\ }CScoreLerper\ :\ \textcolor{keyword}{public}\ CScore}
+\DoxyCodeLine{00067\ \{}
+\DoxyCodeLine{00068\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00069\ \ \ \ \ CScoreLerper(\textcolor{keywordtype}{int}\ nPriority\ =\ Const::NUM\_PRIORITY\ -\/\ 2);}
+\DoxyCodeLine{00070\ \ \ \ \ \string~CScoreLerper();}
+\DoxyCodeLine{00071\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordtype}{void}\ SetDestScore(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ value,\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nTime);}
+\DoxyCodeLine{00076\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nDestScore;\ \textcolor{comment}{//\ 目的のスコア}}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nTime;\ \ \ \ \ \ \textcolor{comment}{//\ 目的のスコアになるまでの時間}}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nCounter;\ \ \ \textcolor{comment}{//\ カウンソstring^ー}}
+\DoxyCodeLine{00080\ \};}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

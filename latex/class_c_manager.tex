@@ -1,0 +1,74 @@
+\doxysection{CManager Class Reference}
+\hypertarget{class_c_manager}{}\label{class_c_manager}\index{CManager@{CManager}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_manager_a53f0e0565e79e3e2c20d27a7e6dc8c82}\label{class_c_manager_a53f0e0565e79e3e2c20d27a7e6dc8c82} 
+HRESULT {\bfseries Init} (HINSTANCE h\+Instance, HWND h\+Wnd, BOOL b\+Window)
+\item 
+\Hypertarget{class_c_manager_a73ef4ee63db9188fbb28cf4aae45c536}\label{class_c_manager_a73ef4ee63db9188fbb28cf4aae45c536} 
+void {\bfseries Uninit} (void)
+\item 
+\Hypertarget{class_c_manager_afc41a3ca1a63ea7ec3f98f3821465fef}\label{class_c_manager_afc41a3ca1a63ea7ec3f98f3821465fef} 
+void {\bfseries Update} (void)
+\item 
+\Hypertarget{class_c_manager_a99fdc82157df65a6238fcfad4f1e6360}\label{class_c_manager_a99fdc82157df65a6238fcfad4f1e6360} 
+void {\bfseries Draw} (void)
+\item 
+\Hypertarget{class_c_manager_a3d68725f55eadc2fe34f56daea1de682}\label{class_c_manager_a3d68725f55eadc2fe34f56daea1de682} 
+void {\bfseries Set\+Fps} (const int fps)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_manager_ae61e5d53c5981ba1461a0cb7a82a7aab}\label{class_c_manager_ae61e5d53c5981ba1461a0cb7a82a7aab} 
+static \mbox{\hyperlink{class_c_renderer}{CRenderer}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Renderer} (void)
+\item 
+\Hypertarget{class_c_manager_ab8d0f5af147611264cab6402d4fd178b}\label{class_c_manager_ab8d0f5af147611264cab6402d4fd178b} 
+static \mbox{\hyperlink{class_c_input_keyboard}{CInput\+Keyboard}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Input\+Keyboard} (void)
+\item 
+\Hypertarget{class_c_manager_a002ed9bec34027a5f4bc365e1b7d58c8}\label{class_c_manager_a002ed9bec34027a5f4bc365e1b7d58c8} 
+static \mbox{\hyperlink{class_c_input_joypad}{CInput\+Joypad}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Input\+Joypad} (void)
+\item 
+\Hypertarget{class_c_manager_a6fcc6d87949c9dcd6ab17513dc19c9a0}\label{class_c_manager_a6fcc6d87949c9dcd6ab17513dc19c9a0} 
+static \mbox{\hyperlink{class_c_input_mouse}{CInput\+Mouse}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Input\+Mouse} (void)
+\item 
+\Hypertarget{class_c_manager_aa5996235f383fda486e0da571c57d320}\label{class_c_manager_aa5996235f383fda486e0da571c57d320} 
+static \mbox{\hyperlink{class_c_sound}{CSound}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Sound} (void)
+\item 
+\Hypertarget{class_c_manager_a81b8843f367b78e1f3211244a803a09c}\label{class_c_manager_a81b8843f367b78e1f3211244a803a09c} 
+static int {\bfseries Get\+Frame\+Counter} (void)
+\item 
+\Hypertarget{class_c_manager_a4722fcb8feaf96d3cdd5b5f89ac3ac35}\label{class_c_manager_a4722fcb8feaf96d3cdd5b5f89ac3ac35} 
+static bool {\bfseries Get\+Show\+Debug} (void)
+\item 
+\Hypertarget{class_c_manager_add9e4cf021483c9b3e0ce930b74d5a18}\label{class_c_manager_add9e4cf021483c9b3e0ce930b74d5a18} 
+static \mbox{\hyperlink{class_c_texture_manager}{CTexture\+Manager}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Texture} (void)
+\item 
+\Hypertarget{class_c_manager_a7f2f8efd77f4e97bd7293060a37cc0d3}\label{class_c_manager_a7f2f8efd77f4e97bd7293060a37cc0d3} 
+static \mbox{\hyperlink{class_c_light}{CLight}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Light} (void)
+\item 
+\Hypertarget{class_c_manager_aac3ea2401f1bb96f21591d0b45d68545}\label{class_c_manager_aac3ea2401f1bb96f21591d0b45d68545} 
+static \mbox{\hyperlink{class_c_model_manager}{CModel\+Manager}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Model} (void)
+\item 
+\Hypertarget{class_c_manager_aca9ff3fad9a0a19bac86258df019b9b3}\label{class_c_manager_aca9ff3fad9a0a19bac86258df019b9b3} 
+static \mbox{\hyperlink{class_c_slow}{CSlow}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Slow} (void)
+\item 
+\Hypertarget{class_c_manager_a1efcb6a39234c2c4188a12f0e93eb968}\label{class_c_manager_a1efcb6a39234c2c4188a12f0e93eb968} 
+static void {\bfseries Set\+Mode} (std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_c_scene}{CScene}} $>$ p\+New\+Scene)
+\item 
+\Hypertarget{class_c_manager_ae400c055587fbf57bf8666f0bbd05e02}\label{class_c_manager_ae400c055587fbf57bf8666f0bbd05e02} 
+static CScene\+::\+MODE {\bfseries Get\+Mode} (void)
+\item 
+\Hypertarget{class_c_manager_a965149ee60559a9f5c9041b0322dc012}\label{class_c_manager_a965149ee60559a9f5c9041b0322dc012} 
+static \mbox{\hyperlink{class_c_fade}{CFade}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Fade} (void)
+\item 
+\Hypertarget{class_c_manager_ab99613c045a7c7539c9e0774ce55907e}\label{class_c_manager_ab99613c045a7c7539c9e0774ce55907e} 
+static void {\bfseries Draw\+Scene} (void)
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+manager.\+h\item 
+manager.\+cpp\end{DoxyCompactItemize}

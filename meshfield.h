@@ -94,6 +94,7 @@ public:
 		float fSpeed;				 // ‘¬‚³
 		int nTime;		         // ŽžŠÔ
 	};
+
 	CMeshFieldImpact();
 	~CMeshFieldImpact();
 

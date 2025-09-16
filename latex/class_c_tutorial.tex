@@ -1,0 +1,105 @@
+\doxysection{CTutorial Class Reference}
+\hypertarget{class_c_tutorial}{}\label{class_c_tutorial}\index{CTutorial@{CTutorial}}
+Inheritance diagram for CTutorial\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_c_tutorial}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+HRESULT \mbox{\hyperlink{class_c_tutorial_a310543e80ea44ab7db7cdedc010d83de}{Init}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_tutorial_a7ab7e45a248981d2b2b3ea4ca3f22599}{Uninit}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_tutorial_a3c4642963dc7213a8146c076b36fa8dc}{Update}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_tutorial_a3a0b05345d8268ebb0da6b149128be31}{Draw}} (void) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_scene}{CScene}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CScene} (MODE mode)
+\item 
+MODE {\bfseries Get\+Mode} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_tutorial_a3cdc920828da43e107d65017494448d2}\label{class_c_tutorial_a3cdc920828da43e107d65017494448d2} 
+static \mbox{\hyperlink{class_c_game_camera}{CGame\+Camera}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Camera} (void)
+\item 
+\Hypertarget{class_c_tutorial_aded011add1d15e77adaa74c5aa8ba7d7}\label{class_c_tutorial_aded011add1d15e77adaa74c5aa8ba7d7} 
+static \mbox{\hyperlink{class_c_mesh_field}{CMesh\+Field}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Field} (void)
+\item 
+\Hypertarget{class_c_tutorial_a418f16e367542040b000e198ef0c0637}\label{class_c_tutorial_a418f16e367542040b000e198ef0c0637} 
+static \mbox{\hyperlink{class_c_player}{CPlayer}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Player} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_scene}{CScene}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_scene_ac89c656e1679c326e23527fd48d9861d}\label{class_c_scene_ac89c656e1679c326e23527fd48d9861d} 
+enum {\bfseries MODE} \{ \newline
+{\bfseries MODE\+\_\+\+TITLE} = 0
+, {\bfseries MODE\+\_\+\+EDIT}
+, {\bfseries MODE\+\_\+\+TUTORIAL}
+, {\bfseries MODE\+\_\+\+OPENING}
+, \newline
+{\bfseries MODE\+\_\+\+GAME}
+, {\bfseries MODE\+\_\+\+RESULT}
+, {\bfseries MODE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_tutorial_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_tutorial_a3a0b05345d8268ebb0da6b149128be31}\index{CTutorial@{CTutorial}!Draw@{Draw}}
+\index{Draw@{Draw}!CTutorial@{CTutorial}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_tutorial_a3a0b05345d8268ebb0da6b149128be31} 
+void CTutorial\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_scene}{CScene}}.
+
+\Hypertarget{class_c_tutorial_a310543e80ea44ab7db7cdedc010d83de}\index{CTutorial@{CTutorial}!Init@{Init}}
+\index{Init@{Init}!CTutorial@{CTutorial}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_tutorial_a310543e80ea44ab7db7cdedc010d83de} 
+HRESULT CTutorial\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_scene}{CScene}}.
+
+\Hypertarget{class_c_tutorial_a7ab7e45a248981d2b2b3ea4ca3f22599}\index{CTutorial@{CTutorial}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CTutorial@{CTutorial}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_tutorial_a7ab7e45a248981d2b2b3ea4ca3f22599} 
+void CTutorial\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_scene}{CScene}}.
+
+\Hypertarget{class_c_tutorial_a3c4642963dc7213a8146c076b36fa8dc}\index{CTutorial@{CTutorial}!Update@{Update}}
+\index{Update@{Update}!CTutorial@{CTutorial}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_tutorial_a3c4642963dc7213a8146c076b36fa8dc} 
+void CTutorial\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_scene}{CScene}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+tutorial.\+h\item 
+tutorial.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,132 @@
+\doxysection{CParticle\+Tornado Class Reference}
+\hypertarget{class_c_particle_tornado}{}\label{class_c_particle_tornado}\index{CParticleTornado@{CParticleTornado}}
+Inheritance diagram for CParticle\+Tornado\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_c_particle_tornado}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+HRESULT \mbox{\hyperlink{class_c_particle_tornado_ac7353ad2bea2da28c7b7de4af0bb4a30}{Init}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_particle_tornado_a28f5f0f6449d88b97a4c1cfb97f57e63}{Uninit}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_particle_tornado_a6991828b8421c0d2f84e69622530fc28}{Update}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_particle_tornado_ab16289e9ec0389ea13bca64619823d4a}{Draw}} (void) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_particle3_d}{CParticle3D}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Set\+Particle} (const float f\+Speed, const int n\+Life, const int n\+Num\+Particle, const int n\+Time, const int n\+Angle)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_particle3_d}{CParticle3D}}}
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries Get\+Max\+Life} (void) const
+\item 
+void {\bfseries Set\+Max\+Life} (const int n\+Max\+Life)
+\item 
+void {\bfseries Set\+Info} (const \mbox{\hyperlink{struct_c_particle3_d_1_1_info}{Info}} info)
+\item 
+\mbox{\hyperlink{struct_c_particle3_d_1_1_info}{Info}} {\bfseries Get\+Info} (void) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_particle_tornado_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_particle_tornado_ab16289e9ec0389ea13bca64619823d4a}\index{CParticleTornado@{CParticleTornado}!Draw@{Draw}}
+\index{Draw@{Draw}!CParticleTornado@{CParticleTornado}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_particle_tornado_ab16289e9ec0389ea13bca64619823d4a} 
+void CParticle\+Tornado\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_particle3_d}{CParticle3D}}.
+
+\Hypertarget{class_c_particle_tornado_ac7353ad2bea2da28c7b7de4af0bb4a30}\index{CParticleTornado@{CParticleTornado}!Init@{Init}}
+\index{Init@{Init}!CParticleTornado@{CParticleTornado}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_particle_tornado_ac7353ad2bea2da28c7b7de4af0bb4a30} 
+HRESULT CParticle\+Tornado\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_particle3_d}{CParticle3D}}.
+
+\Hypertarget{class_c_particle_tornado_a28f5f0f6449d88b97a4c1cfb97f57e63}\index{CParticleTornado@{CParticleTornado}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CParticleTornado@{CParticleTornado}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_particle_tornado_a28f5f0f6449d88b97a4c1cfb97f57e63} 
+void CParticle\+Tornado\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_particle3_d}{CParticle3D}}.
+
+\Hypertarget{class_c_particle_tornado_a6991828b8421c0d2f84e69622530fc28}\index{CParticleTornado@{CParticleTornado}!Update@{Update}}
+\index{Update@{Update}!CParticleTornado@{CParticleTornado}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_particle_tornado_a6991828b8421c0d2f84e69622530fc28} 
+void CParticle\+Tornado\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_particle3_d}{CParticle3D}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Particle\+Tornado.\+h\item 
+Particle\+Tornado.\+cpp\end{DoxyCompactItemize}

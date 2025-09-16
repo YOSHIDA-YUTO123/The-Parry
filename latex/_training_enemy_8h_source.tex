@@ -1,0 +1,115 @@
+\doxysection{Training\+Enemy.\+h}
+\hypertarget{_training_enemy_8h_source}{}\label{_training_enemy_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ 練習用の敵\ [TrainingEnemy.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:\ YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_TRAININGENEMY\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_TRAININGENEMY\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}character3D.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include<memory>}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ 前方宣言}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00023\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_collider_capsule}{CColliderCapsule}};}
+\DoxyCodeLine{00024\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_state_machine}{CStateMachine}};}
+\DoxyCodeLine{00025\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_training_enemy_state}{CTrainingEnemyState}};}
+\DoxyCodeLine{00026\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_mesh_orbit}{CMeshOrbit}};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00029\ \textcolor{comment}{//\ 練習用の敵のクラスの定義}}
+\DoxyCodeLine{00030\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00031\ \textcolor{keyword}{class\ }CTrainingEnemy\ :\ \textcolor{keyword}{public}\ CCharacter3D}
+\DoxyCodeLine{00032\ \{}
+\DoxyCodeLine{00033\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{comment}{//\ モデルの種類}}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00037\ \ \ \ \ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ MODEL\_NONE\ =\ -\/1,\ \textcolor{comment}{//\ モデル無し}}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ MODEL\_WAIST,\ \ \ \ \ \textcolor{comment}{//\ 腰}}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ MODEL\_CHEST,\ \ \ \ \ \textcolor{comment}{//\ 胸}}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ MODEL\_HEAD,\ \ \ \ \ \ \textcolor{comment}{//\ 頭}}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ MODEL\_ARMUR,\ \ \ \ \ \textcolor{comment}{//\ 右上腕}}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ MODEL\_ARMFR,\ \ \ \ \ \textcolor{comment}{//\ 右前腕}}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ MODEL\_HANDR,\ \ \ \ \ \textcolor{comment}{//\ 右手}}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ MODEL\_ARMUL,\ \ \ \ \ \textcolor{comment}{//\ 左上腕}}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ MODEL\_ARMFL,\ \ \ \ \ \textcolor{comment}{//\ 左前腕}}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ MODEL\_HANDL,\ \ \ \ \ \textcolor{comment}{//\ 左手}}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ MODEL\_LEGUR,\ \ \ \ \ \textcolor{comment}{//\ 右太もも}}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ MODEL\_LEGDR,\ \ \ \ \ \textcolor{comment}{//\ 右すね}}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ MODEL\_FOOTR,\ \ \ \ \ \textcolor{comment}{//\ 右足}}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ MODEL\_LEGUL,\ \ \ \ \ \textcolor{comment}{//\ 左太もも}}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ MODEL\_LEGDL,\ \ \ \ \ \textcolor{comment}{//\ 左すね}}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ MODEL\_FOOTL,\ \ \ \ \ \textcolor{comment}{//\ 左足}}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ MODEL\_WEPON,\ \ \ \ \ \textcolor{comment}{//\ 武器}}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ MODEL\_MAX}
+\DoxyCodeLine{00056\ \ \ \ \ \}MODEL;}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{comment}{//\ モーションの種類}}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00060\ \ \ \ \ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ MOTIONTYPE\_NEUTRAL\ =\ 0,\ \textcolor{comment}{//\ ニュートラル}}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ MOTIONTYPE\_ACTION,\ \ \ \ \ \ \textcolor{comment}{//\ 攻撃}}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ MOTIONTYPE\_HIT,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ヒット}}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ MOTIONTYPE\_DAMAGE,\ \ \ \ \ \ \textcolor{comment}{//\ ソ_メージ}}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ MOTIONTYPE\_DAMAGES,\ \ \ \ \ \textcolor{comment}{//\ 中ソ_メージ}}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ MOTIONTYPE\_DAMAGELS,\ \ \ \ \textcolor{comment}{//\ 小ソ_メージ}}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ MOTIONTYPE\_COMB\_DAMAGE,\ \textcolor{comment}{//\ 連続ソ_メージ}}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ MOTIONTYPE\_MAX}
+\DoxyCodeLine{00069\ \ \ \ \ \}MOTIONTYPE;}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{comment}{//\ 攻撃の結果}}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00073\ \ \ \ \ \{}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ RESULT\_NONE\ =\ 0,\ \ \textcolor{comment}{//\ 何も無し}}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ RESULT\_PARRY,\ \ \ \ \ \textcolor{comment}{//\ パリィされた}}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ RESULT\_AVOID,\ \ \ \ \ \textcolor{comment}{//\ 回避された}}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ RESULT\_HIT,\ \ \ \ \ \ \ \textcolor{comment}{//\ 攻撃が当たった}}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ RESULT\_SPREVENGE,\ \textcolor{comment}{//\ 絶対反撃モード\ \ \ \ \ }}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ RESULT\_MAX}
+\DoxyCodeLine{00080\ \ \ \ \ \}RESULT;}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ CTrainingEnemy();}
+\DoxyCodeLine{00083\ \ \ \ \ \string~CTrainingEnemy();}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keyword}{static}\ CTrainingEnemy*\ Create(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos);}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordtype}{void}\ Orbit(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nSegH,\ \textcolor{keyword}{const}\ D3DXCOLOR\ col);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 軌跡の設定}}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keywordtype}{void}\ DeleteOrbit(\textcolor{keywordtype}{void});\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 軌跡の消去}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{comment}{//\ 範囲内にいるか}}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordtype}{bool}\ CheckDistance(\textcolor{keywordtype}{float}\ fRange);}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordtype}{void}\ ChangeState(std::shared\_ptr<CTrainingEnemyState>\ pNewState);}
+\DoxyCodeLine{00098\ \ \ \ \ RESULT\ GetAttackResult(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keywordtype}{void}\ CollisionPlayerAttack(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordtype}{void}\ SelectDamageMotion(\textcolor{keywordtype}{int}\ success,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ ImpactPos);}
+\DoxyCodeLine{00101\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordtype}{bool}\ CollisionPlayer(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordtype}{bool}\ IsDamage(\mbox{\hyperlink{class_c_motion}{CMotion}}*\ pMotion);}
+\DoxyCodeLine{00104\ \ \ \ \ std::unique\_ptr<CColliderCapsule>\ m\_pCapsule;\ \textcolor{comment}{//\ カプセルコライソ_ー}}
+\DoxyCodeLine{00105\ \ \ \ \ std::unique\_ptr<CStateMachine>\ m\_pMachine;\ \ \ \ \textcolor{comment}{//\ 状態ソ}シーン}}
+\DoxyCodeLine{00106\ \ \ \ \ D3DXMATRIX\ m\_SwordMtx;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 剣のソ}トリックス}}
+\DoxyCodeLine{00107\ \ \ \ \ \mbox{\hyperlink{class_c_mesh_orbit}{CMeshOrbit}}*\ m\_pOrbit;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 軌跡}}
+\DoxyCodeLine{00108\ \};}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

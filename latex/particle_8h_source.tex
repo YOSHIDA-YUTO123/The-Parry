@@ -1,0 +1,86 @@
+\doxysection{particle.\+h}
+\hypertarget{particle_8h_source}{}\label{particle_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ パーティクル\ [particle.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_PARTICLE\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_PARTICLE\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}main.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include"{}object.h"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include<vector>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include<string>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include"{}effect.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ パーティクル3Dクラスの定義(基底クラス)}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00026\ \textcolor{keyword}{class\ }CParticle3D\ :\ \textcolor{keyword}{public}\ CObject}
+\DoxyCodeLine{00027\ \{}
+\DoxyCodeLine{00028\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{comment}{//\ パーティクルの情報(共通部分)}}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_c_particle3_d_1_1_info}{Info}}}
+\DoxyCodeLine{00032\ \ \ \ \ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ D3DXVECTOR3\ pos;\ \ \ \ \textcolor{comment}{//\ 位置}}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ D3DXCOLOR\ col;\ \ \ \ \ \ \textcolor{comment}{//\ 色}}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ fRadius;\ \ \ \ \ \ \textcolor{comment}{//\ 半径}}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ fSpeed;\ \ \ \ \ \ \ \textcolor{comment}{//\ 速さ}}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ nAngle;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 放射範囲}}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ nLife;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 寿命}}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ nNumParticle;\ \ \ \textcolor{comment}{//\ 粒子の数}}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ nTime;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 発生させる時間}}
+\DoxyCodeLine{00041\ \ \ \ \ \};}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ CParticle3D();}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~CParticle3D();}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{virtual}\ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override}\ =\ 0;}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{void}\ SetParticle(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fSpeed,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nLife,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nNumParticle,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nTime,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nAngle);}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{int}\ GetMaxLife(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_nMaxLife;\ \}}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{void}\ SetMaxLife(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nMaxLife)\ \{\ m\_nMaxLife\ =\ nMaxLife;\ \}}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{void}\ SetInfo(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_c_particle3_d_1_1_info}{Info}}\ info)\ \{\ m\_Info\ =\ info;\ \}}
+\DoxyCodeLine{00056\ \ \ \ \ \mbox{\hyperlink{struct_c_particle3_d_1_1_info}{Info}}\ GetInfo(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_Info;\ \}}
+\DoxyCodeLine{00057\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00058\ \ \ \ \ \mbox{\hyperlink{struct_c_particle3_d_1_1_info}{Info}}\ m\_Info;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ パーティクルの情報}}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nMaxLife;\ \ \ \ \ \textcolor{comment}{//\ 最大のHP}}
+\DoxyCodeLine{00060\ \};}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00063\ \textcolor{comment}{//\ パーティクル3D(通常)クラスの定義}}
+\DoxyCodeLine{00064\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00065\ \textcolor{keyword}{class\ }CParticle3DNormal\ :\ \textcolor{keyword}{public}\ CParticle3D}
+\DoxyCodeLine{00066\ \{}
+\DoxyCodeLine{00067\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00068\ \ \ \ \ CParticle3DNormal();}
+\DoxyCodeLine{00069\ \ \ \ \ \string~CParticle3DNormal();}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keyword}{static}\ CParticle3DNormal*\ Create(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fRadius,\textcolor{keyword}{const}\ D3DXCOLOR\ col);}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordtype}{void}\ SetParam(CEffect3D::TYPE\ type);}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void})\textcolor{keyword}{\ override\ }\{\};}
+\DoxyCodeLine{00078\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00079\ \ \ \ \ CEffect3D::TYPE\ m\_type;}
+\DoxyCodeLine{00080\ \};}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

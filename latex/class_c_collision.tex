@@ -1,0 +1,48 @@
+\doxysection{CCollision Class Reference}
+\hypertarget{class_c_collision}{}\label{class_c_collision}\index{CCollision@{CCollision}}
+Inheritance diagram for CCollision\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_c_collision}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_collision_a6ae898afb7321e4cfb0c3705ac07ccac}\label{class_c_collision_a6ae898afb7321e4cfb0c3705ac07ccac} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+AABB} = 0
+, {\bfseries TYPE\+\_\+\+SPHERE}
+, {\bfseries TYPE\+\_\+\+FOV}
+, {\bfseries TYPE\+\_\+\+CAPSULE}
+, \newline
+{\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_collision_a12b090e8cffb4b53051aa858880a9a93}\label{class_c_collision_a12b090e8cffb4b53051aa858880a9a93} 
+{\bfseries CCollision} (TYPE type)
+\item 
+\Hypertarget{class_c_collision_aec74d5e71924fb9d13cdb66694a5d053}\label{class_c_collision_aec74d5e71924fb9d13cdb66694a5d053} 
+void {\bfseries Set\+Pos} (const D3\+DXVECTOR3 pos)
+\item 
+\Hypertarget{class_c_collision_ac789c826d4dda6fc3bebcc9c0d21f8a1}\label{class_c_collision_ac789c826d4dda6fc3bebcc9c0d21f8a1} 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\item 
+\Hypertarget{class_c_collision_abff01d0840a8ad9ef11731cb064c4741}\label{class_c_collision_abff01d0840a8ad9ef11731cb064c4741} 
+TYPE {\bfseries Get\+Type} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_collision_ad8d088910b14012fbd9311cd7c6b7750}\label{class_c_collision_ad8d088910b14012fbd9311cd7c6b7750} 
+static \mbox{\hyperlink{class_c_collision}{CCollision}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const TYPE type)
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Collision.\+h\item 
+Collision.\+cpp\end{DoxyCompactItemize}

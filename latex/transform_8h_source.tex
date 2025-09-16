@@ -1,0 +1,128 @@
+\doxysection{transform.\+h}
+\hypertarget{transform_8h_source}{}\label{transform_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ トランスフォームを制御する処理\ [transform.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//=================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_TRANSFORM\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_TRANSFORM\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}main.h"{}}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ 位置のクラスの定義}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00022\ \textcolor{keyword}{class\ }CPosition}
+\DoxyCodeLine{00023\ \{}
+\DoxyCodeLine{00024\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00025\ \ \ \ \ CPosition();}
+\DoxyCodeLine{00026\ \ \ \ \ \string~CPosition();}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ D3DXVECTOR3\ Get(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_pos;\ \}}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{void}\ Set(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos)\ \{\ m\_pos\ =\ pos;\ \}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{void}\ UpdatePosition(\textcolor{keyword}{const}\ D3DXVECTOR3\ move);}
+\DoxyCodeLine{00032\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00033\ \ \ \ \ D3DXVECTOR3\ m\_pos;\ \textcolor{comment}{//\ 位置}}
+\DoxyCodeLine{00034\ \};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00037\ \textcolor{comment}{//\ 回転のクラスの定義}}
+\DoxyCodeLine{00038\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00039\ \textcolor{keyword}{class\ }CRotation}
+\DoxyCodeLine{00040\ \{}
+\DoxyCodeLine{00041\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00042\ \ \ \ \ CRotation();}
+\DoxyCodeLine{00043\ \ \ \ \ \string~CRotation();}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ D3DXVECTOR3\ Get(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_rot;\ \}}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{void}\ Set(\textcolor{keyword}{const}\ D3DXVECTOR3\ rot)\ \{\ m\_rot\ =\ rot;\ \}}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{void}\ Add(\textcolor{keyword}{const}\ D3DXVECTOR3\ rot)\ \{\ m\_rot\ +=\ rot;\ \}}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{void}\ SetDest(\textcolor{keyword}{const}\ D3DXVECTOR3\ dest)\ \{\ m\_Dest\ =\ dest;\ \}}
+\DoxyCodeLine{00049\ \ \ \ \ D3DXVECTOR3\ GetDest(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_Dest;\ \}}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{void}\ SetSmoothAngle(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ coef);}
+\DoxyCodeLine{00051\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00052\ \ \ \ \ D3DXVECTOR3\ m\_rot;\ \ \ \ \ \textcolor{comment}{//\ 向き}}
+\DoxyCodeLine{00053\ \ \ \ \ D3DXVECTOR3\ m\_Dest;\ \textcolor{comment}{//\ 目的の向き}}
+\DoxyCodeLine{00054\ \};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00057\ \textcolor{comment}{//\ 移動のクラスの定義}}
+\DoxyCodeLine{00058\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00059\ \textcolor{keyword}{class\ }CVelocity}
+\DoxyCodeLine{00060\ \{}
+\DoxyCodeLine{00061\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00062\ \ \ \ \ CVelocity();}
+\DoxyCodeLine{00063\ \ \ \ \ \string~CVelocity();}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ D3DXVECTOR3\ Get(\textcolor{keywordtype}{void})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{void}\ Set(\textcolor{keyword}{const}\ D3DXVECTOR3\ move)\ \{\ m\_move\ =\ move;\ \}}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{void}\ Add(\textcolor{keyword}{const}\ D3DXVECTOR3\ move)\ \{\ m\_move\ +=\ move;\ \}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{void}\ SetInertia3D(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fcoef);}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordtype}{void}\ SetInertia2D(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fcoef);}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordtype}{void}\ Gravity(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ gravity);}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordtype}{void}\ Bound(D3DXVECTOR3\ nor,\ \textcolor{keywordtype}{float}\ coef\ =\ 0.8f);}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordtype}{void}\ Jump(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ jumpHeight);}
+\DoxyCodeLine{00074\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00075\ \ \ \ \ D3DXVECTOR3\ m\_move;\ \textcolor{comment}{//\ 移動量}}
+\DoxyCodeLine{00076\ \};}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00079\ \textcolor{comment}{//\ 大きさの(噂string~形)クラスの定義}}
+\DoxyCodeLine{00080\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00081\ \textcolor{keyword}{class\ }CSizeCircle}
+\DoxyCodeLine{00082\ \{}
+\DoxyCodeLine{00083\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00084\ \ \ \ \ CSizeCircle();}
+\DoxyCodeLine{00085\ \ \ \ \ \string~CSizeCircle();}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordtype}{float}\ Get(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_fRadius;\ \}}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordtype}{void}\ Set(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fRadius)\ \{\ m\_fRadius\ =\ fRadius;\ \}}
+\DoxyCodeLine{00089\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fRadius;\ \textcolor{comment}{//\ 大きさ}}
+\DoxyCodeLine{00091\ \};}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00094\ \textcolor{comment}{//\ 大きさの2Dクラスの定義}}
+\DoxyCodeLine{00095\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00096\ \textcolor{keyword}{class\ }CSize2D}
+\DoxyCodeLine{00097\ \{}
+\DoxyCodeLine{00098\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00099\ \ \ \ \ CSize2D();}
+\DoxyCodeLine{00100\ \ \ \ \ \string~CSize2D();}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \ \ D3DXVECTOR2\ Get(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ D3DXVECTOR2(m\_fWidth,\ m\_fHeight);\ \}}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordtype}{void}\ Set(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fWidth,\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fHeight)\ \{\ m\_fWidth\ =\ fWidth\ ,\ m\_fHeight\ =\ fHeight;\ \}}
+\DoxyCodeLine{00104\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fWidth,m\_fHeight;\ \textcolor{comment}{//\ 大きさ}}
+\DoxyCodeLine{00106\ \};}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00109\ \textcolor{comment}{//\ 大きさの3Dクラスの定義}}
+\DoxyCodeLine{00110\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00111\ \textcolor{keyword}{class\ }CSize3D}
+\DoxyCodeLine{00112\ \{}
+\DoxyCodeLine{00113\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00114\ \ \ \ \ CSize3D();}
+\DoxyCodeLine{00115\ \ \ \ \ \string~CSize3D();}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \ \ \ \ D3DXVECTOR3\ Get(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ GetVector;\ \}}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keywordtype}{void}\ Set(\textcolor{keyword}{const}\ D3DXVECTOR3\ SIze)\ \{\ GetVector\ =\ SIze;\ \}}
+\DoxyCodeLine{00119\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00120\ \ \ \ \ D3DXVECTOR3\ GetVector;}
+\DoxyCodeLine{00121\ \};}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,185 @@
+\doxysection{CMesh Class Reference}
+\hypertarget{class_c_mesh}{}\label{class_c_mesh}\index{CMesh@{CMesh}}
+Inheritance diagram for CMesh\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.592592cm]{class_c_mesh}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_mesh_adf0d9fb0f5d4c40cd545acab990a8d71}\label{class_c_mesh_adf0d9fb0f5d4c40cd545acab990a8d71} 
+{\bfseries CMesh} (int n\+Priority=4)
+\item 
+virtual HRESULT \mbox{\hyperlink{class_c_mesh_aaf2ce7eb507170c625d02731f90ba34e}{Init}} (void)
+\item 
+virtual void \mbox{\hyperlink{class_c_mesh_a254c59dd7dda64c4144bce55d3668779}{Uninit}} (void)
+\item 
+virtual void \mbox{\hyperlink{class_c_mesh_a52d770f4105a05c9cbff6cda735ee03b}{Update}} (void)=0
+\item 
+virtual void \mbox{\hyperlink{class_c_mesh_a8a756d13d7a999c70c556f44ba2467ab}{Draw}} (void)
+\item 
+\Hypertarget{class_c_mesh_a907c1c9b7ce5f71371f6efa2ae241549}\label{class_c_mesh_a907c1c9b7ce5f71371f6efa2ae241549} 
+void {\bfseries Set\+Up\+Draw} (void)
+\item 
+\Hypertarget{class_c_mesh_a4481c46d65beccfda2f02c4085c39481}\label{class_c_mesh_a4481c46d65beccfda2f02c4085c39481} 
+int {\bfseries Get\+SegH} (void) const
+\item 
+\Hypertarget{class_c_mesh_a1c640f04b032908dfd4bf65a1c25886b}\label{class_c_mesh_a1c640f04b032908dfd4bf65a1c25886b} 
+int {\bfseries Get\+SegV} (void) const
+\item 
+\Hypertarget{class_c_mesh_aa6201522a99680cc3882633dcfc6107d}\label{class_c_mesh_aa6201522a99680cc3882633dcfc6107d} 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\item 
+\Hypertarget{class_c_mesh_ac3e168f955f3b90c33bc7c191d08a3e3}\label{class_c_mesh_ac3e168f955f3b90c33bc7c191d08a3e3} 
+D3\+DXVECTOR3 {\bfseries Normalize\+Normal} (const int n\+Idx)
+\item 
+\Hypertarget{class_c_mesh_a16adb42450eec1df9bb39849eccc309b}\label{class_c_mesh_a16adb42450eec1df9bb39849eccc309b} 
+void {\bfseries Set\+Position} (const D3\+DXVECTOR3 pos)
+\item 
+\Hypertarget{class_c_mesh_a0ad72e807f4dc1e67bcf3132ccaf68c2}\label{class_c_mesh_a0ad72e807f4dc1e67bcf3132ccaf68c2} 
+void {\bfseries Set\+Rotation} (const D3\+DXVECTOR3 rot)
+\item 
+\Hypertarget{class_c_mesh_a1112649fed9fd9dd23789388dc9fc9f5}\label{class_c_mesh_a1112649fed9fd9dd23789388dc9fc9f5} 
+void {\bfseries Update\+Position} (const D3\+DXVECTOR3 speed)
+\item 
+\Hypertarget{class_c_mesh_a37b579545c162fb5a4dad99c1106c832}\label{class_c_mesh_a37b579545c162fb5a4dad99c1106c832} 
+void {\bfseries Update\+Rotation} (const D3\+DXVECTOR3 speed)
+\item 
+\Hypertarget{class_c_mesh_a3a601a989c31cb37c43150159ab96f74}\label{class_c_mesh_a3a601a989c31cb37c43150159ab96f74} 
+void {\bfseries Set\+Vtx\+Buffer} (const D3\+DXVECTOR3 pos, const int n\+Idx, const D3\+DXVECTOR2 tex, const D3\+DXVECTOR3 nor=\{ 0.\+0f, 1.\+0f, 0.\+0f \}, const D3\+DXCOLOR col=Const\+::\+WHITE)
+\item 
+\Hypertarget{class_c_mesh_a8d69c792d46de302c51bf5fee7f2c85e}\label{class_c_mesh_a8d69c792d46de302c51bf5fee7f2c85e} 
+void {\bfseries Set\+Index\+Buffer} (const WORD Idx, const int n\+Cnt)
+\item 
+\Hypertarget{class_c_mesh_aa5d0f35a43aefa47f32cbfa4bacb657a}\label{class_c_mesh_aa5d0f35a43aefa47f32cbfa4bacb657a} 
+void {\bfseries Set\+Texture\+ID} (const char \texorpdfstring{$\ast$}{*}p\+Texture\+Name=NULL)
+\item 
+\Hypertarget{class_c_mesh_a48bb168a4880abceda91e423ba2b90fb}\label{class_c_mesh_a48bb168a4880abceda91e423ba2b90fb} 
+void {\bfseries Set\+Vtx\+Element} (const int vertex, const int polygon, const int index)
+\item 
+\Hypertarget{class_c_mesh_a936c9adb1fdb8e562cd4339f1d52357e}\label{class_c_mesh_a936c9adb1fdb8e562cd4339f1d52357e} 
+void {\bfseries Set\+Segment} (const int n\+SegH, const int n\+SegV)
+\item 
+\Hypertarget{class_c_mesh_a922b181a0bba793e88ed9e22ee4b77a9}\label{class_c_mesh_a922b181a0bba793e88ed9e22ee4b77a9} 
+void {\bfseries Set\+Matrix} (void)
+\item 
+\Hypertarget{class_c_mesh_a96fad3ac63b410cd83c56511a6985e75}\label{class_c_mesh_a96fad3ac63b410cd83c56511a6985e75} 
+D3\+DXVECTOR3 {\bfseries Get\+Vtx\+Pos} (const int n\+Idx)
+\item 
+\Hypertarget{class_c_mesh_a9aff7cc10f24d621759e7b5ed62a6ad6}\label{class_c_mesh_a9aff7cc10f24d621759e7b5ed62a6ad6} 
+int {\bfseries Get\+Index} (const int n\+Idx)
+\item 
+\Hypertarget{class_c_mesh_af8c458d267fed7c867102acc430cdc14}\label{class_c_mesh_af8c458d267fed7c867102acc430cdc14} 
+D3\+DXCOLOR {\bfseries Get\+Color} (const int n\+Idx)
+\item 
+\Hypertarget{class_c_mesh_a5ada4bbb642f1b2fe273ee6624b24708}\label{class_c_mesh_a5ada4bbb642f1b2fe273ee6624b24708} 
+void {\bfseries Set\+Vtx\+Pos} (const D3\+DXVECTOR3 pos, const int n\+Idx)
+\item 
+\Hypertarget{class_c_mesh_a949e1b37f8d0234c73ea778cc5beab14}\label{class_c_mesh_a949e1b37f8d0234c73ea778cc5beab14} 
+void {\bfseries Set\+Normal} (const D3\+DXVECTOR3 nor, const int n\+Idx)
+\item 
+\Hypertarget{class_c_mesh_a5787e5e9c85ca2a3942dc07eff7b6f1d}\label{class_c_mesh_a5787e5e9c85ca2a3942dc07eff7b6f1d} 
+void {\bfseries Set\+Vtx\+Color} (const D3\+DXCOLOR col, const int n\+Idx)
+\item 
+\Hypertarget{class_c_mesh_a75e0a330c19dcfdfdbf2878ac2dcd6c9}\label{class_c_mesh_a75e0a330c19dcfdfdbf2878ac2dcd6c9} 
+void {\bfseries Set\+Texture} (const D3\+DXVECTOR2 tex, const int n\+Idx)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_mesh_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_mesh_a8a756d13d7a999c70c556f44ba2467ab}\index{CMesh@{CMesh}!Draw@{Draw}}
+\index{Draw@{Draw}!CMesh@{CMesh}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_mesh_a8a756d13d7a999c70c556f44ba2467ab} 
+void CMesh\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_mesh_aaf2ce7eb507170c625d02731f90ba34e}\index{CMesh@{CMesh}!Init@{Init}}
+\index{Init@{Init}!CMesh@{CMesh}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_mesh_aaf2ce7eb507170c625d02731f90ba34e} 
+HRESULT CMesh\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_mesh_a254c59dd7dda64c4144bce55d3668779}\index{CMesh@{CMesh}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CMesh@{CMesh}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_mesh_a254c59dd7dda64c4144bce55d3668779} 
+void CMesh\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+\Hypertarget{class_c_mesh_a52d770f4105a05c9cbff6cda735ee03b}\index{CMesh@{CMesh}!Update@{Update}}
+\index{Update@{Update}!CMesh@{CMesh}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_mesh_a52d770f4105a05c9cbff6cda735ee03b} 
+virtual void CMesh\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_object}{CObject}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+mesh.\+h\item 
+mesh.\+cpp\end{DoxyCompactItemize}

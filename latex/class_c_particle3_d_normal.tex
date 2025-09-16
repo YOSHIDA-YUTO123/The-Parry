@@ -1,0 +1,141 @@
+\doxysection{CParticle3\+DNormal Class Reference}
+\hypertarget{class_c_particle3_d_normal}{}\label{class_c_particle3_d_normal}\index{CParticle3DNormal@{CParticle3DNormal}}
+Inheritance diagram for CParticle3\+DNormal\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_c_particle3_d_normal}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_particle3_d_normal_ad8542d6eac5f0e86db76aa13470a15ff}\label{class_c_particle3_d_normal_ad8542d6eac5f0e86db76aa13470a15ff} 
+void {\bfseries Set\+Param} (CEffect3\+D\+::\+TYPE type)
+\item 
+HRESULT \mbox{\hyperlink{class_c_particle3_d_normal_a376d0993c863e032ca699c327faaca7e}{Init}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_particle3_d_normal_a5ddf79b251241bf8d53151e3bec42826}{Uninit}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_particle3_d_normal_aa58edb9864c42e080735280d9a45244c}{Update}} (void) override
+\item 
+void \mbox{\hyperlink{class_c_particle3_d_normal_a804dea9310bf1e93c2f2aa47b6b0adeb}{Draw}} (void) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_particle3_d}{CParticle3D}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Set\+Particle} (const float f\+Speed, const int n\+Life, const int n\+Num\+Particle, const int n\+Time, const int n\+Angle)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_particle3_d_normal_abe2c540f76e32a7ef77f4cba66194006}\label{class_c_particle3_d_normal_abe2c540f76e32a7ef77f4cba66194006} 
+static \mbox{\hyperlink{class_c_particle3_d_normal}{CParticle3\+DNormal}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const float f\+Radius, const D3\+DXCOLOR col)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_particle3_d}{CParticle3D}}}
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries Get\+Max\+Life} (void) const
+\item 
+void {\bfseries Set\+Max\+Life} (const int n\+Max\+Life)
+\item 
+void {\bfseries Set\+Info} (const \mbox{\hyperlink{struct_c_particle3_d_1_1_info}{Info}} info)
+\item 
+\mbox{\hyperlink{struct_c_particle3_d_1_1_info}{Info}} {\bfseries Get\+Info} (void) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_particle3_d_normal_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_particle3_d_normal_a804dea9310bf1e93c2f2aa47b6b0adeb}\index{CParticle3DNormal@{CParticle3DNormal}!Draw@{Draw}}
+\index{Draw@{Draw}!CParticle3DNormal@{CParticle3DNormal}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_particle3_d_normal_a804dea9310bf1e93c2f2aa47b6b0adeb} 
+void CParticle3\+DNormal\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_particle3_d}{CParticle3D}}.
+
+\Hypertarget{class_c_particle3_d_normal_a376d0993c863e032ca699c327faaca7e}\index{CParticle3DNormal@{CParticle3DNormal}!Init@{Init}}
+\index{Init@{Init}!CParticle3DNormal@{CParticle3DNormal}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_particle3_d_normal_a376d0993c863e032ca699c327faaca7e} 
+HRESULT CParticle3\+DNormal\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_particle3_d}{CParticle3D}}.
+
+\Hypertarget{class_c_particle3_d_normal_a5ddf79b251241bf8d53151e3bec42826}\index{CParticle3DNormal@{CParticle3DNormal}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CParticle3DNormal@{CParticle3DNormal}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_particle3_d_normal_a5ddf79b251241bf8d53151e3bec42826} 
+void CParticle3\+DNormal\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_particle3_d}{CParticle3D}}.
+
+\Hypertarget{class_c_particle3_d_normal_aa58edb9864c42e080735280d9a45244c}\index{CParticle3DNormal@{CParticle3DNormal}!Update@{Update}}
+\index{Update@{Update}!CParticle3DNormal@{CParticle3DNormal}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_particle3_d_normal_aa58edb9864c42e080735280d9a45244c} 
+void CParticle3\+DNormal\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_particle3_d}{CParticle3D}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+particle.\+h\item 
+particle.\+cpp\end{DoxyCompactItemize}

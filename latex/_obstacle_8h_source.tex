@@ -1,0 +1,125 @@
+\doxysection{Obstacle.\+h}
+\hypertarget{_obstacle_8h_source}{}\label{_obstacle_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//==============================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ 障害物\ [obstacle.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//==============================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//**********************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//**********************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_OBSTACLE\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_OBSTACLE\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//**********************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//**********************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}objectX.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include<memory>}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{comment}{//**********************************************}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ 前方宣言}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//**********************************************}}
+\DoxyCodeLine{00023\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_velocity}{CVelocity}};}
+\DoxyCodeLine{00024\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_collision}{CCollision}};}
+\DoxyCodeLine{00025\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_collision_a_a_b_b}{CCollisionAABB}};}
+\DoxyCodeLine{00026\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_collider_a_a_b_b}{CColliderAABB}};}
+\DoxyCodeLine{00027\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_shadow_s}{CShadowS}};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{comment}{//**********************************************}}
+\DoxyCodeLine{00030\ \textcolor{comment}{//\ 障害物のクラスの定義}}
+\DoxyCodeLine{00031\ \textcolor{comment}{//**********************************************}}
+\DoxyCodeLine{00032\ \textcolor{keyword}{class\ }CObstacle\ :\ \textcolor{keyword}{public}\ CObjectX}
+\DoxyCodeLine{00033\ \{}
+\DoxyCodeLine{00034\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{comment}{//\ 障害物の距離}}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00038\ \ \ \ \ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ TYPE\_SPIKE\_TRAP\ =\ 0,\ \textcolor{comment}{//\ スパイクトラップ}}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ TYPE\_TNT\_BARREL,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ 爆発樽}}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ TYPE\_MAX}
+\DoxyCodeLine{00042\ \ \ \ \ \}TYPE;}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ CObstacle(\textcolor{keyword}{const}\ TYPE\ type);}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~CObstacle();}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{virtual}\ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ Collision(\mbox{\hyperlink{class_c_collider_a_a_b_b}{CColliderAABB}}*\ pCollider,D3DXVECTOR3\ *pushPos)\ =\ 0;}
+\DoxyCodeLine{00052\ \ \ \ \ TYPE\ GetType(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_type;\ \}}
+\DoxyCodeLine{00053\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00054\ \ \ \ \ \mbox{\hyperlink{class_c_collider_a_a_b_b}{CColliderAABB}}*\ GetCollider(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_pAABB.get();\ \}}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{void}\ CreateCollider(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00056\ \ \ \ \ \mbox{\hyperlink{class_c_velocity}{CVelocity}}*\ GetMove(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_pMove.get();\ \}}
+\DoxyCodeLine{00057\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00058\ \ \ \ \ std::unique\_ptr<CVelocity>\ m\_pMove;\ \ \ \ \ \ \textcolor{comment}{//\ 移動量}}
+\DoxyCodeLine{00059\ \ \ \ \ std::unique\_ptr<CColliderAABB>\ m\_pAABB;\ \ \textcolor{comment}{//\ 矩形のコライソ_ー}}
+\DoxyCodeLine{00060\ \ \ \ \ TYPE\ m\_type;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 種類}}
+\DoxyCodeLine{00061\ \ \ \ \ D3DXVECTOR3\ m\_posOld;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 前回の位置}}
+\DoxyCodeLine{00062\ \ \ \ \ D3DXVECTOR3\ m\_CenterPos;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 申string^ん中の位置}}
+\DoxyCodeLine{00063\ \};}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{comment}{//**********************************************}}
+\DoxyCodeLine{00066\ \textcolor{comment}{//\ スパイクトラップクラスの定義}}
+\DoxyCodeLine{00067\ \textcolor{comment}{//**********************************************}}
+\DoxyCodeLine{00068\ \textcolor{keyword}{class\ }CSpikeTrap\ :\ \textcolor{keyword}{public}\ CObstacle}
+\DoxyCodeLine{00069\ \{}
+\DoxyCodeLine{00070\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00071\ \ \ \ \ CSpikeTrap();}
+\DoxyCodeLine{00072\ \ \ \ \ \string~CSpikeTrap();}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keyword}{static}\ CSpikeTrap*\ Create(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ rot,\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nDamageFace);}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordtype}{bool}\ Collision(\mbox{\hyperlink{class_c_collider_a_a_b_b}{CColliderAABB}}*\ pCollider,\ D3DXVECTOR3*\ pushPos)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00081\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nDamageFace;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ソ_メージを食らう面}}
+\DoxyCodeLine{00083\ \};}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \textcolor{comment}{//**********************************************}}
+\DoxyCodeLine{00086\ \textcolor{comment}{//\ 爆発樽クラスの定義}}
+\DoxyCodeLine{00087\ \textcolor{comment}{//**********************************************}}
+\DoxyCodeLine{00088\ \textcolor{keyword}{class\ }CTNTBarrel\ :\ \textcolor{keyword}{public}\ CObstacle}
+\DoxyCodeLine{00089\ \{}
+\DoxyCodeLine{00090\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00091\ \ \ \ \ CTNTBarrel();}
+\DoxyCodeLine{00092\ \ \ \ \ \string~CTNTBarrel();}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keyword}{static}\ CTNTBarrel*\ Create(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ DestPos);}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordtype}{bool}\ Collision(\mbox{\hyperlink{class_c_collider_a_a_b_b}{CColliderAABB}}*\ pCollider,\ D3DXVECTOR3*\ pushPos)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00101\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordtype}{void}\ SetQuaternion(\textcolor{keywordtype}{void});\ \textcolor{comment}{//\ クォーソstring^ニオンの設定処理}}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordtype}{void}\ LandingShake(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos);\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 着地した時の処理}}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \ \ \ \ \mbox{\hyperlink{class_c_shadow_s}{CShadowS}}*\ m\_pShadow;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ 影クラスへのポインソstring^}}
+\DoxyCodeLine{00106\ \ \ \ \ D3DXQUATERNION\ m\_quat;\ \ \ \ \ \ \textcolor{comment}{//\ クォーソstring^ニオン}}
+\DoxyCodeLine{00107\ \ \ \ \ D3DXMATRIX\ m\_mtxRot;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ 回転行列}}
+\DoxyCodeLine{00108\ \ \ \ \ D3DXVECTOR3\ m\_ShadowSize;\ \ \ \textcolor{comment}{//\ 影の大きさ}}
+\DoxyCodeLine{00109\ \ \ \ \ D3DXVECTOR3\ m\_axis;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 回転軸}}
+\DoxyCodeLine{00110\ \ \ \ \ D3DXVECTOR3\ m\_DestPos;\ \ \ \ \ \ \textcolor{comment}{//\ 目的の位置}}
+\DoxyCodeLine{00111\ \ \ \ \ D3DXVECTOR3\ m\_StopPos;\ \ \ \ \ \ \textcolor{comment}{//\ 停蚕string~する位置}}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fCircumference;\ \ \ \ \ \textcolor{comment}{//\ 半径}}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fDestValueRot;\ \ \ \ \ \ \textcolor{comment}{//\ 目的の回転量}}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fValueRot;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 回転量}}
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nShakeTime;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 着地してから揺れる時間}}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_bLanding;\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 着地したかどうか}}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_bFirstLanding;\ \ \ \ \ \ \ \textcolor{comment}{//\ 最初の着地をしたかどうか}}
+\DoxyCodeLine{00118\ \};}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

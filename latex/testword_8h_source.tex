@@ -1,0 +1,46 @@
+\doxysection{testword.\+h}
+\hypertarget{testword_8h_source}{}\label{testword_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ 文字テスト\ [testword.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:\ YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_TESTWORD\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_TESTWORD\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}main.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include"{}object.h"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include"{}word.h"{}}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ 文字クラスの定義}}
+\DoxyCodeLine{00023\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00024\ \textcolor{keyword}{class\ }CTestWord\ :\ \textcolor{keyword}{public}\ CObject}
+\DoxyCodeLine{00025\ \{}
+\DoxyCodeLine{00026\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00027\ \ \ \ \ CTestWord();}
+\DoxyCodeLine{00028\ \ \ \ \ \string~CTestWord();}
+\DoxyCodeLine{00029\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keyword}{static}\ CTestWord*\ Create(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nWord,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fWidth,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fHeight);}
+\DoxyCodeLine{00034\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00035\ \ \ \ \ \mbox{\hyperlink{class_c_word}{CWord}}*\ m\_pWord;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ 文字のクラスへのポインソstring^}}
+\DoxyCodeLine{00036\ \ \ \ \ D3DXVECTOR3\ m\_pos;\ \ \textcolor{comment}{//\ 位置}}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fWidth;\ \ \ \ \ \textcolor{comment}{//\ 横幅}}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fHeight;\ \ \ \ \textcolor{comment}{//\ 高さ}}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nWord;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ 文字}}
+\DoxyCodeLine{00040\ \};}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,171 @@
+\doxysection{CResult\+Menu Class Reference}
+\hypertarget{class_c_result_menu}{}\label{class_c_result_menu}\index{CResultMenu@{CResultMenu}}
+Inheritance diagram for CResult\+Menu\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=4.000000cm]{class_c_result_menu}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_result_menu_a3f781b8dc8ff7fdeb3131fa66e8678b1}\label{class_c_result_menu_a3f781b8dc8ff7fdeb3131fa66e8678b1} 
+enum {\bfseries MENU} \{ {\bfseries MENU\+\_\+\+RETRY} = 0
+, {\bfseries MENU\+\_\+\+QUIT}
+, {\bfseries MENU\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_result_menu_a3458cf2ca154a12ea190f891d685296e}\label{class_c_result_menu_a3458cf2ca154a12ea190f891d685296e} 
+{\bfseries CResult\+Menu} (const MENU menu)
+\item 
+virtual HRESULT \mbox{\hyperlink{class_c_result_menu_a093b9f6c9dfd00a812d8af0633b71a58}{Init}} (void) override
+\item 
+virtual void \mbox{\hyperlink{class_c_result_menu_a0d8609821f7e00cd69355f0e41910dfe}{Uninit}} (void) override
+\item 
+virtual void \mbox{\hyperlink{class_c_result_menu_a31827d34d98c9c3852fdb8c938769760}{Update}} (void) override
+\item 
+virtual void \mbox{\hyperlink{class_c_result_menu_a9f68ae8353b3edc51842865858a17e50}{Draw}} (void) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object2_d}{CObject2D}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject2D} (int n\+Priority=7)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\item 
+D3\+DXVECTOR2 {\bfseries Get\+Size} (void) const
+\item 
+void {\bfseries Set\+Position} (const D3\+DXVECTOR3 pos)
+\item 
+void {\bfseries Set\+Rotaition} (const D3\+DXVECTOR3 rot)
+\item 
+void {\bfseries Set\+Vtx} (const D3\+DXCOLOR col)
+\item 
+void {\bfseries Set\+Size} (const D3\+DXVECTOR2 Size)
+\item 
+void {\bfseries Set\+Size} (const float f\+Width, const float f\+Height)
+\item 
+void {\bfseries Set\+Size} (const float left\+Width, const float right\+Wdth, const float top\+Height, const float buttom)
+\item 
+void {\bfseries Update\+Vertex} (void)
+\item 
+void {\bfseries Set\+Color} (const D3\+DXCOLOR col)
+\item 
+void {\bfseries Set\+Texture\+ID} (const char \texorpdfstring{$\ast$}{*}p\+Texture\+Name=NULL)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_result_menu_a6bf21be35f9eb5f10c307ee8e04f9dd9}\label{class_c_result_menu_a6bf21be35f9eb5f10c307ee8e04f9dd9} 
+static \mbox{\hyperlink{class_c_result_menu}{CResult\+Menu}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const D3\+DXVECTOR2 Size, const MENU menu)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object2_d}{CObject2D}}}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_c_object2_d}{CObject2D}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const float f\+Width, const float f\+Height, const D3\+DXVECTOR3 pos, const D3\+DXVECTOR3 rot=Const\+::\+VEC3\+\_\+\+NULL)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_result_menu_a6b721c926172f4f0e482db0a22f39a94}\label{class_c_result_menu_a6b721c926172f4f0e482db0a22f39a94} 
+MENU {\bfseries Get\+Menu} (void) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_result_menu_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_result_menu_a9f68ae8353b3edc51842865858a17e50}\index{CResultMenu@{CResultMenu}!Draw@{Draw}}
+\index{Draw@{Draw}!CResultMenu@{CResultMenu}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_result_menu_a9f68ae8353b3edc51842865858a17e50} 
+void CResult\+Menu\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object2_d}{CObject2D}}.
+
+\Hypertarget{class_c_result_menu_a093b9f6c9dfd00a812d8af0633b71a58}\index{CResultMenu@{CResultMenu}!Init@{Init}}
+\index{Init@{Init}!CResultMenu@{CResultMenu}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_result_menu_a093b9f6c9dfd00a812d8af0633b71a58} 
+HRESULT CResult\+Menu\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object2_d}{CObject2D}}.
+
+\Hypertarget{class_c_result_menu_a0d8609821f7e00cd69355f0e41910dfe}\index{CResultMenu@{CResultMenu}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CResultMenu@{CResultMenu}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_result_menu_a0d8609821f7e00cd69355f0e41910dfe} 
+void CResult\+Menu\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object2_d}{CObject2D}}.
+
+\Hypertarget{class_c_result_menu_a31827d34d98c9c3852fdb8c938769760}\index{CResultMenu@{CResultMenu}!Update@{Update}}
+\index{Update@{Update}!CResultMenu@{CResultMenu}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_result_menu_a31827d34d98c9c3852fdb8c938769760} 
+void CResult\+Menu\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_object2_d}{CObject2D}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Result\+Menu.\+h\item 
+Result\+Menu.\+cpp\end{DoxyCompactItemize}

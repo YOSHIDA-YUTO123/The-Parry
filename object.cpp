@@ -20,9 +20,7 @@ using namespace Const; // 名前空間Constを使用
 //***************************************************
 CObject* CObject::m_pTop[NUM_PRIORITY] = { nullptr }; // 先頭オブジェクトへのポインタ
 CObject* CObject::m_pCur[NUM_PRIORITY] = { nullptr }; // 最後尾オブジェクトへのポインタ
-
-//CObject* CObject::m_apObject[MAX_OBJECT][NUM_PRIORITY] = {};	// オブジェクトのポインタ
-int CObject::m_nNumAll[NUM_PRIORITY] = { NULL };				// オブジェクトの総数
+int CObject::m_nNumAll[NUM_PRIORITY] = { NULL };	  // オブジェクトの総数
 
 //===================================================
 // コンストラクタ(オーバーロード)

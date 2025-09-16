@@ -1,0 +1,128 @@
+\doxysection{CEnemy\+State Class Reference}
+\hypertarget{class_c_enemy_state}{}\label{class_c_enemy_state}\index{CEnemyState@{CEnemyState}}
+Inheritance diagram for CEnemy\+State\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=12.000000cm]{class_c_enemy_state}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_enemy_state_af3e7578c92f591f4d1ca34114376c3f4}\label{class_c_enemy_state_af3e7578c92f591f4d1ca34114376c3f4} 
+enum {\bfseries ID} \{ \newline
+{\bfseries ID\+\_\+\+BASE} = 0
+, {\bfseries ID\+\_\+\+IDLE}
+, {\bfseries ID\+\_\+\+MOVE}
+, {\bfseries ID\+\_\+\+BACKSTEP}
+, \newline
+{\bfseries ID\+\_\+\+LANDING}
+, {\bfseries ID\+\_\+\+SMASH}
+, {\bfseries ID\+\_\+\+IMPACT}
+, {\bfseries ID\+\_\+\+DAMAGEL}
+, \newline
+{\bfseries ID\+\_\+\+ROAR}
+, {\bfseries ID\+\_\+\+DASH}
+, {\bfseries ID\+\_\+\+SPIN}
+, {\bfseries ID\+\_\+\+HIT}
+, \newline
+{\bfseries ID\+\_\+\+DAMAGES}
+, {\bfseries ID\+\_\+\+GUARD}
+, {\bfseries ID\+\_\+\+STEP}
+, {\bfseries ID\+\_\+\+SWING}
+, \newline
+{\bfseries ID\+\_\+\+JUMPATTACK}
+, {\bfseries ID\+\_\+\+DEATH}
+, {\bfseries ID\+\_\+\+DOWN}
+, {\bfseries ID\+\_\+\+AWAY}
+, \newline
+{\bfseries ID\+\_\+\+SUPER\+\_\+\+HIT}
+, {\bfseries ID\+\_\+\+COMBO\+\_\+\+DAMAGE}
+, {\bfseries ID\+\_\+\+RIGHT\+\_\+\+MOVE}
+, {\bfseries ID\+\_\+\+LEFT\+\_\+\+MOVE}
+, \newline
+{\bfseries ID\+\_\+\+RUSH}
+, {\bfseries ID\+\_\+\+ENDRUSH}
+, {\bfseries ID\+\_\+\+BACKKICK}
+, {\bfseries ID\+\_\+\+LOOK\+\_\+\+BACKL}
+, \newline
+{\bfseries ID\+\_\+\+LOOK\+\_\+\+BACKR}
+, {\bfseries ID\+\_\+\+SWEEP\+\_\+\+RIGHT}
+, {\bfseries ID\+\_\+\+SWEEP\+\_\+\+LEFT}
+, {\bfseries ID\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_enemy_state_a3ac49806748cbe252f6b2f80aad199e6}\label{class_c_enemy_state_a3ac49806748cbe252f6b2f80aad199e6} 
+{\bfseries CEnemy\+State} (ID Id)
+\item 
+virtual void \mbox{\hyperlink{class_c_enemy_state_a96cd394a6eb45f4e8f3fda5ff820fa51}{Init}} (void)
+\item 
+virtual void \mbox{\hyperlink{class_c_enemy_state_ae29e2869a217d34acc64999e45e23d73}{Update}} (void)
+\item 
+virtual void \mbox{\hyperlink{class_c_enemy_state_a289413c48284f2326b9bfd94f9e8d491}{Uninit}} (void)
+\item 
+virtual int \mbox{\hyperlink{class_c_enemy_state_aa6c36c45fd506766ac8f745471f15e17}{Get\+ID}} (void) const
+\item 
+\Hypertarget{class_c_enemy_state_a8f5069c94214a0e473178d44185e776a}\label{class_c_enemy_state_a8f5069c94214a0e473178d44185e776a} 
+void {\bfseries Set\+Owner} (\mbox{\hyperlink{class_c_enemy}{CEnemy}} \texorpdfstring{$\ast$}{*}p\+Enemy)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_enemy_state_acb9da77b55165d3e3816d49dbb68cb02}\label{class_c_enemy_state_acb9da77b55165d3e3816d49dbb68cb02} 
+\mbox{\hyperlink{class_c_enemy}{CEnemy}} \texorpdfstring{$\ast$}{*} {\bfseries Get\+Enemy} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_enemy_state_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_enemy_state_aa6c36c45fd506766ac8f745471f15e17}\index{CEnemyState@{CEnemyState}!GetID@{GetID}}
+\index{GetID@{GetID}!CEnemyState@{CEnemyState}}
+\doxysubsubsection{\texorpdfstring{GetID()}{GetID()}}
+{\footnotesize\ttfamily \label{class_c_enemy_state_aa6c36c45fd506766ac8f745471f15e17} 
+virtual int CEnemy\+State\+::\+Get\+ID (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_state_base}{CState\+Base}}.
+
+\Hypertarget{class_c_enemy_state_a96cd394a6eb45f4e8f3fda5ff820fa51}\index{CEnemyState@{CEnemyState}!Init@{Init}}
+\index{Init@{Init}!CEnemyState@{CEnemyState}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_enemy_state_a96cd394a6eb45f4e8f3fda5ff820fa51} 
+virtual void CEnemy\+State\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_state_base}{CState\+Base}}.
+
+\Hypertarget{class_c_enemy_state_a289413c48284f2326b9bfd94f9e8d491}\index{CEnemyState@{CEnemyState}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CEnemyState@{CEnemyState}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_enemy_state_a289413c48284f2326b9bfd94f9e8d491} 
+virtual void CEnemy\+State\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_state_base}{CState\+Base}}.
+
+\Hypertarget{class_c_enemy_state_ae29e2869a217d34acc64999e45e23d73}\index{CEnemyState@{CEnemyState}!Update@{Update}}
+\index{Update@{Update}!CEnemyState@{CEnemyState}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_enemy_state_ae29e2869a217d34acc64999e45e23d73} 
+virtual void CEnemy\+State\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_c_state_base}{CState\+Base}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Enemy\+State.\+h\item 
+Enemy\+State.\+cpp\end{DoxyCompactItemize}

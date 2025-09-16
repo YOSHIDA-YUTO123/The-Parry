@@ -1,0 +1,76 @@
+\doxysection{character2\+D.\+h}
+\hypertarget{character2_d_8h_source}{}\label{character2_d_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ キャラクソstring^ー\ [character.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_CHARACTER2D\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_CHARACTER2D\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}main.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include"{}object2D.h"{}}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ キャラクソstring^ークラスの定義}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00023\ \textcolor{keyword}{class\ }CCharacter2D\ :\ \textcolor{keyword}{public}\ CObject2D}
+\DoxyCodeLine{00024\ \{}
+\DoxyCodeLine{00025\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00026\ \ \ \ \ CCharacter2D(\textcolor{keywordtype}{int}\ nPriority\ =\ 5);}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~CCharacter2D();}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{virtual}\ HRESULT\ Init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ SetTexture(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ pFilePath);}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{void}\ Flash(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nCount,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fSpeed);}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{bool}\ HitCharacter(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nDamage);}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00038\ \ \ \ \ D3DXCOLOR\ m\_col;\ \ \ \ \textcolor{comment}{//\ 色}}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nIdxTexture;\ \ \textcolor{comment}{//\ テクスチャのインデックス}}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nLife;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ 体力}}
+\DoxyCodeLine{00041\ \};}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00044\ \textcolor{comment}{//\ アニメーションするキャラクソstring^ーのクラスの定義}}
+\DoxyCodeLine{00045\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00046\ \textcolor{keyword}{class\ }CAnimCharacter2D\ :\ \textcolor{keyword}{public}\ CCharacter2D}
+\DoxyCodeLine{00047\ \{}
+\DoxyCodeLine{00048\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00049\ \ \ \ \ CAnimCharacter2D();}
+\DoxyCodeLine{00050\ \ \ \ \ \string~CAnimCharacter2D();}
+\DoxyCodeLine{00051\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{void}\ SetTexPos(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nPosX,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nPosY);}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordtype}{void}\ SetAnimationSpeed(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nAnimSpeed\ =\ 1)\ \{\ m\_nAnimSpeed\ =\ nAnimSpeed;\ \}}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordtype}{void}\ SetTexDir(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nOffTexPosH)\ \{\ m\_nOffTexPosH\ =\ nOffTexPosH;\ \}}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{void}\ StopAnim(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nPattern)\ \{\ m\_nPatternAnim\ =\ nPattern;\ \}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fPosTexU;\ \ \ \ \ \ \ \textcolor{comment}{//\ テクスチャ座標UV}}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fPosTexH;\ \ \ \ \ \ \ \textcolor{comment}{//\ テクスチャ座標HV}}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nOffTexPosH;\ \ \ \ \ \ \textcolor{comment}{//\ テクスチャ座標のオフセットHV}}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nAnimSpeed;\ \ \ \ \ \ \ \textcolor{comment}{//\ アニメーションの速さ}}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nPatternAnim;\ \ \ \ \ \textcolor{comment}{//\ アニメーションのパソstring^ーン}}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nCounterAnim;\ \ \ \ \ \textcolor{comment}{//\ アニメーションのカウンソstring^ー}}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nPosX;\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ テクスチャの分割数X}}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nPosY;\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ テクスチャの分割数Y}}
+\DoxyCodeLine{00069\ \};}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

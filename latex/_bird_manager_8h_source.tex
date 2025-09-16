@@ -1,0 +1,74 @@
+\doxysection{Bird\+Manager.\+h}
+\hypertarget{_bird_manager_8h_source}{}\label{_bird_manager_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ 鳥のソ}ネージャー\ [BirdManager.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_BIRDMANAGER\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_BIRDMANAGER\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}object.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include<list>}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ 前方宣言}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00023\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_bird}{CBird}};}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ 鳥のソ}ネージャーのクラスの定義}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00028\ \textcolor{keyword}{class\ }CBirdManager\ :\ \textcolor{keyword}{public}\ CObject}
+\DoxyCodeLine{00029\ \{}
+\DoxyCodeLine{00030\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00031\ \ \ \ \ \string~CBirdManager();}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ Create(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{static}\ CBirdManager*\ GetInstance(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_pInstance;\ \}}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{void}\ AddBirdList(\mbox{\hyperlink{class_c_bird}{CBird}}*\ pBird)\ \{\ m\_apBirdList.push\_back(pBird);\ \}}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{void}\ Erase(\mbox{\hyperlink{class_c_bird}{CBird}}*\ pBird);}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{comment}{//\ 対象の位置からの距離を判定}}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{bool}\ CheckDistance(\textcolor{keyword}{const}\ D3DXVECTOR3\ otherPos,\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fRadius);}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{void}\ SetOpening(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00047\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{void}\ InAreaRenge(\textcolor{keyword}{const}\ D3DXVECTOR3\ otherPos);}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ MAX\_AREA\ =\ 4;\ \ \textcolor{comment}{//\ 出現エリア}}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ MAX\_POINT\ =\ 2;\ \textcolor{comment}{//\ 出現ポイント}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{comment}{//\ 位置の情報}}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{struct\ }AreaPoint}
+\DoxyCodeLine{00055\ \ \ \ \ \{}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ D3DXVECTOR3\ pos;\ \textcolor{comment}{//\ 出現エリアの位置}}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ fRadius;\ \ \ \textcolor{comment}{//\ エリアの半径}}
+\DoxyCodeLine{00058\ \ \ \ \ \};}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ CBirdManager();}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{static}\ CBirdManager*\ m\_pInstance;\ \textcolor{comment}{//\ 自分のインスソstring^ンス}}
+\DoxyCodeLine{00062\ \ \ \ \ std::list<CBird*>\ m\_apBirdList;\ \ \ \textcolor{comment}{//\ 鳥のリスト}}
+\DoxyCodeLine{00063\ \ \ \ \ AreaPoint\ m\_Arena[MAX\_AREA];\ \ \ \ \ \ \textcolor{comment}{//\ 出現エリアの情報}}
+\DoxyCodeLine{00064\ \ \ \ \ D3DXVECTOR3\ m\_Point[MAX\_POINT];\ \ \ \textcolor{comment}{//\ 出現ポイントの情報}}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nAreaPopTime;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ エリアに出現する時間}}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nPointPopTime;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 出現ポイントに出現する時間}}
+\DoxyCodeLine{00067\ \};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

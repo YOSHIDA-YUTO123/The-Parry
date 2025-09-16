@@ -1,0 +1,228 @@
+\doxysection{playerstate.\+h}
+\hypertarget{playerstate_8h_source}{}\label{playerstate_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ プレイヤーの状態 [playerstate.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_PLAYERSTATE\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_PLAYERSTATE\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}main.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}statebase.h"{}}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ 前方宣言}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00023\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_player}{CPlayer}};}
+\DoxyCodeLine{00024\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_character3_d}{CCharacter3D}};}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ プレイヤーの状態クラスの定義}}
+\DoxyCodeLine{00028\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00029\ \textcolor{keyword}{class\ }CPlayerState\ :\ \textcolor{keyword}{public}\ CStateBase}
+\DoxyCodeLine{00030\ \{}
+\DoxyCodeLine{00031\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{comment}{//\ IDの種類}}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{enum}\ ID}
+\DoxyCodeLine{00035\ \ \ \ \ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ ID\_BASE\ =\ 0,}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ ID\_NORMAL,}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ ID\_MOVE,}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ ID\_JUMP,}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ ID\_LANDING,}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ ID\_DAMAGE,}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ ID\_DOWNNEUTRAL,}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ ID\_AVOID,}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ ID\_ROUNDKICK,}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ ID\_DASH,}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ ID\_REVENGE,}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ ID\_REVENGEATTACK,}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ ID\_MAX}
+\DoxyCodeLine{00049\ \ \ \ \ \};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ CPlayerState();}
+\DoxyCodeLine{00052\ \ \ \ \ CPlayerState(ID\ Id);}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~CPlayerState();}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Init(\textcolor{keywordtype}{void})\textcolor{keyword}{\ override\ }\{\};}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\textcolor{keyword}{\ override\ }\{\};}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\textcolor{keyword}{\ override\ }\{\};}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetID(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_ID;\ \}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{void}\ SetOwner(\mbox{\hyperlink{class_c_player}{CPlayer}}*\ pPlayer);}
+\DoxyCodeLine{00060\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00061\ \ \ \ \ \mbox{\hyperlink{class_c_player}{CPlayer}}*\ GetPlayer(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_pPlayer;\ \}}
+\DoxyCodeLine{00062\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00063\ \ \ \ \ \mbox{\hyperlink{class_c_player}{CPlayer}}*\ m\_pPlayer;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ プレイヤーのクラスへのポインソstring^}}
+\DoxyCodeLine{00064\ \ \ \ \ ID\ m\_ID;\ \textcolor{comment}{//\ ID}}
+\DoxyCodeLine{00065\ \};}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00068\ \textcolor{comment}{//\ プレイヤーの状態(Normal)の定義}}
+\DoxyCodeLine{00069\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00070\ \textcolor{keyword}{class\ }CPlayerNormal\ :\ \textcolor{keyword}{public}\ CPlayerState}
+\DoxyCodeLine{00071\ \{}
+\DoxyCodeLine{00072\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00073\ \ \ \ \ CPlayerNormal();}
+\DoxyCodeLine{00074\ \ \ \ \ \string~CPlayerNormal();}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00076\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00077\ \};}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00080\ \textcolor{comment}{//\ プレイヤーの状態(Move)の定義}}
+\DoxyCodeLine{00081\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00082\ \textcolor{keyword}{class\ }CPlayerMove\ :\ \textcolor{keyword}{public}\ CPlayerState}
+\DoxyCodeLine{00083\ \{}
+\DoxyCodeLine{00084\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00085\ \ \ \ \ CPlayerMove();}
+\DoxyCodeLine{00086\ \ \ \ \ \string~CPlayerMove();}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00088\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00089\ \};}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00092\ \textcolor{comment}{//\ プレイヤーの状態(Damage)の定義}}
+\DoxyCodeLine{00093\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00094\ \textcolor{keyword}{class\ }CPlayerDamage\ :\ \textcolor{keyword}{public}\ CPlayerState}
+\DoxyCodeLine{00095\ \{}
+\DoxyCodeLine{00096\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{comment}{//\ 音の種類}}
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00100\ \ \ \ \ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ TYPE\_NORMAL\ =\ 0,}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ TYPE\_SPIKE,}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ TYPE\_MAX}
+\DoxyCodeLine{00104\ \ \ \ \ \}TYPE;}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ CPlayerDamage();}
+\DoxyCodeLine{00107\ \ \ \ \ CPlayerDamage(\textcolor{keywordtype}{int}\ nDamage);}
+\DoxyCodeLine{00108\ \ \ \ \ \string~CPlayerDamage();}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keywordtype}{void}\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keywordtype}{void}\ SetSound(\textcolor{keyword}{const}\ TYPE\ type)\ \{\ m\_type\ =\ type;\ \}}
+\DoxyCodeLine{00112\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00113\ \ \ \ \ TYPE\ m\_type;\ \ \ \ \textcolor{comment}{//\ 種類}}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nDamage;\ \ \textcolor{comment}{//\ ソ_メ―(\backslash\)ジ量}}
+\DoxyCodeLine{00115\ \};}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00118\ \textcolor{comment}{//\ プレイヤーの状態(DownNeutral)の定義}}
+\DoxyCodeLine{00119\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00120\ \textcolor{keyword}{class\ }CPlayerDownNeutral\ :\ \textcolor{keyword}{public}\ CPlayerState}
+\DoxyCodeLine{00121\ \{}
+\DoxyCodeLine{00122\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00123\ \ \ \ \ CPlayerDownNeutral();}
+\DoxyCodeLine{00124\ \ \ \ \ \string~CPlayerDownNeutral();}
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keywordtype}{void}\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00127\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00128\ \};}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00131\ \textcolor{comment}{//\ プレイヤーの状態(Avoid)の定義}}
+\DoxyCodeLine{00132\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00133\ \textcolor{keyword}{class\ }CPlayerAvoid\ :\ \textcolor{keyword}{public}\ CPlayerState}
+\DoxyCodeLine{00134\ \{}
+\DoxyCodeLine{00135\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00136\ \ \ \ \ CPlayerAvoid();}
+\DoxyCodeLine{00137\ \ \ \ \ CPlayerAvoid(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fSpeed);}
+\DoxyCodeLine{00138\ \ \ \ \ \string~CPlayerAvoid();}
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keywordtype}{void}\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00141\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00142\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fSpeed;\ \textcolor{comment}{//\ 速さ}}
+\DoxyCodeLine{00143\ \};}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00146\ \textcolor{comment}{//\ プレイヤーの状態(RoundKick)の定義}}
+\DoxyCodeLine{00147\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00148\ \textcolor{keyword}{class\ }CPlayerRoundKick\ :\ \textcolor{keyword}{public}\ CPlayerState}
+\DoxyCodeLine{00149\ \{}
+\DoxyCodeLine{00150\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00151\ \ \ \ \ CPlayerRoundKick();}
+\DoxyCodeLine{00152\ \ \ \ \ \string~CPlayerRoundKick();}
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keywordtype}{void}\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00155\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00156\ \};}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00159\ \textcolor{comment}{//\ プレイヤーの状態(RoundKick)の定義}}
+\DoxyCodeLine{00160\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00161\ \textcolor{keyword}{class\ }CPlayerDash\ :\ \textcolor{keyword}{public}\ CPlayerState}
+\DoxyCodeLine{00162\ \{}
+\DoxyCodeLine{00163\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00164\ \ \ \ \ CPlayerDash();}
+\DoxyCodeLine{00165\ \ \ \ \ \string~CPlayerDash();}
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{keywordtype}{void}\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00168\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00169\ \};}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00172\ \textcolor{comment}{//\ プレイヤーの状態(Jump)の定義}}
+\DoxyCodeLine{00173\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00174\ \textcolor{keyword}{class\ }CPlayerJump\ :\ \textcolor{keyword}{public}\ CPlayerState}
+\DoxyCodeLine{00175\ \{}
+\DoxyCodeLine{00176\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00177\ \ \ \ \ CPlayerJump();}
+\DoxyCodeLine{00178\ \ \ \ \ \string~CPlayerJump();}
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{keywordtype}{void}\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00180\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00181\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00182\ \};}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00185\ \textcolor{comment}{//\ プレイヤーの状態(Landing)の定義}}
+\DoxyCodeLine{00186\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00187\ \textcolor{keyword}{class\ }CPlayerLanding\ :\ \textcolor{keyword}{public}\ CPlayerState}
+\DoxyCodeLine{00188\ \{}
+\DoxyCodeLine{00189\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00190\ \ \ \ \ CPlayerLanding();}
+\DoxyCodeLine{00191\ \ \ \ \ \string~CPlayerLanding();}
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{keywordtype}{void}\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00193\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00194\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00195\ \};}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00198\ \textcolor{comment}{//\ プレイヤーの状態(Revenge)の定義}}
+\DoxyCodeLine{00199\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00200\ \textcolor{keyword}{class\ }CPlayerRevenge\ :\ \textcolor{keyword}{public}\ CPlayerState}
+\DoxyCodeLine{00201\ \{}
+\DoxyCodeLine{00202\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00203\ \ \ \ \ CPlayerRevenge();}
+\DoxyCodeLine{00204\ \ \ \ \ \string~CPlayerRevenge();}
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{keywordtype}{void}\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00206\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00207\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00208\ \};}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00211\ \textcolor{comment}{//\ プレイヤーの状態(RevengeAttack)の定義}}
+\DoxyCodeLine{00212\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00213\ \textcolor{keyword}{class\ }CPlayerRevengeAttack\ :\ \textcolor{keyword}{public}\ CPlayerState}
+\DoxyCodeLine{00214\ \{}
+\DoxyCodeLine{00215\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00216\ \ \ \ \ CPlayerRevengeAttack();}
+\DoxyCodeLine{00217\ \ \ \ \ \string~CPlayerRevengeAttack();}
+\DoxyCodeLine{00218\ \ \ \ \ \textcolor{keywordtype}{void}\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00219\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00220\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00221\ \};}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

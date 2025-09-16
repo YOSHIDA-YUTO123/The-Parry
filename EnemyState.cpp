@@ -44,10 +44,10 @@ constexpr int NEXT_STAE_TIME = 120;				// 次の行動に移るまでの時間
 constexpr int START_ACTION = 55;				// アクションの開始確率
 constexpr int SPIN_TIME = 60;					// 回転モーションの時間
 constexpr int ABSSPIN_TIME = 30;				// 絶対回転する時間
-constexpr float JUMPATTACK_MOVE_FRAME = 25.0f;	// ジャンプ攻撃の移動フレーム
 constexpr int INIT_NEXT_ACTION = 999;			// 次のアクションに移行する数値(初期化)
 constexpr int MAX_AWAYPOS_X = 1300;				// 最大の離れる位置X
 constexpr int MAX_AWAYPOS_Z = 1300;				// 最大の離れる位置Z
+constexpr float JUMPATTACK_MOVE_FRAME = 25.0f;	// ジャンプ攻撃の移動フレーム
 constexpr float AWAY_TIME = 24.0f;				// ジャンプする時間
 
 //===================================================
@@ -110,6 +110,54 @@ bool CEnemyStateManager::SetMotionByPlayerPosition(void)
 		else if (m_pEnemy->CollisionFOV(playerPos, -D3DX_PI * 0.15f, -D3DX_PI * 0.75f))
 		{
 			m_pEnemy->ChangeState(make_shared<CEnemySweepLeft>());
+			return true;
+		}
+	}
+	else
+	{
+		// 左後ろにいたら
+		if (m_pEnemy->CollisionFOV(playerPos, -D3DX_PI * 0.5f, D3DX_PI))
+		{
+			// 振り返り
+			m_pEnemy->ChangeState(make_shared<CEnemyLookBackL>());
+			return true;
+		}
+		// 右後ろにいたら
+		else if (m_pEnemy->CollisionFOV(playerPos, D3DX_PI, D3DX_PI * 0.5f))
+		{
+			// 振り返り
+			m_pEnemy->ChangeState(make_shared<CEnemyLookBackR>());
+			return true;
+		}
+	}
+
+	return false;
+}
+
+//===================================================
+// 後ろを見るモーションの設定
+//===================================================
+bool CEnemyStateManager::SetLookBackMotion(void)
+{
+	// 取得できなかったら処理しない
+	if (m_pEnemy == nullptr) return false;
+
+	// プレイヤーの取得
+	CPlayer* pPlayer = CGame::GetPlayer();
+
+	// 取得できなかったら処理しない
+	if (pPlayer == nullptr) return false;
+
+	// プレイヤーの位置の取得
+	D3DXVECTOR3 playerPos = pPlayer->GetPosition();
+
+	// 近くにいたら
+	if (m_pEnemy->CheckDistane(400.0f))
+	{
+		// 後ろにいたら
+		if (m_pEnemy->CollisionFOV(playerPos, -D3DX_PI * 0.15f, D3DX_PI * 0.15f))
+		{
+			m_pEnemy->ChangeState(make_shared<CEnemyBackKick>());
 			return true;
 		}
 	}
@@ -559,7 +607,7 @@ void CEnemyAttackSmash::Update(void)
 		}
 	}
 	
-	if (pMotion->IsEventFrame(1, 15, CEnemy::MOTIONTYPE_SMASH))
+	if (pMotion->IsEventFrame(0, 30, CEnemy::MOTIONTYPE_SMASH))
 	{
 		// プレイヤーの方向を見る処理
 		pEnemy->AngleToPlayer();
@@ -609,6 +657,17 @@ void CEnemyAttackSmash::Update(void)
 			pSound->Play(CSound::SOUND_LABEL_SWING);
 		}
 	}
+}
+
+//===================================================
+// コンストラクタ(大ダメージ)
+//===================================================
+CEnemyDamageL::CEnemyDamageL() : CEnemyState(ID_DAMAGEL)
+{
+	m_bFinish = false;
+	m_nIdleTime = IDLE_TIME;
+	m_nDamage = NULL;
+	m_bBackStap = false;
 }
 
 //===================================================
@@ -707,6 +766,15 @@ void CEnemyDamageL::Update(void)
 	// 何もしない時間が終わったら
 	if (m_nIdleTime <= 0)
 	{
+		// 状態マネージャーの取得
+		auto pStateManager = pEnemy->GetStateManager();
+
+		// プレイヤーの立ち位置でモーションを設定
+		if (pStateManager != nullptr && pStateManager->SetMotionByPlayerPosition())
+		{
+			return;
+		}
+
 		// 次の行動を選出
 		int nAction = rand() % 2;
 
@@ -939,6 +1007,15 @@ void CEnemyDash::Update(void)
 
 		return;
 	}
+}
+
+//===================================================
+// コンストラクタ(回転攻撃)
+//===================================================
+CEnemySpin::CEnemySpin() : CEnemyState(ID_SPIN)
+{
+	m_nTime = NULL;
+	m_nMaxTime = NULL;
 }
 
 //===================================================
@@ -1288,6 +1365,17 @@ void CEnemyHit::Update(void)
 //===================================================
 // コンストラクタ(ダメージ小)
 //===================================================
+CEnemyDamageS::CEnemyDamageS()
+{
+	m_bFinish = false;
+	m_nIdleTime = IDLE_TIME;
+	m_nNextAction = INIT_NEXT_ACTION;
+	m_nDamage = NULL;
+}
+
+//===================================================
+// コンストラクタ(ダメージ小)
+//===================================================
 CEnemyDamageS::CEnemyDamageS(const int nDamage) : CEnemyState(ID_DAMAGES)
 {
 	m_bFinish = false;
@@ -1384,6 +1472,15 @@ void CEnemyDamageS::Update(void)
 	// 何もしない時間が終わったら
 	if (m_nIdleTime <= 0)
 	{
+		// 状態マネージャーの取得
+		auto pStateManager = pEnemy->GetStateManager();
+
+		// プレイヤーの立ち位置でモーションを設定
+		if (pStateManager != nullptr && pStateManager->SetMotionByPlayerPosition())
+		{
+			return;
+		}
+
 		// 次の行動を選出
 		int nAction = rand() % 2;
 
@@ -1400,6 +1497,16 @@ void CEnemyDamageS::Update(void)
 			break;
 		}
 	}
+}
+
+//===================================================
+// コンストラクタ(ガード)
+//===================================================
+CEnemyGuard::CEnemyGuard()
+{
+	m_nDamage = NULL;
+	m_ImpactPos = VEC3_NULL;
+	m_nNextAction = INIT_NEXT_ACTION;
 }
 
 //===================================================
@@ -2355,7 +2462,8 @@ void CEnemyComboDamage::Update(void)
 				pSound->Play(CSound::SOUND_LABEL_PERFECT);
 			}
 
-			pEnemy->Hit(3);
+			// ヒット時の設定
+			pEnemy->Hit(2);
 		}
 		if (pMotion->IsEventFrame(159, 159, CEnemy::MOTIONTYPE_COMBODAMAGE))
 		{
@@ -2365,7 +2473,8 @@ void CEnemyComboDamage::Update(void)
 				pSound->Play(CSound::SOUND_LABEL_PERFECT);
 			}
 
-			pEnemy->Hit(5);
+			// ヒット時の設定
+			pEnemy->Hit(3);
 
 			// 状態の変更
 			pEnemy->ChangeState(make_shared<CEnemyDamageL>(0,false));
@@ -2775,6 +2884,14 @@ void CEnemyRush::Update(void)
 			pPlayer->ChangeState(make_shared<CPlayerRevengeAttack>());
 		}
 	}	
+}
+
+//===================================================
+// コンストラクタ(突進攻撃終了)
+//===================================================
+CEnemyEndRush::CEnemyEndRush() : CEnemyState(ID_ENDRUSH)
+{
+	m_fInertia = NULL;
 }
 
 //===================================================
@@ -3406,8 +3523,14 @@ void CEnemySweepRight::Update(void)
 		// モーションが終わったら
 		if (pMotion->IsFinishEndBlend())
 		{
-			// プレイヤーの方向を見る
-			pEnemy->AngleToPlayer();
+			// 状態マネージャーの取得
+			auto pStateManager = pEnemy->GetStateManager();
+
+			// プレイヤーの立ち位置でモーションを設定
+			if (pStateManager != nullptr && pStateManager->SetLookBackMotion())
+			{
+				return;
+			}
 
 			// 状態の変更
 			pEnemy->ChangeState(make_shared<CEnemyIdle>(20));
@@ -3558,8 +3681,14 @@ void CEnemySweepLeft::Update(void)
 		// モーションが終わったら
 		if (pMotion->IsFinishEndBlend())
 		{
-			// プレイヤーの方向を見る
-			pEnemy->AngleToPlayer();
+			// 状態マネージャーの取得
+			auto pStateManager = pEnemy->GetStateManager();
+
+			// プレイヤーの立ち位置でモーションを設定
+			if (pStateManager != nullptr && pStateManager->SetLookBackMotion())
+			{
+				return;
+			}
 
 			// 状態の変更
 			pEnemy->ChangeState(make_shared<CEnemyIdle>(20));

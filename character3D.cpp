@@ -19,9 +19,9 @@
 #include<string>
 #include "CharacterManager.h"
 
-using namespace math; // 名前空間mathを使用
-using namespace Const; // 名前空間Constを使用
-using namespace std; // 名前空間stdを使用
+using namespace math;	// 名前空間mathを使用
+using namespace Const;	// 名前空間Constを使用
+using namespace std;	// 名前空間stdを使用
 
 //===================================================
 // コンストラクタ

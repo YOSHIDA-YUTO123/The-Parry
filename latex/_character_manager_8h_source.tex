@@ -1,0 +1,66 @@
+\doxysection{Character\+Manager.\+h}
+\hypertarget{_character_manager_8h_source}{}\label{_character_manager_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ キャラクソstring^ー\ [character.h]}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ Author:YUTO\ YOSHIDA}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#ifndef\ \_CHARACTERMANAGER\_H\_}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ \_CHARACTERMANAGER\_H\_}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include<memory>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include<vector>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}character3D.h"{}}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}motion.h"{}}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//\ 前方宣言}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00027\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_character3_d}{CCharacter3D}};}
+\DoxyCodeLine{00028\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_motion}{CMotion}};}
+\DoxyCodeLine{00029\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_model}{CModel}};}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00032\ \textcolor{comment}{//\ キャラクソstring^ーのソ}ネージャークラスの定義}}
+\DoxyCodeLine{00033\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00034\ \textcolor{keyword}{class\ }CCharacterManager}
+\DoxyCodeLine{00035\ \{}
+\DoxyCodeLine{00036\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00037\ \ \ \ \ \string~CCharacterManager();}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ Create(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{static}\ CCharacterManager*\ GetInstance(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_pInstance.get();\ \}}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{void}\ SetMotion(\mbox{\hyperlink{class_c_motion}{CMotion}}*\ pMotion,\ \textcolor{keyword}{const}\ CCharacter3D::TYPE\ type);}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{void}\ SetModel(\mbox{\hyperlink{class_c_model}{CModel}}*\ pModel,\ \textcolor{keyword}{const}\ CCharacter3D::TYPE\ type,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nNumModel,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nIdx);}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{void}\ GetMotion(\mbox{\hyperlink{class_c_motion}{CMotion}}*\ pMotion,\ \textcolor{keyword}{const}\ CCharacter3D::TYPE\ type);}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{void}\ GetModel(\mbox{\hyperlink{class_c_model}{CModel}}**\ pModel,\ \textcolor{keyword}{const}\ CCharacter3D::TYPE\ type,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nIdx,\ \textcolor{keywordtype}{int}*\ pParentIndx);}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{int}\ GetModelSize(\textcolor{keyword}{const}\ CCharacter3D::TYPE\ type)\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(m\_aConfig[type].aModelList.size());\ \}}
+\DoxyCodeLine{00045\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{struct\ }Config}
+\DoxyCodeLine{00048\ \ \ \ \ \{}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ std::vector<CModel>\ aModelList;}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_c_motion}{CMotion}}\ Motion;}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ CCharacter3D::TYPE\ type;}
+\DoxyCodeLine{00052\ \ \ \ \ \};}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ CCharacterManager();}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keyword}{static}\ std::unique\_ptr<CCharacterManager>\ m\_pInstance;\ \ \textcolor{comment}{//\ 自分のインスソstring^ンス}}
+\DoxyCodeLine{00056\ \ \ \ \ Config\ m\_aConfig[CCharacter3D::TYPE\_MAX];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ キャラクソstring^ーの構(\backslash\)成情報}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{comment}{//std::vector<CModel>\ m\_aModelList;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ 保存用のモデル情報}}
+\DoxyCodeLine{00059\ \};}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -93,8 +93,11 @@ public:
 	static CEnemyStateManager* Create(void);
 	void SetOnwer(CEnemy* pEnemy) { m_pEnemy = pEnemy; }
 
-	// 後ろに出すモーションの設定
+	// プレイヤーーの位置を基準としたモーションの設定
 	bool SetMotionByPlayerPosition(void);
+
+	// 後ろを見るモーションの設定
+	bool SetLookBackMotion(void);
 private:
 	CEnemyStateManager();
 	CEnemy* m_pEnemy;		// 敵のインスタンス
@@ -192,6 +195,7 @@ private:
 class CEnemyDamageL : public CEnemyState
 {
 public:
+	CEnemyDamageL();
 	CEnemyDamageL(const int nDamage,const bool bBackStatp = false);
 	~CEnemyDamageL();
 	void Init(void) override;
@@ -234,6 +238,7 @@ private:
 class CEnemySpin : public CEnemyState
 {
 public:
+	CEnemySpin();
 	CEnemySpin(const int nTime);
 	~CEnemySpin();
 	void Init(void) override;
@@ -262,6 +267,7 @@ private:
 class CEnemyDamageS : public CEnemyState
 {
 public:
+	CEnemyDamageS();
 	CEnemyDamageS(const int nDamage);
 	~CEnemyDamageS();
 	void Init(void) override;
@@ -281,14 +287,15 @@ private:
 class CEnemyGuard : public CEnemyState
 {
 public:
+	CEnemyGuard();
 	CEnemyGuard(const D3DXVECTOR3 ImpactPos, const int nDamage);
 	~CEnemyGuard();
 	void Init(void) override;
 	void Update(void) override;
 private:
 	D3DXVECTOR3 m_ImpactPos; // インパクトの位置
-	int m_nDamage; // ダメージ量
-	int m_nNextAction; // 次の行動
+	int m_nDamage;			 // ダメージ量
+	int m_nNextAction;		 // 次の行動
 };
 
 //***************************************************
@@ -454,6 +461,7 @@ private:
 class CEnemyEndRush : public CEnemyState
 {
 public:
+	CEnemyEndRush();
 	CEnemyEndRush(const float fInertia);
 	~CEnemyEndRush();
 	void Init(void) override;

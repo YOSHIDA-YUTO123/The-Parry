@@ -1,0 +1,54 @@
+\doxysection{Block\+Manager.\+h}
+\hypertarget{_block_manager_8h_source}{}\label{_block_manager_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ ブロックソ}ネージャー\ [BlockManager.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:\ YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_BLOCKMANAGER\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_BLOCKMANAGER\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}object.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include<vector>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include<memory>}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ 前方宣言}}
+\DoxyCodeLine{00023\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00024\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_block}{CBlock}};\ }
+\DoxyCodeLine{00025\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_collider_a_a_b_b}{CColliderAABB}};}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00028\ \textcolor{comment}{//\ ブロックのソ}ネージャクラスの定義}}
+\DoxyCodeLine{00029\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00030\ \textcolor{keyword}{class\ }CBlockManager}
+\DoxyCodeLine{00031\ \{}
+\DoxyCodeLine{00032\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00033\ \ \ \ \ \string~CBlockManager();}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ Create(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{static}\ CBlockManager*\ GetInstance(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_pInstance.get();\ \}}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{void}\ SetBlock(\mbox{\hyperlink{class_c_block}{CBlock}}*\ pBlock);}
+\DoxyCodeLine{00038\ \ \ \ \ \mbox{\hyperlink{class_c_block}{CBlock}}*\ GetBlock(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nIdx);}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{int}\ GetNumAll(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(m\_apBlockList.size());\ \}}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{bool}\ Collision(\mbox{\hyperlink{class_c_collider_a_a_b_b}{CColliderAABB}}*\ pAABB,\ D3DXVECTOR3*\ pPushPos);}
+\DoxyCodeLine{00042\ \ \ \ \ HRESULT\ Load(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00043\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00044\ \ \ \ \ CBlockManager();}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{static}\ std::unique\_ptr<CBlockManager>\ m\_pInstance;\ \textcolor{comment}{//\ 自分のインスソstring^ンス}}
+\DoxyCodeLine{00046\ \ \ \ \ std::vector<CBlock*>\ m\_apBlockList;\ \textcolor{comment}{//\ ブロックのリスト}}
+\DoxyCodeLine{00047\ \};}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

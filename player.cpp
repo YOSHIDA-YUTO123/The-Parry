@@ -50,20 +50,22 @@
 #include "BirdManager.h"
 #include "sound.h"
 
-using namespace math; // 名前空間mathを使用
-using namespace std;  // 名前空間をstdを使用する
-using namespace Const;							// 名前空間Constを使用する
+//***************************************************
+// 名前空間
+//***************************************************
+using namespace math;						// 名前空間mathを使用
+using namespace std;						// 名前空間をstdを使用する
+using namespace Const;						// 名前空間Constを使用する
 
-//using MOTION = CPlayerMotionController::TYPE; // 列挙型を使用する
-using STATE = CCharacter3D::STATE;			  // キャラクターの状態
+using STATE = CCharacter3D::STATE;			// キャラクターの状態
 
 constexpr float JUMP_HEIGHT = 25.0f;		// ジャンプ量
 constexpr float SHADOW_SIZE = 50.0f;		// 影の大きさ
 constexpr float SHADOW_MAX_HEIGHT = 500.0f; // 影が見える最大の高さ
 constexpr float SHADOW_A_LEVEL = 0.9f;		// 影のアルファ値のオフセット
+constexpr float AVOID_STAMINA = 15.0f;		// 回避に使用するスタミナ
 constexpr int PARRY_TIME = 15;				// パリィの有効時間
 constexpr int ATTACK_TIME = 120;			// 攻撃の有効時間
-constexpr float AVOID_STAMINA = 15.0f;		// 回避に使用するスタミナ
 
 //===================================================
 // コンストラクタ
@@ -71,7 +73,7 @@ constexpr float AVOID_STAMINA = 15.0f;		// 回避に使用するスタミナ
 CPlayer::CPlayer() : CCharacter3D(TYPE_PLAYER)
 {
 	m_fRevengeValue = NULL;
-	m_pMachine = nullptr;				// ステートマシーン
+	m_pMachine = nullptr;
 	m_pMovement = nullptr;
 	m_pFOV = nullptr;
 	m_pSphere = nullptr;
@@ -1107,7 +1109,7 @@ int CPlayer::SuccessParry(void)
 	return m_ParryResult;
 }
 
-//===================================================
+//====================================================
 // 矩形の判定
 //===================================================
 bool CPlayer::CollisionAABB(CColliderAABB* pAABB)

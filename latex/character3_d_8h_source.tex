@@ -1,0 +1,128 @@
+\doxysection{character3\+D.\+h}
+\hypertarget{character3_d_8h_source}{}\label{character3_d_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ キャラクソstring^ー\ [character.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//===================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_CHARACTER3D\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_CHARACTER3D\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}object.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include<memory>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include<vector>}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ 前方宣言}}
+\DoxyCodeLine{00023\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00024\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_shadow_s}{CShadowS}};}
+\DoxyCodeLine{00025\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_rotation}{CRotation}};}
+\DoxyCodeLine{00026\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_motion}{CMotion}};}
+\DoxyCodeLine{00027\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_c_model}{CModel}};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00030\ \textcolor{comment}{//\ キャラクソstring^ー3Dクラスの定義}}
+\DoxyCodeLine{00031\ \textcolor{comment}{//***************************************************}}
+\DoxyCodeLine{00032\ \textcolor{keyword}{class\ }CCharacter3D\ :\ \textcolor{keyword}{public}\ CObject}
+\DoxyCodeLine{00033\ \{}
+\DoxyCodeLine{00034\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{comment}{//\ 状態の種類}}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00038\ \ \ \ \ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ STATE\_NORMAL\ =\ 0,}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ STATE\_MOVE,}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ STATE\_ACTION,}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ STATE\_DAMAGE,}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ STATE\_DEATH,}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ STATE\_MAX}
+\DoxyCodeLine{00045\ \ \ \ \ \}STATE;}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{comment}{//\ キャラクソstring^ーの種類}}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00049\ \ \ \ \ \{}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ TYPE\_NONE\ =\ 0,}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ TYPE\_PLAYER,}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ TYPE\_ENEMY,}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ TYPE\_TRAININGENEMY,}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ TYPE\_BIRD,}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ TYPE\_TITLEPLAYER,}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ TYPE\_OPENING\_ENEMY,}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ TYPE\_MAX}
+\DoxyCodeLine{00058\ \ \ \ \ \}TYPE;}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ CCharacter3D();}
+\DoxyCodeLine{00061\ \ \ \ \ CCharacter3D(\textcolor{keyword}{const}\ TYPE\ type);}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~CCharacter3D();}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{virtual}\ HRESULT\ Init(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fAvl);}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{void}\ DrawMT(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00070\ \ \ \ \ }
+\DoxyCodeLine{00071\ \ \ \ \ TYPE\ GetType(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_type;\ \}}
+\DoxyCodeLine{00072\ \ \ \ \ \mbox{\hyperlink{class_c_motion}{CMotion}}*\ LoadMotion(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *pFileName,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nNumMotion);}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{comment}{//\ ゲッソstring^ー}}
+\DoxyCodeLine{00075\ \ \ \ \ D3DXVECTOR3\ GetPosition(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_pos;\ \}}
+\DoxyCodeLine{00076\ \ \ \ \ D3DXVECTOR3\ GetSize(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_Size;\ \}}
+\DoxyCodeLine{00077\ \ \ \ \ \mbox{\hyperlink{class_c_rotation}{CRotation}}*\ GetRotaition(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_pRot;\ \}}
+\DoxyCodeLine{00078\ \ \ \ \ STATE\ GetState(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_state;\ \}}
+\DoxyCodeLine{00079\ \ \ \ \ \mbox{\hyperlink{class_c_motion}{CMotion}}*\ GetMotion(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_pMotion.get();\ \}\ \textcolor{comment}{//\ モーションの取得}}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordtype}{float}\ GetSpeed(\textcolor{keywordtype}{void})\ \{\ \textcolor{keywordflow}{return}\ m\_fSpeed;\ \}}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordtype}{int}\ GetLife(\textcolor{keywordtype}{void})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_nLife;\ \}}
+\DoxyCodeLine{00082\ \ \ \ \ D3DXVECTOR3\ GetModelPos(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nIdx);}
+\DoxyCodeLine{00083\ \ \ \ \ D3DXVECTOR3\ GetModelRot(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nIdx);}
+\DoxyCodeLine{00084\ \ \ \ \ D3DXVECTOR3\ GetModelSize(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nIdx);}
+\DoxyCodeLine{00085\ \ \ \ \ D3DXMATRIX\ GetParent(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nIdx)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{comment}{//\ セッソstring^ー}}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordtype}{void}\ SetPosition(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos)\ \{\ m\_pos\ =\ pos;\ \}}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordtype}{void}\ SetCharacter(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nLife,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fSpeed,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ ShadowScal,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ Size);}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordtype}{void}\ SetModelMT(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ pTextureName);}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keywordtype}{void}\ Copy(CCharacter3D*\ pCharacter);}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keywordtype}{bool}\ GetAlive(\textcolor{keywordtype}{void});\ \ \ \ \ \ \ \ \textcolor{comment}{//\ 生きているか}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordtype}{void}\ SetState(\textcolor{keyword}{const}\ STATE\ state,\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nTime);}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordtype}{void}\ DeleteShadow(\textcolor{keywordtype}{void});\ \ \ \ \textcolor{comment}{//\ 影の消去}}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordtype}{bool}\ Hit(\textcolor{keywordtype}{int}\ nDamage);\ \ \ \ \ \ \textcolor{comment}{//\ ヒット時の処理}}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keywordtype}{bool}\ HitStop(\textcolor{keywordtype}{void});\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ヒットストップしてるかどうか}}
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keywordtype}{void}\ SetHitStop(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nTime)\ \{\ m\_nHitStopTime\ =\ nTime;\ \}\ \textcolor{comment}{//\ ヒットストップの設定}}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordtype}{void}\ UpdateMotion(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordtype}{void}\ SetCharacter(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00104\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ std::unique\_ptr<CMotion>\ m\_pMotion;\ \ \ \ \ \textcolor{comment}{//\ モーションのクラスへのポインソstring^}}
+\DoxyCodeLine{00107\ \ \ \ \ std::vector<CModel*>\ m\_apModel;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ モデルクラスのポインソstring^}}
+\DoxyCodeLine{00108\ \ \ \ \ }
+\DoxyCodeLine{00109\ \ \ \ \ \mbox{\hyperlink{class_c_shadow_s}{CShadowS}}*\ m\_pShadowS;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 影(ステンシル)}}
+\DoxyCodeLine{00110\ \ \ \ \ \mbox{\hyperlink{class_c_rotation}{CRotation}}*\ m\_pRot;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 向きクラスへのポインソstring^}}
+\DoxyCodeLine{00111\ \ \ \ \ STATE\ m\_state;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 状態}}
+\DoxyCodeLine{00112\ \ \ \ \ TYPE\ m\_type;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 種類}}
+\DoxyCodeLine{00113\ \ \ \ \ D3DXVECTOR3\ m\_pos;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 位置}}
+\DoxyCodeLine{00114\ \ \ \ \ D3DXVECTOR3\ m\_ShadowScal;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 影の大きさ}}
+\DoxyCodeLine{00115\ \ \ \ \ D3DXVECTOR3\ m\_Size;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 大きさ}}
+\DoxyCodeLine{00116\ \ \ \ \ D3DXMATRIX\ m\_mtxWorld;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ワールドソ}トリックス}}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fSpeed;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 足の速さ}}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nNumModel;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ モデルの最大数}}
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nCounterState;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 状態のカウンソstring^ー}}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nLife;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 寿命}}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nHitStopTime;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ヒットストップの時間}}
+\DoxyCodeLine{00122\ \};}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

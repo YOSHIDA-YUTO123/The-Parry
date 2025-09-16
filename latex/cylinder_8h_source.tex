@@ -1,0 +1,57 @@
+\doxysection{cylinder.\+h}
+\hypertarget{cylinder_8h_source}{}\label{cylinder_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ メッシュシリンソ_ー\ [cylinder.h]}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Author:\ YUTO\ YOSHIDA}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//================================================}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ 多重インクルード防蚕string~}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//*************************************************}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_CYLINDER\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_CYLINDER\_H\_}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ インクルードファイル}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include"{}mesh.h"{}}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ メッシュフィールドクラスの定義}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//************************************************}}
+\DoxyCodeLine{00022\ \textcolor{keyword}{class\ }CMeshCylinder\ :\ \textcolor{keyword}{public}\ CMesh}
+\DoxyCodeLine{00023\ \{}
+\DoxyCodeLine{00024\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{comment}{//\ シリンソ_ーの種類の設定}}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00028\ \ \ \ \ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ TYPE\_WALL\ =\ 0,\ \textcolor{comment}{//\ 壁}}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ TYPE\_VIEW,\ \ \ \ \ \textcolor{comment}{//\ 判定可視化用}}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ TYPE\_MAX}
+\DoxyCodeLine{00032\ \ \ \ \ \}TYPE;}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ CMeshCylinder(\textcolor{keywordtype}{int}\ nPriority\ =\ 5);}
+\DoxyCodeLine{00035\ \ \ \ \ \string~CMeshCylinder();}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{static}\ CMeshCylinder*\ Create(\textcolor{keyword}{const}\ D3DXVECTOR3\ pos,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nSegH,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nSegV,\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fRadius,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fHeight,\ \textcolor{keyword}{const}\ D3DXVECTOR3\ rot\ =\ Const::VEC3\_NULL);}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{void}\ Set(\textcolor{keyword}{const}\ TYPE\ type)\ \{\ m\_Type\ =\ type;\ \}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ HRESULT\ Init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{void}\ Uninit(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{void}\ Update(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{void}\ SetCylinder(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nSegH,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nSegV,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fRadius,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ fHeight);}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{bool}\ Collision(D3DXVECTOR3*\ pPos);}
+\DoxyCodeLine{00046\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00047\ \ \ \ \ D3DXVECTOR3\ m\_CenterPos;\ \textcolor{comment}{//\ 噂string~柱の中心の座標}}
+\DoxyCodeLine{00048\ \ \ \ \ D3DXCOLOR\ m\_col;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 色}}
+\DoxyCodeLine{00049\ \ \ \ \ TYPE\ m\_Type;\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 種類}}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_fRadius;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 半径}}
+\DoxyCodeLine{00051\ \};}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

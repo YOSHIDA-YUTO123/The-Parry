@@ -1,0 +1,169 @@
+\doxysection{CExplosion Class Reference}
+\hypertarget{class_c_explosion}{}\label{class_c_explosion}\index{CExplosion@{CExplosion}}
+Inheritance diagram for CExplosion\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_c_explosion}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_explosion_a27b76dbe4e4c1661b9bd0aad17731879}\label{class_c_explosion_a27b76dbe4e4c1661b9bd0aad17731879} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+SMOKE} = 0
+, {\bfseries TYPE\+\_\+\+EXPLOSION}
+, {\bfseries TYPE\+\_\+\+FIRE\+\_\+\+EXPLOSION}
+, {\bfseries TYPE\+\_\+\+FIRE}
+, \newline
+{\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_object_a7263d5eae1a949d02e262e246152a2c6}\label{class_c_object_a7263d5eae1a949d02e262e246152a2c6} 
+enum {\bfseries TYPE} \{ \newline
+{\bfseries TYPE\+\_\+\+NONE} = 0
+, {\bfseries TYPE\+\_\+\+PLAYER}
+, {\bfseries TYPE\+\_\+\+ENEMY}
+, {\bfseries TYPE\+\_\+\+OBSTACLE}
+, \newline
+{\bfseries TYPE\+\_\+\+PAUSE}
+, {\bfseries TYPE\+\_\+\+MAX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_explosion_a837d6ad8b23717eb7f4ed16869d78bc1}\label{class_c_explosion_a837d6ad8b23717eb7f4ed16869d78bc1} 
+{\bfseries CExplosion} (int n\+Priority=4)
+\item 
+HRESULT \mbox{\hyperlink{class_c_explosion_a3c0920c9b77aafac58f9a8a7ea1ca99e}{Init}} (void)
+\item 
+void \mbox{\hyperlink{class_c_explosion_a8cc917f8e4c0efc0f10c9f5d6d85ef24}{Uninit}} (void)
+\item 
+void \mbox{\hyperlink{class_c_explosion_a7a4f8415e06a835c95017316a9c21cf8}{Update}} (void)
+\item 
+void \mbox{\hyperlink{class_c_explosion_a7119c9e2e38681a0577da3e7b95ec2ac}{Draw}} (void)
+\item 
+\Hypertarget{class_c_explosion_a6a271f1e589131b6ec575714ed568a45}\label{class_c_explosion_a6a271f1e589131b6ec575714ed568a45} 
+void {\bfseries Set\+Param} (const D3\+DXVECTOR3 move)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_billboard_animation}{CBillboard\+Animation}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CBillboard\+Animation} (int n\+Priority=4)
+\item 
+D3\+DXVECTOR3 {\bfseries Get\+Position} (void) const
+\item 
+D3\+DXVECTOR2 {\bfseries Get\+Size} (void) const
+\item 
+void {\bfseries Set\+Anim} (const int n\+Anim\+Speed, const int U, const int V, const bool b\+Loop)
+\item 
+void {\bfseries Set\+Position} (const D3\+DXVECTOR3 pos)
+\item 
+void {\bfseries Set\+Size} (const D3\+DXVECTOR2 size)
+\item 
+void {\bfseries Set\+Texture\+Vtx} (const D3\+DXVECTOR2 tex, const D3\+DXVECTOR2 offtex)
+\item 
+void {\bfseries Set\+Color} (const D3\+DXCOLOR col)
+\item 
+void {\bfseries Set\+Texture\+ID} (const char \texorpdfstring{$\ast$}{*}p\+Texture\+Name)
+\item 
+void {\bfseries Update\+Vertex\+Pos} (const D3\+DXVECTOR3 pos)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries CObject} (int n\+Priority=3)
+\item 
+int {\bfseries Get\+Priority} (void) const
+\item 
+void {\bfseries Set\+Type} (const TYPE type)
+\item 
+TYPE {\bfseries Get\+Type} (void) const
+\item 
+bool {\bfseries Get\+Death} (void) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_explosion_a272ceb2a8e9f2cc91313bcb6f9055dad}\label{class_c_explosion_a272ceb2a8e9f2cc91313bcb6f9055dad} 
+static \mbox{\hyperlink{class_c_explosion}{CExplosion}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const D3\+DXVECTOR2 size, const D3\+DXCOLOR col, const int U, const int V, const int n\+Anim\+Speed, const TYPE type)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_billboard_animation}{CBillboard\+Animation}}}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_c_billboard_animation}{CBillboard\+Animation}} \texorpdfstring{$\ast$}{*} {\bfseries Create} (const D3\+DXVECTOR3 pos, const D3\+DXVECTOR2 Size, const int n\+Speed, const int U, const int V, const bool b\+Loop)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+static void {\bfseries Release\+All} (void)
+\item 
+static void {\bfseries Update\+All} (void)
+\item 
+static void {\bfseries Draw\+All} (void)
+\item 
+static int {\bfseries Get\+Num\+Object} (const int n\+Priority)
+\item 
+static void {\bfseries Destroy\+All} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_c_object}{CObject}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Release} (void)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_explosion_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_explosion_a7119c9e2e38681a0577da3e7b95ec2ac}\index{CExplosion@{CExplosion}!Draw@{Draw}}
+\index{Draw@{Draw}!CExplosion@{CExplosion}}
+\doxysubsubsection{\texorpdfstring{Draw()}{Draw()}}
+{\footnotesize\ttfamily \label{class_c_explosion_a7119c9e2e38681a0577da3e7b95ec2ac} 
+void CExplosion\+::\+Draw (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_billboard_animation}{CBillboard\+Animation}}.
+
+\Hypertarget{class_c_explosion_a3c0920c9b77aafac58f9a8a7ea1ca99e}\index{CExplosion@{CExplosion}!Init@{Init}}
+\index{Init@{Init}!CExplosion@{CExplosion}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_c_explosion_a3c0920c9b77aafac58f9a8a7ea1ca99e} 
+HRESULT CExplosion\+::\+Init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_billboard_animation}{CBillboard\+Animation}}.
+
+\Hypertarget{class_c_explosion_a8cc917f8e4c0efc0f10c9f5d6d85ef24}\index{CExplosion@{CExplosion}!Uninit@{Uninit}}
+\index{Uninit@{Uninit}!CExplosion@{CExplosion}}
+\doxysubsubsection{\texorpdfstring{Uninit()}{Uninit()}}
+{\footnotesize\ttfamily \label{class_c_explosion_a8cc917f8e4c0efc0f10c9f5d6d85ef24} 
+void CExplosion\+::\+Uninit (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_billboard_animation}{CBillboard\+Animation}}.
+
+\Hypertarget{class_c_explosion_a7a4f8415e06a835c95017316a9c21cf8}\index{CExplosion@{CExplosion}!Update@{Update}}
+\index{Update@{Update}!CExplosion@{CExplosion}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_c_explosion_a7a4f8415e06a835c95017316a9c21cf8} 
+void CExplosion\+::\+Update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_c_billboard_animation}{CBillboard\+Animation}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+explosion.\+h\item 
+explosion.\+cpp\end{DoxyCompactItemize}
