@@ -69,7 +69,7 @@ public:
 	~CParticle3DNormal();
 
 	static CParticle3DNormal* Create(const D3DXVECTOR3 pos,const float fRadius,const D3DXCOLOR col);
-	void SetParam(CEffect3D::TYPE type);
+	void SetParam(CEffect3D::TYPE type, const float fInertia = 0.01f);
 
 	HRESULT Init(void) override;
 	void Uninit(void) override;
@@ -77,5 +77,6 @@ public:
 	void Draw(void) override {};
 private:
 	CEffect3D::TYPE m_type;
+	float m_fInertia; // äµê´
 };
 #endif

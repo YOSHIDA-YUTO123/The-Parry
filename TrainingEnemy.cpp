@@ -331,18 +331,9 @@ CTrainingEnemy::RESULT CTrainingEnemy::GetAttackResult(void)
 	// プレイヤーのモーションの取得
 	int playerMotionType = pPlayerMotion->GetBlendType();
 
-	// 音の取得
-	CSound* pSound = CManager::GetSound();
-
 	// 武器が当たったら
 	if (CollisionPlayer())
 	{
-		if (pSound != nullptr)
-		{
-			// 音の再生
-			pSound->Play(CSound::SOUND_LABEL_PERFECT);
-		}
-
 		if (playerMotionType == pPlayer->MOTIONTYPE_REVENGE)
 		{
 			// パリィした

@@ -33,6 +33,7 @@ public:
 		ID_BASE = 0,	 // 無し
 		ID_IDLE,		 // 通常状態
 		ID_FLY,			 // 飛行
+		ID_FLYMOVE,		 // 飛行移動
 		ID_MAX
 	}ID;
 
@@ -74,6 +75,20 @@ class CBirdFly : public CBirdState
 public:
 	CBirdFly();
 	~CBirdFly();
+
+	void Init(void) override;
+	void Update(void) override;
+private:
+};
+
+//***************************************************
+// 鳥の状態クラス(飛行移動状態)の定義
+//***************************************************
+class CBirdFlyMove : public CBirdState
+{
+public:
+	CBirdFlyMove();
+	~CBirdFlyMove();
 
 	void Init(void) override;
 	void Update(void) override;

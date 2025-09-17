@@ -21,7 +21,8 @@ using namespace Const; // 名前空間Constの使用
 //***************************************************
 constexpr int AREA_POP_TIME = 1800; // 30秒
 constexpr int POINT_POP_TIME = 900; // 15秒
-constexpr int POP_BIRD = 10; // 10匹
+constexpr int POP_BIRD_CENTER = 3; // 10匹
+constexpr int POP_BIRD = 8; // 10匹
 
 //***************************************************
 // 静的メンバ変数宣言
@@ -61,7 +62,7 @@ bool CBirdManager::CheckDistance(const D3DXVECTOR3 otherPos, const float fRadius
 void CBirdManager::SetOpening(void)
 {
 	// 鳥の出現
-	for (int nCnt = 0; nCnt < POP_BIRD; nCnt++)
+	for (int nCnt = 0; nCnt < POP_BIRD_CENTER; nCnt++)
 	{
 		// 位置
 		D3DXVECTOR3 pos = m_Arena[0].pos;
@@ -74,9 +75,15 @@ void CBirdManager::SetOpening(void)
 		float fRandomPosZ = static_cast<float>(rand() % (nRadius * 2) - m_Arena[0].fRadius);
 
 		// 鳥の生成
-		CBird::Create(D3DXVECTOR3(pos.x + fRandomPosX, pos.y, pos.z + fRandomPosZ),false);
+		CBird::Create(D3DXVECTOR3(pos.x + fRandomPosX, pos.y, pos.z + fRandomPosZ),CBird::TYPE_NORMAL,false);
 	}
 
+	// 鳥の出現
+	for (int nCnt = 0; nCnt < POP_BIRD; nCnt++)
+	{
+		CBird::Create(D3DXVECTOR3(static_cast<float>(rand() % 2800 - 1400.0f), 0.0f, static_cast<float>(rand() % 2800 - 1400.0f)), CBird::TYPE_NORMAL);
+		CBird::Create(D3DXVECTOR3(static_cast<float>(rand() % 2000 - 1000.0f), static_cast<float>(rand() % 200 + 600.0f), static_cast<float>(rand() % 2000 - 1000.0f)), CBird::TYPE_FLY_MOVE, false);
+	}
 }
 
 //===================================================
@@ -135,7 +142,8 @@ void CBirdManager::InAreaRenge(const D3DXVECTOR3 otherPos)
 		float fRandomPosZ = static_cast<float>(rand() % (nRadius * 2) - m_Arena[nPoint].fRadius);
 
 		// 鳥の生成
-		CBird::Create(D3DXVECTOR3(pos.x + fRandomPosX,pos.y,pos.z + fRandomPosZ));
+		CBird::Create(D3DXVECTOR3(pos.x + fRandomPosX,pos.y,pos.z + fRandomPosZ), CBird::TYPE_NORMAL);
+		CBird::Create(D3DXVECTOR3(static_cast<float>(rand() % 2000 - 1000.0f), static_cast<float>(rand() % 200 + 600.0f), static_cast<float>(rand() % 2000 - 1000.0f)), CBird::TYPE_FLY_MOVE, false);
 	}
 
 	m_nAreaPopTime = AREA_POP_TIME;
@@ -244,7 +252,7 @@ void CBirdManager::Update(void)
 		int nPoint = rand() % MAX_POINT;
 
 		// 生成処理
-		CBird::Create(m_Point[nPoint],false);
+		CBird::Create(m_Point[nPoint], CBird::TYPE_NORMAL,false);
 
 		m_nPointPopTime = POINT_POP_TIME;
 	}

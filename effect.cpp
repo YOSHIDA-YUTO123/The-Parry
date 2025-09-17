@@ -64,6 +64,9 @@ HRESULT CEffect3D::Init(void)
 		break;
 	}
 
+	// 慣性の設定
+	m_Data.fInertia = 0.01f;
+
 	// 移動クラスの生成
 	m_Data.pMove = make_unique<CVelocity>();
 
@@ -92,7 +95,7 @@ void CEffect3D::Update(void)
 	if (m_Data.pMove != nullptr)
 	{
 		// 移動量の減衰
-		m_Data.pMove->SetInertia3D(0.01f);
+		m_Data.pMove->SetInertia3D(m_Data.fInertia,true);
 
 		// 移動量の更新
 		pos += m_Data.pMove->Get();
@@ -208,7 +211,7 @@ CEffect3D* CEffect3D::Create(const D3DXVECTOR3 pos, const float fRadius, const D
 //===================================================
 // エフェクトの設定処理
 //===================================================
-void CEffect3D::Set(const int nLife, const D3DXVECTOR3 move)
+void CEffect3D::Set(const int nLife, const D3DXVECTOR3 move, const float fInertia)
 {
 	// 減少値の計算
 	m_Data.decAlv = m_Data.col.a / nLife;
@@ -223,4 +226,5 @@ void CEffect3D::Set(const int nLife, const D3DXVECTOR3 move)
 	}
 
 	m_Data.pMove->Set(move);
+	m_Data.fInertia = fInertia;
 }

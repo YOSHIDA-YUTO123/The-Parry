@@ -32,7 +32,7 @@ class CEnemyState : public CStateBase
 {
 public:
 	// IDÇÃéÌóﬁ
-	enum ID
+	typedef enum
 	{
 		ID_BASE = 0,	 // ñ≥Çµ
 		ID_IDLE,		 // Ç»Ç…Ç‡ÇµÇ»Ç¢èÛë‘
@@ -66,7 +66,7 @@ public:
 		ID_SWEEP_RIGHT,	 // ì„Ç¨ï•Ç¢(âE)
 		ID_SWEEP_LEFT,	 // ì„Ç¨ï•Ç¢(ç∂)
 		ID_MAX
-	};
+	}ID;
 
 	CEnemyState();
 	CEnemyState(ID Id);

@@ -118,10 +118,16 @@ void CPosition::UpdatePosition(const D3DXVECTOR3 move)
 //=================================================
 // ˆÚ“®—Ê‚ÌŒ¸Šˆ—3D
 //=================================================
-void CVelocity::SetInertia3D(const float fcoef)
+void CVelocity::SetInertia3D(const float fcoef, const bool bMoveY)
 {
 	// 0.0f‚É‹ß‚Ã‚¯‚é
 	m_move.x = LerpDest(0.0f, m_move.x, fcoef);
+
+	// Y‚àŒ¸Š‚·‚é‚È‚ç
+	if (bMoveY)
+	{
+		m_move.y = LerpDest(0.0f, m_move.y, fcoef);
+	}
 	m_move.z = LerpDest(0.0f, m_move.z, fcoef);
 }
 

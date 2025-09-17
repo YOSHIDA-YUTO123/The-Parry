@@ -58,20 +58,22 @@ public:
 	// モーションの種類
 	typedef enum
 	{
-		MOTIONTYPE_NEUTRAL = 0,
-		MOTIONTYPE_MOVE,
-		MOTIONTYPE_PARRY,
-		MOTIONTYPE_JUMP,
-		MOTIONTYPE_LANDING,
-		MOTIONTYPE_DASH,
-		MOTIONTYPE_DAMAGE,
-		MOTIONTYPE_PUNCH,
-		MOTIONTYPE_DOWN_NEUTRAL,
-		MOTIONTYPE_AVOID,
-		MOTIONTYPE_ROUNDKICK,
-		MOTIONTYPE_STANCE,
-		MOTIONTYPE_REVENGE,
-		MOTIONTYPE_REVENGEATTACK,
+		MOTIONTYPE_NEUTRAL = 0,		// ニュートラル
+		MOTIONTYPE_MOVE,			// 移動
+		MOTIONTYPE_PARRY,			// パリィ
+		MOTIONTYPE_JUMP,			// ジャンプ
+		MOTIONTYPE_LANDING,			// 着地
+		MOTIONTYPE_DASH,			// ダッシュ
+		MOTIONTYPE_DAMAGE,			// ダメージ
+		MOTIONTYPE_PUNCH,			// パンチ
+		MOTIONTYPE_DOWN_NEUTRAL,	// ダウンニュートラル
+		MOTIONTYPE_AVOID,			// 回避
+		MOTIONTYPE_ROUNDKICK,		// 回し蹴り
+		MOTIONTYPE_STANCE,			// 構え
+		MOTIONTYPE_REVENGE,			// 反撃
+		MOTIONTYPE_REVENGEATTACK,	// 反撃(攻撃)
+		MOTIONTYPE_BACK_DAMAGE,		// 後ろから攻撃を受けた
+		MOTIONTYPE_DOWN_NEUTRA_BACK,// ダウンニュートラル(Back)
 		MOTIONTYPE_MAX
 	}MOTIONTYPE;
 
@@ -161,6 +163,7 @@ public:
 	bool CollisionCapsule(CColliderCapsule* pCapsule,const bool bPush = true);
 	void SetRevengeEffect(void);					// 絶対反撃のエフェクトの設定
 	void EnableGravity(const bool bEnable) { m_bGravity = bEnable; } // 重力の判定の設定
+	void SetDamageMotion(const D3DXVECTOR3 AttackerPos, const int nDamage);
 private:
 	void CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos, CMotion* pMotion); // インパクトの当たり判定
 	bool IsMove(CMotion* pMotion);		// 移動できるか判定
@@ -173,6 +176,7 @@ private:
 	void UpdateStamina(void);
 	bool CollisionBlock(D3DXVECTOR3 *pPos);
 	void Config(const int nLife,const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size);
+	void BlowForward(const float fMove, const float fJump);
 
 	std::unique_ptr<CStateMachine> m_pMachine;		// 状態の制御クラス
 	std::unique_ptr<CPlayerMovement> m_pMovement;	// 移動処理
@@ -189,6 +193,7 @@ private:
 	PARRY m_ParryResult;							// パリィの結果
 	float m_fStamina;								// スタミナ
 	float m_fRevengeValue;							// 反撃ゲージ量
+	float m_fDestRevengeValue;						// 目的の反撃ゲージ量
 	int m_nPerfectCnt;								// パリィのパーフェクトの回数
 	int m_nNormalCnt;								// パリィの普通の回数
 	int m_nWeakCnt;									// パリィの弱いの回数

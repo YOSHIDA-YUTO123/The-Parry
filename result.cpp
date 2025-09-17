@@ -170,13 +170,13 @@ HRESULT CResultLose::Init(void)
 	CResultPlayer::Create(VEC3_NULL, VEC3_NULL);
 
 	// íπÇÃê∂ê¨
-	CBird::Create(D3DXVECTOR3(100.0f, 0.0f, 0.0f),false);
+	CBird::Create(D3DXVECTOR3(100.0f, 0.0f, 0.0f),CBird::TYPE_NORMAL,false);
 
 	// íπÇÃê∂ê¨
-	CBird::Create(D3DXVECTOR3(-100.0f, 0.0f, 0.0f), false);
+	CBird::Create(D3DXVECTOR3(-100.0f, 0.0f, 0.0f), CBird::TYPE_NORMAL, false);
 
 	// íπÇÃê∂ê¨
-	CBird::Create(D3DXVECTOR3(-100.0f, 0.0f, -80.0f), false);
+	CBird::Create(D3DXVECTOR3(-100.0f, 0.0f, -80.0f), CBird::TYPE_NORMAL, false);
 
 	return S_OK;
 }

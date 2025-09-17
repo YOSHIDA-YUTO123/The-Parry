@@ -9,26 +9,27 @@
 // インクルードファイル
 //***************************************************
 #include "EnemyState.h"
-#include"enemy.h"
-#include"motion.h"
+#include "enemy.h"
+#include "motion.h"
 #include "math.h"
-#include"player.h"
+#include "player.h"
 #include "manager.h"
 #include "playerstate.h"
-#include"slow.h"
+#include "slow.h"
 #include "game.h"
-#include"particle.h"
-#include"impact.h"
+#include "particle.h"
+#include "impact.h"
 #include "Wave.h"
-#include"GameCamera.h"
+#include "GameCamera.h"
 #include "MoveSmoke.h"
 #include "result.h"
-#include"fade.h"
+#include "fade.h"
 #include "debugproc.h"
 #include "transform.h"
 #include "dust.h"
-#include"Collider.h"
+#include "Collider.h"
 #include"sound.h"
+#include "renderer.h"
 
 //***************************************************
 // 名前空間
@@ -538,9 +539,6 @@ void CEnemyAttackSmash::Update(void)
 		return;
 	}
 
-	// プレイヤーの取得
-	CMotion* pPlayerMotion = pPlayer->GetMotion();
-
 	// 位置の取得
 	D3DXVECTOR3 pos = pEnemy->GetPosition();
 
@@ -578,14 +576,8 @@ void CEnemyAttackSmash::Update(void)
 		// 攻撃があたった
 		else if (result == CEnemy::RESULT_HIT)
 		{
-			// 吹き飛び処理
-			pPlayer->BlowOff(pos, 10.0f, 10.0f);
-
-			// プレイヤーのモーションの設定
-			pPlayerMotion->SetMotion(pPlayer->MOTIONTYPE_DAMAGE, true, 2);
-
-			// プレイヤー状態の変更
-			pPlayer->ChangeState(make_shared<CPlayerDamage>(8));
+			// プレイヤーのダメージモーションの設定
+			pPlayer->SetDamageMotion(pos, 8);
 		}
 		// 絶対反撃
 		else if (result == CEnemy::RESULT_SPREVENGE)
@@ -928,10 +920,19 @@ void CEnemyRoar::Update(void)
 	// 叫びモーションの設定
 	pMotion->SetMotion(CEnemy::MOTIONTYPE_ROAR, true, 10);
 
+	// レンダラーの取得
+	CRenderer* pRenderer = CManager::GetRenderer();
+
 	if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_ROAR))
 	{
 		// 音の取得
 		CSound *pSound = CManager::GetSound();
+
+		if (pRenderer != nullptr)
+		{
+			// ブラーをオン
+			pRenderer->onEffect(0.8f);
+		}
 
 		if (pSound != nullptr)
 		{
@@ -943,6 +944,12 @@ void CEnemyRoar::Update(void)
 	// 攻撃モーションが終わったら
 	if (pMotion->FinishMotion())
 	{
+		if (pRenderer != nullptr)
+		{
+			// ブラーをオン
+			pRenderer->offEffect();
+		}
+
 		// 次の行動
 		int nAction = rand() % 2;
 
@@ -1125,11 +1132,8 @@ void CEnemySpin::Update(void)
 		// 攻撃があたった
 		else if (result == CEnemy::RESULT_HIT)
 		{
-			// 吹き飛び処理
-			pPlayer->BlowOff(pos, 50.0f, 10.0f);
-
-			// プレイヤー状態の変更
-			pPlayer->ChangeState(make_shared<CPlayerDamage>(4));
+			// プレイヤーのダメージモーションの設定
+			pPlayer->SetDamageMotion(pos, 4);
 		}
 	}
 
@@ -1558,9 +1562,6 @@ void CEnemyGuard::Init(void)
 	// ボスまでの角度を取得
 	float fAngle = GetTargetAngle(pos, PlayerPos);
 
-	//// 吹き飛ばす
-	//pEnemy->GetMovement()->BlowOff(PlayerPos,100.0f, 0.0f);
-
 	// 向きの設定
 	pPlayer->SetAngle(fAngle + D3DX_PI);
 
@@ -1737,9 +1738,6 @@ void CEnemySwing::Update(void)
 	// プレイヤーの取得
 	CPlayer* pPlayer = CGame::GetPlayer();
 
-	// プレイヤーの取得
-	CMotion* pPlayerMotion = pPlayer->GetMotion();
-
 	// 位置の取得
 	D3DXVECTOR3 pos = pEnemy->GetPosition();
 	
@@ -1780,14 +1778,8 @@ void CEnemySwing::Update(void)
 			// 範囲内で視界に入っていない、カウンターしていない
 			else if (result == CEnemy::RESULT_HIT)
 			{
-				// 吹き飛び処理
-				pPlayer->BlowOff(pos, 10.0f, 10.0f);
-
-				// プレイヤーのモーションの設定
-				pPlayerMotion->SetMotion(pPlayer->MOTIONTYPE_DAMAGE, true, 2);
-
-				// プレイヤー状態の変更
-				pPlayer->ChangeState(make_shared<CPlayerDamage>(5));
+				// プレイヤーのダメージモーションの設定
+				pPlayer->SetDamageMotion(pos, 5);
 			}
 			// 絶対反撃
 			else if (result == CEnemy::RESULT_SPREVENGE)
@@ -2053,11 +2045,8 @@ void CEnemyJumpAttack::CollisionPlayer(CPlayer* pPlayer, CMotion* pMotion)
 		// 攻撃があたった
 		else if (result == CEnemy::RESULT_HIT)
 		{
-			// 吹き飛び処理
-			pPlayer->BlowOff(pos, 100.0f, 10.0f);
-
-			// プレイヤー状態の変更
-			pPlayer->ChangeState(make_shared<CPlayerDamage>(9));
+			// プレイヤーのダメージモーションの設定
+			pPlayer->SetDamageMotion(pos, 9);
 		}
 		// 絶対反撃
 		else if (result == CEnemy::RESULT_SPREVENGE)
@@ -2442,43 +2431,95 @@ void CEnemyComboDamage::Update(void)
 	// 敵の取得
 	CEnemy* pEnemy = CEnemyState::GetEnemy();
 
+	// プレイヤーの取得
+	CPlayer* pPlayer = CGame::GetPlayer();
+
+	// 取得できなかったら処理しない
+	if (pPlayer == nullptr) return;
+
 	// 敵が使われていないなら処理しない
 	if (pEnemy == nullptr) return;
 
 	// モーションクラスの取得
 	CMotion* pMotion = pEnemy->GetMotion();
 
+	// 取得できなかったら処理しない
+	if (pMotion == nullptr) return;
+	
 	// 音の取得
 	CSound* pSound = CManager::GetSound();
 
-	// モーションがあるなら
-	if (pMotion != nullptr)
+	// エフェクトの生成
+	D3DXVECTOR3 HandL = pPlayer->GetModelPos(CEnemy::MODEL_HANDL);
+	D3DXVECTOR3 HandR = pPlayer->GetModelPos(CEnemy::MODEL_HANDR);
+
+	// プレイヤーの位置
+	D3DXVECTOR3 playerPos = pPlayer->GetPosition();
+
+	// プレイヤー向きの取得
+	D3DXVECTOR3 angle = pPlayer->GetRotaition()->Get();
+
+	// インパクトの位置
+	D3DXVECTOR3 ImpactPos =
 	{
-		if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_COMBODAMAGE))
+		playerPos.x + sinf(angle.y + D3DX_PI) * 100.0f,
+		HandR.y,
+		playerPos.z + cosf(angle.y + D3DX_PI) * 100.0f
+	};
+
+	// ランダムな位置の設定
+	float fRandPosX = static_cast<float>(rand() % 50 - 25);
+	float fRandPosY = static_cast<float>(rand() % 50 - 25);
+	float fRandPosZ = static_cast<float>(rand() % 50 - 25);
+
+	// 新しい位置の設定
+	D3DXVECTOR3 NewImpactPos;
+	NewImpactPos.x = ImpactPos.x + fRandPosX;
+	NewImpactPos.y = ImpactPos.y + fRandPosY;
+	NewImpactPos.z = ImpactPos.z + fRandPosZ;
+
+	if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_COMBODAMAGE))
+	{
+		if (pSound != nullptr)
 		{
-			if (pSound != nullptr)
-			{
-				// 音の再生
-				pSound->Play(CSound::SOUND_LABEL_PERFECT);
-			}
-
-			// ヒット時の設定
-			pEnemy->Hit(2);
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_PERFECT);
 		}
-		if (pMotion->IsEventFrame(159, 159, CEnemy::MOTIONTYPE_COMBODAMAGE))
+
+		// エフェクトの生成
+		auto pEffect = CParticle3DNormal::Create(ImpactPos,20.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
+		pEffect->SetParticle(35.0f, 360, 30, 1, 314);
+		pEffect->SetParam(CEffect3D::TYPE_NORAML,0.1f);
+
+		// メッシュサークルの生成
+		auto pMeshCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.4f, 0.5f), NewImpactPos, 10.0f, 50.0f);
+		pMeshCircle->SetCircle(-50.0f, 8.0f, 30, false, D3DXVECTOR3(D3DX_PI * 0.5f, angle.y, 0.0f));
+
+		// ヒット時の設定
+		pEnemy->Hit(2);
+	}
+	if (pMotion->IsEventFrame(159, 159, CEnemy::MOTIONTYPE_COMBODAMAGE))
+	{
+		if (pSound != nullptr)
 		{
-			if (pSound != nullptr)
-			{
-				// 音の再生
-				pSound->Play(CSound::SOUND_LABEL_PERFECT);
-			}
-
-			// ヒット時の設定
-			pEnemy->Hit(3);
-
-			// 状態の変更
-			pEnemy->ChangeState(make_shared<CEnemyDamageL>(0,false));
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_PERFECT);
 		}
+
+		// メッシュサークルの生成
+		auto pMeshCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.4f, 0.9f), NewImpactPos, 10.0f, 50.0f);
+		pMeshCircle->SetCircle(-50.0f, 8.0f, 30, false, D3DXVECTOR3(D3DX_PI * 0.5f, angle.y, 0.0f));
+
+		// エフェクトの生成
+		auto pEffect = CParticle3DNormal::Create(ImpactPos, 20.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
+		pEffect->SetParticle(35.0f, 360, 50, 1, 314);
+		pEffect->SetParam(CEffect3D::TYPE_NORAML, 0.1f);
+
+		// ヒット時の設定
+		pEnemy->Hit(3);
+
+		// 状態の変更
+		pEnemy->ChangeState(make_shared<CEnemyDamageL>(0,false));
 	}
 }
 
@@ -2859,11 +2900,8 @@ void CEnemyRush::Update(void)
 			// 状態変更
 			pEnemy->ChangeState(make_shared<CEnemyEndRush>(0.05f));
 
-			// 吹き飛び処理
-			pPlayer->BlowOff(pos, 100.0f, 10.0f);
-
-			// プレイヤー状態の変更
-			pPlayer->ChangeState(make_shared<CPlayerDamage>(7));
+			// プレイヤーのダメージモーションの設定
+			pPlayer->SetDamageMotion(pos, 7);
 		}
 		// 絶対反撃
 		else if (result == CEnemy::RESULT_SPREVENGE)
@@ -3109,11 +3147,8 @@ void CEnemyBackKick::Update(void)
 			// 攻撃があたった
 			else if (result == CEnemy::RESULT_HIT)
 			{
-				// 吹き飛び処理
-				pPlayer->BlowOff(pos, 100.0f, 10.0f);
-
-				// プレイヤー状態の変更
-				pPlayer->ChangeState(make_shared<CPlayerDamage>(3));
+				// プレイヤーのダメージモーションの設定
+				pPlayer->SetDamageMotion(pos, 3);
 			}
 			// 絶対反撃
 			else if (result == CEnemy::RESULT_SPREVENGE)
@@ -3448,9 +3483,6 @@ void CEnemySweepRight::Update(void)
 	// モーションクラスの取得
 	CMotion* pMotion = pEnemy->GetMotion();
 
-	// モーションの取得
-	CMotion* pPlayerMotion = pPlayer->GetMotion();
-
 	// 位置の取得
 	D3DXVECTOR3 pos = pEnemy->GetPosition();
 
@@ -3491,14 +3523,8 @@ void CEnemySweepRight::Update(void)
 			// 範囲内で視界に入っていない、カウンターしていない
 			else if (result == CEnemy::RESULT_HIT)
 			{
-				// 吹き飛び処理
-				pPlayer->BlowOff(pos, 10.0f, 10.0f);
-
-				// プレイヤーのモーションの設定
-				pPlayerMotion->SetMotion(pPlayer->MOTIONTYPE_DAMAGE, true, 2);
-
-				// プレイヤー状態の変更
-				pPlayer->ChangeState(make_shared<CPlayerDamage>(5));
+				// プレイヤーのダメージモーションの設定
+				pPlayer->SetDamageMotion(pos, 5);
 			}
 			// 絶対反撃
 			else if (result == CEnemy::RESULT_SPREVENGE)
@@ -3609,9 +3635,6 @@ void CEnemySweepLeft::Update(void)
 	// モーションクラスの取得
 	CMotion* pMotion = pEnemy->GetMotion();
 
-	// モーションの取得
-	CMotion* pPlayerMotion = pPlayer->GetMotion();
-
 	// 位置の取得
 	D3DXVECTOR3 pos = pEnemy->GetPosition();
 
@@ -3649,14 +3672,8 @@ void CEnemySweepLeft::Update(void)
 			// 範囲内で視界に入っていない、カウンターしていない
 			else if (result == CEnemy::RESULT_HIT)
 			{
-				// 吹き飛び処理
-				pPlayer->BlowOff(pos, 10.0f, 10.0f);
-
-				// プレイヤーのモーションの設定
-				pPlayerMotion->SetMotion(pPlayer->MOTIONTYPE_DAMAGE, true, 2);
-
-				// プレイヤー状態の変更
-				pPlayer->ChangeState(make_shared<CPlayerDamage>(4));
+				// プレイヤーのダメージモーションの設定
+				pPlayer->SetDamageMotion(pos, 4);
 			}
 			// 絶対反撃
 			else if (result == CEnemy::RESULT_SPREVENGE)

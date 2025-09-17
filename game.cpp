@@ -133,7 +133,10 @@ HRESULT CGame::Init(void)
 	m_pPauseManager = CPauseManager::GetInstance();
 
 	// Ž•ŽÔ‚Ì¶¬
-	CGear::Create(D3DXVECTOR3(-2700.0f,2100.0f,-155.0f));
+	CGear::Create(D3DXVECTOR3(-2320.0f,1700.0f,100.0f));
+
+	// Ž•ŽÔ‚Ì¶¬
+	CGear::Create(D3DXVECTOR3(2100.0f, 1700.0f, 100.0f));
 
 	// ‰¹‚ÌŽæ“¾
 	CSound* pSound = CManager::GetSound();
@@ -516,7 +519,7 @@ void CGame::LoadCharacter(std::fstream& file, std::string line, CLoadManager* pL
 				EnemyConfig(nLife, fSpeed, ShadowScal, Size, pos, fAngle);
 				break;
 			case CCharacter3D::TYPE_BIRD:
-				CBird::Create(pos)->SetCharacter(nLife, fSpeed, ShadowScal, Size);
+				CBird::Create(pos, CBird::TYPE_NORMAL)->SetCharacter(nLife, fSpeed, ShadowScal, Size);
 				break;
 			default:
 				break;

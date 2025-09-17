@@ -1,0 +1,40 @@
+//================================================
+//
+// ロックオン時にビルボードを描画する [RockOn.h]
+// Author: YUTO YOSHIDA
+//
+//================================================
+
+//*************************************************
+// 多重インクルード防止
+//*************************************************
+#ifndef _ROCKON_H_
+#define _ROCKON_H_
+
+//************************************************
+// インクルードファイル
+//************************************************
+#include "billboard.h"
+
+//************************************************
+// ロックオンクラスの定義
+//************************************************
+class CRockOn : public CObjectBillboard
+{
+public:
+	CRockOn();
+	~CRockOn();
+
+	static CRockOn* Create(const D3DXVECTOR2 Size);
+
+	HRESULT Init(void) override;
+	void Uninit(void) override;
+	void Update(void) override;
+	void Draw(void) override;
+private:
+	D3DXCOLOR m_col;		// 色
+	D3DXVECTOR2 m_DestSize; // 目的の大きさ
+	float m_fCounter;		// 色のカウンター
+};
+
+#endif

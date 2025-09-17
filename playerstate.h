@@ -45,6 +45,8 @@ public:
 		ID_DASH,
 		ID_REVENGE,
 		ID_REVENGEATTACK,
+		ID_DAMAGE_BACK,
+		ID_DOWN_NEUTRAL_BACK,
 		ID_MAX
 	};
 
@@ -215,6 +217,34 @@ class CPlayerRevengeAttack : public CPlayerState
 public:
 	CPlayerRevengeAttack();
 	~CPlayerRevengeAttack();
+	void Init(void) override;
+	void Update(void) override;
+private:
+};
+
+//***************************************************
+// プレイヤーの状態(Damage_Back)の定義
+//***************************************************
+class CPlayerDamageBack : public CPlayerState
+{
+public:
+	CPlayerDamageBack();
+	CPlayerDamageBack(const int nDamage);
+	~CPlayerDamageBack();
+	void Init(void) override;
+	void Update(void) override;
+private:
+	int m_nDamage; // ダメージ
+};
+
+//***************************************************
+// プレイヤーの状態(DownNeutralBk)の定義
+//***************************************************
+class CPlayerDownNeutralBk : public CPlayerState
+{
+public:
+	CPlayerDownNeutralBk();
+	~CPlayerDownNeutralBk();
 	void Init(void) override;
 	void Update(void) override;
 private:

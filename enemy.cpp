@@ -216,12 +216,19 @@ void CEnemy::Update(void)
 	MOTIONTYPE motiontype = static_cast<MOTIONTYPE>(pMotion->GetBlendType());
 
 	float fDistance = motiontype == MOTIONTYPE_JUMPATTACK ? 600.0f : 600.0f;
-	float fHeightV = motiontype == MOTIONTYPE_JUMPATTACK ? 100.0f : 160.0f;
+	//float fHeightV = motiontype == MOTIONTYPE_JUMPATTACK ? 150.0f : 160.0f;
+	 
+	// 胸の位置の取得
+	D3DXVECTOR3 chestpos = GetModelPos(CEnemy::MODEL_CHEST);
+	
+	// 頭の位置の取得
+	D3DXVECTOR3 Headpos = GetModelPos(CEnemy::MODEL_HEAD);
 
 	// カメラがnullじゃないなら
 	if (pCamera != nullptr)
 	{
-		pCamera->Rockon(PlayerPos, D3DXVECTOR3(pos.x, pos.y + fHeightV, pos.z), fDistance);
+		// ロックオン処理
+		pCamera->Rockon(PlayerPos, Headpos, fDistance);
 	}
 
 	if (CCharacter3D::HitStop())
@@ -411,9 +418,6 @@ void CEnemy::Update(void)
 	D3DXVECTOR3 WeponPos = GetPositionFromMatrix(m_weponMatrix);
 	D3DXVECTOR3 WeponBottom = GetModelPos(15);
 
-	// 胸の位置の取得
-	D3DXVECTOR3 chestpos = GetModelPos(2);
-
 	// 敵の攻撃のカウンターの目安の表示
 	if (pMotion->IsEventFrame(50, 50, MOTIONTYPE_SMASH))
 	{
@@ -447,6 +451,9 @@ void CEnemy::Update(void)
 		SetRubble();
 	}
 
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
 	// 衝撃波の生成
 	if (pMotion->IsEventFrame(102, 102, MOTIONTYPE_IMPACT))
 	{
@@ -456,6 +463,11 @@ void CEnemy::Update(void)
 		// インパクトの設定
 		CMeshFieldImpact::Config config = { WeponPos,chestpos,dir,D3DXCOLOR(1.0f,0.5f,0.5f,1.0f),CMeshFieldImpact::OBJ_ENEMY,150.0f,750.0f,26.0f,60 };
 
+		if (pSound != nullptr)
+		{
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_IMPACT001);
+		}
 		// インパクトの生成
 		pMesh->SetImpact(config);
 	}
@@ -1246,9 +1258,6 @@ CEnemy::RESULT CEnemy::WeponAttackResult(CPlayer* pPlayer)
 	// 武器が当たって無かったら
 	if (!CollisionWepon()) return RESULT_NONE;
 	
-	// 音の取得
-	CSound* pSound = CManager::GetSound();
-
 	if (playerMotionType == pPlayer->MOTIONTYPE_REVENGE)
 	{
 		// パリィした
@@ -1274,11 +1283,6 @@ CEnemy::RESULT CEnemy::WeponAttackResult(CPlayer* pPlayer)
 		// カウンター失敗した
 		else if (bParry == false)
 		{
-			if (pSound != nullptr)
-			{
-				// ダメージ音(使いまわし)
-				pSound->Play(CSound::SOUND_LABEL_NORMAL);
-			}
 			// 当たった
 			return RESULT_HIT;
 		}

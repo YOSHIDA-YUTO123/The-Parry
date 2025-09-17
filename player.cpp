@@ -38,7 +38,6 @@
 #include "EffectAnim.h"
 #include "MoveSmoke.h"
 #include "Orbit.h"
-#include "ZoneParticle.h"
 #include "overlay.h"
 #include "math.h"
 #include "ParticleSpark.h"
@@ -49,6 +48,7 @@
 #include "bird.h"
 #include "BirdManager.h"
 #include "sound.h"
+#include "RockOn.h"
 
 //***************************************************
 // 名前空間
@@ -72,6 +72,7 @@ constexpr int ATTACK_TIME = 120;			// 攻撃の有効時間
 //===================================================
 CPlayer::CPlayer() : CCharacter3D(TYPE_PLAYER)
 {
+	m_fDestRevengeValue = NULL;
 	m_fRevengeValue = NULL;
 	m_pMachine = nullptr;
 	m_pMovement = nullptr;
@@ -285,8 +286,14 @@ void CPlayer::Update(void)
 			// ダッシュモーションか歩きモーションかを判定
 			int isDashMotion = (m_bDash ? MOTIONTYPE_DASH : MOTIONTYPE_MOVE);
 
-			// ジャンプかjumpじゃないかを判定
-			int motiontype = m_bJump ? isDashMotion : MOTIONTYPE_JUMP;
+			// 現在のモーションの取得
+			int nNowMotionType = pMotion->GetBlendType();
+
+			// ダウンニュートラルか判定
+			const bool isDownNeutral = nNowMotionType == MOTIONTYPE_DOWN_NEUTRAL || nNowMotionType == MOTIONTYPE_DOWN_NEUTRA_BACK;
+
+			// ダウンニュートラルか判定
+			int motiontype = isDownNeutral ? MOTIONTYPE_AVOID : isDashMotion;
 
 			// フレームを設定
 			const int nFrame = m_bDash ? 5 : 10;
@@ -303,10 +310,15 @@ void CPlayer::Update(void)
 				// 状態の変更
 				ChangeState(make_shared<CPlayerDash>());
 			}
-			else
+			else if(motiontype == MOTIONTYPE_MOVE)
 			{
 				// 状態の変更
 				ChangeState(make_shared<CPlayerMove>());
+			}
+			else
+			{
+				// 状態の変更
+				ChangeState(make_shared<CPlayerAvoid>(35.0f));
 			}
 		}
 		else
@@ -428,22 +440,8 @@ void CPlayer::Update(void)
 		state = rockon ? CGameCamera::STATE_TRACKING : CGameCamera::STATE_ROCKON;
 
 		pCamera->SetState(state);
+
 	}
-
-	//// ジャンプできるなら
-	//if ((pKeyboard->GetTrigger(DIK_SPACE) == true || pJoypad->GetTrigger(pJoypad->JOYKEY_A) == true) && m_bJump == true)
-	//{
-	//	// 生きてるなら
-	//	if (bAlive)
-	//	{
-	//		// ジャンプ状態に移行する
-	//		ChangeState(make_shared<CPlayerJump>());
-
-	//		// 移動量を上方向に設定
-	//		m_pMove->Jump(JUMP_HEIGHT);
-	//		m_bJump = false;
-	//	}
-	//}
 
 	// 回避ボタンを押したかつ生きているなら
 	if ((pKeyboard->GetTrigger(DIK_SPACE) || pJoypad->GetTrigger(pJoypad->JOYKEY_B)) && bAlive)
@@ -486,17 +484,6 @@ void CPlayer::Update(void)
 			//auto pEffect = CEffect3D::Create(playerHandL, 100.0f, D3DCOLOR_RGBA(255, 215, 0, 255), CEffect3D::TYPE_HIT);
 			//pEffect->Set(60, VEC3_NULL);
 		}
-	}
-
-	if (pMotion->IsEventFrame(13, 13, MOTIONTYPE_STANCE))
-	{
-		//D3DXVECTOR3 handRpos = GetModelPos(8);
-		//auto pParticle = CParticle3DNormal::Create(handRpos, 10.0f, WHITE);
-		//pParticle->SetParticle(10.0f, 60, 1, 1, 120);
-
-		//auto pParticle = CZoneParticle3D::Create(handRpos, 10, D3DCOLOR_RGBA(200, 200, 200, 255));
-		//pParticle->SetParticle(3.0f, 60, 20, PARRY_TIME, 314);
-		//pParticle->SetZone(handRpos, 500);
 	}
 
 	// ズームインだったら解除
@@ -550,19 +537,23 @@ void CPlayer::Update(void)
 	}
 
 	// 反撃ゲージが最大を超えたら
-	if (m_fRevengeValue >= MAX_REVENGE)
+	if (m_fDestRevengeValue >= MAX_REVENGE)
 	{
-		m_fRevengeValue = MAX_REVENGE;
+		m_fDestRevengeValue = MAX_REVENGE;
 
 		if (pKeyboard->GetTrigger(DIK_Q) || pJoypad->GetTrigger(pJoypad->JOYKEY_LEFT_THUMB))
 		{
 			// 状態の遷移
 			ChangeState(make_shared<CPlayerRevenge>());
 
+			m_fDestRevengeValue = 0.0f;
 			m_fRevengeValue = 0.0f;
 		}
 	}
 
+	// 目的の値に近づける
+	m_fRevengeValue += (m_fDestRevengeValue - m_fRevengeValue) * 0.1f;
+	
 	// コライダーの更新
 	UpdateCollider(pos);
 
@@ -579,7 +570,7 @@ void CPlayer::Update(void)
 
 	D3DXVECTOR3 rot = CCharacter3D::GetRotaition()->Get();
 
-	D3DXVECTOR3 modelpos = GetModelPos(1);
+	D3DXVECTOR3 modelpos = GetModelPos(CPlayer::MODEL_CHEST);
 
 	posRDest.x = modelpos.x + sinf(rot.y) * 1.0f;
 	posRDest.y = (modelpos.y + 0.0f) + sinf(rot.y) * 1.0f;
@@ -594,7 +585,7 @@ void CPlayer::Update(void)
 	// チュートリアルだったら
 	if (mode == CScene::MODE_TUTORIAL)
 	{
-		m_fRevengeValue += 0.5f;
+		m_fDestRevengeValue += 0.5f;
 	}
 
 #ifdef _DEBUG
@@ -629,7 +620,7 @@ void CPlayer::Update(void)
 
 	if (pKeyboard->GetPress(DIK_9))
 	{
-		m_fRevengeValue += 1.0f;
+		m_fDestRevengeValue += 1.0f;
 	}
 
 	if (pKeyboard->GetTrigger(DIK_O))
@@ -642,9 +633,10 @@ void CPlayer::Update(void)
 
 	if (pKeyboard->GetTrigger(DIK_B))
 	{
-		for (int nCnt = 0; nCnt < 16; nCnt++)
+		for (int nCnt = 0; nCnt < 5; nCnt++)
 		{
-			CBird::Create(D3DXVECTOR3(static_cast<float>(rand() % 2000 - 1000.0f), 0.0f, static_cast<float>(rand() % 2000 - 1000.0f)));
+			CBird::Create(D3DXVECTOR3(static_cast<float>(rand() % 2800 - 1400.0f), 0.0f, static_cast<float>(rand() % 2800 - 1400.0f)), CBird::TYPE_NORMAL);
+			CBird::Create(D3DXVECTOR3(static_cast<float>(rand() % 2000 - 1000.0f), static_cast<float>(rand() % 200 + 600.0f), static_cast<float>(rand() % 2000 - 1000.0f)), CBird::TYPE_FLY_MOVE,false);
 		}
 	}
 #endif // _DEBUG
@@ -1303,7 +1295,7 @@ bool CPlayer::CollisionObstacle(D3DXVECTOR3* pPos)
 				pDamageState->SetSound(CPlayerDamage::TYPE_SPIKE);
 
 				// ダメージ状態にする
-				ChangeState(make_shared<CPlayerDamage>(0));
+				ChangeState(pDamageState);
 			}
 		}
 
@@ -1425,6 +1417,45 @@ void CPlayer::SetRevengeEffect(void)
 }
 
 //===================================================
+// ダメージモーションの選択
+//===================================================
+void CPlayer::SetDamageMotion(const D3DXVECTOR3 AttackerPos,const int nDamage)
+{
+	// 視界の判定の取得
+	auto pFOV = CCollisionFOV::GetInstance();
+
+	// モーションの取得
+	CMotion* pMotion = CCharacter3D::GetMotion();
+
+	// 取得できなかったら処理しない
+	if (pMotion == nullptr) return;
+
+	// 現在のモーションの取得
+	int nNowMotion = pMotion->GetBlendType();
+
+	// ダメージだったら処理しない
+	if (nNowMotion == MOTIONTYPE_DAMAGE || nNowMotion == MOTIONTYPE_BACK_DAMAGE) return;
+
+	// 視界の中だったら
+	if (pFOV->Collision(AttackerPos, m_pFOV.get()))
+	{
+		// 吹き飛び処理
+		BlowOff(AttackerPos, 10.0f, 10.0f);
+
+		// プレイヤーの状態の設定
+		ChangeState(make_shared<CPlayerDamage>(nDamage));
+	}
+	else
+	{
+		// 前に吹き飛ぶ
+		BlowForward(20.0f, 15.0f);
+
+		// プレイヤーの状態の設定
+		ChangeState(make_shared<CPlayerDamageBack>(nDamage));
+	}
+}
+
+//===================================================
 // 剣の軌跡の削除
 //===================================================
 void CPlayer::DeleteOrbit(void)
@@ -1529,7 +1560,7 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos)
 	if (m_nParryCounter >= 0 && m_nParryCounter <= 3)
 	{
 		// 反撃ゲージを増やす
-		m_fRevengeValue += 25;
+		m_fDestRevengeValue += 25;
 
 		if (pSound != nullptr)
 		{
@@ -1547,7 +1578,7 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos)
 	}
 	else if (m_nParryCounter > 3 && m_nParryCounter <= 10)
 	{
-		m_fRevengeValue += 15;
+		m_fDestRevengeValue += 15;
 
 		if (pSound != nullptr)
 		{
@@ -1565,7 +1596,7 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos)
 	}
 	else if (m_nParryCounter > 10 && m_nParryCounter <= m_nParryTime)
 	{
-		m_fRevengeValue += 5;
+		m_fDestRevengeValue += 5;
 
 		if (pSound != nullptr)
 		{
@@ -1608,6 +1639,9 @@ void CPlayer::CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos, CMotion
 	// 衝撃波の位置
 	D3DXVECTOR3 ImpactPos = VEC3_NULL;
 
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
 	// インパクトとの判定
 	const bool bCollision = pMeshField->CollisionImpact(*pPos, 150.0f, CMeshFieldImpact::OBJ_PLAYER, &firstPos, &ImpactPos);
 
@@ -1642,14 +1676,17 @@ void CPlayer::CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos, CMotion
 		// 再設定
 		pMeshField->ResetImpact(dir, CMeshFieldImpact::OBJ_PLAYER, playerHandR, D3DXCOLOR(1.0f, 1.0f, 0.5f, 1.0f));
 
-		m_fRevengeValue += 30;
+		if (pSound != nullptr)
+		{
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_IMPACT001);
+		}
+
+		m_fDestRevengeValue += 30;
 	}
 	// インパクトの当たり判定
 	else if (bCollision && pMotion->GetBlendType() != MOTIONTYPE_DAMAGE)
 	{
-		// 音の取得
-		CSound* pSound = CManager::GetSound();
-
 		if (pSound != nullptr)
 		{
 			// 音の再生
@@ -1708,6 +1745,25 @@ void CPlayer::Config(const int nLife, const float fSpeed, const D3DXVECTOR3 Shad
 }
 
 //===================================================
+// 前に吹き飛ぶ
+//===================================================
+void CPlayer::BlowForward(const float fMove, const float fJump)
+{
+	// 目的の角度の設定
+	float fAngle = CCharacter3D::GetRotaition()->Get().y;
+
+	// 移動量
+	D3DXVECTOR3 move;
+
+	// 移動量の設定
+	move.x = sinf(fAngle + D3DX_PI) * fMove;
+	move.y = fJump;
+	move.z = cosf(fAngle + D3DX_PI) * fMove;
+
+	m_pMove->Set(move);
+}
+
+//===================================================
 // 移動できるかどうか
 //===================================================
 bool CPlayer::IsMove(CMotion *pMotion)
@@ -1718,6 +1774,9 @@ bool CPlayer::IsMove(CMotion *pMotion)
 	// ダメージ状態だったら移動できない
 	if (motiontype == MOTIONTYPE_DAMAGE) return false;
 	
+	// ダメージ状態だったら移動できない
+	if (motiontype == MOTIONTYPE_BACK_DAMAGE) return false;
+
 	// 回避状態だったら移動できない
 	if (motiontype == MOTIONTYPE_AVOID) return false;
 	

@@ -20,6 +20,9 @@
 #include "manager.h"
 #include "tutorial.h"
 #include "sound.h"
+#include "slow.h"
+#include "ParryEffect.h"
+#include "ParticleSpark.h"
 
 using MOTION = CPlayer::MOTIONTYPE; // プレイヤーの列挙型の使用
 using namespace std;				// 名前空間stdの使用
@@ -205,10 +208,21 @@ void CPlayerDamage::Init(void)
 	CSound* pSound = CManager::GetSound();
 
 	// 種類がSPIKEだったら
-	if (pSound != nullptr && m_type == TYPE_SPIKE)
+	if (pSound != nullptr)
 	{
-		// 音の再生
-		pSound->Play(CSound::SOUND_LABEL_SPIKE);
+		switch (m_type)
+		{
+		case TYPE_NORMAL:
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_NORMAL);
+			break;
+		case TYPE_SPIKE:
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_SPIKE);
+			break;
+		default:
+			break;
+		}
 	}
 }
 
@@ -675,6 +689,9 @@ void CPlayerRevenge::Init(void)
 	// プレイヤーの取得
 	auto pPlayer = GetPlayer();
 
+	// 取得できなかったら処理しない
+	if (pPlayer == nullptr) return;
+
 	// モーションの取得
 	CMotion* pMotion = pPlayer->GetMotion();
 
@@ -747,14 +764,64 @@ void CPlayerRevengeAttack::Init(void)
 	// プレイヤーの取得
 	auto pPlayer = GetPlayer();
 
+	// 取得できなかったら処理しない
+	if (pPlayer == nullptr) return;
+
 	// モーションの取得
 	CMotion* pMotion = pPlayer->GetMotion();
+
+	// スローモーションの取得
+	CSlow* pSlow = CManager::GetSlow();
+
+	if (pSlow != nullptr)
+	{
+		// スローモーションの設定
+		pSlow->Start(60, 8);
+	}
 
 	if (pMotion != nullptr)
 	{
 		// 着地モーションの再生
-		pMotion->SetMotion(MOTION::MOTIONTYPE_REVENGEATTACK, true, 5);
+		pMotion->SetMotion(MOTION::MOTIONTYPE_REVENGEATTACK, false, 0);
 	}
+
+	// モーションの更新処理
+	pPlayer->UpdateMotion();
+
+	D3DXVECTOR3 playerPos = pPlayer->GetPosition();
+	D3DXVECTOR3 HandPos = pPlayer->GetModelPos(CPlayer::MODEL_HANDL);
+
+	D3DXVECTOR3 angle = pPlayer->GetRotaition()->Get();
+
+	// 右手の位置
+	D3DXVECTOR3 ImpactPos =
+	{
+		playerPos.x + sinf(angle.y + D3DX_PI) * 50.0f,
+		playerPos.y + HandPos.y,
+		playerPos.z + cosf(angle.y + D3DX_PI) * 50.0f
+	};
+
+	// サークルの生成^
+	auto pMeshCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), ImpactPos, 0.0f, 60.0f);
+	pMeshCircle->SetCircle(0.0f, 8.0f, 120, true, D3DXVECTOR3(D3DX_PI * 0.5f, angle.y, 0.0f));
+
+		// パリィエフェクトの生成
+	CParryEffect::Create(ImpactPos, D3DXVECTOR3(150.0f, 150.0f, 0.0f), D3DXVECTOR3(0.0f, angle.y, 0.0f), 5, 2, 6, false, CParryEffect::TYPE_PARRY);
+
+	// パーティクルの生成
+	CParticleSpark* pSpark = CParticleSpark::Create(ImpactPos, D3DXVECTOR2(3.0f, 40.0f), D3DCOLOR_RGBA(255, 127, 80, 255));
+	pSpark->SetParticle(15.0f, 60, 150, 1, -180);
+
+	pSpark = CParticleSpark::Create(ImpactPos, D3DXVECTOR2(3.0f, 40.0f), D3DCOLOR_RGBA(106, 90, 205, 255));
+	pSpark->SetParticle(15.0f, 60, 150, 1, -180);
+
+	// パーティクルの生成
+	CParticle3DNormal* pNormal = CParticle3DNormal::Create(ImpactPos, 35.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+
+	// パーティクルの設定処理
+	pNormal->SetParticle(15.0f, 120, 60, 1, 314);
+	pNormal->SetParam(CEffect3D::TYPE_HIT);
+
 }
 
 //===================================================
@@ -800,4 +867,144 @@ void CPlayerRevengeAttack::Update(void)
 			pPlayer->ChangeState(make_shared<CPlayerNormal>());
 		}
 	}
+}
+
+//===================================================
+// コンストラクタ(後ろからのダメージ)
+//===================================================
+CPlayerDamageBack::CPlayerDamageBack() : CPlayerState(ID_DAMAGE_BACK)
+{
+	m_nDamage = NULL;
+}
+
+//===================================================
+// コンストラクタ(後ろからのダメージ)
+//===================================================
+CPlayerDamageBack::CPlayerDamageBack(const int nDamage) : CPlayerState(ID_DAMAGE_BACK)
+{
+	m_nDamage = nDamage;
+}
+
+//===================================================
+// デストラクタ(後ろからのダメージ)
+//===================================================
+CPlayerDamageBack::~CPlayerDamageBack()
+{
+}
+
+//===================================================
+// 初期化処理(後ろからのダメージ)
+//===================================================
+void CPlayerDamageBack::Init(void)
+{
+	// プレイヤーの取得
+	auto pPlayer = GetPlayer();
+
+	// 取得できなかったら処理しない
+	if (pPlayer == nullptr) return;
+
+	// モーションの取得
+	CMotion* pMotion = pPlayer->GetMotion();
+
+	// モードの取得
+	CScene::MODE mode = CManager::GetMode();
+
+	// カメラの取得
+	CGameCamera* pCamera = nullptr;
+
+	if (mode == CScene::MODE_GAME)
+	{
+		// カメラの取得
+		pCamera = CGame::GetCamera();
+	}
+	else if (mode == CScene::MODE_TUTORIAL)
+	{
+		// カメラの取得
+		pCamera = CTutorial::GetCamera();
+	}
+
+	// カメラの揺れ
+	pCamera->SetShake(20, 40);
+
+	pPlayer->Hit(m_nDamage);
+
+	if (pMotion != nullptr)
+	{
+		// モーションの再生
+		pMotion->SetMotion(MOTION::MOTIONTYPE_BACK_DAMAGE, true, 2);
+	}
+
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	// 種類がSPIKEだったら
+	if (pSound != nullptr)
+	{
+		// 音の再生
+		pSound->Play(CSound::SOUND_LABEL_PERFECT);
+	}
+}
+//===================================================
+// 更新処理(後ろからのダメージ)
+//===================================================
+void CPlayerDamageBack::Update(void)
+{
+	// プレイヤーの取得
+	auto pPlayer = GetPlayer();
+
+	// 取得できなかったら処理しない
+	if (pPlayer == nullptr) return;
+
+	// モーションの取得
+	CMotion* pMotion = pPlayer->GetMotion();
+	
+	// モーションが終わったら
+	if (pMotion->IsEventFrame(50,50,CPlayer::MOTIONTYPE_BACK_DAMAGE))
+	{
+		// 状態の変更
+		pPlayer->ChangeState(make_shared<CPlayerDownNeutralBk>());
+	}
+}
+
+//===================================================
+// コンストラクタ(ダウン後ろ)
+//===================================================
+CPlayerDownNeutralBk::CPlayerDownNeutralBk() : CPlayerState(ID_DOWN_NEUTRAL_BACK)
+{
+}
+
+//===================================================
+// デストラクタ(ダウン後ろ)
+//===================================================
+CPlayerDownNeutralBk::~CPlayerDownNeutralBk()
+{
+}
+
+//===================================================
+// 初期化処理(ダウン後ろ)
+//===================================================
+void CPlayerDownNeutralBk::Init(void)
+{
+	// プレイヤーの取得
+	auto pPlayer = GetPlayer();
+
+	// 取得できなかったら処理しない
+	if (pPlayer == nullptr) return;
+
+	// モーションの取得
+	CMotion* pMotion = pPlayer->GetMotion();
+
+	if (pMotion != nullptr)
+	{
+		// 着地モーションの再生
+		pMotion->SetMotion(MOTION::MOTIONTYPE_DOWN_NEUTRA_BACK, true, 5);
+	}
+}
+
+//===================================================
+// 更新処理(ダウン後ろ)
+//===================================================
+void CPlayerDownNeutralBk::Update(void)
+{
+
 }

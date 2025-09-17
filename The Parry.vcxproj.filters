@@ -297,13 +297,7 @@
     <ClCompile Include="object2DMT.cpp">
       <Filter>ソース ファイル\object2DMT</Filter>
     </ClCompile>
-    <ClCompile Include="ZoneEffect.cpp">
-      <Filter>ソース ファイル\objectBillboard\effect</Filter>
-    </ClCompile>
     <ClCompile Include="particle.cpp">
-      <Filter>ソース ファイル\objectBillboard\particle</Filter>
-    </ClCompile>
-    <ClCompile Include="ZoneParticle.cpp">
       <Filter>ソース ファイル\objectBillboard\particle</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
@@ -350,9 +344,6 @@
     </ClCompile>
     <ClCompile Include="RevengeGage.cpp">
       <Filter>ソース ファイル\object2DMT</Filter>
-    </ClCompile>
-    <ClCompile Include="ParticleTornado.cpp">
-      <Filter>ソース ファイル\objectBillboard\particle</Filter>
     </ClCompile>
     <ClCompile Include="opening.cpp">
       <Filter>ソース ファイル\scene</Filter>
@@ -428,6 +419,9 @@
     </ClCompile>
     <ClCompile Include="ResultScore.cpp">
       <Filter>ソース ファイル\number</Filter>
+    </ClCompile>
+    <ClCompile Include="RockOn.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -611,14 +605,8 @@
     <ClInclude Include="object2DMT.h">
       <Filter>ヘッダー ファイル\object2DMT</Filter>
     </ClInclude>
-    <ClInclude Include="ZoneEffect.h">
-      <Filter>ヘッダー ファイル\objectBillboard\effect</Filter>
-    </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>ヘッダー ファイル\base</Filter>
-    </ClInclude>
-    <ClInclude Include="ZoneParticle.h">
-      <Filter>ヘッダー ファイル\objectBillboard\particle</Filter>
     </ClInclude>
     <ClInclude Include="particle.h">
       <Filter>ヘッダー ファイル\objectBillboard\particle</Filter>
@@ -740,8 +728,8 @@
     <ClInclude Include="ResultScore.h">
       <Filter>ヘッダー ファイル\number</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleTornado.h">
-      <Filter>ヘッダー ファイル\objectBillboard\particle</Filter>
+    <ClInclude Include="RockOn.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

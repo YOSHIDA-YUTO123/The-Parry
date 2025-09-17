@@ -17,6 +17,7 @@
 #include "game.h"
 #include"pause.h"
 #include "effect.h"
+#include "RockOn.h"
 
 using namespace Const; // 名前空間Constを使用
 
@@ -144,6 +145,12 @@ void CGameCamera::SetState(const STATE state)
 {
 	m_Oldstate = m_state; // 前回の状態を保存
 	m_state = state;
+
+	if (state == CGameCamera::STATE_ROCKON)
+	{
+		// ロックオンの生成
+		CRockOn::Create(D3DXVECTOR2(50.0f, 50.0f));
+	}
 }
 
 //===================================================
@@ -153,6 +160,12 @@ void CGameCamera::ResetState(void)
 {
 	// 前の状態を設定
 	m_state = m_Oldstate;
+
+	if (m_state == CGameCamera::STATE_ROCKON)
+	{
+		// ロックオンの生成
+		CRockOn::Create(D3DXVECTOR2(50.0f, 50.0f));
+	}
 
 	// レンダラーの取得
 	auto pRenderer = CManager::GetRenderer();
@@ -189,9 +202,10 @@ void CGameCamera::Rockon(D3DXVECTOR3 playerPos, D3DXVECTOR3 enemyPos, float fDis
 	// 注視点
 	D3DXVECTOR3 posR = CCamera::GetPosR();
 
+	// 敵とプレイヤーの間を見る
 	D3DXVECTOR3 CenterPos = (enemyPos + playerPos) * 0.5f;
 
-	CenterPos.y = enemyPos.y;
+	//CenterPos.y = enemyPos.y;
 
 	// 注視点を敵の位置にする
 	posR.x = CenterPos.x;

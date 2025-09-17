@@ -121,7 +121,7 @@ void CWinResultManager::Create(void)
 	int nPerfectScore = 100000 * m_pInstance->m_nPerfectCnt;
 	int nNormalScore = 10000 * m_pInstance->m_nNormalCnt;
 	int nWeakScore = 1000 * m_pInstance->m_nWeakCnt;
-	int nTimeScore = 1234 * nTime;
+	int nTimeScore = 123400 / nTime;
 
 	m_pInstance->m_nScore = nPerfectScore + nNormalScore + nWeakScore + nTimeScore;
 }

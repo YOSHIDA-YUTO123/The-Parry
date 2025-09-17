@@ -66,7 +66,7 @@ public:
 	void Set(const D3DXVECTOR3 move) { m_move = move; }
 	void Add(const D3DXVECTOR3 move) { m_move += move; }
 
-	void SetInertia3D(const float fcoef);
+	void SetInertia3D(const float fcoef, const bool bMoveY = false);
 	void SetInertia2D(const float fcoef);
 	void Gravity(const float gravity);
 	void Bound(D3DXVECTOR3 nor, float coef = 0.8f);

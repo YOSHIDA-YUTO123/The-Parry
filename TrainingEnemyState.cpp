@@ -20,6 +20,8 @@
 #include"math.h"
 #include"transform.h"
 #include "sound.h"
+#include "particle.h"
+#include "impact.h"
 
 using namespace math; // 名前空間mathの使用
 using namespace std;  // 名前空間stdの使用
@@ -239,11 +241,8 @@ void CTrainingEnemyAction::Update(void)
 		// 攻撃があたった
 		else if (result == CTrainingEnemy::RESULT_HIT)
 		{
-			// 吹き飛び処理
-			pPlayer->BlowOff(pos, 100.0f, 10.0f);
-
-			// プレイヤー状態の変更
-			pPlayer->ChangeState(make_shared<CPlayerDamage>(0));
+			// ダメージモーション
+			pPlayer->SetDamageMotion(pos, 0);
 		}
 	}
 }
@@ -464,6 +463,12 @@ void CTrainingEnemyCombDamage::Update(void)
 	// モーションクラスの取得
 	CMotion* pMotion = pEnemy->GetMotion();
 
+	// プレイヤーの取得
+	CPlayer* pPlayer = CTutorial::GetPlayer();
+
+	// 取得できなかったら処理しない
+	if (pPlayer == nullptr) return;
+
 	// 敵が使われていないなら処理しない
 	if (pEnemy == nullptr) return;
 
@@ -473,6 +478,34 @@ void CTrainingEnemyCombDamage::Update(void)
 	// 音の取得
 	CSound* pSound = CManager::GetSound();
 
+	// エフェクトの生成
+	D3DXVECTOR3 HandR = pPlayer->GetModelPos(CTrainingEnemy::MODEL_HANDR);
+
+	// プレイヤーの位置
+	D3DXVECTOR3 playerPos = pPlayer->GetPosition();
+
+	// プレイヤー向きの取得
+	D3DXVECTOR3 angle = pPlayer->GetRotaition()->Get();
+
+	// インパクトの位置
+	D3DXVECTOR3 ImpactPos =
+	{
+		playerPos.x + sinf(angle.y + D3DX_PI) * 100.0f,
+		HandR.y,
+		playerPos.z + cosf(angle.y + D3DX_PI) * 100.0f
+	};
+
+	// ランダムな位置の設定
+	float fRandPosX = static_cast<float>(rand() % 50 - 25);
+	float fRandPosY = static_cast<float>(rand() % 50 - 25);
+	float fRandPosZ = static_cast<float>(rand() % 50 - 25);
+
+	// 新しい位置の設定
+	D3DXVECTOR3 NewImpactPos;
+	NewImpactPos.x = ImpactPos.x + fRandPosX;
+	NewImpactPos.y = ImpactPos.y + fRandPosY;
+	NewImpactPos.z = ImpactPos.z + fRandPosZ;
+
 	if (pMotion->IsEventFrame(CTrainingEnemy::MOTIONTYPE_COMB_DAMAGE))
 	{
 		if (pSound != nullptr)
@@ -480,6 +513,15 @@ void CTrainingEnemyCombDamage::Update(void)
 			// 音の再生
 			pSound->Play(CSound::SOUND_LABEL_PERFECT);
 		}
+
+		// エフェクトの生成
+		auto pEffect = CParticle3DNormal::Create(ImpactPos, 20.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
+		pEffect->SetParticle(35.0f, 360, 30, 1, 314);
+		pEffect->SetParam(CEffect3D::TYPE_NORAML, 0.1f);
+
+		// メッシュサークルの生成
+		auto pMeshCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.4f, 0.5f), NewImpactPos, 10.0f, 50.0f);
+		pMeshCircle->SetCircle(-50.0f, 8.0f, 30, false, D3DXVECTOR3(D3DX_PI * 0.5f, angle.y, 0.0f));
 	}
 	if (pMotion->IsEventFrame(159, 159, CTrainingEnemy::MOTIONTYPE_COMB_DAMAGE))
 	{
@@ -488,6 +530,22 @@ void CTrainingEnemyCombDamage::Update(void)
 			// 音の再生
 			pSound->Play(CSound::SOUND_LABEL_PERFECT);
 		}
+
+		// 足の位置
+		D3DXVECTOR3 FootPosR = pPlayer->GetModelPos(CPlayer::MODEL_FOOTR);
+		D3DXVECTOR3 FootPosL = pPlayer->GetModelPos(CPlayer::MODEL_FOOTL);
+
+		// 足の間の位置を求める
+		D3DXVECTOR3 FootPos = FootPosR + (FootPosR - FootPosL) * 0.5f;
+
+		// メッシュサークルの生成
+		auto pMeshCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.4f, 0.9f), FootPos, 10.0f, 50.0f);
+		pMeshCircle->SetCircle(-50.0f, 8.0f, 30, false, D3DXVECTOR3(D3DX_PI * 0.5f, angle.y, 0.0f));
+
+		// エフェクトの生成
+		auto pEffect = CParticle3DNormal::Create(FootPos, 20.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
+		pEffect->SetParticle(35.0f, 360, 50, 1, 314);
+		pEffect->SetParam(CEffect3D::TYPE_NORAML, 0.1f);
 
 		// ダメージ状態の生成
 		auto pDamageState = make_shared<CTrainingEnemyDamage>();

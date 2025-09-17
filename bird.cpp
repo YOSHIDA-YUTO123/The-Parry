@@ -40,6 +40,9 @@ bool CBird::m_bLoad = false;  // ロードしたかどうか
 //===================================================
 CBird::CBird() : CCharacter3D(TYPE_BIRD)
 {
+	m_fTimeOffset = NULL;
+	m_fTime = NULL;
+	m_type = TYPE_NORMAL;
 	m_bGravity = true;
 	m_nMaxLife = POP_TIME;
 	m_nLife = MAX_LIFE;
@@ -57,13 +60,14 @@ CBird::~CBird()
 //===================================================
 // 生成処理
 //===================================================
-CBird* CBird::Create(const D3DXVECTOR3 pos,const bool bGravity)
+CBird* CBird::Create(const D3DXVECTOR3 pos, const TYPE type, const bool bGravity)
 {
 	CBird* pBird = new CBird;
 
 	// 位置の設定
 	pBird->SetPosition(pos);
 	pBird->m_bGravity = bGravity;
+	pBird->m_type = type;
 
 	// 初期化処理
 	if (FAILED(pBird->Init()))
@@ -119,14 +123,32 @@ HRESULT CBird::Init(void)
 	// 状態マシーンの生成
 	m_pMachine = make_unique<CStateMachine>();
 
-	// 状態の設定
-	ChangeState(make_shared<CBirdIdle>());
+	// 種類
+	switch (m_type)
+	{
+	case TYPE_NORMAL:
+		// 状態の設定
+		ChangeState(make_shared<CBirdIdle>());
+		break;
+	case TYPE_FLY_MOVE:
+		// 状態の設定
+		ChangeState(make_shared<CBirdFlyMove>());
+		break;
+	default:
+		break;
+	}
 
 	// キャラクターの設定処理
 	CCharacter3D::SetCharacter(10, 6.0f, D3DXVECTOR3(2.0f, 1.0f, 2.0f), D3DXVECTOR3(50.0f, 100.0f, 50.0f));
 
 	// 移動クラスの生成
 	m_pMove = make_unique<CVelocity>();
+
+	// 2πをintに変換
+	int nTwoPI = static_cast<int>(D3DX_PI * 2);
+
+	// オフセットを選出
+	m_fTimeOffset = static_cast<float>(rand() % nTwoPI);
 
 	return S_OK;
 }
@@ -197,6 +219,7 @@ void CBird::Update(void)
 	// モードがリザルトだったら
 	if (mode == CScene::MODE_RESULT) return;
 
+	// モーションの取得
 	CMotion* pMotion = CCharacter3D::GetMotion();
 
 	if (pMotion != nullptr)
@@ -312,6 +335,37 @@ void CBird::SetFly(const D3DXVECTOR3 move)
 		// 移動量の設定
 		m_pMove->Set(moveWk);
 	}
+}
+
+//===================================================
+// 飛びながら移動
+//===================================================
+void CBird::FlyMove(const float fMove)
+{
+	// nullなら処理しない
+	if (m_pMove == nullptr) return;
+
+	// 計算用の移動量
+	D3DXVECTOR3 moveWk = m_pMove->Get();
+
+	m_fTime += 0.02f;
+
+	float fTime = m_fTime + m_fTimeOffset;
+
+	// 円運動の速度ベクトルを計算
+	moveWk.x = -sinf(fTime) * fMove;
+	moveWk.z = cosf(fTime) * fMove;
+
+	// 移動量の設定
+	m_pMove->Set(moveWk);
+
+	// 移動量の正規化
+	D3DXVec3Normalize(&moveWk, &moveWk);
+
+	// 移動方向を求める
+	float fAngle = atan2f(moveWk.x, moveWk.z);
+
+	CCharacter3D::GetRotaition()->Set(D3DXVECTOR3(0.0f, fAngle + D3DX_PI, 0.0f));
 }
 
 //===================================================

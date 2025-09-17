@@ -47,6 +47,7 @@ public:
 		float decRadius;					// 大きさの減少スピード
 		float decAlv;						// α値の減少スピード
 		float fRadius;						// 半径
+		float fInertia;					// 慣性
 		int nLife;							// 寿命
 	};
 
@@ -54,7 +55,7 @@ public:
 	~CEffect3D();
 
 	static CEffect3D* Create(const D3DXVECTOR3 pos, const float fRadius, const D3DXCOLOR col, const TYPE type);
-	void Set(const int nLife, const D3DXVECTOR3 move);
+	void Set(const int nLife, const D3DXVECTOR3 move, const float fInertia = 0.01f);
 
 	virtual HRESULT Init(void) override;
 	virtual void Uninit(void) override;

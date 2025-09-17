@@ -182,12 +182,12 @@
     <ClCompile Include="overlay.cpp" />
     <ClCompile Include="ParryEffect.cpp" />
     <ClCompile Include="ParticleSpark.cpp" />
-    <ClCompile Include="ParticleTornado.cpp" />
     <ClCompile Include="ResultCamera.cpp" />
     <ClCompile Include="ResultMenu.cpp" />
     <ClCompile Include="ResultPlayer.cpp" />
     <ClCompile Include="ResultScore.cpp" />
     <ClCompile Include="RevengeGage.cpp" />
+    <ClCompile Include="RockOn.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="TitleCamera.cpp" />
     <ClCompile Include="TitleLogo.cpp" />
@@ -197,7 +197,6 @@
     <ClCompile Include="TrainingEnemyState.cpp" />
     <ClCompile Include="tutorial.cpp" />
     <ClCompile Include="WinResultManager.cpp" />
-    <ClCompile Include="ZoneParticle.cpp" />
     <ClCompile Include="cylinder.cpp" />
     <ClCompile Include="debugproc.cpp" />
     <ClCompile Include="dome.cpp" />
@@ -259,7 +258,6 @@
     <ClCompile Include="transform.cpp" />
     <ClCompile Include="Wave.cpp" />
     <ClCompile Include="word.cpp" />
-    <ClCompile Include="ZoneEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="background.h" />
@@ -293,12 +291,12 @@
     <ClInclude Include="overlay.h" />
     <ClInclude Include="ParryEffect.h" />
     <ClInclude Include="ParticleSpark.h" />
-    <ClInclude Include="ParticleTornado.h" />
     <ClInclude Include="ResultCamera.h" />
     <ClInclude Include="ResultMenu.h" />
     <ClInclude Include="ResultPlayer.h" />
     <ClInclude Include="ResultScore.h" />
     <ClInclude Include="RevengeGage.h" />
+    <ClInclude Include="RockOn.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="TitleCamera.h" />
     <ClInclude Include="TitleLogo.h" />
@@ -308,7 +306,6 @@
     <ClInclude Include="TrainingEnemyState.h" />
     <ClInclude Include="tutorial.h" />
     <ClInclude Include="WinResultManager.h" />
-    <ClInclude Include="ZoneParticle.h" />
     <ClInclude Include="cylinder.h" />
     <ClInclude Include="debugproc.h" />
     <ClInclude Include="dome.h" />
@@ -365,7 +362,6 @@
     <ClInclude Include="transform.h" />
     <ClInclude Include="Wave.h" />
     <ClInclude Include="word.h" />
-    <ClInclude Include="ZoneEffect.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

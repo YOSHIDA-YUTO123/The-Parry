@@ -26,7 +26,7 @@ CParticle3D::CParticle3D()
 {
 	// 0にする
 	ZeroMemory(&m_Info, sizeof(m_Info));
-
+	
 	m_nMaxLife = NULL;
 }
 
@@ -96,6 +96,7 @@ void CParticle3D::SetParticle(const float fSpeed, const int nLife, const int nNu
 //===================================================
 CParticle3DNormal::CParticle3DNormal()
 {
+	m_fInertia = 0.01f;
 	m_type = CEffect3D::TYPE::TYPE_NORAML;
 }
 
@@ -131,9 +132,10 @@ CParticle3DNormal* CParticle3DNormal::Create(const D3DXVECTOR3 pos, const float 
 //===================================================
 // パーティクルの設定処理
 //===================================================
-void CParticle3DNormal::SetParam(CEffect3D::TYPE type)
+void CParticle3DNormal::SetParam(CEffect3D::TYPE type, const float fInertia)
 {
 	m_type = type;
+	m_fInertia = fInertia;
 }
 
 //===================================================
@@ -212,7 +214,7 @@ void CParticle3DNormal::Update(void)
 			auto pEffect = CEffect3D::Create(pos,fRadius,col,m_type);
 
 			// エフェクトの設定処理
-			pEffect->Set(nLife, moveWk);
+			pEffect->Set(nLife, moveWk,m_fInertia);
 		}
 	}
 	

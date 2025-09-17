@@ -34,7 +34,7 @@ namespace
 	constexpr int NUM_SIRCLE = 5;			// メッシュサークルを出す数
 	constexpr float MAX_COLOR = 1.0f;		// 色の最大値
 	constexpr float COLOR_EASE = 0.004f;	// 色のイージング値
-	constexpr float AUDIO_DISTANCE = 1000.0f; // 音の聞こえる距離
+	constexpr float AUDIO_DISTANCE = 2000.0f; // 音の聞こえる距離
 }
 
 //================================================

@@ -131,6 +131,9 @@ void COpeningEnemy::Update(void)
 	// 取得できなかったら処理しない
 	if (pFade == nullptr) return;
 
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
 	float fHeight = 0.0f;
 
 	// 地面との当たり判定
@@ -148,6 +151,12 @@ void COpeningEnemy::Update(void)
 			pCamera->SetShake(60, 20);
 
 			m_bLanding = true;
+
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_IMPACT000);
+			}
 		}
 
 		// 高さの設定
@@ -179,9 +188,6 @@ void COpeningEnemy::Update(void)
 	// 叫びの63f目になったら
 	if (pMotion->IsEventFrame(63,63,CEnemy::MOTIONTYPE_ROAR))
 	{
-		// 音の取得
-		CSound* pSound = CManager::GetSound();
-
 		if (pSound != nullptr)
 		{
 			// 咆哮
@@ -192,26 +198,26 @@ void COpeningEnemy::Update(void)
 		pCamera->SetShake(180, 30);
 
 		// レンダラーの取得
-		//CRenderer* pRenderer = CManager::GetRenderer();
+		CRenderer* pRenderer = CManager::GetRenderer();
 
-		//if (pRenderer != nullptr)
-		//{
-		//	 ブラーをオン
-		//	pRenderer->onEffect(0.9f);
-		//}
+		if (pRenderer != nullptr)
+		{
+			// ブラーをオン
+			pRenderer->onEffect(0.9f);
+		}
 	}
 
 	// 叫びが終わったら
 	if (pMotion->GetType() == CEnemy::MOTIONTYPE_ROAR && pMotion->IsEndMotion())
 	{
-		//// レンダラーの取得
-		//CRenderer* pRenderer = CManager::GetRenderer();
+		// レンダラーの取得
+		CRenderer* pRenderer = CManager::GetRenderer();
 
-		//if (pRenderer != nullptr)
-		//{
-		//	// ブラーをオン
-		//	pRenderer->offEffect();
-		//}
+		if (pRenderer != nullptr)
+		{
+			// ブラーをオン
+			pRenderer->offEffect();
+		}
 
 		pCamera->SetMove(D3DXVECTOR3(0.0f, 0.0f, 3.0f));
 	}
