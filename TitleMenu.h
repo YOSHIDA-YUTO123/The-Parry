@@ -47,6 +47,8 @@ protected:
 private:
 	MENU m_Menu; // タイトルのメニュー
 	D3DXVECTOR2 m_BaseSize; // 基準の大きさ
+	D3DXCOLOR m_col;		// 色
+	float m_fCounter;		// 色のカウンター
 };
 
 //***************************************************

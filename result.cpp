@@ -190,6 +190,15 @@ HRESULT CResultLose::Init(void)
 //===================================================
 void CResultLose::Uninit(void)
 {
+	// ゲームマネージャーの取得
+	auto pGameManager = CGameManager::GetInstance();
+
+	if (pGameManager != nullptr)
+	{
+		// 破棄
+		pGameManager->Uninit();
+	}
+
 	// カメラの破棄
 	if (m_pCamera != nullptr)
 	{

@@ -48,7 +48,7 @@ constexpr int ABSSPIN_TIME = 30;				// 絶対回転する時間
 constexpr int INIT_NEXT_ACTION = 999;			// 次のアクションに移行する数値(初期化)
 constexpr int MAX_AWAYPOS_X = 1300;				// 最大の離れる位置X
 constexpr int MAX_AWAYPOS_Z = 1300;				// 最大の離れる位置Z
-constexpr float JUMPATTACK_MOVE_FRAME = 25.0f;	// ジャンプ攻撃の移動フレーム
+constexpr float JUMPATTACK_MOVE_FRAME = 20.0f;	// ジャンプ攻撃の移動フレーム
 constexpr float AWAY_TIME = 24.0f;				// ジャンプする時間
 
 //===================================================
@@ -2598,7 +2598,7 @@ void CEnemyRightMove::Update(void)
 		if (!pEnemy->CheckDistane(ACTION_DISTANCE))
 		{
 			// 次の行動の選出
-			int nAction = rand() % 2;
+			int nAction = rand() % 4;
 
 			// 次の行動の遷移
 			switch (nAction)
@@ -2609,13 +2609,20 @@ void CEnemyRightMove::Update(void)
 			case 1:
 				pEnemy->ChangeState(make_shared<CEnemyRush>());
 				break;
+			case 2:
+				pEnemy->ChangeState(make_shared<CEnemyAttackImpact>());
+				break;
+			case 3:
+				pEnemy->ChangeState(make_shared<CEnemyRoar>());
+				break;
 			default:
 				break;
 			}
 		}
 		else
 		{
-			pEnemy->ChangeState(make_shared<CEnemyMove>());
+			// 状態の変更
+			pEnemy->ChangeState(make_shared<CEnemyRushSwing>());
 		}
 	}
 
@@ -2708,7 +2715,7 @@ void CEnemyLeftMove::Update(void)
 		if (!pEnemy->CheckDistane(ACTION_DISTANCE))
 		{
 			// 次の行動の選出
-			int nAction = rand() % 2;
+			int nAction = rand() % 4;
 
 			// 次の行動の遷移
 			switch (nAction)
@@ -2719,13 +2726,20 @@ void CEnemyLeftMove::Update(void)
 			case 1:
 				pEnemy->ChangeState(make_shared<CEnemyRush>());
 				break;
+			case 2:
+				pEnemy->ChangeState(make_shared<CEnemyAttackImpact>());
+				break;
+			case 3:
+				pEnemy->ChangeState(make_shared<CEnemyRoar>());
+				break;
 			default:
 				break;
 			}
 		}
 		else
 		{
-			pEnemy->ChangeState(make_shared<CEnemyMove>());
+			// 状態の変更
+			pEnemy->ChangeState(make_shared<CEnemyRushSwing>());
 		}
 	}
 
@@ -2892,7 +2906,7 @@ void CEnemyRush::Update(void)
 			pSlow->Start(60, 4);
 
 			// 状態変更
-			pEnemy->ChangeState(make_shared<CEnemyEndRush>(0.02f));
+			pEnemy->ChangeState(make_shared<CEnemyEndRush>(0.009f));
 		}
 		// 攻撃があたった
 		else if (result == CEnemy::RESULT_HIT)
@@ -3559,7 +3573,7 @@ void CEnemySweepRight::Update(void)
 			}
 
 			// 状態の変更
-			pEnemy->ChangeState(make_shared<CEnemyIdle>(20));
+			pEnemy->ChangeState(make_shared<CEnemyRushSwing>());
 
 			return;
 		}
@@ -3708,7 +3722,7 @@ void CEnemySweepLeft::Update(void)
 			}
 
 			// 状態の変更
-			pEnemy->ChangeState(make_shared<CEnemyIdle>(20));
+			pEnemy->ChangeState(make_shared<CEnemyRushSwing>());
 
 			return;
 		}
@@ -3723,6 +3737,227 @@ void CEnemySweepLeft::Update(void)
 				// 音の再生
 				pSound->Play(CSound::SOUND_LABEL_SWING);
 			}
+		}
+	}
+}
+
+//===================================================
+// コンストラクタ(突進なぎ)
+//===================================================
+CEnemyRushSwing::CEnemyRushSwing() : CEnemyState(ID_RUSH_SWING)
+{
+}
+
+//===================================================
+// デストラクタ(突進なぎ)
+//===================================================
+CEnemyRushSwing::~CEnemyRushSwing()
+{
+	// 敵の取得
+	CEnemy* pEnemy = CEnemyState::GetEnemy();
+
+	// 敵が使われていないなら処理しない
+	if (pEnemy == nullptr) return;
+
+	// 慣性をもとに戻す
+	pEnemy->SetInertia(0.25f);
+}
+
+//===================================================
+// 初期化処理
+//===================================================
+void CEnemyRushSwing::Init(void)
+{
+	// 敵の取得
+	CEnemy* pEnemy = CEnemyState::GetEnemy();
+
+	// 敵が使われていないなら処理しない
+	if (pEnemy == nullptr) return;
+
+	// 剣のリセット
+	pEnemy->DeleteOrbit();
+
+	// モーションクラスの取得
+	CMotion* pMotion = pEnemy->GetMotion();
+
+	// モーションがあるなら
+	if (pMotion != nullptr)
+	{
+		// モーションの再生
+		pMotion->SetMotion(CEnemy::MOTIONTYPE_RUSH_SWING, true, 10);
+	}
+}
+
+//===================================================
+// 更新処理
+//===================================================
+void CEnemyRushSwing::Update(void)
+{
+	// 敵の取得
+	CEnemy* pEnemy = CEnemyState::GetEnemy();
+
+	// 敵が使われていないなら処理しない
+	if (pEnemy == nullptr) return;
+
+	// プレイヤーの取得
+	CPlayer* pPlayer = CGame::GetPlayer();
+
+	// 取得できなかったら処理しない
+	if (pPlayer == nullptr) return;
+
+	// モーションクラスの取得
+	CMotion* pMotion = pEnemy->GetMotion();
+
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	// モーションがあるなら
+	if (pMotion != nullptr)
+	{
+		if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_RUSH_SWING, 2))
+		{
+			// プレイヤーの取得
+			D3DXVECTOR3 playerPos = pPlayer->GetPosition();
+			D3DXVECTOR3 pos = pEnemy->GetPosition();
+
+			// プレイヤーの方向を見る
+			pEnemy->AngleToPlayer();
+
+			// 距離を求める
+			float fDistance = GetDistance(playerPos - pos);
+
+			// 移動量を設定
+			pEnemy->GetMovement()->MoveForWard(fDistance / MOVE_FRAME);
+		}
+		else if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_RUSH_SWING, 3))
+		{
+			// 慣性を設定
+			pEnemy->SetInertia(0.02f);
+		}
+		if(pMotion->IsEventFrame(CEnemy::MOTIONTYPE_RUSH_SWING, 4) || 
+			pMotion->IsEventFrame(CEnemy::MOTIONTYPE_RUSH_SWING, 5) ||
+			pMotion->IsEventFrame(CEnemy::MOTIONTYPE_RUSH_SWING, 6))
+		{
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_WARK003);
+			}
+		}
+
+		if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_RUSH_SWING, 7))
+		{
+			// プレイヤーの方向を見る
+			pEnemy->AngleToPlayer();
+		}
+
+		// プレイヤーとの当たり判定
+		CollisionPlayer(pEnemy, pMotion);
+
+		if (pMotion->FinishMotion())
+		{
+			// 状態マネージャーの取得
+			auto pStateManager = pEnemy->GetStateManager();
+
+			// プレイヤーの立ち位置でモーションを設定
+			if (pStateManager != nullptr && pStateManager->SetMotionByPlayerPosition())
+			{
+				return;
+			}
+		}
+		// モーションが終わったら
+		if (pMotion->IsFinishEndBlend())
+		{
+			// 状態の変更
+			pEnemy->ChangeState(make_shared<CEnemyIdle>(20));
+
+			return;
+		}
+	}
+}
+
+//===================================================
+// プレイヤーとの当たり判定
+//===================================================
+void CEnemyRushSwing::CollisionPlayer(CEnemy* pEnemy, CMotion* pMotion)
+{
+	// 位置の取得
+	D3DXVECTOR3 pos = pEnemy->GetPosition();
+
+	// プレイヤーの取得
+	CPlayer* pPlayer = CGame::GetPlayer();
+
+	// 取得できなかったら処理しない
+	if (pPlayer == nullptr) return;
+
+	if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_RUSH_SWING,0))
+	{
+		// 音の取得
+		CSound* pSound = CManager::GetSound();
+
+		if (pSound != nullptr)
+		{
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_SWING);
+		}
+	}
+	// イベントフレームの判定
+	if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_RUSH_SWING,1))
+	{
+		// 剣の軌跡
+		pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f));
+
+		// 状態の設定
+		pEnemy->SetState(CCharacter3D::STATE_ACTION, 5);
+
+		// 攻撃の結果を取得
+		CEnemy::RESULT result = pEnemy->WeponAttackResult(pPlayer);
+
+		// パリィされた
+		if (result == CEnemy::RESULT_PARRY)
+		{
+			// 構えの設定処理
+			pPlayer->SetStance(pos);
+
+			// ヒットストップ
+			pEnemy->SetHitStop(25);
+
+			// ヒットストップ
+			pPlayer->SetHitStop(25);
+
+			// ヒット状態にする
+			pEnemy->ChangeState(make_shared<CEnemyHit>());
+		}
+		// 回避だったら
+		else if (result == CEnemy::RESULT_AVOID)
+		{
+			CSlow* pSlow = CManager::GetSlow();
+
+			pSlow->Start(60, 4);
+		}
+		// 攻撃があたった
+		else if (result == CEnemy::RESULT_HIT)
+		{
+			// プレイヤーのダメージモーションの設定
+			pPlayer->SetDamageMotion(pos, 6);
+		}
+		// 絶対反撃
+		else if (result == CEnemy::RESULT_SPREVENGE)
+		{
+			// プレイヤーの位置の取得
+			D3DXVECTOR3 playerPos = pPlayer->GetPosition();
+
+			// 角度を求める
+			float fAngle = GetTargetAngle(playerPos, pos);
+
+			// 角度を設定
+			pPlayer->SetAngle(fAngle);
+
+			// ヒット状態にする
+			pEnemy->ChangeState(make_shared<CEnemySuperHit>());
+
+			// 状態の変更
+			pPlayer->ChangeState(make_shared<CPlayerRevengeAttack>());
 		}
 	}
 }

@@ -50,6 +50,7 @@ public:
 		SOUND_LABEL_MENU,				// メニュー選択
 		SOUND_LABEL_ENTER,				// 決定
 		SOUND_LABEL_IMPACT001,			// 衝撃波1
+		SOUND_LABEL_TITLE_BGM,			// タイトルのBGM
 		SOUND_LABEL_MAX
 	} SOUND_LABEL;
 
@@ -105,6 +106,7 @@ private:
 		{"data/SE/menu000.wav", 0},		  // メニュー選択
 		{"data/SE/Enter.wav", 0},		  // 決定
 		{"data/SE/impact001.wav", 0},	  // 衝撃波1
+		{"data/BGM/title_bgm.wav", -1},	  // タイトルのBGM
 	};				
 };
 #endif

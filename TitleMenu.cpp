@@ -19,6 +19,7 @@
 #include"opening.h"
 #include "tutorial.h"
 #include "sound.h"
+
 using namespace math;  // 名前空間mathを使用
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -33,6 +34,8 @@ CTitleMenuManager* CTitleMenuManager::m_pInstance = nullptr; // 自分のインスタン
 //===================================================
 CTitleMenu::CTitleMenu(const MENU menu)
 {
+	m_col = WHITE;
+	m_fCounter = NULL;
 	m_Menu = menu;
 }
 
@@ -122,6 +125,9 @@ void CTitleMenu::Update(void)
 	// 位置の取得
 	D3DXVECTOR3 pos = CObject2D::GetPosition();
 
+	// カウンターを加算
+	m_fCounter += 0.03f;
+
 	// 種類が同じだったら
 	if (m_Menu == pTitleManager->GetMenu())
 	{
@@ -132,16 +138,27 @@ void CTitleMenu::Update(void)
 		// 大きさの設定
 		CObject2D::SetSize(Size);
 
+		// 透明度の変更
+		m_col.a = 1.0f - fabsf(sinf(m_fCounter) * 0.5f);
+
 		// 位置の設定
 		pTitleManager->SetPosition(D3DXVECTOR3(pos.x - Size.x * 1.3f, pos.y, pos.z));
 	}
 	else
 	{
+		// リセット
+		m_col.a = 1.0f;
+
+		m_fCounter = NULL;
+
 		Size += (m_BaseSize - Size) * 0.1f;
 
 		// 大きさの設定
 		CObject2D::SetSize(Size);
 	}
+
+	// 色の設定
+	CObject2D::SetColor(m_col);
 
 	// 頂点座標の更新
 	pTitleManager->UpdateVertex(); 
@@ -372,7 +389,7 @@ void CTitleMenuManager::Create(void)
 		m_pInstance = new CTitleMenuManager;
 		m_pInstance->Init();
 		m_pInstance->SetPosition(D3DXVECTOR3(150.0f, 400.0f, 0.0f));
-		m_pInstance->SetSize(50.0f, 40.0f);
+		m_pInstance->SetSize(40.0f, 30.0f);
 		m_pInstance->SetVtx(WHITE);
 
 		// タイトルの選択メニュー分
@@ -429,7 +446,7 @@ void CTitleMenuManager::Update(void)
 	// 音の取得
 	CSound* pSound = CManager::GetSound();
 
-	if (pKeyboard->GetTrigger(DIK_DOWN) || pJoypad->GetTrigger(pJoypad->JOYKEY_DOWN))
+	if (pKeyboard->GetTrigger(DIK_DOWN) || pKeyboard->GetTrigger(DIK_S) || pJoypad->GetTrigger(pJoypad->JOYKEY_DOWN))
 	{
 		if (pSound != nullptr)
 		{
@@ -440,7 +457,7 @@ void CTitleMenuManager::Update(void)
 		// 次のメニューへ
 		m_Menu = static_cast<CTitleMenu::MENU>(m_Menu + 1);
 	}
-	else if (pKeyboard->GetTrigger(DIK_UP) || pJoypad->GetTrigger(pJoypad->JOYKEY_UP))
+	else if (pKeyboard->GetTrigger(DIK_UP) || pKeyboard->GetTrigger(DIK_W) || pJoypad->GetTrigger(pJoypad->JOYKEY_UP))
 	{
 		if (pSound != nullptr)
 		{

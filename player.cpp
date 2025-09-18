@@ -1836,6 +1836,9 @@ bool CPlayer::IsAvoid(CMotion* pMotion)
 	// モーションの種類の取得
 	int motiontype = pMotion->GetBlendType();
 	
+	// ダメージモーション中だったらできない
+	if (motiontype == MOTIONTYPE_DAMAGE || motiontype == MOTIONTYPE_BACK_DAMAGE) return false;
+
 	// 反撃受付時間は回避できない
 	if (pMotion->IsEventFrame(1, m_nParryTime, MOTIONTYPE_STANCE)) return false;
 	

@@ -85,6 +85,7 @@ public:
 		MOTIONTYPE_LOOK_BACKR,	// å„ÇÎÇå©ÇÈ(âE)
 		MOTIONTYPE_SWEEP_RIGHT,	// ì„Ç¨ï•Ç¢(âE)
 		MOTIONTYPE_SWEEP_LEFT,	// ì„Ç¨ï•Ç¢(ç∂)
+		MOTIONTYPE_RUSH_SWING,	// ìÀêiÇ»Ç¨
 		MOTIONTYPE_MAX
 	}MOTIONTYPE;
 

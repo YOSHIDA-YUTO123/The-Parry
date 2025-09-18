@@ -65,6 +65,7 @@ public:
 		ID_LOOK_BACKR,	 // 後ろを見る(右)
 		ID_SWEEP_RIGHT,	 // 薙ぎ払い(右)
 		ID_SWEEP_LEFT,	 // 薙ぎ払い(左)
+		ID_RUSH_SWING,	 // 突進なぎ
 		ID_MAX
 	}ID;
 
@@ -541,6 +542,22 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 private:
+};
+
+//***************************************************
+// 敵の状態(RushSwing)クラスの定義
+//***************************************************
+class CEnemyRushSwing : public CEnemyState
+{
+public:
+	CEnemyRushSwing();
+	~CEnemyRushSwing();
+	void Init(void) override;
+	void Update(void) override;
+private:
+	static constexpr float MOVE_FRAME = 15.0f;
+
+	void CollisionPlayer(CEnemy* pEnemy, CMotion* pMotion);
 };
 
 #endif

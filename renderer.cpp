@@ -37,7 +37,7 @@ CRenderer::CRenderer()
 		m_pTextureMT[nCnt] = nullptr;		// レンダリングターゲット用テクスチャ
 	}
 	m_pVtxBuffMT = nullptr;
-
+	m_fALv = NULL;
 	m_pZBuffMT = nullptr;		// レンダリングターゲット用Zバッファ
 	ZeroMemory(&m_viewport, sizeof(m_viewport)); // ビューポート
 	m_bEffect = false;
@@ -325,8 +325,41 @@ void CRenderer::Update(void)
 	if (CManager::GetInputKeyboard()->GetTrigger(DIK_H))
 	{
 		m_bEffect = m_bEffect ? false : true;
+		m_fALv = m_bEffect ? 0.8f : 0.0f;
 	}
 #endif // _DEBUG
+
+	// 頂点情報のポインタ
+	VERTEX_2D* pVtx;
+
+	// 頂点バッファのロック
+	m_pVtxBuffMT->Lock(0, 0, (void**)&pVtx, 0);
+
+	for (int nCnt = 0; nCnt < NUM_TEXTUREMT; nCnt++)
+	{
+		D3DXVECTOR2 pos = D3DXVECTOR2(640.0f, 360.0f);
+
+		float width = SCREEN_WIDTH * 0.5f;
+		float height = SCREEN_HEIGHT * 0.5f;
+
+		// 頂点座標の設定
+		pVtx[0].pos = D3DXVECTOR3(pos.x - width, pos.y - height, 0.0f);
+		pVtx[1].pos = D3DXVECTOR3(pos.x + width, pos.y - height, 0.0f);
+		pVtx[2].pos = D3DXVECTOR3(pos.x - width, pos.y + height, 0.0f);
+		pVtx[3].pos = D3DXVECTOR3(pos.x + width, pos.y + height, 0.0f);
+
+		float fA = (nCnt == 0) ? 1.0f : m_fALv;
+
+		// 頂点カラーの設定
+		pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, fA);
+		pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, fA);
+		pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, fA);
+		pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, fA);
+
+		pVtx += 4;
+	}
+	// 頂点バッファのアンロック
+	m_pVtxBuffMT->Unlock();
 
 	// すべてのオブジェクトの更新処理
 	CObject::UpdateAll();
@@ -340,7 +373,7 @@ void CRenderer::Draw(const int fps)
 	m_pD3DDevice->Clear(0,
 		NULL,
 		(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL),
-		D3DCOLOR_RGBA(0, 0, 0, 255), 1.0f, 0);
+		D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
 
 	D3DXVECTOR3 vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 
@@ -367,17 +400,15 @@ void CRenderer::Draw(const int fps)
 	if (SUCCEEDED(m_pD3DDevice->BeginScene()))
 	{//描画開始が成功した場合
 		
-		if (m_bEffect == true)
-		{
-			// レンダリングターゲットの変更
-			ChangeTarget(D3DXVECTOR3(0.0f,240.0f,400.0f), D3DXVECTOR3(0.0f,0.0f,0.0f), vecU);
+		// レンダリングターゲットの変更
+		ChangeTarget(D3DXVECTOR3(0.0f,240.0f,400.0f), D3DXVECTOR3(0.0f,0.0f,0.0f), vecU);
 
-			// 画面クリア(バックバッファ&Zバッファのクリア)
-			m_pD3DDevice->Clear(0,
-				NULL,
-				(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL),
-				D3DCOLOR_RGBA(0, 0, 0, 255), 1.0f, 0);
-		}
+		// 画面クリア(バックバッファ&Zバッファのクリア)
+		m_pD3DDevice->Clear(0,
+			NULL,
+			(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL),
+			D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
+		
 
 		// シーンの描画処理
 		CManager::DrawScene();
@@ -394,71 +425,69 @@ void CRenderer::Draw(const int fps)
 			pFade->Draw();
 		}
 
-		if (m_bEffect == true)
-		{
-			// サンプラーステートの設定
-			m_pD3DDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
-			m_pD3DDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+		// サンプラーステートの設定
+		m_pD3DDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
+		m_pD3DDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
 
-			//頂点バッファをデータストリームに設定
-			m_pD3DDevice->SetStreamSource(0, m_pVtxBuffMT, 0, sizeof(VERTEX_2D));
+		//頂点バッファをデータストリームに設定
+		m_pD3DDevice->SetStreamSource(0, m_pVtxBuffMT, 0, sizeof(VERTEX_2D));
 
-			// 頂点フォーマットの設定
-			m_pD3DDevice->SetFVF(FVF_VERTEX_2D);
+		// 頂点フォーマットの設定
+		m_pD3DDevice->SetFVF(FVF_VERTEX_2D);
 
-			// NULLに戻す
-			m_pD3DDevice->SetTexture(0, m_pTextureMT[1]);
+		// NULLに戻す
+		m_pD3DDevice->SetTexture(0, m_pTextureMT[1]);
 
-			// プレイヤーの描画
-			m_pD3DDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 4, 2); // プリミティブの種類	
+		// プレイヤーの描画
+		m_pD3DDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 4, 2); // プリミティブの種類	
 
-			// レンダーターゲットをもとに戻す
-			m_pD3DDevice->SetRenderTarget(0, pRenderDef);
+		// レンダーターゲットをもとに戻す
+		m_pD3DDevice->SetRenderTarget(0, pRenderDef);
 
-			// Zバッファをもとに戻す
-			m_pD3DDevice->SetDepthStencilSurface(pZBuffer);
+		// Zバッファをもとに戻す
+		m_pD3DDevice->SetDepthStencilSurface(pZBuffer);
 
-			// 画面クリア(バックバッファ&Zバッファのクリア)
-			m_pD3DDevice->Clear(0,
-				NULL,
-				(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL),
-				D3DCOLOR_RGBA(0, 0, 0, 255), 1.0f, 0);
+		// 画面クリア(バックバッファ&Zバッファのクリア)
+		m_pD3DDevice->Clear(0,
+			NULL,
+			(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL),
+			D3DCOLOR_RGBA(0, 0, 0, 255), 1.0f, 0);
 
-			// 現在のZバッファのをもとに戻す
-			m_pD3DDevice->SetDepthStencilSurface(pZBuffer);
+		// 現在のZバッファのをもとに戻す
+		m_pD3DDevice->SetDepthStencilSurface(pZBuffer);
 
-			// ビューポートをもとに戻す
-			m_pD3DDevice->SetViewport(&viepowtDef);
+		// ビューポートをもとに戻す
+		m_pD3DDevice->SetViewport(&viepowtDef);
 
-			m_pD3DDevice->SetTransform(D3DTS_VIEW, &mtxViewDef);
+		m_pD3DDevice->SetTransform(D3DTS_VIEW, &mtxViewDef);
 
-			m_pD3DDevice->SetTransform(D3DTS_PROJECTION, &mtxProjectionDef);
+		m_pD3DDevice->SetTransform(D3DTS_PROJECTION, &mtxProjectionDef);
 
-			//頂点バッファをデータストリームに設定
-			m_pD3DDevice->SetStreamSource(0, m_pVtxBuffMT, 0, sizeof(VERTEX_2D));
+		//頂点バッファをデータストリームに設定
+		m_pD3DDevice->SetStreamSource(0, m_pVtxBuffMT, 0, sizeof(VERTEX_2D));
 
-			// 頂点フォーマットの設定
-			m_pD3DDevice->SetFVF(FVF_VERTEX_2D);
+		// 頂点フォーマットの設定
+		m_pD3DDevice->SetFVF(FVF_VERTEX_2D);
 
-			// NULLに戻す
-			m_pD3DDevice->SetTexture(0, m_pTextureMT[0]);
+		// NULLに戻す
+		m_pD3DDevice->SetTexture(0, m_pTextureMT[0]);
 
-			// プレイヤーの描画
-			m_pD3DDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2); // プリミティブの種類	
+		// プレイヤーの描画
+		m_pD3DDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2); // プリミティブの種類	
 
-			LPDIRECT3DTEXTURE9 pTextureWK = {};
-			LPDIRECT3DSURFACE9 pRenderWK = {};
+		LPDIRECT3DTEXTURE9 pTextureWK = {};
+		LPDIRECT3DSURFACE9 pRenderWK = {};
 
-			// テクスチャ0と1を入れ替える
-			pTextureWK = m_pTextureMT[0];
-			m_pTextureMT[0] = m_pTextureMT[1];
-			m_pTextureMT[1] = pTextureWK;
+		// テクスチャ0と1を入れ替える
+		pTextureWK = m_pTextureMT[0];
+		m_pTextureMT[0] = m_pTextureMT[1];
+		m_pTextureMT[1] = pTextureWK;
 
-			// レンダリング0と1を入れ替える
-			pRenderWK = m_pRenderMT[0];
-			m_pRenderMT[0] = m_pRenderMT[1];
-			m_pRenderMT[1] = pRenderWK;
-		}
+		// レンダリング0と1を入れ替える
+		pRenderWK = m_pRenderMT[0];
+		m_pRenderMT[0] = m_pRenderMT[1];
+		m_pRenderMT[1] = pRenderWK;
+		
 
 #ifdef _DEBUG
 		CDebugProc::Print("FPS = %d\n", fps);
@@ -552,49 +581,15 @@ void CRenderer::offWireFrame()
 //===================================================
 void CRenderer::onEffect(const float fLevel)
 {
-	// 頂点情報のポインタ
-	VERTEX_2D* pVtx;
-
-	// 頂点バッファのロック
-	m_pVtxBuffMT->Lock(0, 0, (void**)&pVtx, 0);
-
-	for (int nCnt = 0; nCnt < NUM_TEXTUREMT; nCnt++)
-	{
-		D3DXVECTOR2 pos = D3DXVECTOR2(640.0f, 360.0f);
-
-		float width = SCREEN_WIDTH * 0.5f;
-		float height = SCREEN_HEIGHT * 0.5f;
-
-		// 頂点座標の設定
-		pVtx[0].pos = D3DXVECTOR3(pos.x - width, pos.y - height, 0.0f);
-		pVtx[1].pos = D3DXVECTOR3(pos.x + width, pos.y - height, 0.0f);
-		pVtx[2].pos = D3DXVECTOR3(pos.x - width, pos.y + height, 0.0f);
-		pVtx[3].pos = D3DXVECTOR3(pos.x + width, pos.y + height, 0.0f);
-
-		// rhwの設定
-		pVtx[0].rhw = 1.0f;
-		pVtx[1].rhw = 1.0f;
-		pVtx[2].rhw = 1.0f;
-		pVtx[3].rhw = 1.0f;
-
-		float fA = (nCnt == 0) ? 1.0f : fLevel;
-
-		// 頂点カラーの設定
-		pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, fA);
-		pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, fA);
-		pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, fA);
-		pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, fA);
-
-		// テクスチャ座標の設定
-		pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
-		pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);
-		pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);
-		pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);
-
-		pVtx += 4;
-	}
-	// 頂点バッファのアンロック
-	m_pVtxBuffMT->Unlock();
-
 	m_bEffect = true;
+	m_fALv = fLevel;
+}
+
+//===================================================
+// ブラーのオフ
+//===================================================
+void CRenderer::offEffect(void)
+{
+	m_bEffect = false;
+	m_fALv = 0.0f;
 }

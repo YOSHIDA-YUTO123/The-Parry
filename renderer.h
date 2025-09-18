@@ -41,7 +41,7 @@ public:
 	void onWireFrame();
 	void offWireFrame();
 	void onEffect(const float fLevel); // ブラーのオン
-	void offEffect(void) { m_bEffect = false; }
+	void offEffect(void);
 private:
 	LPDIRECT3DTEXTURE9 m_pTextureMT[NUM_TEXTUREMT];		// レンダリングターゲット用テクスチャ
 	LPDIRECT3DSURFACE9 m_pRenderMT[NUM_TEXTUREMT];			// レンダリングターゲット用インターフェース
@@ -51,6 +51,7 @@ private:
 	LPDIRECT3D9 m_pD3D;						// Directxデバイスへのポインタ
 	LPDIRECT3DDEVICE9 m_pD3DDevice;			// Directxデバイスへのポインタ
 	bool m_bEffect;
+	float m_fALv;							// A値
 	static CDebugProc* m_pDebug;			// デバッグフォントへのポインタ
 };
 

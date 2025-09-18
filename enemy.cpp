@@ -297,6 +297,10 @@ void CEnemy::Update(void)
 	{
 		ChangeState(make_shared<CEnemyLookBackL>());
 	}
+	if (pKeyboard->GetTrigger(DIK_9))
+	{
+		ChangeState(make_shared<CEnemyRushSwing>());
+	}
 
 	if (pKeyboard->GetTrigger(DIK_F1))
 	{
@@ -1042,8 +1046,14 @@ bool CEnemy::CollisionObstacle(D3DXVECTOR3 *pPos)
 		if (type != CObstacle::TYPE_TNT_BARREL)
 		{
 			// €–Só‘Ô‚¶‚á‚È‚¢‚È‚ç
-			if (pMotion->GetBlendType() != MOTIONTYPE_DEATH)
+			if (pMotion->GetBlendType() != MOTIONTYPE_DEATH && pMotion->GetBlendType() != MOTIONTYPE_DAMAGEL)
 			{
+				// ‰¹‚Ìæ“¾
+				CSound* pSound = CManager::GetSound();
+
+				// ‰¹‚ÌÄ¶
+				if (pSound != nullptr) pSound->Play(CSound::SOUND_LABEL_SPIKE);
+
 				// ƒ_ƒ[ƒWó‘Ô‚É‚·‚é
 				ChangeState(make_shared<CEnemyDamageL>(10, true));
 			}

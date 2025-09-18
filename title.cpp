@@ -9,16 +9,16 @@
 // インクルードファイル
 //***************************************************
 #include "title.h"
-#include"meshfield.h"
-#include"manager.h"
-#include"input.h"
-#include"game.h"
-#include"fade.h"
+#include "meshfield.h"
+#include "manager.h"
+#include "input.h"
+#include "game.h"
+#include "fade.h"
 #include "objectX.h"
-#include"player.h"
-#include"TitleCamera.h"
+#include "player.h"
+#include "TitleCamera.h"
 #include "TitlePlayer.h"
-#include"light.h"
+#include "light.h"
 #include "effect.h"
 #include "particle.h"
 #include "debugproc.h"
@@ -26,8 +26,9 @@
 #include "TitleMenu.h"
 #include "edit.h"
 #include "tutorial.h"
-#include"opening.h"
+#include "opening.h"
 #include "ranking.h"
+#include "sound.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std;   // 名前空間stdを使用
@@ -90,6 +91,14 @@ HRESULT CTitle::Init(void)
 	// プレイヤーの生成
 	CTitlePlayer::Create(VEC3_NULL,D3DXVECTOR3(0.0f,-D3DX_PI * 0.5f,0.0f));
 
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	if (pSound != nullptr)
+	{
+		// bgmの再生
+		pSound->Play(CSound::SOUND_LABEL_TITLE_BGM, 0.1f);
+	}
 	//auto pObj2D = CObject2DMT::Create(D3DXVECTOR3(640.0f, 360.0f, 0.0f), D3DXVECTOR2(350.0f, 150.0f));
 	//pObj2D->SetTextureID("data/TEXTURE/GageFrame/playerHpFrame.png", "data/TEXTURE/gradation/wave000.png");
 
@@ -110,6 +119,14 @@ void CTitle::Uninit(void)
 		pLight->Uninit();
 	}
 
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	if (pSound != nullptr)
+	{
+		// 音の再生の停止
+		pSound->StopSound();
+	}
 	// カメラの破棄
 	if (m_pCamera != nullptr)
 	{
