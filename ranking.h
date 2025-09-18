@@ -1,6 +1,6 @@
 //===================================================
 //
-// ブロック [block.h]
+// ランキングシーン [ranking.h]
 // Author:YUTO YOSHIDA
 //
 //===================================================
@@ -8,40 +8,35 @@
 //***************************************************
 // 多重インクルード防止
 //***************************************************
-#ifndef _BLOCK_H_
-#define _BLOCK_H_
+#ifndef _RANKING_H_
+#define _RANKING_H_
 
 //***************************************************
 // インクルードファイル
 //***************************************************
-#include "objectX.h"
+#include "scene.h"
 #include <memory>
 
 //***************************************************
 // 前方宣言
 //***************************************************
-class CColliderAABB;
+class CResultCamera;
 
 //***************************************************
-// ブロッククラスの定義
+// ランキングシーンの定義
 //***************************************************
-class CBlock : public CObjectX
+class CRanking : public CScene
 {
 public:
-	CBlock();
-	~CBlock();
-
-	// "data/MODEL/"は省略
-	static CBlock* Create(const D3DXVECTOR3 pos,const char *pModelFileName, const D3DXVECTOR3 rot = Const::VEC3_NULL);
+	CRanking();
+	~CRanking();
 
 	HRESULT Init(void) override;
 	void Uninit(void) override;
 	void Update(void) override;
 	void Draw(void) override;
-	bool Collision(CColliderAABB* pAABB, D3DXVECTOR3* pPushPos);
 private:
-	std::unique_ptr<CColliderAABB> m_pAABB; // AABBのコライダー
-	D3DXVECTOR3 m_CenterPos; // 中心座標
+	std::unique_ptr<CResultCamera> m_pCamera; // リザルトのカメラ
 };
 
 #endif

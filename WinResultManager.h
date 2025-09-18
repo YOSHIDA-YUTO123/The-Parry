@@ -44,6 +44,8 @@ public:
 	void Draw(void) override;
 private:
 	CWinResultManager();
+	void SaveScore(void);
+
 	static CWinResultManager* m_pInstance; // 自分のインスタンス
 	MENU m_menu;						   // メニュー
 	int m_nCounter;						   // カウンター

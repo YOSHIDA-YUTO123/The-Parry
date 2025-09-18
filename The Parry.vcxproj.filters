@@ -421,7 +421,16 @@
       <Filter>ソース ファイル\number</Filter>
     </ClCompile>
     <ClCompile Include="RockOn.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\objectBillboard</Filter>
+    </ClCompile>
+    <ClCompile Include="ranking.cpp">
+      <Filter>ソース ファイル\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="RankingScore.cpp">
+      <Filter>ソース ファイル\number</Filter>
+    </ClCompile>
+    <ClCompile Include="RankingManager.cpp">
+      <Filter>ソース ファイル\manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -728,8 +737,17 @@
     <ClInclude Include="ResultScore.h">
       <Filter>ヘッダー ファイル\number</Filter>
     </ClInclude>
+    <ClInclude Include="ranking.h">
+      <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
     <ClInclude Include="RockOn.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\objectBillboard</Filter>
+    </ClInclude>
+    <ClInclude Include="RankingScore.h">
+      <Filter>ヘッダー ファイル\number</Filter>
+    </ClInclude>
+    <ClInclude Include="RankingManager.h">
+      <Filter>ヘッダー ファイル\manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

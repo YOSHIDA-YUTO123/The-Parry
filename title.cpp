@@ -27,6 +27,7 @@
 #include "edit.h"
 #include "tutorial.h"
 #include"opening.h"
+#include "ranking.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std;   // 名前空間stdを使用
@@ -138,6 +139,14 @@ void CTitle::Update(void)
 	{
 		m_pCamera->Update();
 	}
+#ifdef _DEBUG
+
+	if (CManager::GetInputKeyboard()->GetTrigger(DIK_F9))
+	{
+		CManager::GetFade()->SetFade(make_unique<CRanking>());
+	}
+#endif // _DEBUG
+
 }
 
 //===================================================

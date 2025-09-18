@@ -25,6 +25,7 @@
 #include "bird.h"
 #include "WinResultManager.h"
 #include "background.h"
+#include "ranking.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -111,8 +112,11 @@ void CResultWin::Update(void)
 	{
 		CFade* pFade = CManager::GetFade();
 
-		// 新しいモードの設定
-		pFade->SetFade(make_unique<CTitle>());
+		if (pFade != nullptr)
+		{
+			// 新しいモードの設定
+			pFade->SetFade(make_unique<CRanking>());
+		}
 	}
 }
 

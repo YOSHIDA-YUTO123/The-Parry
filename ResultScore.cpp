@@ -105,7 +105,7 @@ HRESULT CResultScore::Init(void)
 		m_pNumber[nCnt]->Init(D3DXVECTOR3(m_pos.x - (offPosX * nCnt), m_pos.y, 0.0f), D3DXVECTOR2(fWidth, m_Size.y));
 
 		// テクスチャのIDの設定
-		m_pNumber[nCnt]->SetTextureID("data/TEXTURE/number/number002.png");
+		m_pNumber[nCnt]->SetTextureID("data/TEXTURE/number/number005.png");
 	}
 
 	return S_OK;

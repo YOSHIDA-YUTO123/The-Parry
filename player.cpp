@@ -318,7 +318,7 @@ void CPlayer::Update(void)
 			else
 			{
 				// ó‘Ô‚Ì•ÏX
-				ChangeState(make_shared<CPlayerAvoid>(35.0f));
+				ChangeState(make_shared<CPlayerAvoid>(25.0f));
 			}
 		}
 		else

@@ -354,7 +354,7 @@ void CPlayerAvoid::Update(void)
 	if (pMotion != nullptr)
 	{
 		// ˆÚ“®ƒNƒ‰ƒX‚ÌŽæ“¾
-		if (pMoveMent != nullptr && pMotion->IsEventFrame(1,20,CPlayer::MOTIONTYPE_AVOID))
+		if (pMoveMent != nullptr && pMotion->IsEventFrame(1,24,CPlayer::MOTIONTYPE_AVOID))
 		{
 			// Œü‚¢‚Ä‚¢‚é•ûŒü‚Éi‚Þˆ—
 			pMoveMent->MoveForward(m_fSpeed);

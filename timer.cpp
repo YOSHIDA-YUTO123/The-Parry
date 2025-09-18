@@ -21,7 +21,7 @@ using namespace Const; // 名前空間Constを使用
 //*************************************************
 namespace
 {
-	constexpr const char* NUMBER_TEXTURE = "data/TEXTURE/number/number002.png";
+	constexpr const char* NUMBER_TEXTURE = "data/TEXTURE/number/number005.png";
 	constexpr const char* CORON_TEXTURE = "data/TEXTURE/number/coron.png";
 };
 
@@ -82,7 +82,7 @@ HRESULT CTime::Init(void)
 	float offPosX = fRateWidth * NUM_DIGIT;
 
 	// コロンの作成
-	auto pCoron = CObject2D::Create(fRateWidth * 0.5f, m_fHeight * 0.7f, D3DXVECTOR3(offPosX + m_pos.x, m_pos.y, 0.0f));
+	auto pCoron = CObject2D::Create(fRateWidth * 0.4f, m_fHeight * 0.75f, D3DXVECTOR3(offPosX + m_pos.x, m_pos.y, 0.0f));
 	pCoron->SetTextureID(CORON_TEXTURE);
 
 	offPosX = fRateWidth * (3.0f * NUM_DIGIT);

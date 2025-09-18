@@ -42,6 +42,34 @@ CWinResultManager::CWinResultManager()
 }
 
 //===================================================
+// スコアのセーブ
+//===================================================
+void CWinResultManager::SaveScore(void)
+{
+	// ファイルを開く
+	ofstream file("data/TXT/result_score.txt");
+
+	// ファイルが開けたら
+	if (file.is_open())
+	{
+		// 書き出し
+		file << "//====================================================\n";
+		file << "// リザルトのスコア [ result_score.txt ]\n";
+		file << "//====================================================\n";
+
+		file << "RESULT_SCORE = " << m_nScore;
+
+		file.close();
+		file.clear();
+	}
+	else
+	{
+		// メッセージボックス
+		MessageBox(NULL, "ファイルが開けませんでした", "data/TXT/result_score.txt", MB_OK);
+	}
+}
+
+//===================================================
 // デストラクタ
 //===================================================
 CWinResultManager::~CWinResultManager()
@@ -117,6 +145,11 @@ void CWinResultManager::Create(void)
 	// ゲームの時間の取得
 	const int nTime = pGameManager->GetTime();
 
+	if (nTime == 0)
+	{
+		return;
+	}
+
 	// スコアの計算
 	int nPerfectScore = 100000 * m_pInstance->m_nPerfectCnt;
 	int nNormalScore = 10000 * m_pInstance->m_nNormalCnt;
@@ -141,6 +174,9 @@ HRESULT CWinResultManager::Init(void)
 //===================================================
 void CWinResultManager::Uninit(void)
 {
+	// スコアのセーブ
+	SaveScore();
+
 	// 終了処理
 	CObject::Release();
 }
@@ -161,7 +197,7 @@ void CWinResultManager::Update(void)
 	};
 
 	// スコアの値
-	static const int nScore[NUM_SCORE] =
+	const int nScore[NUM_SCORE] =
 	{
 		m_nPerfectCnt,
 		m_nNormalCnt,
@@ -200,7 +236,7 @@ void CWinResultManager::Update(void)
 		 if (nCnt < NUM_SCORE)
 		 {
 			 // リザルトのスコアの生成
-			 CResultScore::Create(D3DXVECTOR3(650.0f, 150.0f + nCnt * 100.0f, 0.0f), D3DXVECTOR2(200.0f, 45.0f), nScore[nCnt]);
+			 CResultScore::Create(D3DXVECTOR3(800.0f, 150.0f + nCnt * 100.0f, 0.0f), D3DXVECTOR2(200.0f, 45.0f), nScore[nCnt]);
 		 }
 		 else if(nCnt == MENU_CLEAR_TIME)
 		 {
