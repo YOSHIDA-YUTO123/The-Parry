@@ -255,11 +255,32 @@ private:
 class CEnemyHit : public CEnemyState
 {
 public:
+
+	// モーションの種類
+	typedef enum
+	{
+		TYPE_NORMAL = 0,
+		TYPE_BACK,
+		TYPE_MAX
+	}TYPE;
+
 	CEnemyHit();
 	~CEnemyHit();
+
 	void Init(void) override;
 	void Update(void) override;
+	void SetType(const TYPE type) { m_type = type; }
 private:
+
+	// 定数
+	struct Const
+	{
+		const D3DXVECTOR2 BACK_MOVE_VALUE = { 0.0f, 5.0f }; // 後ろに進む量
+		static constexpr float FORWARD_MOVE_VALUE = 5.0f;	// 前に進む量
+	};
+	
+	Const m_Const; // 定数
+	TYPE m_type;   // 種類
 };
 
 //***************************************************
@@ -268,14 +289,25 @@ private:
 class CEnemyDamageS : public CEnemyState
 {
 public:
+
+	// モーションの種類
+	typedef enum
+	{
+		TYPE_NORMAL = 0,
+		TYPE_STANP,
+		TYPE_MAX
+	}TYPE;
+
 	CEnemyDamageS();
 	CEnemyDamageS(const int nDamage);
 	~CEnemyDamageS();
 	void Init(void) override;
 	void Update(void) override;
+	void SetType(const TYPE type) { m_type = type; }
 private:
 	static constexpr int IDLE_TIME = 30; // 何もしない時間
 
+	TYPE m_type;		// モーションの種類
 	int m_nIdleTime;	// 何もしない時間
 	int m_nDamage;		// ダメージ量
 	int m_nNextAction;	// 次の行動

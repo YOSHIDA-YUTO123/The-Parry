@@ -41,15 +41,18 @@ using namespace Const; // 名前空間Constを使用
 //***************************************************
 // 定数宣言
 //***************************************************
-constexpr int NEXT_STAE_TIME = 120;				// 次の行動に移るまでの時間
-constexpr int START_ACTION = 55;				// アクションの開始確率
-constexpr int SPIN_TIME = 60;					// 回転モーションの時間
-constexpr int ABSSPIN_TIME = 30;				// 絶対回転する時間
-constexpr int INIT_NEXT_ACTION = 999;			// 次のアクションに移行する数値(初期化)
-constexpr int MAX_AWAYPOS_X = 1300;				// 最大の離れる位置X
-constexpr int MAX_AWAYPOS_Z = 1300;				// 最大の離れる位置Z
-constexpr float JUMPATTACK_MOVE_FRAME = 20.0f;	// ジャンプ攻撃の移動フレーム
-constexpr float AWAY_TIME = 24.0f;				// ジャンプする時間
+namespace
+{
+	constexpr int NEXT_STAE_TIME = 120;				// 次の行動に移るまでの時間
+	constexpr int START_ACTION = 55;				// アクションの開始確率
+	constexpr int SPIN_TIME = 60;					// 回転モーションの時間
+	constexpr int ABSSPIN_TIME = 30;				// 絶対回転する時間
+	constexpr int INIT_NEXT_ACTION = 999;			// 次のアクションに移行する数値(初期化)
+	constexpr int MAX_AWAYPOS_X = 1300;				// 最大の離れる位置X
+	constexpr int MAX_AWAYPOS_Z = 1300;				// 最大の離れる位置Z
+	constexpr float JUMPATTACK_MOVE_FRAME = 20.0f;	// ジャンプ攻撃の移動フレーム
+	constexpr float AWAY_TIME = 24.0f;				// ジャンプする時間
+};
 
 //===================================================
 // コンストラクタ
@@ -1304,6 +1307,7 @@ void CEnemyLanding::Update(void)
 //===================================================
 CEnemyHit::CEnemyHit() : CEnemyState(ID_HIT)
 {
+	m_type = TYPE_NORMAL;
 }
 
 //===================================================
@@ -1329,8 +1333,19 @@ void CEnemyHit::Init(void)
 
 	if (pMotion != nullptr)
 	{
-		// モーションの設定
-		pMotion->SetMotion(CEnemy::MOTIONTYPE_HIT, true, 5);
+		switch (m_type)
+		{
+		case TYPE_NORMAL:
+			// モーションの設定
+			pMotion->SetMotion(CEnemy::MOTIONTYPE_HIT, true, 5);
+			break;
+		case TYPE_BACK:
+			// モーションの設定
+			pMotion->SetMotion(CEnemy::MOTIONTYPE_BACK_HIT, true, 5);
+			break;
+		default:
+			break;
+		}
 	}
 }
 
@@ -1348,22 +1363,37 @@ void CEnemyHit::Update(void)
 	// モーションクラスの取得
 	CMotion* pMotion = pEnemy->GetMotion();
 
-	if (pMotion != nullptr )
+	if (pMotion != nullptr)
 	{
+		// モーションの種類の取得
+		int motiontype = pMotion->GetBlendType();
+
 		if (pMotion->IsEventFrame(1,50,CEnemy::MOTIONTYPE_HIT))
 		{
 			// 後ろに進む
-			pEnemy->GetMovement()->SetMoveDir(0.0f, 5.0f);
+			pEnemy->GetMovement()->SetMoveDir(m_Const.BACK_MOVE_VALUE.x, m_Const.BACK_MOVE_VALUE.y);
 		}
 
 		// モーションが終わったら
-		if (pMotion->FinishMotion())
+		if (pMotion->FinishMotion() && motiontype == CEnemy::MOTIONTYPE_HIT)
 		{
 			// 状態の変更
 			pEnemy->ChangeState(make_shared<CEnemyBackStep>());
 		}
-	}
 
+		if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_BACK_HIT))
+		{
+			// 前に進む
+			pEnemy->GetMovement()->MoveForWard(m_Const.FORWARD_MOVE_VALUE);
+		}
+
+		// モーションが終わったら
+		if (pMotion->IsFinishEndBlend())
+		{
+			// 状態の変更
+			pEnemy->ChangeState(make_shared<CEnemyIdle>(1));
+		}
+	}
 }
 
 //===================================================
@@ -1371,6 +1401,7 @@ void CEnemyHit::Update(void)
 //===================================================
 CEnemyDamageS::CEnemyDamageS()
 {
+	m_type = TYPE_NORMAL;
 	m_bFinish = false;
 	m_nIdleTime = IDLE_TIME;
 	m_nNextAction = INIT_NEXT_ACTION;
@@ -1382,6 +1413,7 @@ CEnemyDamageS::CEnemyDamageS()
 //===================================================
 CEnemyDamageS::CEnemyDamageS(const int nDamage) : CEnemyState(ID_DAMAGES)
 {
+	m_type = TYPE_NORMAL;
 	m_bFinish = false;
 	m_nIdleTime = IDLE_TIME;
 	m_nNextAction = INIT_NEXT_ACTION;
@@ -1424,16 +1456,26 @@ void CEnemyDamageS::Init(void)
 	// ダメージの設定
 	pEnemy->Hit(m_nDamage);
 
-	if (pMovement != nullptr && pPlayer != nullptr)
-	{
-		// 吹き飛び処理
-		pMovement->BlowOff(PlayerPos, 100.0f, 5.0f);
-	}
-
 	if (pMotion != nullptr)
 	{
-		// ダメージモーションにする
-		pMotion->SetMotion(CEnemy::MOTIONTYPE_DAMAGES, true, 2);
+		switch (m_type)
+		{
+		case TYPE_NORMAL:
+			if (pMovement != nullptr && pPlayer != nullptr)
+			{
+				// 吹き飛び処理
+				pMovement->BlowOff(PlayerPos, 100.0f, 5.0f);
+			}
+			// ダメージモーションにする
+			pMotion->SetMotion(CEnemy::MOTIONTYPE_DAMAGES, true, 2);
+			break;
+		case TYPE_STANP:
+			// ダメージモーションにする
+			pMotion->SetMotion(CEnemy::MOTIONTYPE_STANP_DAMAGE, true, 2);
+			break;
+		default:
+			break;
+		}
 	}
 }
 
@@ -1454,8 +1496,11 @@ void CEnemyDamageS::Update(void)
 	// モーションが終わったら
 	if (pMotion != nullptr)
 	{
+		// モーションの種類の取得
+		int nMotionType = pMotion->GetType();
+
 		// 10%の確率
-		if (pMotion->FinishMotion() && m_nNextAction <= 10)
+		if (pMotion->FinishMotion() && m_nNextAction <= 10 && nMotionType == CEnemy::MOTIONTYPE_DAMAGES)
 		{
 			// 距離を取る
 			pEnemy->ChangeState(make_shared<CEnemyAway>());
@@ -3137,7 +3182,7 @@ void CEnemyBackKick::Update(void)
 			if (result == CEnemy::RESULT_PARRY)
 			{
 				// 構えの設定処理
-				pPlayer->SetStance(pos);
+				pPlayer->SetStance(pos,CPlayer::PARRYMOTION_JUMP);
 
 				// ヒットストップ
 				pEnemy->SetHitStop(25);
@@ -3145,8 +3190,14 @@ void CEnemyBackKick::Update(void)
 				// ヒットストップ
 				pPlayer->SetHitStop(25);
 
+				// ヒット状態の生成
+				auto pHitState = make_shared<CEnemyHit>();
+
+				// 種類の設定
+				pHitState->SetType(CEnemyHit::TYPE_BACK);
+
 				// ヒット状態にする
-				pEnemy->ChangeState(make_shared<CEnemyHit>());
+				pEnemy->ChangeState(pHitState);
 			}
 			// 回避だったら
 			else if (result == CEnemy::RESULT_AVOID)

@@ -49,9 +49,10 @@ constexpr float GATE_RADIUS = 100.0f;				  // ゲートの半径
 //***************************************************
 // 静的メンバ変数宣言
 //***************************************************
-CGameCamera* CTutorial::m_pCamera = nullptr;	// カメラクラスへのポインタ
-CMeshField* CTutorial::m_pMeshField = nullptr;	// メッシュフィールドへのポインタ
-CPlayer* CTutorial::m_pPlayer = nullptr;		// プレイヤーへのポインタ
+CGameCamera* CTutorial::m_pCamera = nullptr;			// カメラクラスへのポインタ
+CMeshField* CTutorial::m_pMeshField = nullptr;			// メッシュフィールドへのポインタ
+CPlayer* CTutorial::m_pPlayer = nullptr;				// プレイヤーへのポインタ
+CTrainingEnemy* CTutorial::m_pTrainingEnemy = nullptr;  // 練習用の敵のクラスへのポインタ
 
 //===================================================
 // コンストラクタ
@@ -159,7 +160,7 @@ HRESULT CTutorial::Init(void)
 	m_pPlayer->SetHpObserver(observer);
 
 	// 敵の生成
-	CTrainingEnemy::Create(D3DXVECTOR3(0.0f,0.0f,-500.0f));
+	m_pTrainingEnemy = CTrainingEnemy::Create(D3DXVECTOR3(0.0f,0.0f,-500.0f));
 
 	// 生成処理
 	CObject2D::Create(180.0f, 180.0f, D3DXVECTOR3(1080.0f, 200.0f, 0.0f))->SetTextureID("data/TEXTURE/tutorial/tuto.png");
@@ -199,6 +200,7 @@ HRESULT CTutorial::Init(void)
 //===================================================
 void CTutorial::Uninit(void)
 {
+	m_pTrainingEnemy = nullptr;
 	m_pMeshField = nullptr;
 	m_pPlayer = nullptr;
 

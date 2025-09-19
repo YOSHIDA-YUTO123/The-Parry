@@ -47,6 +47,7 @@ public:
 		ID_REVENGEATTACK,
 		ID_DAMAGE_BACK,
 		ID_DOWN_NEUTRAL_BACK,
+		ID_JUMP_ATTACK,
 		ID_MAX
 	};
 
@@ -250,4 +251,18 @@ public:
 private:
 };
 
+//***************************************************
+// プレイヤーの状態(JumpAttack)の定義
+//***************************************************
+class CPlayerJumpAttack : public CPlayerState
+{
+public:
+	CPlayerJumpAttack();
+	~CPlayerJumpAttack();
+	void Init(void) override;
+	void Update(void) override;
+private:
+	static constexpr float JUMP_MOVE_FRAME = 20.0f; // ジャンプ攻撃の移動フレーム
+	static constexpr float JUMP_VALUE = 20.0f;		// ジャンプ量
+};
 #endif

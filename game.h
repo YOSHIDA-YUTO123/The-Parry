@@ -28,6 +28,7 @@ class CMeshCylinder;
 class CPauseManager;
 class CGameCamera;
 class CLoadManager;
+class CEnemy;
 
 //***************************************************
 // ゲームクラスの定義
@@ -67,6 +68,7 @@ public:
 	static CMeshCylinder* GetCylinder(void){ return m_pCylinder; }
 	static CGameCamera* GetCamera(void) { return m_pCamera; }
 	static STATE GetState(void) { return m_state; }
+	static CEnemy* GetEnemy(void) { return m_pEnemy; }
 private:
 	void Load(void);					// ゲームのロード
 	void LoadObstacle(std::fstream& file, std::string line, CLoadManager* pLoad);
@@ -79,6 +81,7 @@ private:
 	static CPlayer* m_pPlayer;			// プレイヤークラスへのポインタ
 	static CMeshCylinder* m_pCylinder;	// メッシュシリンダーへのポインタ
 	static CGameCamera* m_pCamera;		// ゲームカメラクラスへのポインタ
+	static CEnemy* m_pEnemy;			// 敵クラスへのポインタ
 	CPauseManager* m_pPauseManager;		// ポーズマネージャークラスへのポインタ
 	static RESULTTYPE m_ResultType;		// リザルトの種類
 	int m_nCounterState;				// 状態のカウンター

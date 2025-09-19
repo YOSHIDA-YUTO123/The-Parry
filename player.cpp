@@ -72,6 +72,7 @@ constexpr int ATTACK_TIME = 120;			// 攻撃の有効時間
 //===================================================
 CPlayer::CPlayer() : CCharacter3D(TYPE_PLAYER)
 {
+	m_ParryMotion = PARRYMOTION_KICK;
 	m_fDestRevengeValue = NULL;
 	m_fRevengeValue = NULL;
 	m_pMachine = nullptr;
@@ -505,8 +506,19 @@ void CPlayer::Update(void)
 			// 反撃受付しない
 			m_nAttackCounter = 0;
 
-			// 回し蹴り状態を設定
-			ChangeState(make_shared<CPlayerRoundKick>());
+			switch (m_ParryMotion)
+			{
+			case PARRYMOTION_KICK:
+				// 回し蹴り状態を設定
+				ChangeState(make_shared<CPlayerRoundKick>());
+				break;
+			case PARRYMOTION_JUMP:
+				// ジャンプ攻撃状態を設定
+				ChangeState(make_shared<CPlayerJumpAttack>());
+				break;
+			default:
+				break;
+			}
 		}
 	}
 
@@ -528,13 +540,6 @@ void CPlayer::Update(void)
 
 	// モーションの更新処理
 	CCharacter3D::UpdateMotion();
-
-	// 状態制御がnullじゃなかったら
-	if (m_pMachine != nullptr)
-	{
-		// 状態の更新処理
-		m_pMachine->Update();
-	}
 
 	// 反撃ゲージが最大を超えたら
 	if (m_fDestRevengeValue >= MAX_REVENGE)
@@ -559,6 +564,13 @@ void CPlayer::Update(void)
 
 	// 位置の設定
 	CCharacter3D::SetPosition(pos);
+
+	// 状態制御がnullじゃなかったら
+	if (m_pMachine != nullptr)
+	{
+		// 状態の更新処理
+		m_pMachine->Update();
+	}
 
 	// キャラクターの更新処理
 	CCharacter3D::Update();
@@ -638,6 +650,11 @@ void CPlayer::Update(void)
 			CBird::Create(D3DXVECTOR3(static_cast<float>(rand() % 2800 - 1400.0f), 0.0f, static_cast<float>(rand() % 2800 - 1400.0f)), CBird::TYPE_NORMAL);
 			CBird::Create(D3DXVECTOR3(static_cast<float>(rand() % 2000 - 1000.0f), static_cast<float>(rand() % 200 + 600.0f), static_cast<float>(rand() % 2000 - 1000.0f)), CBird::TYPE_FLY_MOVE,false);
 		}
+	}
+
+	if (pKeyboard->GetTrigger(DIK_J))
+	{
+		ChangeState(make_shared<CPlayerJumpAttack>());
 	}
 #endif // _DEBUG
 }
@@ -1027,6 +1044,26 @@ void CPlayerMovement::MoveForward(const float fSpeed)
 }
 
 //===================================================
+// 前に進む処理
+//===================================================
+void CPlayerMovement::MoveForward(const float fSpeed, const float fJump)
+{
+	// 移動量の取得
+	D3DXVECTOR3 move = m_pMove->Get();
+
+	// 今の向きの取得
+	float forward = m_pRot->Get().y;
+
+	// 移動方向の計算
+	move.x = sinf(forward + D3DX_PI) * fSpeed;
+	move.y = fJump;
+	move.z = cosf(forward + D3DX_PI) * fSpeed;
+
+	// 移動量の設定
+	m_pMove->Set(move);
+}
+
+//===================================================
 // 移動量の設定
 //===================================================
 void CPlayerMovement::Set(const D3DXVECTOR3 move)
@@ -1382,38 +1419,15 @@ void CPlayer::SetRevengeEffect(void)
 
 	// フィールドの波の設定
 	CMeshFieldWave::Config config = { FootL,250.0f,380.0f,280.0f,12.0f,0.01f,120 };
-	
+
 	if (pMeshField != nullptr)
 	{
 		// 地面に波を発生させる
 		pMeshField->SetWave(config);
 	}
 
-	const int NUM_RUBBLE = 16;
-
-	// 瓦礫の数分出す
-	for (int nCnt = 0; nCnt < NUM_RUBBLE; nCnt++)
-	{
-		// 分割に応じた方向を求める
-		float fAngle = (D3DX_PI * 2.0f) / NUM_RUBBLE * nCnt;
-
-		// 吹っ飛び量を選出
-		float dir = rand() % 15 + 5.0f;
-		float Jump = rand() % 15 + 25.0f;
-
-		// 方向に応じた吹っ飛び量を計算
-		float fMoveX = sinf(fAngle) * dir;
-		float fMoveZ = cosf(fAngle) * dir;
-
-		// 寿命を選出
-		int nLife = rand() % 120 + 60;
-
-		// 種類を選出
-		int nType = rand() % CRubble::TYPE_MAX;
-
-		// 瓦礫を生成
-		CRubble::Create(FootL, D3DXVECTOR3(fMoveX, Jump, fMoveZ), nLife, nType);
-	}
+	// 瓦礫を出す
+	SetRubble(FootL);
 }
 
 //===================================================
@@ -1456,6 +1470,36 @@ void CPlayer::SetDamageMotion(const D3DXVECTOR3 AttackerPos,const int nDamage)
 }
 
 //===================================================
+// 瓦礫の設定
+//===================================================
+void CPlayer::SetRubble(const D3DXVECTOR3 pos)
+{
+	// 瓦礫の数分出す
+	for (int nCnt = 0; nCnt < NUM_RUBBLE; nCnt++)
+	{
+		// 分割に応じた方向を求める
+		float fAngle = (D3DX_PI * 2.0f) / NUM_RUBBLE * nCnt;
+
+		// 吹っ飛び量を選出
+		float dir = rand() % 15 + 5.0f;
+		float Jump = rand() % 15 + 25.0f;
+
+		// 方向に応じた吹っ飛び量を計算
+		float fMoveX = sinf(fAngle) * dir;
+		float fMoveZ = cosf(fAngle) * dir;
+
+		// 寿命を選出
+		int nLife = rand() % 120 + 60;
+
+		// 種類を選出
+		int nType = rand() % CRubble::TYPE_FOUR;
+
+		// 瓦礫を生成
+		CRubble::Create(pos, D3DXVECTOR3(fMoveX, Jump, fMoveZ), nLife, nType);
+	}
+}
+
+//===================================================
 // 剣の軌跡の削除
 //===================================================
 void CPlayer::DeleteOrbit(void)
@@ -1470,8 +1514,11 @@ void CPlayer::DeleteOrbit(void)
 //===================================================
 // 構えの設定
 //===================================================
-void CPlayer::SetStance(const D3DXVECTOR3 enemyPos)
+void CPlayer::SetStance(const D3DXVECTOR3 enemyPos, const PARRYMOTION parry)
 {
+	// どのモーションか設定
+	m_ParryMotion = parry;
+
 	// 向きの取得
 	D3DXVECTOR3 rot = CCharacter3D::GetRotaition()->Get();
 

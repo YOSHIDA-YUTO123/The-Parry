@@ -13,6 +13,10 @@
 #include "GameCamera.h"
 #include "manager.h"
 #include "tutorial.h"
+#include "enemy.h"
+#include "TrainingEnemy.h"
+#include "manager.h"
+#include "renderer.h"
 
 using namespace Const;
 
@@ -22,8 +26,6 @@ using namespace Const;
 CRockOn::CRockOn()
 {
 	m_DestSize = VEC2_NULL;
-	m_col = WHITE;
-	m_fCounter = NULL;
 }
 
 //================================================
@@ -36,13 +38,13 @@ CRockOn::~CRockOn()
 //================================================
 // 生成処理
 //================================================
-CRockOn* CRockOn::Create(const D3DXVECTOR2 Size)
+CRockOn* CRockOn::Create(void)
 {
 	CRockOn* pRockOn = new CRockOn;
 
-	pRockOn->m_DestSize = Size;
+	pRockOn->m_DestSize = pRockOn->SIZE;
 
-	pRockOn->SetSize(Size * 10.0f);
+	pRockOn->SetSize(pRockOn->SIZE * 10.0f);
 
 	// 初期化処理
 	if (FAILED(pRockOn->Init()))
@@ -86,14 +88,28 @@ void CRockOn::Uninit(void)
 //================================================
 void CRockOn::Update(void)
 {
-	// カメラの取得
-	CGameCamera* pCamera = nullptr;
-
 	// 現在のモードの取得
 	CScene::MODE mode = CManager::GetMode();
 
+	// 敵の取得
+	CEnemy* pEnemy = CGame::GetEnemy();
+
+	// 練習用の敵の取得
+	CTrainingEnemy* pTrainingEnemy = CTutorial::GetTrainingEnemy();
+
+	// ゲームのカメラの取得
+	CGameCamera* pCamera = nullptr;
+
+	// ロックオンする位置
+	D3DXVECTOR3 RockOnPos = VEC3_NULL;
+
 	if (mode == CScene::MODE_TUTORIAL)
 	{
+		if (pTrainingEnemy != nullptr)
+		{
+			// 位置の取得
+			RockOnPos = pTrainingEnemy->GetModelPos(CTrainingEnemy::MODEL_CHEST);
+		}
 		// カメラの取得
 		pCamera = CTutorial::GetCamera();
 	}
@@ -101,10 +117,13 @@ void CRockOn::Update(void)
 	{
 		// カメラの取得
 		pCamera = CGame::GetCamera();
-	}
 
-	// 取得できなかったら処理しない
-	if (pCamera == nullptr) return;
+		if (pEnemy != nullptr)
+		{
+			// 胸の位置
+			RockOnPos = pEnemy->GetModelPos(CEnemy::MODEL_CHEST);
+		}
+	}
 
 	// 大きさの取得
 	D3DXVECTOR2 Size = CObjectBillboard::GetSize();
@@ -115,19 +134,8 @@ void CRockOn::Update(void)
 	// 大きさの設定
 	CObjectBillboard::SetSize(Size);
 
-	// 現在の注視点の取得
-	D3DXVECTOR3 pos = pCamera->GetPosR();
-
 	// 位置の設定
-	CObjectBillboard::UpdateVertexPos(pos);
-
-	m_fCounter += 0.01f;
-
-	// 透明度を設定
-	m_col.a = 1.0f - fabsf(sinf(m_fCounter));
-
-	// 色の設定
-	CObjectBillboard::SetColor(m_col);
+	CObjectBillboard::UpdateVertexPos(RockOnPos);
 
 	// ロックオン状態じゃないなら
 	if (pCamera->GetState() != pCamera->STATE_ROCKON)
@@ -142,6 +150,17 @@ void CRockOn::Update(void)
 //================================================
 void CRockOn::Draw(void)
 {
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+	// ゼットテスト
+	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_GREATEREQUAL);
+	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+
 	// 描画処理
 	CObjectBillboard::Draw();
+
+	// ゼットテスト
+	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 }

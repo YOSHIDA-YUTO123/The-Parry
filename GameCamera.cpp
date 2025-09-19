@@ -149,7 +149,7 @@ void CGameCamera::SetState(const STATE state)
 	if (state == CGameCamera::STATE_ROCKON)
 	{
 		// ロックオンの生成
-		CRockOn::Create(D3DXVECTOR2(50.0f, 50.0f));
+		CRockOn::Create();
 	}
 }
 
@@ -164,7 +164,7 @@ void CGameCamera::ResetState(void)
 	if (m_state == CGameCamera::STATE_ROCKON)
 	{
 		// ロックオンの生成
-		CRockOn::Create(D3DXVECTOR2(50.0f, 50.0f));
+		CRockOn::Create();
 	}
 
 	// レンダラーの取得
@@ -204,8 +204,6 @@ void CGameCamera::Rockon(D3DXVECTOR3 playerPos, D3DXVECTOR3 enemyPos, float fDis
 
 	// 敵とプレイヤーの間を見る
 	D3DXVECTOR3 CenterPos = (enemyPos + playerPos) * 0.5f;
-
-	//CenterPos.y = enemyPos.y;
 
 	// 注視点を敵の位置にする
 	posR.x = CenterPos.x;

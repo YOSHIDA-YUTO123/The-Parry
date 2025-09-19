@@ -23,7 +23,7 @@
 class CObjectBillboard : public CObject
 {
 public:
-	CObjectBillboard(int nPriority = 4);
+	CObjectBillboard(int nPriority = 7);
 	virtual ~CObjectBillboard();
 
 	static CObjectBillboard* Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 size, const char* pTextureName);

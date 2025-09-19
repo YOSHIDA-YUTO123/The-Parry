@@ -38,6 +38,7 @@
 #include "BirdManager.h"
 #include "gear.h"
 #include "sound.h"
+#include "enemy.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -52,6 +53,7 @@ CGame::STATE CGame::m_state = STATE_NORMAL;					   // ゲームの状態
 CGameCamera* CGame::m_pCamera = nullptr;					   // ゲームカメラクラスへのポインタ
 CGame::RESULTTYPE CGame::m_ResultType = CGame::RESULTTYPE_WIN; // リザルトの種類
 unique_ptr<CGameManager> CGameManager::m_pInstance = nullptr;  // 自分のインスタンス
+CEnemy* CGame::m_pEnemy = nullptr;							   // 敵クラスへのポインタ
 
 //===================================================
 // コンストラクタ
@@ -172,6 +174,7 @@ void CGame::Uninit(void)
 	m_pMeshField = nullptr;
 	m_pCylinder = nullptr;
 	m_pPlayer = nullptr;
+	m_pEnemy = nullptr;
 
 	// 障害物マネージャーのインスタンスの取得
 	CObstacleManager* pObstacleManager = CObstacleManager::GetInstance();
@@ -595,7 +598,7 @@ void CGame::PlayerConfig(const int nLife, const float fSpeed, const D3DXVECTOR3 
 void CGame::EnemyConfig(const int nLife, const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size, const D3DXVECTOR3 pos, const float fAngle)
 {
 	// 敵の生成
-	auto pEnemy = CEnemy::Create(nLife,fSpeed,ShadowScal,Size,pos,D3DXVECTOR3(0.0f,fAngle,0.0f));
+	m_pEnemy = CEnemy::Create(nLife,fSpeed,ShadowScal,Size,pos,D3DXVECTOR3(0.0f,fAngle,0.0f));
 
 	// ゲージのフレームの生成
 	auto gageFrame = CGageFrame::Create(D3DXVECTOR3(1000.0f, 36.0f, 0.0f), D3DXVECTOR2(200.0f, 25.0f), CGageFrame::TYPE_HP_ENEMY);
@@ -614,7 +617,7 @@ void CGame::EnemyConfig(const int nLife, const float fSpeed, const D3DXVECTOR3 S
 	auto observer = new CHpObserver(pGage);
 
 	// オブザーバーの設定
-	pEnemy->SetObserver(observer);
+	m_pEnemy->SetObserver(observer);
 }
 
 //===================================================

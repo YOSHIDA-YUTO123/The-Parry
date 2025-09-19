@@ -17,13 +17,14 @@
 #include "Collider.h"
 #include "ExplosionArea.h"
 #include "meshfield.h"
+#include "pause.h"
 
 using namespace std; // 名前空間stdを使用
 
 //**********************************************
 // 定数宣言
 //**********************************************
-constexpr int POP_TIME = 1200; // ポップする時間
+constexpr int POP_TIME = 1000; // ポップする時間
 
 //**********************************************
 // 静的メンバ変数宣言
@@ -200,6 +201,20 @@ void CObstacleManager::Uninit(void)
 //==============================================
 void CObstacleManager::Update(void)
 {
+	// ポーズマネージャー
+	auto pPauzeManager = CPauseManager::GetInstance();
+
+	if (pPauzeManager != nullptr)
+	{
+		// ポーズ状態の取得
+		bool bPause = pPauzeManager->GetPause();
+
+		// ポーズ状態だったら
+		if (bPause)
+		{
+			return;
+		}
+	}
 	// タイムを減らす
 	m_nPopTime--;
 

@@ -23,10 +23,13 @@
 #include "slow.h"
 #include "ParryEffect.h"
 #include "ParticleSpark.h"
+#include "enemy.h"
+#include "math.h"
 
 using MOTION = CPlayer::MOTIONTYPE; // プレイヤーの列挙型の使用
 using namespace std;				// 名前空間stdの使用
 using namespace Const;				// 名前空間Constの使用
+using namespace math;				// 名前空間mathの使用
 
 //===================================================
 // コンストラクタ
@@ -1007,4 +1010,137 @@ void CPlayerDownNeutralBk::Init(void)
 void CPlayerDownNeutralBk::Update(void)
 {
 
+}
+
+//===================================================
+// コンストラクタ(ジャンプ攻撃)
+//===================================================
+CPlayerJumpAttack::CPlayerJumpAttack() : CPlayerState(ID_JUMP_ATTACK)
+{
+}
+
+//===================================================
+// デストラクタ(ジャンプ攻撃)
+//===================================================
+CPlayerJumpAttack::~CPlayerJumpAttack()
+{
+}
+
+//===================================================
+// 初期化処理(ジャンプ攻撃)
+//===================================================
+void CPlayerJumpAttack::Init(void)
+{
+	// プレイヤーの取得
+	auto pPlayer = GetPlayer();
+
+	// 取得できなかったら処理しない
+	if (pPlayer == nullptr) return;
+
+	// モーションの取得
+	CMotion* pMotion = pPlayer->GetMotion();
+
+	if (pMotion != nullptr)
+	{
+		// 着地モーションの再生
+		pMotion->SetMotion(MOTION::MOTIONTYPE_JUMP_ATTACK, true, 5);
+	}
+}
+
+//===================================================
+// 更新処理(ジャンプ攻撃)
+//===================================================
+void CPlayerJumpAttack::Update(void)
+{
+	// プレイヤーの取得
+	auto pPlayer = GetPlayer();
+
+	// 取得できなかったら処理しない
+	if (pPlayer == nullptr) return;
+
+	// モーションの取得
+	CMotion* pMotion = pPlayer->GetMotion();
+
+	// 敵の取得
+	CEnemy* pEnemy = CGame::GetEnemy();
+
+	// 取得できなかったら処理しない
+	if (pEnemy == nullptr)
+	{
+		// 状態の変更
+		pPlayer->ChangeState(make_shared<CPlayerNormal>());
+		return;
+	}
+
+	// プレイヤーの位置の取得
+	D3DXVECTOR3 pos = pPlayer->GetPosition();
+
+	if (pMotion != nullptr)
+	{
+		if (pMotion->IsEventFrame(CPlayer::MOTIONTYPE_JUMP_ATTACK, 0))
+		{
+			// ジャンプ
+			pPlayer->GetMovement()->Set(D3DXVECTOR3(0.0f, JUMP_VALUE, 0.0f));
+		}
+		if (pMotion->IsEventFrame(CPlayer::MOTIONTYPE_JUMP_ATTACK, 1))
+		{
+			// 空中に少しとどまる
+			pPlayer->GetMovement()->Set(VEC3_NULL);
+		}
+		if (pMotion->IsEventFrame(CPlayer::MOTIONTYPE_JUMP_ATTACK, 5))
+		{
+			// カメラの取得
+			CGameCamera* pCamera = CGame::GetCamera();
+
+			if (pCamera != nullptr)
+			{
+				// カメラの揺れ
+				pCamera->SetShake(60, 15);
+			}
+
+			// メッシュフィールドの取得
+			CMeshField* pMeshField = CGame::GetField();
+
+			// フィールドの波の設定
+			CMeshFieldWave::Config config = { pos,250.0f,380.0f,280.0f,12.0f,0.01f,120 };
+
+			if (pMeshField != nullptr)
+			{
+				// 地面に波を発生させる
+				pMeshField->SetWave(config);
+			}
+
+			// 瓦礫の設定
+			pPlayer->SetRubble(pos);
+		}
+		if (pMotion->IsEventFrame(CPlayer::MOTIONTYPE_JUMP_ATTACK, 3))
+		{
+			// 敵の胸の位置
+			D3DXVECTOR3 enemyChestPos = pEnemy->GetModelPos(CEnemy::MODEL_CHEST);
+
+			// 敵の胸の大きさ
+			D3DXVECTOR3 enemyChestSize = pEnemy->GetModelSize(CEnemy::MODEL_CHEST);
+
+			// 敵の胸の中心を求める
+			D3DXVECTOR3 enemyChestCenter = { enemyChestPos.x,enemyChestPos.y + enemyChestSize.y * 0.5f,enemyChestPos.z };
+
+			// 角度の取得
+			float fAngle = GetTargetAngle(enemyChestPos, pos);
+
+			// 向きの設定
+			pPlayer->SetAngle(fAngle + D3DX_PI);
+
+			// 距離を求める
+			float fDistance = GetDistance(enemyChestCenter - pos);
+
+			// 移動量の設定
+			pPlayer->GetMovement()->MoveForward(fDistance / JUMP_MOVE_FRAME);
+		}
+		// モーションがおわったら
+		if (pMotion->IsFinishEndBlend())
+		{
+			// 状態の変更
+			pPlayer->ChangeState(make_shared<CPlayerNormal>());
+		}
+	}
 }

@@ -74,6 +74,7 @@ public:
 		MOTIONTYPE_REVENGEATTACK,	// 反撃(攻撃)
 		MOTIONTYPE_BACK_DAMAGE,		// 後ろから攻撃を受けた
 		MOTIONTYPE_DOWN_NEUTRA_BACK,// ダウンニュートラル(Back)
+		MOTIONTYPE_JUMP_ATTACK,		// ジャンプ攻撃
 		MOTIONTYPE_MAX
 	}MOTIONTYPE;
 
@@ -117,6 +118,14 @@ public:
 		MODEL_MAX
 	}MODEL;
 
+	// 反撃の種類
+	typedef enum
+	{
+		PARRYMOTION_KICK = 0,
+		PARRYMOTION_JUMP,
+		PARRYMOTION_MAX
+	}PARRYMOTION;
+
 	CPlayer();
 	~CPlayer();
 
@@ -126,8 +135,6 @@ public:
 	void Uninit(void) override;
 	void Update(void) override;
 	void Draw(void) override;
-
-	void SetPosition(const D3DXVECTOR3 pos) { CCharacter3D::SetPosition(pos); }
 
 	void ChangeState(std::shared_ptr<CPlayerState> pNewState);
 	void SetHitStop(const int nTime) { CCharacter3D::SetHitStop(nTime); }
@@ -151,7 +158,7 @@ public:
 	bool CollisionObstacle(D3DXVECTOR3* pPos);
 	void Orbit(const int nSegH, const D3DXCOLOR col); // 軌跡の処理
 	void DeleteOrbit(void);							  // 軌跡のリセット
-	void SetStance(const D3DXVECTOR3 enemyPos);		  // 構えモーションの設定
+	void SetStance(const D3DXVECTOR3 enemyPos,const PARRYMOTION parry = PARRYMOTION_KICK);		 // 構えモーションの設定
 	void SetStamina(const float fStamina);
 
 	/**
@@ -164,6 +171,7 @@ public:
 	void SetRevengeEffect(void);					// 絶対反撃のエフェクトの設定
 	void EnableGravity(const bool bEnable) { m_bGravity = bEnable; } // 重力の判定の設定
 	void SetDamageMotion(const D3DXVECTOR3 AttackerPos, const int nDamage);
+	void SetRubble(const D3DXVECTOR3 pos);
 private:
 	void CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos, CMotion* pMotion); // インパクトの当たり判定
 	bool IsMove(CMotion* pMotion);		// 移動できるか判定
@@ -178,6 +186,8 @@ private:
 	void Config(const int nLife,const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size);
 	void BlowForward(const float fMove, const float fJump);
 
+	static constexpr int NUM_RUBBLE = 16;			// 瓦礫の数
+
 	std::unique_ptr<CStateMachine> m_pMachine;		// 状態の制御クラス
 	std::unique_ptr<CPlayerMovement> m_pMovement;	// 移動処理
 	std::unique_ptr<CColliderFOV> m_pFOV;			// 視界の判定
@@ -191,6 +201,7 @@ private:
 	CObserver<float>* m_pRevengeObserver;			// 反撃オブザーバークラスへのポインタ
 	D3DXVECTOR3 m_posOld;							// 前回の位置
 	PARRY m_ParryResult;							// パリィの結果
+	PARRYMOTION m_ParryMotion;						// パリィモーション
 	float m_fStamina;								// スタミナ
 	float m_fRevengeValue;							// 反撃ゲージ量
 	float m_fDestRevengeValue;						// 目的の反撃ゲージ量
@@ -219,6 +230,7 @@ public:
 	bool MoveKeyboard(CInputKeyboard* pKeyboard, const float fSpeed, float* pRotDest);
 	bool MoveJoypad(CInputJoypad* pJoypad, const float fSpeed, float* pRotDest);
 	void MoveForward(const float fSpeed);
+	void MoveForward(const float fSpeed,const float fJump);
 	void Set(const D3DXVECTOR3 move);
 private:
 	CRotation* m_pRot;	// 向き

@@ -25,16 +25,15 @@ public:
 	CRockOn();
 	~CRockOn();
 
-	static CRockOn* Create(const D3DXVECTOR2 Size);
+	static CRockOn* Create(void);
 
 	HRESULT Init(void) override;
 	void Uninit(void) override;
 	void Update(void) override;
 	void Draw(void) override;
 private:
-	D3DXCOLOR m_col;		// 色
+	const D3DXVECTOR2 SIZE = { 60.0f,60.0f };
 	D3DXVECTOR2 m_DestSize; // 目的の大きさ
-	float m_fCounter;		// 色のカウンター
 };
 
 #endif
