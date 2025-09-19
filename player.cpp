@@ -95,6 +95,7 @@ CPlayer::CPlayer() : CCharacter3D(TYPE_PLAYER)
 	m_nPerfectCnt = NULL;
 	m_nNormalCnt = NULL;
 	m_nWeakCnt = NULL;
+	m_bRevenge = false;
 }
 
 //===================================================
@@ -546,6 +547,8 @@ void CPlayer::Update(void)
 	{
 		m_fDestRevengeValue = MAX_REVENGE;
 
+		m_bRevenge = true;
+
 		if (pKeyboard->GetTrigger(DIK_Q) || pJoypad->GetTrigger(pJoypad->JOYKEY_LEFT_THUMB))
 		{
 			// ó‘Ô‚Ì‘JˆÚ
@@ -554,6 +557,10 @@ void CPlayer::Update(void)
 			m_fDestRevengeValue = 0.0f;
 			m_fRevengeValue = 0.0f;
 		}
+	}
+	else
+	{
+		m_bRevenge = false;
 	}
 
 	// –Ú“I‚Ì’l‚É‹ß‚Ã‚¯‚é

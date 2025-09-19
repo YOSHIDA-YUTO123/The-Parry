@@ -39,6 +39,8 @@
 #include "gear.h"
 #include "sound.h"
 #include "enemy.h"
+#include "Object2DAnimMT.h"
+#include "RevengeActiveUI.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -148,6 +150,9 @@ HRESULT CGame::Init(void)
 		// 音の再生
 		pSound->Play(CSound::SOUND_LABEL_GAME_BGM, 0.5f);
 	}
+
+	// マルチテクスチャの表示
+	CRevengeActiveUI::Create(D3DXVECTOR3(80.0f,100.0f,0.0f), D3DXVECTOR2(60.0f, 60.0f), 4, 4);
 
 	//// パリィエフェクトの生成
 	//CParryEffect::Create(D3DXVECTOR3(0.0f,200.0f,0.0f), D3DXVECTOR3(150.0f, 150.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 5, 2, 4, true);

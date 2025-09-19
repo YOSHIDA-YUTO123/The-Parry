@@ -51,6 +51,7 @@ namespace Const
 {
 	const D3DXVECTOR3 VEC3_NULL = { 0.0f,0.0f,0.0f };		// VECTOR3の初期化
 	const D3DXVECTOR2 VEC2_NULL = { 0.0f,0.0f };			// VECTOR2の初期化
+	const D3DXVECTOR3 CENTER_POS_2D = { SCREEN_WIDTH * 0.5f,SCREEN_HEIGHT * 0.5f,0.0f };
 	const D3DXCOLOR WHITE = { 1.0f,1.0f,1.0f,1.0f };		// 色の初期カラー
 	constexpr int FRAME = 60;								// 一フレーム
 	constexpr int MAX_WORD = 5024;							// 最大の文字数

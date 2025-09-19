@@ -172,6 +172,7 @@ public:
 	void EnableGravity(const bool bEnable) { m_bGravity = bEnable; } // 重力の判定の設定
 	void SetDamageMotion(const D3DXVECTOR3 AttackerPos, const int nDamage);
 	void SetRubble(const D3DXVECTOR3 pos);
+	bool GetRevengeState(void) const { return m_bRevenge; }
 private:
 	void CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos, CMotion* pMotion); // インパクトの当たり判定
 	bool IsMove(CMotion* pMotion);		// 移動できるか判定
@@ -214,6 +215,7 @@ private:
 	bool m_bGravity;								// 重力をつけるかどうか
 	bool m_bJump;									// ジャンプできるかどうか
 	bool m_bDash;									// 走ってるかどうか
+	bool m_bRevenge;								// 絶対反撃できるかどうか
 };
 
 //***************************************************
