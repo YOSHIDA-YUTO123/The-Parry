@@ -96,6 +96,7 @@ void CParticle3D::SetParticle(const float fSpeed, const int nLife, const int nNu
 //===================================================
 CParticle3DNormal::CParticle3DNormal()
 {
+	m_nPosRange = NULL;
 	m_fInertia = 0.01f;
 	m_type = CEffect3D::TYPE::TYPE_NORAML;
 }
@@ -132,8 +133,9 @@ CParticle3DNormal* CParticle3DNormal::Create(const D3DXVECTOR3 pos, const float 
 //===================================================
 // パーティクルの設定処理
 //===================================================
-void CParticle3DNormal::SetParam(CEffect3D::TYPE type, const float fInertia)
+void CParticle3DNormal::SetParam(CEffect3D::TYPE type, const int nPosRange, const float fInertia)
 {
+	m_nPosRange = nPosRange;
 	m_type = type;
 	m_fInertia = fInertia;
 }
@@ -174,6 +176,14 @@ void CParticle3DNormal::Update(void)
 		// 位置の取得
 		D3DXVECTOR3 pos = info.pos;
 		
+		if (m_nPosRange != 0)
+		{
+			// ランダムな位置を求める
+			pos.x = info.pos.x + static_cast<float>(rand() % m_nPosRange) - m_nPosRange / 2;
+			pos.y = info.pos.y + static_cast<float>(rand() % m_nPosRange) - m_nPosRange / 2;
+			pos.z = info.pos.z + static_cast<float>(rand() % m_nPosRange) - m_nPosRange / 2;
+		}
+
 		// 色の取得
 		D3DXCOLOR col = info.col;
 

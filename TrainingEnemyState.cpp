@@ -517,7 +517,7 @@ void CTrainingEnemyCombDamage::Update(void)
 		// エフェクトの生成
 		auto pEffect = CParticle3DNormal::Create(ImpactPos, 20.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
 		pEffect->SetParticle(35.0f, 360, 30, 1, 314);
-		pEffect->SetParam(CEffect3D::TYPE_NORAML, 0.1f);
+		pEffect->SetParam(CEffect3D::TYPE_NORAML, 0,0.1f);
 
 		// メッシュサークルの生成
 		auto pMeshCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.4f, 0.5f), NewImpactPos, 10.0f, 50.0f);
@@ -545,7 +545,7 @@ void CTrainingEnemyCombDamage::Update(void)
 		// エフェクトの生成
 		auto pEffect = CParticle3DNormal::Create(FootPos, 20.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
 		pEffect->SetParticle(35.0f, 360, 50, 1, 314);
-		pEffect->SetParam(CEffect3D::TYPE_NORAML, 0.1f);
+		pEffect->SetParam(CEffect3D::TYPE_NORAML, 0,0.1f);
 
 		// ダメージ状態の生成
 		auto pDamageState = make_shared<CTrainingEnemyDamage>();

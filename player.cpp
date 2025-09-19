@@ -49,6 +49,8 @@
 #include "BirdManager.h"
 #include "sound.h"
 #include "RockOn.h"
+#include "effect2D.h"
+#include "particle2D.h"
 
 //***************************************************
 // 名前空間
@@ -64,7 +66,7 @@ constexpr float SHADOW_SIZE = 50.0f;		// 影の大きさ
 constexpr float SHADOW_MAX_HEIGHT = 500.0f; // 影が見える最大の高さ
 constexpr float SHADOW_A_LEVEL = 0.9f;		// 影のアルファ値のオフセット
 constexpr float AVOID_STAMINA = 15.0f;		// 回避に使用するスタミナ
-constexpr int PARRY_TIME = 15;				// パリィの有効時間
+constexpr int PARRY_TIME = 25;				// パリィの有効時間
 constexpr int ATTACK_TIME = 120;			// 攻撃の有効時間
 
 //===================================================
@@ -533,21 +535,27 @@ void CPlayer::Update(void)
 	// スタミナの更新処理
 	UpdateStamina();
 
-	// オブザーバーへの通知処理
-	Notify();
-
-	// パリィの更新処理
-	UpdateParry();
-
-	// モーションの更新処理
-	CCharacter3D::UpdateMotion();
+	// 目的の値に近づける
+	m_fRevengeValue += (m_fDestRevengeValue - m_fRevengeValue) * 0.1f;
 
 	// 反撃ゲージが最大を超えたら
-	if (m_fDestRevengeValue >= MAX_REVENGE)
+	if (m_fRevengeValue >= MAX_REVENGE)
 	{
-		m_fDestRevengeValue = MAX_REVENGE;
+		// 反撃ゲージ
+		m_fRevengeValue = MAX_REVENGE;
 
 		m_bRevenge = true;
+
+		// エフェクトの生成
+		auto pEffect = CEffect2D::Create(D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXVECTOR2(80.0f, 80.0f), D3DXCOLOR(1.0f, 0.3f, 0.3f, 0.2f));
+		pEffect->SetParam(60, VEC3_NULL);
+
+		// パーティクルの生成
+		auto pNormal = CParticle3DNormal::Create(CCharacter3D::GetModelPos(MODEL_CHEST), 10.0f, D3DXCOLOR(1.0f, 0.4f, 0.4f, 1.0f));
+
+		// パーティクルの設定処理
+		pNormal->SetParticle(5.0f, 120, 5, 1, 60);
+		pNormal->SetParam(CEffect3D::TYPE_NORAML, 100);
 
 		if (pKeyboard->GetTrigger(DIK_Q) || pJoypad->GetTrigger(pJoypad->JOYKEY_LEFT_THUMB))
 		{
@@ -563,8 +571,14 @@ void CPlayer::Update(void)
 		m_bRevenge = false;
 	}
 
-	// 目的の値に近づける
-	m_fRevengeValue += (m_fDestRevengeValue - m_fRevengeValue) * 0.1f;
+	// オブザーバーへの通知処理
+	Notify();
+
+	// パリィの更新処理
+	UpdateParry();
+
+	// モーションの更新処理
+	CCharacter3D::UpdateMotion();
 	
 	// コライダーの更新
 	UpdateCollider(pos);
@@ -1563,15 +1577,6 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos, const PARRYMOTION parry)
 	// モーションの取得
 	auto pMotion = GetMotion();
 
-	// レンダラーの取得
-	auto pRenderer = CManager::GetRenderer();
-
-	if (pRenderer != nullptr)
-	{
-		// ブラーの設定
-		pRenderer->onEffect(0.8f);
-	}
-
 	if (pMotion != nullptr)
 	{
 		// モーションの再生
@@ -1599,7 +1604,7 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos, const PARRYMOTION parry)
 
 	// パーティクルの設定処理
 	pNormal->SetParticle(15.0f, 120, 60, 1, 314);
-	pNormal->SetParam(CEffect3D::TYPE_HIT);
+	pNormal->SetParam(CEffect3D::TYPE_HIT,0);
 
 	// 状態がアクションじゃなかったら抜ける
 	if (CCharacter3D::GetState() != STATE::STATE_ACTION) return;
@@ -1610,9 +1615,30 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos, const PARRYMOTION parry)
 	// 音の取得
 	CSound* pSound = CManager::GetSound();
 
+	// パーティクルの生成
+	auto pParticle = CParticle2D::Create(
+		D3DXVECTOR3(50.0f,
+			80.0f,
+			0.0f),
+		10.0f,
+		D3DXCOLOR(1.0f, 0.4f, 0.4f, 1.0f));
+
+	// パーティクルの生成
+	pParticle->SetParam(20.0f, 60, 10, 10, D3DXVECTOR3(0.0f, -10.0f, 0.0f));
+	pParticle->SetParam(7, 100);
+
 	// パーフェクトだったら
 	if (m_nParryCounter >= 0 && m_nParryCounter <= 3)
 	{
+		// レンダラーの取得
+		auto pRenderer = CManager::GetRenderer();
+
+		if (pRenderer != nullptr)
+		{
+			// ブラーの設定
+			pRenderer->onEffect(0.8f);
+		}
+
 		// 反撃ゲージを増やす
 		m_fDestRevengeValue += 25;
 
@@ -1632,6 +1658,10 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos, const PARRYMOTION parry)
 	}
 	else if (m_nParryCounter > 3 && m_nParryCounter <= 10)
 	{
+		//// エフェクトの生成
+		//auto pEffect = CEffect2D::Create(D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXVECTOR2(80.0f, 80.0f), D3DXCOLOR(1.0f, 1.0f, 0.4f, 0.8f));
+		//pEffect->SetParam(60, VEC3_NULL);
+
 		m_fDestRevengeValue += 15;
 
 		if (pSound != nullptr)

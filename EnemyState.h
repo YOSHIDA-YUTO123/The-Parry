@@ -378,11 +378,22 @@ private:
 class CEnemyDeath : public CEnemyState
 {
 public:
+
+	// モーションの種類
+	typedef enum
+	{
+		TYPE_NORMAL = 0,
+		TYPE_STANP,
+		TYPE_MAX
+	}TYPE;
+
 	CEnemyDeath();
 	~CEnemyDeath();
 	void Init(void) override;
 	void Update(void) override;
+	void SetType(const TYPE type) { m_type = type; }
 private:
+	TYPE m_type; // モーションの種類 
 };
 
 //***************************************************

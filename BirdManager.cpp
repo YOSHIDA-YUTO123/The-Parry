@@ -81,7 +81,7 @@ void CBirdManager::SetOpening(void)
 	// 鳥の出現
 	for (int nCnt = 0; nCnt < POP_BIRD; nCnt++)
 	{
-		CBird::Create(D3DXVECTOR3(static_cast<float>(rand() % 2800 - 1400.0f), 0.0f, static_cast<float>(rand() % 2800 - 1400.0f)), CBird::TYPE_NORMAL);
+		CBird::Create(D3DXVECTOR3(static_cast<float>(rand() % 2800 - 1400.0f), 0.0f, static_cast<float>(rand() % 2800 - 1400.0f)), CBird::TYPE_NORMAL,false);
 		CBird::Create(D3DXVECTOR3(static_cast<float>(rand() % 2000 - 1000.0f), static_cast<float>(rand() % 200 + 600.0f), static_cast<float>(rand() % 2000 - 1000.0f)), CBird::TYPE_FLY_MOVE, false);
 	}
 }
@@ -103,7 +103,7 @@ void CBirdManager::InAreaRenge(const D3DXVECTOR3 otherPos)
 		float fDistance = GetDistance(pos - otherPos);
 
 		// 出現エリアの範囲外だったら
-		if (fDistance >= m_Arena[nCnt].fRadius)
+		if (fDistance <= m_Arena[nCnt].fRadius)
 		{
 			nIdx = nCnt;
 			break;
@@ -212,7 +212,7 @@ HRESULT CBirdManager::Init(void)
 	// ポイントの総数分回す
 	for (int nCnt = 0; nCnt < MAX_POINT; nCnt++)
 	{
-		m_Arena[nCnt].fRadius = 300.0f;
+		m_Arena[nCnt].fRadius = 500.0f;
 	}
 
 	m_Arena[0].pos = { 0.0f,0.0f,0.0f };

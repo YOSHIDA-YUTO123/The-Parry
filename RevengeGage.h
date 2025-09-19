@@ -39,8 +39,8 @@ public:
 	void Draw(void) override;
 	void Set(const float fValue) { m_fValue = fValue; }
 private:
-	float m_fValue;									// Œ»İ‚Ì—Ê
-	float m_fMaxValue;								// Å‘å‚Ì—Ê
+	float m_fValue;			// Œ»İ‚Ì—Ê
+	float m_fMaxValue;		// Å‘å‚Ì—Ê
 };
 
 #endif

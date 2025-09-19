@@ -152,7 +152,7 @@ HRESULT CGame::Init(void)
 	}
 
 	// マルチテクスチャの表示
-	CRevengeActiveUI::Create(D3DXVECTOR3(80.0f,100.0f,0.0f), D3DXVECTOR2(60.0f, 60.0f), 4, 4);
+	CRevengeActiveUI::Create(D3DXVECTOR3(55.0f,90.0f,0.0f), D3DXVECTOR2(48.0f, 18.0f), 4, 4);
 
 	//// パリィエフェクトの生成
 	//CParryEffect::Create(D3DXVECTOR3(0.0f,200.0f,0.0f), D3DXVECTOR3(150.0f, 150.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 5, 2, 4, true);

@@ -823,7 +823,7 @@ void CPlayerRevengeAttack::Init(void)
 
 	// パーティクルの設定処理
 	pNormal->SetParticle(15.0f, 120, 60, 1, 314);
-	pNormal->SetParam(CEffect3D::TYPE_HIT);
+	pNormal->SetParam(CEffect3D::TYPE_HIT,0);
 
 }
 

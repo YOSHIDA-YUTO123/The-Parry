@@ -114,6 +114,7 @@ void CRevengeActiveUI::Draw(void)
 	// ”½Œ‚”­“®‰Â”\‚©‚Ç‚¤‚©æ“¾
 	bool bRevenge = pPlayer->GetRevengeState();
 
+	// ”­“®‰Â”\‚¾‚Á‚½‚ç
 	if (bRevenge)
 	{
 		// •`‰æˆ—

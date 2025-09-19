@@ -1138,6 +1138,24 @@ void CEnemySpin::Update(void)
 			// プレイヤーのダメージモーションの設定
 			pPlayer->SetDamageMotion(pos, 4);
 		}
+		// 絶対反撃
+		else if (result == CEnemy::RESULT_SPREVENGE)
+		{
+			// プレイヤーの位置の取得
+			D3DXVECTOR3 playerPos = pPlayer->GetPosition();
+
+			// 角度を求める
+			float fAngle = GetTargetAngle(playerPos, pos);
+
+			// 角度を設定
+			pPlayer->SetAngle(fAngle);
+
+			// ヒット状態にする
+			pEnemy->ChangeState(make_shared<CEnemySuperHit>());
+
+			// 状態の変更
+			pPlayer->ChangeState(make_shared<CPlayerRevengeAttack>());
+		}
 	}
 
 	// 必ず回転する時間を計算
@@ -2131,6 +2149,7 @@ void CEnemyJumpAttack::CollisionPlayer(CPlayer* pPlayer, CMotion* pMotion)
 //===================================================
 CEnemyDeath::CEnemyDeath() : CEnemyState(ID_DEATH)
 {
+	m_type = TYPE_NORMAL;
 }
 
 //===================================================
@@ -2161,8 +2180,20 @@ void CEnemyDeath::Init(void)
 	// モーションがあるなら
 	if (pMotion != nullptr)
 	{
-		// モーションの再生
-		pMotion->SetMotion(CEnemy::MOTIONTYPE_DEATH, true, 1);
+		// 種類の遷移
+		switch (m_type)
+		{
+		case TYPE_NORMAL:
+			// モーションの再生
+			pMotion->SetMotion(CEnemy::MOTIONTYPE_DEATH, true, 1);
+			break;
+		case TYPE_STANP:
+			// モーションの再生
+			pMotion->SetMotion(CEnemy::MOTIONTYPE_STANP_DEATH, true, 1);
+			break;
+		default:
+			break;
+		}
 	}
 }
 
@@ -2191,6 +2222,11 @@ void CEnemyDeath::Update(void)
 		}
 
 		if (pMotion->IsEventFrame(110, 110, CEnemy::MOTIONTYPE_DEATH))
+		{
+			pEnemy->ChangeState(make_shared<CEnemyDown>());
+		}
+
+		if (pMotion->IsEventFrame(210, 210, CEnemy::MOTIONTYPE_STANP_DEATH))
 		{
 			pEnemy->ChangeState(make_shared<CEnemyDown>());
 		}
@@ -2229,8 +2265,19 @@ void CEnemyDown::Init(void)
 	// モーションがあるなら
 	if (pMotion != nullptr)
 	{
-		// モーションの再生
-		pMotion->SetMotion(CEnemy::MOTIONTYPE_DOWN, true, 4);
+		// モーションの種類の取得
+		int nMotiontype = pMotion->GetBlendType();
+
+		if (nMotiontype == CEnemy::MOTIONTYPE_STANP_DEATH)
+		{
+			// モーションの再生
+			pMotion->SetMotion(CEnemy::MOTIONTYPE_STANP_DOWN, true, 4);
+		}
+		else
+		{
+			// モーションの再生
+			pMotion->SetMotion(CEnemy::MOTIONTYPE_DOWN, true, 4);
+		}
 	}
 }
 
@@ -2377,6 +2424,9 @@ void CEnemySuperHit::Init(void)
 
 	// モーションクラスの取得
 	CMotion* pMotion = pEnemy->GetMotion();
+
+	// プレイヤーの方向を見る
+	pEnemy->AngleToPlayer();
 
 	// モーションがあるなら
 	if (pMotion != nullptr)
@@ -2534,14 +2584,14 @@ void CEnemyComboDamage::Update(void)
 		// エフェクトの生成
 		auto pEffect = CParticle3DNormal::Create(ImpactPos,20.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
 		pEffect->SetParticle(35.0f, 360, 30, 1, 314);
-		pEffect->SetParam(CEffect3D::TYPE_NORAML,0.1f);
+		pEffect->SetParam(CEffect3D::TYPE_NORAML, 0, 0.1f);
 
 		// メッシュサークルの生成
 		auto pMeshCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.4f, 0.5f), NewImpactPos, 10.0f, 50.0f);
 		pMeshCircle->SetCircle(-50.0f, 8.0f, 30, false, D3DXVECTOR3(D3DX_PI * 0.5f, angle.y, 0.0f));
 
 		// ヒット時の設定
-		pEnemy->Hit(2);
+		pEnemy->Hit(1);
 	}
 	if (pMotion->IsEventFrame(159, 159, CEnemy::MOTIONTYPE_COMBODAMAGE))
 	{
@@ -2558,10 +2608,10 @@ void CEnemyComboDamage::Update(void)
 		// エフェクトの生成
 		auto pEffect = CParticle3DNormal::Create(ImpactPos, 20.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
 		pEffect->SetParticle(35.0f, 360, 50, 1, 314);
-		pEffect->SetParam(CEffect3D::TYPE_NORAML, 0.1f);
+		pEffect->SetParam(CEffect3D::TYPE_NORAML,0, 0.1f);
 
 		// ヒット時の設定
-		pEnemy->Hit(3);
+		pEnemy->Hit(2);
 
 		// 状態の変更
 		pEnemy->ChangeState(make_shared<CEnemyDamageL>(0,false));

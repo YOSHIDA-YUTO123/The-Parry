@@ -9,9 +9,10 @@
 // インクルードファイル
 //************************************************
 #include "RevengeGage.h"
-#include"manager.h"
-#include"renderer.h"
-#include"number.h"
+#include "manager.h"
+#include "renderer.h"
+#include "number.h"
+#include "enemy.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std;   // 名前空間stdを使用
@@ -99,13 +100,6 @@ void CRevengeUI::Update(void)
 
 	// 更新処理
 	CObject2DMT::Update();
-
-	//// 最大になったら
-	//if (fRate >= 1.0f)
-	//{
-	//	// 色の設定
-	//	CObject2DMT::SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f,1.0f));
-	//}
 
 	// テクスチャの設定
 	CObject2DMT::SetTexture(

@@ -404,9 +404,6 @@ void CEnemy::Update(void)
 	{			
 		// 状態の設定
 		ChangeState(make_shared<CEnemyDamageL>(5));
-
-		// モーションの設定
-		pMotion->SetMotion(MOTIONTYPE_DAMAGEL, true, 2);
 	}
 	
 	// プレイヤーとの当たり判定
@@ -489,16 +486,44 @@ void CEnemy::Update(void)
 	// オブザーバーへの通知処理
 	Notify();
 
-	if (CCharacter3D::GetAlive() == false && pMotion->GetBlendType() != MOTIONTYPE_DEATH && pMotion->GetBlendType() != MOTIONTYPE_DOWN)
+	if (CCharacter3D::GetAlive() == false)
 	{
-		// 状態を追従にする
-		pCamera->SetState(CGameCamera::STATE_TRACKING);
+		// モーションの種類の取得
+		int nMotionType = pMotion->GetBlendType();
 
-		// 敵を追従する
-		pCamera->SetTracking(CGameCamera::TRACKOBJ_ENEMY);
+		if ((nMotionType != MOTIONTYPE_DEATH && nMotionType != MOTIONTYPE_DOWN) &&
+			(nMotionType != MOTIONTYPE_STANP_DEATH && nMotionType != MOTIONTYPE_STANP_DOWN))
+		{
 
-		// HPが無かったら
-		ChangeState(make_shared<CEnemyDeath>());
+			// 状態を追従にする
+			pCamera->SetState(CGameCamera::STATE_TRACKING);
+
+			// 敵を追従する
+			pCamera->SetTracking(CGameCamera::TRACKOBJ_ENEMY);
+
+			if (nMotionType == MOTIONTYPE_STANP_DAMAGE)
+			{
+				// 死亡状態の設定
+				auto pDeath = make_shared<CEnemyDeath>();
+
+				// 種類の設定
+				pDeath->SetType(CEnemyDeath::TYPE_STANP);
+
+				// HPが無かったら
+				ChangeState(pDeath);
+			}
+			else
+			{
+				// 死亡状態の設定
+				auto pDeath = make_shared<CEnemyDeath>();
+
+				// 種類の設定
+				pDeath->SetType(CEnemyDeath::TYPE_NORMAL);
+
+				// HPが無かったら
+				ChangeState(pDeath);
+			}
+		}
 	}
 	
 	// コライダーの更新
@@ -753,7 +778,9 @@ bool CEnemy::IsDamageMotion(void)
 	// ダメージモーションだったら
 	if (motionType == MOTIONTYPE_DAMAGEL ||
 		motionType == MOTIONTYPE_DAMAGES ||
-		motionType == MOTIONTYPE_STANP_DAMAGE)
+		motionType == MOTIONTYPE_STANP_DAMAGE ||
+		motionType == MOTIONTYPE_DEATH ||
+		motionType == MOTIONTYPE_STANP_DEATH)
 	{
 		return true;
 	}
@@ -1673,7 +1700,7 @@ void CEnemy::CollisionPlayer(CMotion *pPlayerMotion,CPlayer *pPlayer)
 			// エフェクトの生成
 			auto pEffect = CParticle3DNormal::Create(PlayerPos, 20.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
 			pEffect->SetParticle(35.0f, 360, 150, 1, 314);
-			pEffect->SetParam(CEffect3D::TYPE_NORAML, 0.1f);
+			pEffect->SetParam(CEffect3D::TYPE_NORAML, 0,0.1f);
 
 			// ダメージ状態の生成
 			auto pDamageS = make_shared<CEnemyDamageS>(5);

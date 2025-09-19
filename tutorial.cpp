@@ -254,12 +254,12 @@ void CTutorial::Update(void)
 	// パーティクルの生成
 	auto pParticle = CParticle3DNormal::Create(D3DXVECTOR3(-225.0f, 325.0f, -1115.0f), 15.0f, D3DCOLOR_RGBA(240, 122, 27, 255));
 	pParticle->SetParticle(2.0f, 100, 10, 1, 40);
-	pParticle->SetParam(CEffect3D::TYPE_FIRE);
+	pParticle->SetParam(CEffect3D::TYPE_FIRE,0);
 
 	// パーティクルの生成
 	pParticle = CParticle3DNormal::Create(D3DXVECTOR3(255.0f, 325.0f, -1115.0f), 15.0f, D3DCOLOR_RGBA(240, 122, 27, 255));
 	pParticle->SetParticle(2.0f, 100, 10, 1, 40);
-	pParticle->SetParam(CEffect3D::TYPE_FIRE);
+	pParticle->SetParam(CEffect3D::TYPE_FIRE,0);
 
 	// キーボードの取得
 	auto pKeyboard = CManager::GetInputKeyboard();

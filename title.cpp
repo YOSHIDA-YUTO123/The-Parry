@@ -144,12 +144,12 @@ void CTitle::Update(void)
 	// パーティクルの生成
 	auto pParticle = CParticle3DNormal::Create(D3DXVECTOR3(250.0f, 175.0f, 150.0f), 10.0f, D3DCOLOR_RGBA(240, 122, 27, 255));
 	pParticle->SetParticle(2.0f, 60, 10, 1, 40);
-	pParticle->SetParam(CEffect3D::TYPE_FIRE);
+	pParticle->SetParam(CEffect3D::TYPE_FIRE,0);
 
 	// パーティクルの生成
 	pParticle = CParticle3DNormal::Create(D3DXVECTOR3(250.0f, 175.0f, -150.0f), 10.0f, D3DCOLOR_RGBA(240, 122, 27, 255));
 	pParticle->SetParticle(2.0f, 60, 10, 1, 40);
-	pParticle->SetParam(CEffect3D::TYPE_FIRE);
+	pParticle->SetParam(CEffect3D::TYPE_FIRE,0);
 
 	// カメラの更新処理
 	if (m_pCamera != nullptr)

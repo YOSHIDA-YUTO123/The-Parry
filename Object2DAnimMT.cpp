@@ -98,8 +98,8 @@ HRESULT CObject2DAnimMT::Init(void)
 	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 
 	// 頂点座標の設定
-	pVtx[0].pos = D3DXVECTOR3(m_pos.x - m_Size.x, m_pos.x - m_Size.y, 0.0f);
-	pVtx[1].pos = D3DXVECTOR3(m_pos.x + m_Size.x, m_pos.x - m_Size.y, 0.0f);
+	pVtx[0].pos = D3DXVECTOR3(m_pos.x - m_Size.x, m_pos.y - m_Size.y, 0.0f);
+	pVtx[1].pos = D3DXVECTOR3(m_pos.x + m_Size.x, m_pos.y - m_Size.y, 0.0f);
 	pVtx[2].pos = D3DXVECTOR3(m_pos.x - m_Size.x, m_pos.y + m_Size.y, 0.0f);
 	pVtx[3].pos = D3DXVECTOR3(m_pos.x + m_Size.x, m_pos.y + m_Size.y, 0.0f);
 
@@ -161,8 +161,8 @@ void CObject2DAnimMT::Update(void)
 	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 
 	// 頂点座標の設定
-	pVtx[0].pos = D3DXVECTOR3(m_pos.x - m_Size.x, m_pos.x - m_Size.y, 0.0f);
-	pVtx[1].pos = D3DXVECTOR3(m_pos.x + m_Size.x, m_pos.x - m_Size.y, 0.0f);
+	pVtx[0].pos = D3DXVECTOR3(m_pos.x - m_Size.x, m_pos.y - m_Size.y, 0.0f);
+	pVtx[1].pos = D3DXVECTOR3(m_pos.x + m_Size.x, m_pos.y - m_Size.y, 0.0f);
 	pVtx[2].pos = D3DXVECTOR3(m_pos.x - m_Size.x, m_pos.y + m_Size.y, 0.0f);
 	pVtx[3].pos = D3DXVECTOR3(m_pos.x + m_Size.x, m_pos.y + m_Size.y, 0.0f);
 

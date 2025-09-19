@@ -166,6 +166,7 @@
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="edit.cpp" />
+    <ClCompile Include="effect2D.cpp" />
     <ClCompile Include="EffectSpark.cpp" />
     <ClCompile Include="ExplosionArea.cpp" />
     <ClCompile Include="FadeEffect.cpp" />
@@ -182,6 +183,7 @@
     <ClCompile Include="OpningEnemy.cpp" />
     <ClCompile Include="overlay.cpp" />
     <ClCompile Include="ParryEffect.cpp" />
+    <ClCompile Include="particle2D.cpp" />
     <ClCompile Include="ParticleSpark.cpp" />
     <ClCompile Include="ranking.cpp" />
     <ClCompile Include="RankingManager.cpp" />
@@ -280,6 +282,7 @@
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="edit.h" />
+    <ClInclude Include="effect2D.h" />
     <ClInclude Include="EffectSpark.h" />
     <ClInclude Include="ExplosionArea.h" />
     <ClInclude Include="FadeEffect.h" />
@@ -296,6 +299,7 @@
     <ClInclude Include="OpningEnemy.h" />
     <ClInclude Include="overlay.h" />
     <ClInclude Include="ParryEffect.h" />
+    <ClInclude Include="particle2D.h" />
     <ClInclude Include="ParticleSpark.h" />
     <ClInclude Include="ranking.h" />
     <ClInclude Include="RankingManager.h" />
