@@ -413,32 +413,6 @@ void CEnemy::Update(void)
 	D3DXVECTOR3 WeponPos = GetPositionFromMatrix(m_weponMatrix);
 	D3DXVECTOR3 WeponBottom = GetModelPos(15);
 
-	// 敵の攻撃のカウンターの目安の表示
-	if (pMotion->IsEventFrame(50, 50, MOTIONTYPE_SMASH))
-	{
-		// パーティクルの生成
-		auto pParticle = CParticle3DNormal::Create(chestpos, 100.0f, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-
-		// パーティクルの設定
-		pParticle->SetParticle(15.0f, 240, 50, 1,314);
-	}
-	else if (pMotion->IsEventFrame(50, 50, MOTIONTYPE_IMPACT))
-	{
-		// ウェーブの生成
-		auto pWave = CMeshWave::Create(pos, 50.0f, 50.0f, WHITE);
-
-		// ウェーブの設定処理
-		pWave->SetWave(30,50.0f);
-	}
-	else if (pMotion->IsEventFrame(40, 40, MOTIONTYPE_SWING))
-	{
-		// パーティクルの生成
-		auto pParticle = CParticle3DNormal::Create(chestpos, 100.0f, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-
-		// パーティクルの設定
-		pParticle->SetParticle(15.0f, 240, 50, 1,314);
-	}
-
 	// 攻撃モーションのたたきつけになったら
 	if (pMotion->IsEventFrame(72,72, MOTIONTYPE_SMASH))
 	{
@@ -1533,7 +1507,7 @@ bool CEnemy::SetTNTEffect(CObstacle* pObstacle)
 	auto STATE = CCharacter3D::GetState();
 
 	// 状態が攻撃じゃないなら処理しない
-	if (STATE != STATE_ACTION)
+	if (STATE != STATE_ACTION && STATE != STATE_DEATH)
 	{
 		//// 状態の変更
 		//ChangeState(make_shared<CEnemySwing>());

@@ -470,10 +470,6 @@ void CPlayer::Update(void)
 		// 構えが出せるなら
 		if (IsStance(pMotion) && bAlive)
 		{
-			//// オーバーレイの生成
-			//auto pOverlay = COverlay::Create(D3DXVECTOR3(640.0f, 360.0f, 0.0f), D3DXVECTOR2(640.0f, 360.0f), 120);
-			//pOverlay->SetTextureID("data/TEXTURE/overlay/overlay.png");
-
 			pMotion->SetMotion(MOTIONTYPE_STANCE, true, 5);
 
 			// パリィの時間
@@ -481,12 +477,6 @@ void CPlayer::Update(void)
 			m_nParryCounter = 0;
 
 			CCharacter3D::SetState(STATE_ACTION, PARRY_TIME);
-
-			//// 左手の位置
-			//D3DXVECTOR3 playerHandL = CCharacter3D::GetModelPos(8);
-
-			//auto pEffect = CEffect3D::Create(playerHandL, 100.0f, D3DCOLOR_RGBA(255, 215, 0, 255), CEffect3D::TYPE_HIT);
-			//pEffect->Set(60, VEC3_NULL);
 		}
 	}
 
@@ -1995,6 +1985,17 @@ void CPlayer::UpdateParry(void)
 	{
 		// 攻撃カウンターを減らす
 		m_nAttackCounter--;
+	}
+
+	// 攻撃状態だったら
+	if (CCharacter3D::GetState() == STATE_ACTION)
+	{
+		// パーティクルの生成
+		auto pNormal = CParticle3DNormal::Create(CCharacter3D::GetModelPos(MODEL_CHEST), 10.0f, D3DXCOLOR(0.4f, 1.0f, 1.0f, 1.0f));
+
+		// パーティクルの設定処理
+		pNormal->SetParticle(5.0f, 120, 5, 1, 60);
+		pNormal->SetParam(CEffect3D::TYPE_NORAML, 100);
 	}
 }
 

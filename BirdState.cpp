@@ -132,6 +132,7 @@ void CBirdFly::Init(void)
 		// ’¹‚ª‰H‚Î‚½‚­
 		pSound->Play(CSound::SOUND_LABEL_BIRDFLY);
 	}
+
 	// ƒ‚[ƒVƒ‡ƒ“‚ÌÝ’è
 	pMotion->SetMotion(CBird::MOTIONTYPE_FLY, true, 10);
 }

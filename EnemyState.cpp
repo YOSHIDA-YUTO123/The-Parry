@@ -602,6 +602,19 @@ void CEnemyAttackSmash::Update(void)
 		}
 	}
 	
+	// 敵の攻撃のカウンターの目安の表示
+	if (pMotion->IsEventFrame(50, 50, CEnemy::MOTIONTYPE_SMASH))
+	{
+		// モデルの位置の取得
+		D3DXVECTOR3 chestPos = pEnemy->GetModelPos(CEnemy::MODEL_CHEST);
+
+		// パーティクルの生成
+		auto pParticle = CParticle3DNormal::Create(chestPos, 100.0f, D3DXCOLOR(1.0f, 0.3f, 0.3f, 1.0f));
+
+		// パーティクルの設定
+		pParticle->SetParticle(15.0f, 240, 50, 1, 314);
+	}
+
 	if (pMotion->IsEventFrame(0, 30, CEnemy::MOTIONTYPE_SMASH))
 	{
 		// プレイヤーの方向を見る処理
@@ -864,6 +877,18 @@ void CEnemyAttackImpact::Update(void)
 	{
 		// 軌跡の処理
 		pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f));
+	}
+
+	// 位置の取得
+	D3DXVECTOR3 pos = pEnemy->GetPosition();
+
+	if (pMotion->IsEventFrame(50, 50, CEnemy::MOTIONTYPE_IMPACT))
+	{
+		// ウェーブの生成
+		auto pWave = CMeshWave::Create(pos, 50.0f, 50.0f, WHITE);
+
+		// ウェーブの設定処理
+		pWave->SetWave(30, 50.0f);
 	}
 
 	// モーションが終わったら
@@ -1910,17 +1935,30 @@ void CEnemySwing::Update(void)
 			// 状態の変更
 			pEnemy->ChangeState(make_shared<CEnemyIdle>(5));
 		}
-	}
 
-	if (pMotion->IsEventFrame(60, 60, CEnemy::MOTIONTYPE_SWING))
-	{
-		// 音の取得
-		CSound* pSound = CManager::GetSound();
-
-		if (pSound != nullptr)
+		// 敵の攻撃のカウンターの目安の表示
+		if (pMotion->IsEventFrame(40, 40, CEnemy::MOTIONTYPE_SWING))
 		{
-			// 音の再生
-			pSound->Play(CSound::SOUND_LABEL_SWING);
+			// モデルの位置の取得
+			D3DXVECTOR3 chestPos = pEnemy->GetModelPos(CEnemy::MODEL_CHEST);
+
+			// パーティクルの生成
+			auto pParticle = CParticle3DNormal::Create(chestPos, 100.0f, D3DXCOLOR(1.0f, 0.3f, 0.3f, 1.0f));
+
+			// パーティクルの設定
+			pParticle->SetParticle(15.0f, 240, 50, 1, 314);
+		}
+
+		if (pMotion->IsEventFrame(60, 60, CEnemy::MOTIONTYPE_SWING))
+		{
+			// 音の取得
+			CSound* pSound = CManager::GetSound();
+
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_SWING);
+			}
 		}
 	}
 }
@@ -2083,6 +2121,19 @@ void CEnemyJumpAttack::CollisionPlayer(CPlayer* pPlayer, CMotion* pMotion)
 	// 位置の取得
 	D3DXVECTOR3 pos = pEnemy->GetPosition();
 
+	// 敵の攻撃のカウンターの目安の表示
+	if (pMotion->IsEventFrame(70, 70, CEnemy::MOTIONTYPE_JUMPATTACK))
+	{
+		// モデルの位置の取得
+		D3DXVECTOR3 chestPos = pEnemy->GetModelPos(CEnemy::MODEL_CHEST);
+
+		// パーティクルの生成
+		auto pParticle = CParticle3DNormal::Create(chestPos, 100.0f, D3DXCOLOR(1.0f, 0.3f, 0.3f, 1.0f));
+
+		// パーティクルの設定
+		pParticle->SetParticle(15.0f, 240, 50, 1, 314);
+	}
+
 	// イベントフレームの判定
 	if (pMotion->IsEventFrame(80, 88, CEnemy::MOTIONTYPE_JUMPATTACK) && pEnemy->IsDamageMotion() == false)
 	{
@@ -2185,6 +2236,9 @@ void CEnemyDeath::Init(void)
 	CSlow* pSlow = CManager::GetSlow();
 
 	pSlow->Start(60, 8);
+
+	// 死亡状態にする
+	pEnemy->SetState(CCharacter3D::STATE_DEATH, 99999);
 
 	// モーションがあるなら
 	if (pMotion != nullptr)
@@ -2930,6 +2984,19 @@ void CEnemyRush::Update(void)
 
 	if (pMotion != nullptr)
 	{
+		// 敵の攻撃のカウンターの目安の表示
+		if (pMotion->IsEventFrame(68, 68, CEnemy::MOTIONTYPE_START_RUSH))
+		{
+			// モデルの位置の取得
+			D3DXVECTOR3 chestPos = pEnemy->GetModelPos(CEnemy::MODEL_CHEST);
+
+			// パーティクルの生成
+			auto pParticle = CParticle3DNormal::Create(chestPos, 100.0f, D3DXCOLOR(1.0f, 0.3f, 0.3f, 1.0f));
+
+			// パーティクルの設定
+			pParticle->SetParticle(15.0f, 240, 50, 1, 314);
+		}
+
 		// 呼び動作中だったら処理しない
 		if (pMotion->IsEventFrame(0, 70, CEnemy::MOTIONTYPE_START_RUSH))
 		{
@@ -3234,6 +3301,19 @@ void CEnemyBackKick::Update(void)
 
 		// 位置の取得
 		D3DXVECTOR3 pos = pEnemy->GetPosition();
+
+		// 敵の攻撃のカウンターの目安の表示
+		if (pMotion->IsEventFrame(50, 50, CEnemy::MOTIONTYPE_BACKKICK))
+		{
+			// モデルの位置の取得
+			D3DXVECTOR3 chestPos = pEnemy->GetModelPos(CEnemy::MODEL_CHEST);
+
+			// パーティクルの生成
+			auto pParticle = CParticle3DNormal::Create(chestPos, 100.0f, D3DXCOLOR(1.0f, 0.3f, 0.3f, 1.0f));
+
+			// パーティクルの設定
+			pParticle->SetParticle(15.0f, 240, 50, 1, 314);
+		}
 
 		if (pMotion->IsEventFrame(68, 75, CEnemy::MOTIONTYPE_BACKKICK))
 		{
@@ -3579,6 +3659,16 @@ void CEnemySweepRight::Init(void)
 	// 軌跡の破棄
 	pEnemy->DeleteOrbit();
 
+	// モデルの位置の取得
+	D3DXVECTOR3 chestPos = pEnemy->GetModelPos(CEnemy::MODEL_CHEST);
+
+	// パーティクルの生成
+	auto pParticle = CParticle3DNormal::Create(chestPos, 100.0f, D3DXCOLOR(1.0f, 0.3f, 0.3f, 1.0f));
+
+	// パーティクルの設定
+	pParticle->SetParticle(15.0f, 240, 50, 1, 314);
+	
+
 	// モーションがあるなら
 	if (pMotion != nullptr)
 	{
@@ -3687,17 +3777,16 @@ void CEnemySweepRight::Update(void)
 
 			return;
 		}
-	}
-
-	if (pMotion->IsEventFrame(44, 44, CEnemy::MOTIONTYPE_SWEEP_RIGHT))
-	{
-		// 音の取得
-		CSound* pSound = CManager::GetSound();
-
-		if (pSound != nullptr)
+		if (pMotion->IsEventFrame(44, 44, CEnemy::MOTIONTYPE_SWEEP_RIGHT))
 		{
-			// 音の再生
-			pSound->Play(CSound::SOUND_LABEL_SWING);
+			// 音の取得
+			CSound* pSound = CManager::GetSound();
+
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_SWING);
+			}
 		}
 	}
 }
@@ -3835,6 +3924,19 @@ void CEnemySweepLeft::Update(void)
 			pEnemy->ChangeState(make_shared<CEnemyRushSwing>());
 
 			return;
+		}
+
+		// 敵の攻撃のカウンターの目安の表示
+		if (pMotion->IsEventFrame(50, 50, CEnemy::MOTIONTYPE_SWEEP_LEFT))
+		{
+			// モデルの位置の取得
+			D3DXVECTOR3 chestPos = pEnemy->GetModelPos(CEnemy::MODEL_CHEST);
+
+			// パーティクルの生成
+			auto pParticle = CParticle3DNormal::Create(chestPos, 100.0f, D3DXCOLOR(1.0f, 0.3f, 0.3f, 1.0f));
+
+			// パーティクルの設定
+			pParticle->SetParticle(15.0f, 240, 50, 1, 314);
 		}
 
 		if (pMotion->IsEventFrame(64, 64, CEnemy::MOTIONTYPE_SWEEP_LEFT))
@@ -3999,6 +4101,19 @@ void CEnemyRushSwing::CollisionPlayer(CEnemy* pEnemy, CMotion* pMotion)
 
 	// 取得できなかったら処理しない
 	if (pPlayer == nullptr) return;
+
+	// 敵の攻撃のカウンターの目安の表示
+	if (pMotion->IsEventFrame(110, 110, CEnemy::MOTIONTYPE_RUSH_SWING))
+	{
+		// モデルの位置の取得
+		D3DXVECTOR3 chestPos = pEnemy->GetModelPos(CEnemy::MODEL_CHEST);
+
+		// パーティクルの生成
+		auto pParticle = CParticle3DNormal::Create(chestPos, 100.0f, D3DXCOLOR(1.0f, 0.3f, 0.3f, 1.0f));
+
+		// パーティクルの設定
+		pParticle->SetParticle(15.0f, 240, 50, 1, 314);
+	}
 
 	if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_RUSH_SWING,0))
 	{
