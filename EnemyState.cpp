@@ -1474,6 +1474,15 @@ void CEnemyDamageS::Init(void)
 	// ダメージの設定
 	pEnemy->Hit(m_nDamage);
 
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	if (pSound != nullptr)
+	{
+		// 音の再生
+		pSound->Play(CSound::SOUND_LABEL_NORMAL);
+	}
+
 	if (pMotion != nullptr)
 	{
 		switch (m_type)
@@ -3226,7 +3235,7 @@ void CEnemyBackKick::Update(void)
 		// 位置の取得
 		D3DXVECTOR3 pos = pEnemy->GetPosition();
 
-		if (pMotion->IsEventFrame(62, 75, CEnemy::MOTIONTYPE_BACKKICK))
+		if (pMotion->IsEventFrame(68, 75, CEnemy::MOTIONTYPE_BACKKICK))
 		{
 			// パリィされた
 			if (result == CEnemy::RESULT_PARRY)

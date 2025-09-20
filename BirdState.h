@@ -93,6 +93,8 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 private:
+	static constexpr int WING_DROP_TIME = 300; // ‰H‚ð—Ž‚Æ‚·ŽžŠÔ
+	int m_nTime;							   // ŽžŠÔ
 };
 
 #endif

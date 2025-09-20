@@ -256,10 +256,10 @@ void CObjectX::Draw(const float Diffuse)
 	{
 		D3DXMATERIAL Mat = pMat[nCntMat];
 
-		pMat[nCntMat].MatD3D.Diffuse.a = Diffuse;
+		Mat.MatD3D.Diffuse.a = Diffuse;
 
 		//マテリアルの設定
-		pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+		pDevice->SetMaterial(&Mat.MatD3D);
 
 		if (m_pTextureIdx[nCntMat] != -1)
 		{
@@ -412,7 +412,7 @@ void CObjectX::SetUpMatrix(const D3DXMATRIX mtxRot, const D3DXMATRIX mtxTrans, c
 //===================================================
 // 描画までの設定処理
 //===================================================
-void CObjectX::SetUpDraw(void)
+void CObjectX::SetUpDraw(const float Diffuse)
 {
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
@@ -449,8 +449,12 @@ void CObjectX::SetUpDraw(void)
 
 	for (int nCntMat = 0; nCntMat < (int)dwNumMat; nCntMat++)
 	{
+		D3DXMATERIAL Mat = pMat[nCntMat];
+
+		Mat.MatD3D.Diffuse.a = Diffuse;
+
 		//マテリアルの設定
-		pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+		pDevice->SetMaterial(&Mat.MatD3D);
 
 		if (m_pTextureIdx[nCntMat] != -1)
 		{

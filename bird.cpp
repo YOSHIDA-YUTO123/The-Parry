@@ -19,6 +19,7 @@
 #include "game.h"
 #include"meshfield.h"
 #include "manager.h"
+#include "wing.h"
 
 using namespace std;	// 名前空間stdの使用
 using namespace Const;	// 名前空間Constの使用
@@ -234,8 +235,12 @@ void CBird::Update(void)
 			// 寿命が尽きたら
 			if (m_nLife <= 0)
 			{
+				// 羽の生成
+				CWing::Create(pos);
+
 				// 破棄
 				DeleteList();
+
 				return;
 			}
 		}

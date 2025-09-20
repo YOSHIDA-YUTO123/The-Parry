@@ -38,11 +38,12 @@ public:
 	virtual void Uninit(void) override;
 	virtual void Update(void) override;
 	virtual void Draw(void) override;
+	
 	void Draw(const float Diffuse); // “§–¾“x‚ğ•ÏX‚Å‚«‚é•`‰æˆ—
 	void DrawShadow(void);
 	void SetUpMatrix(const D3DXVECTOR3 Scal = D3DXVECTOR3(1.0f,1.0f,1.0f));
 	void SetUpMatrix(const D3DXMATRIX mtxRot, const D3DXMATRIX mtxTrans,const D3DXVECTOR3 Scal = D3DXVECTOR3(1.0f, 1.0f, 1.0f));
-	void SetUpDraw(void);
+	void SetUpDraw(const float Diffuse = 1.0f);
 	void SetTextureMT(const char* pTextureName);
 
 	HRESULT LoadModel(const char* pXFileName);

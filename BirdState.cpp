@@ -14,6 +14,7 @@
 #include"game.h"
 #include "sound.h"
 #include "manager.h"
+#include "wing.h"
 
 //===================================================
 // コンストラクタ
@@ -161,6 +162,7 @@ void CBirdFly::Update(void)
 //===================================================
 CBirdFlyMove::CBirdFlyMove() : CBirdState(ID_FLYMOVE)
 {
+	m_nTime = WING_DROP_TIME;
 }
 
 //===================================================
@@ -201,6 +203,21 @@ void CBirdFlyMove::Update(void)
 
 	// 取得できなかったら処理しない
 	if (pBird == nullptr) return;
+
+	// 位置の取得
+	D3DXVECTOR3 pos = pBird->GetPosition();
+
+	m_nTime--;
+	
+	// 時間が0になったら
+	if (m_nTime <= 0)
+	{
+		// リセット
+		m_nTime = WING_DROP_TIME;
+
+		// 羽の生成
+		CWing::Create(pos);
+	}
 
 	// 飛行移動
 	pBird->FlyMove(10.0f);

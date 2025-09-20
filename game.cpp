@@ -41,6 +41,8 @@
 #include "enemy.h"
 #include "Object2DAnimMT.h"
 #include "RevengeActiveUI.h"
+#include "billboardAnim.h"
+#include "wing.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -280,6 +282,11 @@ void CGame::Update(void)
 	if (pKeyboard->GetTrigger(DIK_F9))
 	{
 		SetState(STATE_END);
+	}
+
+	if (pKeyboard->GetTrigger(DIK_0))
+	{
+		CWing::Create(D3DXVECTOR3(0.0f, 500.0f, 0.0f));
 	}
 #endif
 }

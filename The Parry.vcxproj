@@ -203,6 +203,7 @@
     <ClCompile Include="TrainingEnemy.cpp" />
     <ClCompile Include="TrainingEnemyState.cpp" />
     <ClCompile Include="tutorial.cpp" />
+    <ClCompile Include="wing.cpp" />
     <ClCompile Include="WinResultManager.cpp" />
     <ClCompile Include="cylinder.cpp" />
     <ClCompile Include="debugproc.cpp" />
@@ -319,6 +320,7 @@
     <ClInclude Include="TrainingEnemy.h" />
     <ClInclude Include="TrainingEnemyState.h" />
     <ClInclude Include="tutorial.h" />
+    <ClInclude Include="wing.h" />
     <ClInclude Include="WinResultManager.h" />
     <ClInclude Include="cylinder.h" />
     <ClInclude Include="debugproc.h" />
