@@ -332,8 +332,27 @@ void CPlayerAvoid::Init(void)
 		// 移動量の設定
 		pMoveMent->Set(D3DXVECTOR3(0.0f, 10.0f, 0.0f));
 	}
+
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	if (pSound != nullptr)
+	{
+		// 音の再生
+		pSound->Play(CSound::SOUND_LABEL_AVOID);
+	}
 	if (pMotion != nullptr)
 	{
+		//// モーションの種類の取得
+		//int nMotionType = pMotion->GetBlendType();
+
+		//// 回避状態じゃないなら
+		//if (nMotionType != CPlayer::MOTIONTYPE_AVOID)
+		//{
+		//	// 移動量の設定
+		//	pMoveMent->Set(D3DXVECTOR3(0.0f, 10.0f, 0.0f));
+		//}
+
 		// モーションの再生
 		pMotion->SetMotion(MOTION::MOTIONTYPE_AVOID, false, 5);
 	}
@@ -838,13 +857,38 @@ void CPlayerRevengeAttack::Update(void)
 	// モーションの取得
 	CMotion* pMotion = pPlayer->GetMotion();
 
+	// 位置の取得
+	D3DXVECTOR3 pos = pPlayer->GetPosition();
+
+	// パーティクルの生成
+	auto pNormal = CParticle3DNormal::Create(pPlayer->GetModelPos(CPlayer::MODEL_CHEST), 10.0f, D3DXCOLOR(1.0f, 0.4f, 0.4f, 1.0f));
+
+	// パーティクルの設定処理
+	pNormal->SetParticle(5.0f, 120, 5, 1, 60);
+	pNormal->SetParam(CEffect3D::TYPE_NORAML, 100);
+
+	// パーティクルの生成
+	pNormal = CParticle3DNormal::Create(pPlayer->GetModelPos(CPlayer::MODEL_CHEST), 10.0f, D3DXCOLOR(0.4f, 1.0f, 1.0f, 1.0f));
+
+	// パーティクルの設定処理
+	pNormal->SetParticle(5.0f, 120, 5, 1, 60);
+	pNormal->SetParam(CEffect3D::TYPE_NORAML, 100);
+
 	if (pMotion != nullptr)
 	{
 		// 現在のモードの取得
 		CScene::MODE mode = CManager::GetMode();
 
+		// 音の取得
+		CSound* pSound = CManager::GetSound();
+
 		if (pMotion->IsEventFrame(105, 105, CPlayer::MOTIONTYPE_REVENGEATTACK))
 		{
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_ENEMY_JUMP);
+			}
 			// ジャンプの高さ
 			float fJumpHeight = (mode == CScene::MODE_TUTORIAL) ? 2.0f : 10.0f;
 
@@ -863,6 +907,11 @@ void CPlayerRevengeAttack::Update(void)
 			pPlayer->EnableGravity(true);
 
 			pPlayer->GetMovement()->Set(VEC3_NULL);
+		}
+
+		if (pMotion->IsEventFrame(350, 350, CPlayer::MOTIONTYPE_REVENGEATTACK))
+		{
+			pPlayer->SetRevengeEffect();
 		}
 		// モーションが終わったら
 		if (pMotion->IsFinishEndBlend())

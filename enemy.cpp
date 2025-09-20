@@ -221,14 +221,14 @@ void CEnemy::Update(void)
 	// 胸の位置の取得
 	D3DXVECTOR3 chestpos = GetModelPos(CEnemy::MODEL_CHEST);
 	
-	//// 頭の位置の取得
-	//D3DXVECTOR3 Headpos = GetModelPos(CEnemy::MODEL_HEAD);
+	// 頭の位置の取得
+	D3DXVECTOR3 Headpos = GetModelPos(CEnemy::MODEL_HEAD);
 
 	// カメラがnullじゃないなら
 	if (pCamera != nullptr)
 	{
 		// ロックオン処理
-		pCamera->Rockon(PlayerPos, chestpos, fDistance);
+		pCamera->Rockon(PlayerPos, Headpos, fDistance);
 	}
 
 	if (CCharacter3D::HitStop())
@@ -466,7 +466,8 @@ void CEnemy::Update(void)
 		int nMotionType = pMotion->GetBlendType();
 
 		if ((nMotionType != MOTIONTYPE_DEATH && nMotionType != MOTIONTYPE_DOWN) &&
-			(nMotionType != MOTIONTYPE_STANP_DEATH && nMotionType != MOTIONTYPE_STANP_DOWN))
+			(nMotionType != MOTIONTYPE_STANP_DEATH && nMotionType != MOTIONTYPE_STANP_DOWN)&&
+			nMotionType != MOTIONTYPE_COMBODAMAGE)
 		{
 
 			// 状態を追従にする

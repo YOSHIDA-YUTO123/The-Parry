@@ -404,27 +404,6 @@ void CTrainingEnemy::CollisionPlayerAttack(void)
 			SelectDamageMotion(nSuccess, playerFootR);
 		}
 	}
-
-	//// パリィモーションの蹴りになったら
-	//if (pPlayerMotion->IsEventFrame(13, 13, pPlayer->MOTIONTYPE_PUNCH) && IsDamageMotion() == false)
-	//{
-	//	// プレイヤーの右手の位置
-	//	D3DXVECTOR3 playerHandR = pPlayer->GetModelPos(5);
-
-	//	// 円の当たり判定の取得
-	//	CCollisionSphere* pSphere = CCollisionSphere::GetInstance();
-
-	//	// 右手の円
-	//	CColliderSphere HandRSphere = CColliderSphere::CreateCollider(playerHandR, 80.0f);
-	//	CColliderSphere ChestSphere = CColliderSphere::CreateCollider(chestpos, 250.0f);
-
-	//	// 手が当たったら
-	//	if (pSphere != nullptr && pSphere->Collision(&ChestSphere, &HandRSphere))
-	//	{
-	//		// どの攻撃モーションがでるか判定
-	//		SelectDamageMotion(m_nParrySuccess, playerHandR);
-	//	}
-	//}
 }
 
 //================================================

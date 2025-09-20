@@ -189,6 +189,17 @@ void CTrainingEnemyAction::Update(void)
 		pEnemy->ChangeState(make_shared<CTrainingEnemyIdle>());
 	}
 
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	if (pMotion->IsEventFrame(65, 65, CTrainingEnemy::MOTIONTYPE_ACTION))
+	{
+		if (pSound != nullptr)
+		{
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_SWING);
+		}
+	}
 	// イベントフレームの判定
 	if (pMotion->IsEventFrame(65, 88, CTrainingEnemy::MOTIONTYPE_ACTION))
 	{
@@ -241,6 +252,12 @@ void CTrainingEnemyAction::Update(void)
 		// 攻撃があたった
 		else if (result == CTrainingEnemy::RESULT_HIT)
 		{
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_SPIKE);
+			}
+
 			// ダメージモーション
 			pPlayer->SetDamageMotion(pos, 0);
 		}

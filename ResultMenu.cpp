@@ -9,13 +9,14 @@
 // インクルードファイル
 //***************************************************
 #include "ResultMenu.h"
-#include"manager.h"
-#include"input.h"
-#include"math.h"
-#include"background.h"
-#include"fade.h"
-#include"title.h"
-#include"game.h"
+#include "manager.h"
+#include "input.h"
+#include "math.h"
+#include "background.h"
+#include "fade.h"
+#include "title.h"
+#include "game.h"
+#include "sound.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -193,11 +194,23 @@ void CResultMenuRetry::Update(void)
 	// 自分のメニューと選択中のメニューが同じだったら
 	if (myMenu == selectMenu)
 	{
+		// パッドの取得
+		CInputJoypad* pJoypad = CManager::GetInputJoypad();
+
 		// キーボードの取得
 		CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
 
-		if (pKeyboard->GetTrigger(DIK_RETURN))
+		if (pKeyboard->GetTrigger(DIK_RETURN) || pJoypad->GetTrigger(pJoypad->JOYKEY_A))
 		{
+			// 音の取得
+			CSound* pSound = CManager::GetSound();
+
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_ENTER);
+			}
+
 			CFade* pFade = CManager::GetFade();
 
 			// 新しいモードの設定
@@ -287,6 +300,14 @@ void CResultMenuQuit::Update(void)
 
 		if (pKeyboard->GetTrigger(DIK_RETURN) || pJoypad->GetTrigger(pJoypad->JOYKEY_A))
 		{
+			// 音の取得
+			CSound* pSound = CManager::GetSound();
+
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_ENTER);
+			}
 			CFade* pFade = CManager::GetFade();
 
 			// 新しいモードの設定
@@ -383,13 +404,27 @@ void CResultMenuManager::Update(void)
 	// パッドの取得
 	CInputJoypad* pJoypad = CManager::GetInputJoypad();
 
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
 	if (pKeyboard->GetTrigger(DIK_RIGHT) || pJoypad->GetTrigger(pJoypad->JOYKEY_RIGHT))
 	{
+		if (pSound != nullptr)
+		{
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_MENU);
+		}
 		// 次のメニューへ
 		m_Menu = static_cast<CResultMenu::MENU>(m_Menu + 1);
 	}
 	else if (pKeyboard->GetTrigger(DIK_LEFT) || pJoypad->GetTrigger(pJoypad->JOYKEY_LEFT))
 	{
+		if (pSound != nullptr)
+		{
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_MENU);
+		}
+
 		// 次のメニューへ
 		m_Menu = static_cast<CResultMenu::MENU>(m_Menu - 1);
 	}

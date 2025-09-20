@@ -19,19 +19,28 @@
 #include"input.h"
 #include "game.h"
 #include"pause.h"
+#include "BlockManager.h"
+#include "Collider.h"
 
 using namespace Const; // 名前空間Constを使用
 
-constexpr float MAX_VIEW_TOP = 2.90f;	// カメラの制限(上)
-constexpr float MAX_VIEW_BOTTOM = 0.1f; // カメラの制限(下)
-constexpr float HEIGHT_OFFSET = 20.0f;	// カメラの高さのオフセット
-constexpr float ROCKON_HEIGHT = 200.0f;	// ロックオンの時のカメラの高さ
+namespace
+{
+	constexpr float MAX_VIEW_TOP = 2.90f;	// カメラの制限(上)
+	constexpr float MAX_VIEW_BOTTOM = 0.1f; // カメラの制限(下)
+	constexpr float HEIGHT_OFFSET = 20.0f;	// カメラの高さのオフセット
+	constexpr float ROCKON_HEIGHT = 200.0f;	// ロックオンの時のカメラの高さ
+	constexpr float FOV_BASE = 45.0f;		// 視野角ベース
+	constexpr float FOV_COLLISION = 65.0f;	// 視野角壁際の時
+}
 
 //===================================================
 // コンストラクタ
 //===================================================
 CCamera::CCamera()
 {
+	m_fFov = FOV_BASE;
+	m_bCollision = false;
 	D3DXMatrixIdentity(&m_mtxView);
 	D3DXMatrixIdentity(&m_mtxProjection);
 	m_posR = VEC3_NULL;
@@ -108,6 +117,8 @@ void CCamera::Update(void)
 
 #endif
 
+	D3DXVECTOR3 posOld = m_posV;
+
 	// メッシュシリンダーの取得
 	CMeshCylinder* pCylinder = CGame::GetCylinder();
 
@@ -136,7 +147,16 @@ void CCamera::Update(void)
 		// ポーズ状態じゃないなら
 		if (pPause != nullptr && !pPause->GetPause())
 		{
-			pCylinder->Collision(&m_posV);
+			if (pCylinder->Collision(&m_posV))
+			{
+				m_fFov += (FOV_COLLISION - m_fFov) * 0.01f;
+				m_bCollision = true;
+			}
+			else
+			{
+				m_fFov += (FOV_BASE - m_fFov) * 0.01f;
+				m_bCollision = false;
+			}
 		}
 #else
 		pCylinder->Collision(&m_posV);
@@ -179,7 +199,7 @@ void CCamera::SetCamera(void)
 
 	// プロジェクションマトリックスの作成
 	D3DXMatrixPerspectiveFovLH(&m_mtxProjection,
-		D3DXToRadian(45.0f),
+		D3DXToRadian(m_fFov),
 		(float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,
 		10.0f,
 		100000.0f);
@@ -253,6 +273,7 @@ void CCamera::MouseView(void)
 	// マウスの取得
 	CInputMouse* pMouse = CManager::GetInputMouse();
 
+
 	//D3DXVECTOR2 Move = pMouse->GetVelocity();
 	//D3DXVECTOR2 MoveOld = pMouse->GetOldVelocity();
 
@@ -284,7 +305,7 @@ void CCamera::MouseView(void)
 		//回転量を更新
 		m_rot.y += X;
 		m_rot.x += Y;
-
+		
 		// 回転量を制限
 		if (m_rot.x > MAX_VIEW_TOP)
 		{
@@ -298,17 +319,24 @@ void CCamera::MouseView(void)
 		// カーソルの位置の設定
 		SetCursorPos((long)SCREEN_WIDTH / (long)2.0f, (long)SCREEN_HEIGHT / (long)2.0f);
 
-		// 視点の更新処理
-		UpdatePositionV();
 	}
+
+	// 視点の更新処理
+	UpdatePositionV();
+
+	// 注視点の更新処理
+	UpdatePositionR();
+
 #ifdef _DEBUG
 
 	if (pMouse->OnMousePress(1))
 	{
-		// 回転量を更新
-		m_rot.y += X;
-		m_rot.x += Y;
-
+		if (!m_bCollision)
+		{
+			// 回転量を更新
+			m_rot.y += X;
+			m_rot.x += Y;
+		}
 		// 回転量を制限
 		if (m_rot.x > MAX_VIEW_TOP)
 		{

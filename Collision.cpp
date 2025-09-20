@@ -153,7 +153,7 @@ bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox,
 	if (tPosMin.z < posMax.z && tPosMax.z > posMin.z)
 	{
 		// ç∂Ç©ÇÁâEÇ…ÇﬂÇËçûÇÒÇæ
-		if (tPosOldMin.x > posOldMax.x &&
+		if (tPosOldMin.x >= posOldMax.x &&
 			tPosMin.x < posMax.x)
 		{
 			// ìñÇΩÇ¡ÇΩñ Çê›íË
@@ -172,7 +172,7 @@ bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox,
 			return true;
 		}
 		// âEÇ©ÇÁç∂Ç…ÇﬂÇËçûÇÒÇæ
-		else if (tPosOldMax.x < posOldMin.x &&
+		else if (tPosOldMax.x <= posOldMin.x &&
 			tPosMax.x > posMin.x)
 		{
 			// ìñÇΩÇ¡ÇΩñ Çê›íË
@@ -196,7 +196,7 @@ bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox,
 	if (tPosMin.x < posMax.x && tPosMax.x > posMin.x)
 	{
 		// å„ï˚Ç©ÇÁÇﬂÇËçûÇÒÇæ(ç∂éËç¿ïWån)
-		if (tPosOldMax.z < posOldMin.z &&
+		if (tPosOldMax.z <= posOldMin.z &&
 			tPosMax.z > posMin.z)
 		{
 			// ìñÇΩÇ¡ÇΩñ Çê›íË
@@ -214,7 +214,7 @@ bool CCollisionAABB::Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox,
 			}
 			return true;
 		}
-		else if (tPosOldMin.z > posOldMax.z &&
+		else if (tPosOldMin.z >= posOldMax.z &&
 			tPosMin.z < posMax.z)
 		{
 			// ìñÇΩÇ¡ÇΩñ Çê›íË

@@ -23,6 +23,8 @@
 #include"game.h"
 #include "BirdManager.h"
 #include "Obstacle.h"
+#include "FadeInObject2D.h"
+#include "SkipUI.h"
 
 using namespace Const; // 名前空間Constの使用
 using namespace std;   // 名前空間stdの使用
@@ -79,6 +81,9 @@ HRESULT COpening::Init(void)
 
 	// フェードの生成
 	m_pFadeEffect = CFadeEffect::Create(CFadeEffect::FADE_NONE);
+
+	// スキップUIの生成
+	CSkipUI::Create(D3DXVECTOR3(1000.0f, 650.0f, 0.0f), D3DXVECTOR2(150.0f, 50.0f), 60);
 
 	// フィールドの設定
 	m_pMeshField = CMeshField::Create(VEC3_NULL, 48, 48, D3DXVECTOR2(3500.0f, 3500.0f));

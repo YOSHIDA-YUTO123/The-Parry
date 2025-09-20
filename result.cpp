@@ -9,23 +9,24 @@
 // インクルードファイル
 //***************************************************
 #include "result.h"
-#include"meshfield.h"
-#include"manager.h"
-#include"title.h"
-#include"input.h"
-#include"fade.h"
+#include "meshfield.h"
+#include "manager.h"
+#include "title.h"
+#include "input.h"
+#include "fade.h"
 #include "objectX.h"
-#include"ResultCamera.h"
+#include "ResultCamera.h"
 #include "ResultMenu.h"
 #include "game.h"
 #include "timer.h"
-#include"light.h"
-#include"player.h"
+#include "light.h"
+#include "player.h"
 #include "ResultPlayer.h"
 #include "bird.h"
 #include "WinResultManager.h"
 #include "background.h"
 #include "ranking.h"
+#include "sound.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -152,6 +153,14 @@ CResultLose::~CResultLose()
 //===================================================
 HRESULT CResultLose::Init(void)
 {
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	if (pSound != nullptr)
+	{
+		// 音の再生
+		pSound->Play(CSound::SOUND_LABEL_RESULT_LOSE);
+	}
 	// リザルトマネージャーの生成
 	CResultMenuManager::Create();
 
@@ -190,6 +199,15 @@ HRESULT CResultLose::Init(void)
 //===================================================
 void CResultLose::Uninit(void)
 {
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	if (pSound != nullptr)
+	{
+		// 音の停止
+		pSound->StopSound();
+	}
+
 	// ゲームマネージャーの取得
 	auto pGameManager = CGameManager::GetInstance();
 

@@ -69,6 +69,8 @@ private:
 	D3DXVECTOR3 m_posRDest;		// 目的の注視点
 	D3DXVECTOR3 m_posVDest;		// 目的の視点
 	float m_fDistance;			// 距離
+	float m_fFov;				// カメラの視野角
+	bool m_bCollision;			//
 };
 
 #endif

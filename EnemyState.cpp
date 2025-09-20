@@ -605,6 +605,15 @@ void CEnemyAttackSmash::Update(void)
 	// 敵の攻撃のカウンターの目安の表示
 	if (pMotion->IsEventFrame(50, 50, CEnemy::MOTIONTYPE_SMASH))
 	{
+		// 音の取得
+		CSound* pSound = CManager::GetSound();
+
+		if (pSound != nullptr)
+		{
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_ENEMY_ATTACK);
+		}
+
 		// モデルの位置の取得
 		D3DXVECTOR3 chestPos = pEnemy->GetModelPos(CEnemy::MODEL_CHEST);
 
@@ -719,6 +728,14 @@ void CEnemyDamageL::Init(void)
 	// ダメージの設定
 	pEnemy->Hit(m_nDamage);
 
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	if (pSound != nullptr)
+	{
+		// 音の再生
+		pSound->Play(CSound::SOUND_LABEL_ENEMY_DAMAGE);
+	}
 	if (pMotion != nullptr)
 	{
 		// 大ダメージモーションの設定
@@ -748,6 +765,18 @@ void CEnemyDamageL::Update(void)
 
 	// モーションクラスの取得
 	CMotion* pMotion = pEnemy->GetMotion();
+
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	if (pMotion->IsEventFrame(33, 33, CEnemy::MOTIONTYPE_DAMAGEL))
+	{
+		if (pSound != nullptr)
+		{
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_BLOW);
+		}
+	}
 
 	if (pMotion->IsEventFrame(1, 10, CEnemy::MOTIONTYPE_DAMAGEL))
 	{
@@ -1506,6 +1535,9 @@ void CEnemyDamageS::Init(void)
 	{
 		// 音の再生
 		pSound->Play(CSound::SOUND_LABEL_NORMAL);
+
+		// 音の再生
+		pSound->Play(CSound::SOUND_LABEL_ENEMY_DAMAGE);
 	}
 
 	if (pMotion != nullptr)
@@ -1939,6 +1971,15 @@ void CEnemySwing::Update(void)
 		// 敵の攻撃のカウンターの目安の表示
 		if (pMotion->IsEventFrame(40, 40, CEnemy::MOTIONTYPE_SWING))
 		{
+			// 音の取得
+			CSound* pSound = CManager::GetSound();
+
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_ENEMY_ATTACK);
+			}
+
 			// モデルの位置の取得
 			D3DXVECTOR3 chestPos = pEnemy->GetModelPos(CEnemy::MODEL_CHEST);
 
@@ -2050,6 +2091,9 @@ void CEnemyJumpAttack::Update(void)
 
 			if (pSound != nullptr)
 			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_ENEMY_ATTACK);
+
 				// 音の再生
 				pSound->Play(CSound::SOUND_LABEL_ENEMY_JUMP);
 			}
@@ -2240,6 +2284,15 @@ void CEnemyDeath::Init(void)
 	// 死亡状態にする
 	pEnemy->SetState(CCharacter3D::STATE_DEATH, 99999);
 
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	if (pSound != nullptr)
+	{
+		// 音の再生
+		pSound->Play(CSound::SOUND_LABEL_ENEMY_DEATH);
+	}
+
 	// モーションがあるなら
 	if (pMotion != nullptr)
 	{
@@ -2282,6 +2335,17 @@ void CEnemyDeath::Update(void)
 		{
 			// 移動方向を設定
 			pEnemy->GetMovement()->SetMoveDir(0.0f, 20.0f);
+		}
+		// 音の取得
+		CSound* pSound = CManager::GetSound();
+
+		if (pMotion->IsEventFrame(82, 82, CEnemy::MOTIONTYPE_DEATH))
+		{
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_BLOW);
+			}
 		}
 
 		if (pMotion->IsEventFrame(110, 110, CEnemy::MOTIONTYPE_DEATH))
@@ -2491,6 +2555,15 @@ void CEnemySuperHit::Init(void)
 	// プレイヤーの方向を見る
 	pEnemy->AngleToPlayer();
 
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	if (pSound != nullptr)
+	{
+		// 音の再生
+		pSound->Play(CSound::SOUND_LABEL_ENEMY_DAMAGE);
+	}
+
 	// モーションがあるなら
 	if (pMotion != nullptr)
 	{
@@ -2662,6 +2735,9 @@ void CEnemyComboDamage::Update(void)
 		{
 			// 音の再生
 			pSound->Play(CSound::SOUND_LABEL_PERFECT);
+
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_ENEMY_DAMAGE);
 		}
 
 		// メッシュサークルの生成
@@ -2686,7 +2762,7 @@ void CEnemyComboDamage::Update(void)
 //===================================================
 CEnemyRightMove::CEnemyRightMove() : CEnemyState(ID_RIGHT_MOVE)
 {
-	m_nTime = rand() % 180 + MOVE_TIME;
+	m_nTime = rand() % 120 + MOVE_TIME;
 }
 
 //===================================================
@@ -2739,7 +2815,7 @@ void CEnemyRightMove::Update(void)
 	pEnemy->AngleToPlayer();
 
 	// 右に移動する
-	pEnemy->GetMovement()->SetMoveDir(-D3DX_PI * 0.5f, 3.0f);
+	pEnemy->GetMovement()->SetMoveDir(-D3DX_PI * 0.5f, 5.0f);
 
 	m_nTime--;
 
@@ -2802,7 +2878,7 @@ void CEnemyRightMove::Update(void)
 //===================================================
 CEnemyLeftMove::CEnemyLeftMove() : CEnemyState(ID_LEFT_MOVE)
 {
-	m_nTime = rand() % 180 + MOVE_TIME;
+	m_nTime = rand() % 120 + MOVE_TIME;
 }
 
 //===================================================
@@ -2855,7 +2931,7 @@ void CEnemyLeftMove::Update(void)
 	pEnemy->AngleToPlayer();
 
 	// 右に移動する
-	pEnemy->GetMovement()->SetMoveDir(D3DX_PI * 0.5f, 3.0f);
+	pEnemy->GetMovement()->SetMoveDir(D3DX_PI * 0.5f, 5.0f);
 
 	// 障害物の近くだったら
 	if (pEnemy->CheckObstacleDistance(OBSTACLE_DISTANCE))
@@ -2987,6 +3063,15 @@ void CEnemyRush::Update(void)
 		// 敵の攻撃のカウンターの目安の表示
 		if (pMotion->IsEventFrame(68, 68, CEnemy::MOTIONTYPE_START_RUSH))
 		{
+			// 音の取得
+			CSound* pSound = CManager::GetSound();
+
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_ROAR);
+			}
+
 			// モデルの位置の取得
 			D3DXVECTOR3 chestPos = pEnemy->GetModelPos(CEnemy::MODEL_CHEST);
 
@@ -3305,6 +3390,15 @@ void CEnemyBackKick::Update(void)
 		// 敵の攻撃のカウンターの目安の表示
 		if (pMotion->IsEventFrame(50, 50, CEnemy::MOTIONTYPE_BACKKICK))
 		{
+			// 音の取得
+			CSound* pSound = CManager::GetSound();
+
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_ENEMY_ATTACK);
+			}
+
 			// モデルの位置の取得
 			D3DXVECTOR3 chestPos = pEnemy->GetModelPos(CEnemy::MODEL_CHEST);
 
@@ -3483,6 +3577,17 @@ void CEnemyLookBackL::Update(void)
 
 		if (pMotion->GetBlendType() != CEnemy::MOTIONTYPE_LOOK_BACKL || pMotion->GetType() != CEnemy::MOTIONTYPE_LOOK_BACKL) return;
 
+		// 音の取得
+		CSound* pSound = CManager::GetSound();
+
+		if(pMotion->IsEventFrame(154,154, CEnemy::MOTIONTYPE_LOOK_BACKL) || pMotion->IsEventFrame(194, 194, CEnemy::MOTIONTYPE_LOOK_BACKL))
+		{
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_WARK003);
+			}
+		}
 		if (!pMotion->IsEventFrame(0, 120, CEnemy::MOTIONTYPE_LOOK_BACKL))
 		{
 			// フレームを超えたら
@@ -3603,7 +3708,20 @@ void CEnemyLookBackR::Update(void)
 			return;
 		}
 
+		// 後ろを見るモーションじゃないなら飛ばす
 		if (pMotion->GetBlendType() != CEnemy::MOTIONTYPE_LOOK_BACKR || pMotion->GetType() != CEnemy::MOTIONTYPE_LOOK_BACKR) return;
+
+		// 音の取得
+		CSound* pSound = CManager::GetSound();
+
+		if (pMotion->IsEventFrame(155, 155, CEnemy::MOTIONTYPE_LOOK_BACKR) || pMotion->IsEventFrame(200, 200, CEnemy::MOTIONTYPE_LOOK_BACKR))
+		{
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_WARK003);
+			}
+		}
 
 		if (!pMotion->IsEventFrame(0, 120, CEnemy::MOTIONTYPE_LOOK_BACKR))
 		{
@@ -3929,6 +4047,15 @@ void CEnemySweepLeft::Update(void)
 		// 敵の攻撃のカウンターの目安の表示
 		if (pMotion->IsEventFrame(50, 50, CEnemy::MOTIONTYPE_SWEEP_LEFT))
 		{
+			// 音の取得
+			CSound* pSound = CManager::GetSound();
+
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_ENEMY_ATTACK);
+			}
+
 			// モデルの位置の取得
 			D3DXVECTOR3 chestPos = pEnemy->GetModelPos(CEnemy::MODEL_CHEST);
 
@@ -4105,6 +4232,15 @@ void CEnemyRushSwing::CollisionPlayer(CEnemy* pEnemy, CMotion* pMotion)
 	// 敵の攻撃のカウンターの目安の表示
 	if (pMotion->IsEventFrame(110, 110, CEnemy::MOTIONTYPE_RUSH_SWING))
 	{
+		// 音の取得
+		CSound* pSound = CManager::GetSound();
+
+		if (pSound != nullptr)
+		{
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_ENEMY_ATTACK);
+		}
+
 		// モデルの位置の取得
 		D3DXVECTOR3 chestPos = pEnemy->GetModelPos(CEnemy::MODEL_CHEST);
 

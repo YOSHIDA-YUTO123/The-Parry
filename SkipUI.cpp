@@ -1,6 +1,6 @@
 //===================================================
 //
-// フェードインする2Dオブジェクト [FadeInObject2D.cpp]
+// オープニングのスキップUIを表示する [SkipUI.cpp]
 // Author:YUTO YOSHIDA
 //
 //===================================================
@@ -8,63 +8,68 @@
 //***************************************************
 // インクルードファイル
 //***************************************************
-#include "FadeInObject2D.h"
+#include "SkipUI.h"
+#include "object2D.h"
 
 using namespace Const; // 名前空間Constの使用
+
+namespace
+{
+	constexpr float FLASH_SPEED = 0.01f; // 点滅時間
+}
 
 //===================================================
 // コンストラクタ
 //===================================================
-CFadeInObject2D::CFadeInObject2D(const int nPriority) : CObject2D(nPriority)
+CSkipUI::CSkipUI()
 {
-	m_bFinish = false;
-	m_fAddAlv = NULL;
-	m_col = WHITE;
+	m_fFlashCounter = NULL;
 }
 
 //===================================================
 // デストラクタ
 //===================================================
-CFadeInObject2D::~CFadeInObject2D()
+CSkipUI::~CSkipUI()
 {
 }
 
 //===================================================
 // 生成処理
 //===================================================
-CFadeInObject2D* CFadeInObject2D::Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size,const int nTime)
+CSkipUI* CSkipUI::Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size, const int nTime)
 {
-	CFadeInObject2D* pObject2D = new CFadeInObject2D;
+	CSkipUI* pSkip = new CSkipUI;
+
+	pSkip->SetPosition(pos);
+	pSkip->SetAddAvl(nTime);
 
 	// 初期化処理
-	if (FAILED(pObject2D->Init()))
+	if (FAILED(pSkip->Init()))
 	{
-		pObject2D->Uninit();
-		pObject2D = nullptr;
+		pSkip->Uninit();
+		pSkip = nullptr;
 		return nullptr;
 	}
 
-	pObject2D->SetPosition(pos);
-	pObject2D->SetSize(Size.x, Size.y);
-	pObject2D->SetVtx(WHITE);
-	pObject2D->m_fAddAlv = 1.0f / nTime;
+	pSkip->SetSize(Size.x, Size.y);
+	pSkip->SetVtx(WHITE);
 
-	return pObject2D;
+	return pSkip;
 }
 
 //===================================================
 // 初期化処理
 //===================================================
-HRESULT CFadeInObject2D::Init(void)
+HRESULT CSkipUI::Init(void)
 {
 	// 初期化処理
-	if (FAILED(CObject2D::Init()))
+	if (FAILED(CFadeInObject2D::Init()))
 	{
 		return E_FAIL;
 	}
 
-	// 透明にする
-	m_col.a = 0.0f;
+	// テクスチャのIDの設定
+	CObject2D::SetTextureID("data/TEXTURE/UI/skip.png");
 
 	return S_OK;
 }
@@ -72,40 +77,44 @@ HRESULT CFadeInObject2D::Init(void)
 //===================================================
 // 終了処理
 //===================================================
-void CFadeInObject2D::Uninit(void)
+void CSkipUI::Uninit(void)
 {
 	// 終了処理
-	CObject2D::Uninit();
+	CFadeInObject2D::Uninit();
 }
 
 //===================================================
 // 更新処理
 //===================================================
-void CFadeInObject2D::Update(void)
+void CSkipUI::Update(void)
 {
-	// 終わって無かったら
-	if (!m_bFinish)
+	// 更新処理
+	CFadeInObject2D::Update();
+
+	// フェードが終わったかどうか
+	bool bFinish = CFadeInObject2D::GetFinish();
+
+	if (bFinish)
 	{
-		// アルファ値を加算
-		m_col.a += m_fAddAlv;
+		// カウンターを進める
+		m_fFlashCounter += FLASH_SPEED;
 
-		// 範囲制限
-		if (m_col.a >= 1.0f)
-		{
-			m_bFinish = true;
-			m_col.a = 1.0f;
-		}
+		// 色の取得
+		D3DXCOLOR col = CFadeInObject2D::GetColor();
+
+		// 点滅
+		col.a = 1.0f - fabsf(sinf(m_fFlashCounter) * 0.5f);
+
+		// 色の設定
+		CFadeInObject2D::SetColor(col);
 	}
-
-	// 色の設定
-	CObject2D::SetColor(m_col);
 }
 
 //===================================================
 // 描画処理
 //===================================================
-void CFadeInObject2D::Draw(void)
+void CSkipUI::Draw(void)
 {
 	// 描画処理
-	CObject2D::Draw();
+	CFadeInObject2D::Draw();
 }

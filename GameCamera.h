@@ -63,8 +63,8 @@ private:
 	void UpdateShake(void);		// カメラの揺れの更新
 	STATE m_state;				// カメラの状態
 	STATE m_Oldstate;			// 前の状態
-
 	TRACKOBJ m_TrackObj;		// 追従するオブジェクトの種類
+	D3DXVECTOR3 m_posOld;		// 前回の位置
 	float m_fDistanceBase;		// 保存用の距離
 	float m_fDistanceZoom;		// ズームする距離
 	float m_fZoomAngleBase;		// ズームの角度の基準

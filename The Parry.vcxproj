@@ -195,6 +195,7 @@
     <ClCompile Include="RevengeActiveUI.cpp" />
     <ClCompile Include="RevengeGage.cpp" />
     <ClCompile Include="RockOn.cpp" />
+    <ClCompile Include="SkipUI.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="TitleCamera.cpp" />
     <ClCompile Include="TitleLogo.cpp" />
@@ -312,6 +313,7 @@
     <ClInclude Include="RevengeActiveUI.h" />
     <ClInclude Include="RevengeGage.h" />
     <ClInclude Include="RockOn.h" />
+    <ClInclude Include="SkipUI.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="TitleCamera.h" />
     <ClInclude Include="TitleLogo.h" />

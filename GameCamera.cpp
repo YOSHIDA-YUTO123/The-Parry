@@ -18,7 +18,8 @@
 #include"pause.h"
 #include "effect.h"
 #include "RockOn.h"
-
+#include "BlockManager.h"
+#include "Collider.h"
 using namespace Const; // 名前空間Constを使用
 
 //constexpr float MAX_VIEW_TOP = 2.90f;	// カメラの制限(上)
@@ -31,6 +32,7 @@ using namespace Const; // 名前空間Constを使用
 //===================================================
 CGameCamera::CGameCamera()
 {
+	m_posOld = VEC3_NULL;
 	m_nShakeRange = NULL;
 	m_nShakeTime = NULL;
 	m_state = STATE_NONE;
@@ -87,6 +89,9 @@ void CGameCamera::Uninit(void)
 //===================================================
 void CGameCamera::Update(void)
 {
+	// 過去の位置の設定
+	m_posOld = CCamera::GetPosV();
+
 	// 追従状態なら
 	if (m_state == STATE_TRACKING)
 	{
@@ -103,7 +108,7 @@ void CGameCamera::Update(void)
 	// 距離のリセット
 	ResetDistance();
 	
-	// カメラのお揺れの更新
+	// カメラの揺れの更新
 	UpdateShake();
 
 	// 更新処理

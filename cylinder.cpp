@@ -229,10 +229,9 @@ bool CMeshCylinder::Collision(D3DXVECTOR3 *pPos)
 		D3DXVec3Normalize(&cross, &cross);
 
 		// プレイヤーがシリンダーの外に出たら
-		if (cross.y < 0.0f)
+		if (cross.y <= 0.0f)
 		{
 			D3DXVECTOR3 objectPos = *pPos;
-			objectPos.y = 0.0f;
 
 			// シリンダーの中心までのベクトルを作成
 			D3DXVECTOR3 CenterDir = GetVector(objectPos, m_CenterPos);
@@ -241,7 +240,7 @@ bool CMeshCylinder::Collision(D3DXVECTOR3 *pPos)
 			float fDistance = GetDistance(objectPos - m_CenterPos);
 
 			// めり込んだ深さを求める
-			float fDepth = (m_fRadius - 10.0f) - fDistance;
+			float fDepth = (m_fRadius) - fDistance;
 
 			// プレイヤーの位置から中心までの方向×めり込んだ深さを足す
 			D3DXVECTOR3 pos = objectPos + CenterDir * fDepth;

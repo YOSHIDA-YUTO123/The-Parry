@@ -22,18 +22,29 @@
 class CFadeInObject2D :public CObject2D
 {
 public:
-	CFadeInObject2D();
-	~CFadeInObject2D();
+	CFadeInObject2D(const int nPriority = 7);
+	virtual ~CFadeInObject2D();
 
 	static CFadeInObject2D* Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size, const int nTime);
 
-	HRESULT Init(void) override;
-	void Uninit(void) override;
-	void Update(void) override;
-	void Draw(void) override;
+	virtual HRESULT Init(void) override;
+	virtual void Uninit(void) override;
+	virtual void Update(void) override;
+	virtual void Draw(void) override;
+	
+	// ゲッター
+	D3DXCOLOR GetColor(void) const { return m_col; }
+
+	// セッター
+	void SetColor(const D3DXCOLOR col) { m_col = col; }
+	
+protected:
+	void SetAddAvl(const int nTime) { m_fAddAlv = 1.0f / nTime; }
+	bool GetFinish(void) const { return m_bFinish; }
 private:
 	D3DXCOLOR m_col; // 色
 	float m_fAddAlv; // アルファ値の加算値
+	bool m_bFinish;	 // フェードが終わったかどうか
 };
 
 #endif

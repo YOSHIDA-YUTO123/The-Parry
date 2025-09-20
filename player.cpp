@@ -1390,31 +1390,19 @@ void CPlayer::SetRevengeEffect(void)
 	// モードの取得
 	CScene::MODE mode = CManager::GetMode();
 
-	// カメラの取得
-	CGameCamera* pCamera = nullptr;
-
 	// メッシュフィールドの取得処理
 	CMeshField* pMeshField = nullptr;
 
 	if (mode == CScene::MODE_GAME)
 	{
-		// カメラの取得
-		pCamera = CGame::GetCamera();
-
 		// メッシュフィールドの取得
 		pMeshField = CGame::GetField();
 	}
 	else if (mode == CScene::MODE_TUTORIAL)
 	{
-		// カメラの取得
-		pCamera = CTutorial::GetCamera();
-
 		// メッシュフィールドの取得
 		pMeshField = CTutorial::GetField();
 	}
-
-	// カメラの揺れ
-	pCamera->SetShake(40, 30);
 
 	// 左足の位置
 	D3DXVECTOR3 FootL = GetModelPos(MODEL_FOOTL);
@@ -1485,6 +1473,14 @@ void CPlayer::SetDamageMotion(const D3DXVECTOR3 AttackerPos,const int nDamage)
 //===================================================
 void CPlayer::SetRubble(const D3DXVECTOR3 pos)
 {
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	if (pSound != nullptr)
+	{
+		// 音の再生
+		pSound->Play(CSound::SOUND_LABEL_IMPACT000);
+	}
 	// 瓦礫の数分出す
 	for (int nCnt = 0; nCnt < NUM_RUBBLE; nCnt++)
 	{
@@ -1911,7 +1907,7 @@ bool CPlayer::IsAvoid(CMotion* pMotion)
 	int motiontype = pMotion->GetBlendType();
 	
 	// ダメージモーション中だったらできない
-	if (motiontype == MOTIONTYPE_DAMAGE || motiontype == MOTIONTYPE_BACK_DAMAGE) return false;
+	if (pMotion->IsEventFrame(0,20,MOTIONTYPE_DAMAGE) || pMotion->IsEventFrame(0, 20, MOTIONTYPE_BACK_DAMAGE)) return false;
 
 	// 反撃受付時間は回避できない
 	if (pMotion->IsEventFrame(1, m_nParryTime, MOTIONTYPE_STANCE)) return false;
@@ -1920,7 +1916,7 @@ bool CPlayer::IsAvoid(CMotion* pMotion)
 	if (pMotion->IsEventFrame(1, 15, MOTIONTYPE_PARRY)) return false;
 	
 	// 回避モーションの時回避できない
-	if (motiontype == MOTIONTYPE_AVOID) return false;
+	if (motiontype == MOTIONTYPE_AVOID || pMotion->GetType() == MOTIONTYPE_AVOID) return false;
 	
 	// ジャンプ中は回避できない
 	if (motiontype == MOTIONTYPE_JUMP) return false;

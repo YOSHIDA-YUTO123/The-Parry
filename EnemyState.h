@@ -461,7 +461,7 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 private:
-	static constexpr int MOVE_TIME = 120; // Å’áˆÚ“®ŠÔ
+	static constexpr int MOVE_TIME = 60; // Å’áˆÚ“®ŠÔ
 	static constexpr float OBSTACLE_DISTANCE = 250.0f;	 // áŠQ•¨‚Æ‚Ì‹——£
 	static constexpr float ACTION_DISTANCE = 750.0f; // UŒ‚‚µ‚Ä‚­‚é‹——£
 	int m_nTime; // ‰¡ˆÚ“®‚ÌŠÔ
@@ -478,7 +478,7 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 private:
-	static constexpr int MOVE_TIME = 120; // Å’áˆÚ“®ŠÔ
+	static constexpr int MOVE_TIME = 60; // Å’áˆÚ“®ŠÔ
 	static constexpr float ACTION_DISTANCE = 750.0f; // UŒ‚‚µ‚Ä‚­‚é‹——£
 	static constexpr float OBSTACLE_DISTANCE = 250.0f;	 // áŠQ•¨‚Æ‚Ì‹——£
 	int m_nTime; // ‰¡ˆÚ“®‚ÌŠÔ

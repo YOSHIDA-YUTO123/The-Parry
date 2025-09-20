@@ -51,6 +51,12 @@ public:
 		SOUND_LABEL_ENTER,				// 決定
 		SOUND_LABEL_IMPACT001,			// 衝撃波1
 		SOUND_LABEL_TITLE_BGM,			// タイトルのBGM
+		SOUND_LABEL_RESULT_LOSE,		// 敗北時のBGM
+		SOUND_LABEL_AVOID,				// 回避
+		SOUND_LABEL_ENEMY_DEATH,		// 敵死亡
+		SOUND_LABEL_ENEMY_ATTACK,		// 敵の攻撃
+		SOUND_LABEL_ENEMY_DAMAGE,		// 敵のダメージ
+		SOUND_LABEL_BLOW,				// ダメージを受けて背中から着地
 		SOUND_LABEL_MAX
 	} SOUND_LABEL;
 
@@ -107,6 +113,12 @@ private:
 		{"data/SE/Enter.wav", 0},		  // 決定
 		{"data/SE/impact001.wav", 0},	  // 衝撃波1
 		{"data/BGM/title_bgm.wav", -1},	  // タイトルのBGM
+		{"data/BGM/result_lose.wav", -1}, // 敗北時BGM
+		{"data/SE/avoid.wav", 0},		  // 回避
+		{"data/SE/enemy_death.wav", 0},	  // 敵死亡
+		{"data/SE/enemy_attack.wav", 0},  // 敵攻撃
+		{"data/SE/enemy_damage.wav", 0},  // 敵ダメージ
+		{"data/SE/blow.wav", 0},		  // 吹き飛び
 	};				
 };
 #endif
