@@ -240,7 +240,7 @@ bool CMeshCylinder::Collision(D3DXVECTOR3 *pPos)
 			float fDistance = GetDistance(objectPos - m_CenterPos);
 
 			// めり込んだ深さを求める
-			float fDepth = (m_fRadius) - fDistance;
+			float fDepth = (m_fRadius - 5.0f) - fDistance;
 
 			// プレイヤーの位置から中心までの方向×めり込んだ深さを足す
 			D3DXVECTOR3 pos = objectPos + CenterDir * fDepth;

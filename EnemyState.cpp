@@ -1064,9 +1064,27 @@ void CEnemyDash::Update(void)
 	// モーションクラスの取得
 	CMotion* pMotion = pEnemy->GetMotion();
 
-	// ダッシュ
-	pMotion->SetMotion(CEnemy::MOTIONTYPE_DASH, true, 10);
+	if (pMotion != nullptr)
+	{
+		// 攻撃状態にする
+		pEnemy->SetState(CCharacter3D::STATE_ACTION, 5);
 
+		// ダッシュ
+		pMotion->SetMotion(CEnemy::MOTIONTYPE_DASH, true, 10);
+
+		if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_DASH))
+		{
+			// 音の取得
+			CSound* pSound = CManager::GetSound();
+
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_WARK003);
+			}
+
+		}
+	}
 	// プレイヤーを追いかける
 	pEnemy->ChasePlayer(0.1f,7.0f);
 
@@ -1158,6 +1176,17 @@ void CEnemySpin::Update(void)
 	// 位置の取得
 	D3DXVECTOR3 pos = pEnemy->GetPosition();
 
+	if (pMotion->IsEventFrame(5, 5, CEnemy::MOTIONTYPE_SPIN))
+	{
+		// 音の取得
+		CSound* pSound = CManager::GetSound();
+
+		if (pSound != nullptr)
+		{
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_SWING);
+		}
+	}
 	// 回転モーション
 	if (pMotion->IsEventFrame(0, 999, CEnemy::MOTIONTYPE_SPIN))
 	{
