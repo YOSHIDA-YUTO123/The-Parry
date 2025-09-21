@@ -20,6 +20,7 @@
 #include "RankingScore.h"
 #include "light.h"
 #include "RankingManager.h"
+#include "sound.h"
 
 using namespace std;	// 名前空間stdの使用
 using namespace Const;	// 名前空間Constの使用
@@ -44,6 +45,14 @@ CRanking::~CRanking()
 //===================================================
 HRESULT CRanking::Init(void)
 {
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	if (pSound != nullptr)
+	{
+		// 音の再生
+		pSound->Play(CSound::SOUND_LABEL_BGM_RANKING,0.3f);
+	}
 	// カメラの生成
 	m_pCamera = make_unique<CResultCamera>();
 	m_pCamera->Init();
@@ -76,6 +85,14 @@ HRESULT CRanking::Init(void)
 //===================================================
 void CRanking::Uninit(void)
 {
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	if (pSound != nullptr)
+	{
+		pSound->StopSound();
+	}
+
 	// カメラの破棄
 	if (m_pCamera != nullptr)
 	{

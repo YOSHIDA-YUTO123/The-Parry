@@ -58,6 +58,9 @@ public:
 		SOUND_LABEL_ENEMY_DAMAGE,		// 敵のダメージ
 		SOUND_LABEL_BLOW,				// ダメージを受けて背中から着地
 		SOUND_LABEL_BARRIEL,			// 樽
+		SOUND_LABEL_RESULT000,			// リザルト
+		SOUND_LABEL_RESULT001,			// リザルト
+		SOUND_LABEL_BGM_RANKING,			// ランキングBGM
 		SOUND_LABEL_MAX
 	} SOUND_LABEL;
 
@@ -121,6 +124,9 @@ private:
 		{"data/SE/enemy_damage.wav", 0},  // 敵ダメージ
 		{"data/SE/blow.wav", 0},		  // 吹き飛び
 		{"data/SE/barriel.wav", 0},		  // 樽
+		{"data/SE/result000.wav", 0},	  // リザルト
+		{"data/SE/result001.wav", 0},     // リザルト
+		{"data/BGM/ranking.wav", -1},	  // ランキングBGM
 	};				
 };
 #endif

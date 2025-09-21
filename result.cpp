@@ -113,6 +113,15 @@ void CResultWin::Update(void)
 	{
 		CFade* pFade = CManager::GetFade();
 
+		// ‰¹‚Ìæ“¾
+		CSound* pSound = CManager::GetSound();
+
+		if (pSound != nullptr)
+		{
+			// ‰¹‚ÌÄ¶
+			pSound->Play(CSound::SOUND_LABEL_RESULT001);
+		}
+
 		if (pFade != nullptr)
 		{
 			// V‚µ‚¢ƒ‚[ƒh‚Ìİ’è

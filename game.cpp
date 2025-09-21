@@ -182,6 +182,9 @@ HRESULT CGame::Init(void)
 //===================================================
 void CGame::Uninit(void)
 {
+	// ó‘Ô‚ÌƒŠƒZƒbƒg
+	m_state = STATE_NORMAL;
+
 	// ‰¹‚Ìæ“¾
 	CSound* pSound = CManager::GetSound();
 

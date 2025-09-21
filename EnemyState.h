@@ -67,6 +67,7 @@ public:
 		ID_SWEEP_LEFT,	 // 薙ぎ払い(左)
 		ID_RUSH_SWING,	 // 突進なぎ
 		ID_BRISK_MOVE,	 // 早歩き
+		ID_COUNTER,		 // カウンター
 		ID_MAX
 	}ID;
 
@@ -100,9 +101,15 @@ public:
 
 	// 後ろを見るモーションの設定
 	bool SetLookBackMotion(void);
+	int GetLife(void) const { return m_nLife; }
+	void SetLife(const int nLife) { m_nLife = nLife; }
+	void SetMaxLife(const int nLife) { m_nMaxLife = nLife; }
+	bool CheckLowHp(const int nRate);
 private:
 	CEnemyStateManager();
 	CEnemy* m_pEnemy;		// 敵のインスタンス
+	int m_nMaxLife;			// 最大の体力
+	int m_nLife;			// 敵の体力
 };
 
 //***************************************************
@@ -278,6 +285,7 @@ private:
 	{
 		const D3DXVECTOR2 BACK_MOVE_VALUE = { 0.0f, 5.0f }; // 後ろに進む量
 		static constexpr float FORWARD_MOVE_VALUE = 5.0f;	// 前に進む量
+		static constexpr int PROB_ACTION = 60;				// 攻撃に派生する確率
 	};
 	
 	Const m_Const; // 定数
@@ -321,6 +329,16 @@ private:
 class CEnemyGuard : public CEnemyState
 {
 public:
+
+	// 攻撃モーションの種類
+	typedef enum
+	{
+		ACTION_SMASH = 0,
+		ACTION_SWING,
+		ACTION_RUSH_SWING,
+		ACTION_MAX
+	}ACTION;
+
 	CEnemyGuard();
 	CEnemyGuard(const D3DXVECTOR3 ImpactPos, const int nDamage);
 	~CEnemyGuard();
@@ -329,7 +347,6 @@ public:
 private:
 	D3DXVECTOR3 m_ImpactPos; // インパクトの位置
 	int m_nDamage;			 // ダメージ量
-	int m_nNextAction;		 // 次の行動
 };
 
 //***************************************************
@@ -496,8 +513,12 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 private:
-	static constexpr int MAX_TIME = 360; // 最大の時間
-	int m_nEndTime;						 // 終了する時間
+	static constexpr int MAX_TIME = 360;			// 最大の時間
+	static constexpr int PROB_SMASH = 40;			// 振り下ろし攻撃に派生する確率 
+	static constexpr float SMASH_DISTANCE = 300.0f;	// 振り下ろし攻撃に派生する距離
+
+	int m_nProbSmash;	// 振り下ろしに派生するか
+	int m_nEndTime;		// 終了する時間
 };
 
 //***************************************************
@@ -618,6 +639,19 @@ private:
 	static constexpr int DEST_RANGE = 500; // 目的の位置の範囲
 
 	D3DXVECTOR3 m_destPos; // 目的の位置
+};
+
+//***************************************************
+// 敵の状態(Counter)クラスの定義
+//***************************************************
+class CEnemyCounter : public CEnemyState
+{
+public:
+	CEnemyCounter();
+	~CEnemyCounter();
+	void Init(void) override;
+	void Update(void) override;
+private:
 };
 
 #endif

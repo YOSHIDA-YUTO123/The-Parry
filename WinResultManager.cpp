@@ -14,6 +14,8 @@
 #include "LoadManager.h"
 #include "timer.h"
 #include "game.h"
+#include "sound.h"
+#include "manager.h"
 
 using namespace std; // 名前空間stdの使用
 
@@ -221,6 +223,15 @@ void CWinResultManager::Update(void)
 	// 生成時間になったら
 	if (m_nCounter >= CREATE_TIME)
 	{
+		// 音の取得
+		CSound* pSound = CManager::GetSound();
+
+		if (pSound != nullptr)
+		{
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_RESULT000);
+		}
+
 		m_nCounter = NULL;
 
 		// フェード時間の設定

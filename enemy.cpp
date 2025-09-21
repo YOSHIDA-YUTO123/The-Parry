@@ -105,6 +105,11 @@ CEnemy* CEnemy::Create(const int nLife, const float fSpeed, const D3DXVECTOR3 Sh
 	}
 	pEnemy->GetRotaition()->Set(rot);
 
+	// 状態マネージャーの生成
+	pEnemy->m_pStateManager.reset(CEnemyStateManager::Create());
+	pEnemy->m_pStateManager->SetOnwer(pEnemy);
+	pEnemy->m_pStateManager->SetMaxLife(nLife);
+
 	return pEnemy;
 }
 
@@ -150,10 +155,6 @@ HRESULT CEnemy::Init(void)
 	m_pMovement = make_unique<CEnemyMovement>();
 
 	m_pMovement->Init(m_pMove,this);
-
-	// 状態マネージャーの生成
-	m_pStateManager.reset(CEnemyStateManager::Create());
-	m_pStateManager->SetOnwer(this);
 
 	return S_OK;
 }
@@ -586,7 +587,7 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 	CSound* pSound = CManager::GetSound();
 
 	// 30%の確率でガードする
-	if (random <= 30 && success != CPlayer::PARRY_PARFECT)
+	if (random <= 50 && m_pStateManager->CheckLowHp(2))
 	{
 		if (pSound != nullptr)
 		{
@@ -594,8 +595,29 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 			pSound->Play(CSound::SOUND_LABEL_WEAK);
 		}
 
+		// ダメージ
+		int nDamage = 0;
+
+		// 成功度の遷移
+		switch (success)
+		{
+		case CPlayer::PARRY_MISS:
+			break;
+		case CPlayer::PARRY_WEAK:
+			nDamage = 1;
+			break;
+		case CPlayer::PARRY_NORMAL:
+			nDamage = 3;
+			break;
+		case CPlayer::PARRY_PARFECT:
+			nDamage = 5;
+			break;
+		default:
+			break;
+		}
+
 		// ガードする
-		ChangeState(make_shared<CEnemyGuard>(ImpactPos,2));
+		ChangeState(make_shared<CEnemyGuard>(ImpactPos, nDamage));
 
 		return;
 	}
@@ -617,7 +639,7 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 		D3DXVECTOR3 PlayerPos = pPlayer->GetPosition();
 
 		// パーティクルの生成
-		auto pParticle = CParticle3DNormal::Create(ImpactPos, 10.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
+		auto pParticle = CParticle3DNormal::Create(ImpactPos, 10.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
 		// パーティクルの設定処理
 		pParticle->SetParticle(15.0f, 240, 50, 5,314);
@@ -629,10 +651,10 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 		pPlayer->SetAngle(fAngle + D3DX_PI);
 
 		// インパクトを生成
-		auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.6f, 0.8f), ImpactPos, 0.0f, 50.0f);
+		auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.6f, 0.4f), ImpactPos, 0.0f, 50.0f);
 
 		// サークルの設定処理
-		pCircle->SetCircle(35.0f, 15.0f, 60, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
+		pCircle->SetCircle(35.0f, 8.0f, 60, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
 
 		if (pSound != nullptr)
 		{
@@ -668,10 +690,10 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 		//CParryEffect::Create(ImpactPos, D3DXVECTOR3(150.0f, 150.0f, 0.0f), D3DXVECTOR3(0.0f, fAngle, 0.0f), 5, 2, 6, false, CParryEffect::TYPE_SPARK);
 
 		// インパクトを生成
-		auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.6f, 0.8f), ImpactPos, 0.0f, 50.0f);
+		auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 1.0f, 0.6f, 0.4f), ImpactPos, 0.0f, 50.0f);
 
 		// サークルの設定処理
-		pCircle->SetCircle(35.0f, 15.0f, 60, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
+		pCircle->SetCircle(35.0f, 8.0f, 60, false, D3DXVECTOR3(D3DX_PI * 0.5f, fAngle, 0.0f));
 
 		if (pSound != nullptr)
 		{
@@ -1047,7 +1069,7 @@ bool CEnemy::CollisionObstacle(D3DXVECTOR3 *pPos)
 		{
 			// 死亡状態じゃないなら
 			if (pMotion->GetBlendType() != MOTIONTYPE_DEATH && pMotion->GetBlendType() != MOTIONTYPE_DAMAGEL &&
-				pMotion->GetType() != MOTIONTYPE_DOWN && pMotion->GetType() != MOTIONTYPE_STANP_DOWN)
+				pMotion->GetBlendType() != MOTIONTYPE_DOWN && pMotion->GetType() != MOTIONTYPE_STANP_DOWN && pMotion->GetBlendType() != MOTIONTYPE_DOWN)
 			{
 				// 音の取得
 				CSound* pSound = CManager::GetSound();
@@ -1274,30 +1296,29 @@ CEnemy::RESULT CEnemy::WeponAttackResult(CPlayer* pPlayer)
 		// パリィした
 		return RESULT_SPREVENGE;
 	}
-	else if (playerMotionType != pPlayer->MOTIONTYPE_PARRY)
-	{
-		// パリィできるか判定
-		const bool bParry = pPlayer->IsParry(pos);
+	
+	// パリィできるか判定
+	const bool bParry = pPlayer->IsParry(pos);
 
-		// パリィできた
-		if (bParry)
-		{
-			// パリィした
-			return RESULT_PARRY;
-		}
-		// 回避だったら
-		else if (playerMotionType == pPlayer->MOTIONTYPE_AVOID || pPlayerMotion->GetType() == pPlayer->MOTIONTYPE_AVOID)
-		{
-			// 回避した
-			return RESULT_AVOID;
-		}
-		// カウンター失敗した
-		else if (bParry == false)
-		{
-			// 当たった
-			return RESULT_HIT;
-		}
+	// パリィできた
+	if (bParry)
+	{
+		// パリィした
+		return RESULT_PARRY;
 	}
+	// 回避だったら
+	else if (playerMotionType == pPlayer->MOTIONTYPE_AVOID || pPlayerMotion->GetType() == pPlayer->MOTIONTYPE_AVOID)
+	{
+		// 回避した
+		return RESULT_AVOID;
+	}
+	// カウンター失敗した
+	else if (bParry == false)
+	{
+		// 当たった
+		return RESULT_HIT;
+	}
+	
 	
 	return RESULT_NONE;
 }
@@ -1379,13 +1400,19 @@ CEnemy::RESULT CEnemy::AttackResult(CPlayer* pPlayer, const MODEL model,const fl
 //===================================================
 void CEnemy::Notify(void)
 {
+	// HPの取得
+	int nLife = CCharacter3D::GetLife();
+
 	if (m_pObserver != nullptr)
 	{
-		// HPの取得
-		int nLife = CCharacter3D::GetLife();
-
 		// HPの変化を通知する
 		m_pObserver->OnNotify(nLife);
+	}
+
+	if (m_pStateManager != nullptr)
+	{
+		// 体力の設定
+		m_pStateManager->SetLife(nLife);
 	}
 }
 
