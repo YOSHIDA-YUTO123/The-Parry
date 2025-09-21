@@ -15,4 +15,21 @@
 // インクルードファイル
 //***************************************************
 
+//***************************************************
+// メインクラスの定義
+//***************************************************
+class CMain
+{
+public:
+	~CMain();
+	static void Create(void);
+	static CMain* GetInstance(void) { return m_pInstance; }
+	void Uninit(void);
+	void ToggleFullscreen(HWND hWnd); // フルスクリーン
+private:
+	CMain();
+	static 	CMain* m_pInstance;		  // 自分のインスタンス
+	bool m_bFullScreen;				  // フルスクリーンかどうか
+	RECT m_windowRect;				  // ウィンドウのサイズ
+};
 #endif

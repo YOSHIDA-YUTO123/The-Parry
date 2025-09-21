@@ -16,6 +16,11 @@
 #include "manager.h"
 
 //**************************************************
+// 静的メンバ変数宣言
+//**************************************************
+CMain* CMain::m_pInstance = nullptr; // 自分のインスタンス
+
+//**************************************************
 // プロトタイプ宣言
 //**************************************************
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -101,6 +106,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 		pManager = new CManager;
 	}
 
+	// メインクラスの生成
+	CMain::Create();
+
 	// 初期化処理
 	if (FAILED(pManager->Init(hInstance,hWnd, TRUE)))
 	{
@@ -174,17 +182,30 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 		pManager = nullptr;
 	}
 
+	// メインの取得
+	CMain* pMain = CMain::GetInstance();
+
+	// メインの破棄
+	if (pMain != nullptr)
+	{
+		pMain->Uninit();
+		pMain = nullptr;
+	}
 	// ウインドウクラスの登録を解除
 	UnregisterClass(CLASS_NAME, wcex.hInstance);
 
 	return (int)msg.wParam;
 }
+
 //==================================================
 // ウインドウプロシージャ
 //==================================================
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	const RECT rect = { 0,0, SCREEN_WIDTH,SCREEN_HEIGHT }; // ウインドウの領域
+
+		// メインの取得
+	CMain* pMain = CMain::GetInstance();
 
 	switch (uMsg)
 	{
@@ -197,6 +218,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		switch (wParam)
 		{
 		case VK_ESCAPE:				// [ESC]キーが押された
+		{
 			int nID = MessageBox(hWnd, "終了しますか?", "終了メッセージ", MB_YESNO);
 
 			if (nID == IDYES)
@@ -208,8 +230,85 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			{
 				return 0;			// 返す
 			}
+		}
+			break;
+		case VK_F11:
+			if (pMain != nullptr)
+			{
+				pMain->ToggleFullscreen(hWnd);	// F11でフルスクリーン
+			}
 			break;
 		}
 	}
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);    // 既定の処理を返す
+}
+
+//==================================================
+// コンストラクタ
+//==================================================
+CMain::CMain()
+{
+	m_bFullScreen = false;
+	ZeroMemory(&m_windowRect, sizeof(m_windowRect));
+}
+
+//==================================================
+// デストラクタ
+//==================================================
+CMain::~CMain()
+{
+}
+
+//==================================================
+// 生成処理
+//==================================================
+void CMain::Create(void)
+{
+	if (m_pInstance == nullptr)
+	{
+		m_pInstance = new CMain;
+	}
+}
+
+//==================================================
+// 終了処理
+//==================================================
+void CMain::Uninit(void)
+{
+	// 自分自身の破棄
+	if (m_pInstance != nullptr)
+	{
+		delete m_pInstance;
+		m_pInstance = nullptr;
+	}
+}
+
+//==================================================
+// フルスクリーンにする
+//==================================================
+void CMain::ToggleFullscreen(HWND hWnd)
+{
+	// 現在のウィンドウスタイルを取得
+	DWORD dwStyle = GetWindowLong(hWnd, GWL_STYLE);
+
+	if (m_bFullScreen)
+	{
+		// ウィンドウモードに切り替え
+		SetWindowLong(hWnd, GWL_STYLE, dwStyle | WS_OVERLAPPEDWINDOW);
+		SetWindowPos(hWnd, HWND_TOP, m_windowRect.left, m_windowRect.top,
+			m_windowRect.right - m_windowRect.left, m_windowRect.bottom - m_windowRect.top,
+			SWP_FRAMECHANGED | SWP_NOACTIVATE);
+		ShowWindow(hWnd, SW_NORMAL);
+	}
+	else
+	{
+		// フルスクリーンモードに切り替え
+		GetWindowRect(hWnd, &m_windowRect);
+		SetWindowLong(hWnd, GWL_STYLE, dwStyle & ~WS_OVERLAPPEDWINDOW);
+		SetWindowPos(hWnd, HWND_TOP, 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN),
+			SWP_FRAMECHANGED | SWP_NOACTIVATE);
+		ShowWindow(hWnd, SW_MAXIMIZE);
+	}
+
+	m_bFullScreen = !m_bFullScreen;
 }
