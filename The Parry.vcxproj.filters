@@ -450,6 +450,12 @@
     <ClCompile Include="wing.cpp">
       <Filter>ソース ファイル\objectX</Filter>
     </ClCompile>
+    <ClCompile Include="wall.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ArenaDust.cpp">
+      <Filter>ソース ファイル\objectX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="testword.h">
@@ -783,6 +789,12 @@
       <Filter>ヘッダー ファイル\object2D</Filter>
     </ClInclude>
     <ClInclude Include="wing.h">
+      <Filter>ヘッダー ファイル\objectX</Filter>
+    </ClInclude>
+    <ClInclude Include="wall.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="ArenaDust.h">
       <Filter>ヘッダー ファイル\objectX</Filter>
     </ClInclude>
   </ItemGroup>

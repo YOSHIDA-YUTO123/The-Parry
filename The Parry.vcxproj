@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ArenaDust.cpp" />
     <ClCompile Include="background.cpp" />
     <ClCompile Include="billboard.cpp" />
     <ClCompile Include="bird.cpp" />
@@ -204,6 +205,7 @@
     <ClCompile Include="TrainingEnemy.cpp" />
     <ClCompile Include="TrainingEnemyState.cpp" />
     <ClCompile Include="tutorial.cpp" />
+    <ClCompile Include="wall.cpp" />
     <ClCompile Include="wing.cpp" />
     <ClCompile Include="WinResultManager.cpp" />
     <ClCompile Include="cylinder.cpp" />
@@ -269,6 +271,7 @@
     <ClCompile Include="word.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ArenaDust.h" />
     <ClInclude Include="background.h" />
     <ClInclude Include="billboard.h" />
     <ClInclude Include="bird.h" />
@@ -322,6 +325,7 @@
     <ClInclude Include="TrainingEnemy.h" />
     <ClInclude Include="TrainingEnemyState.h" />
     <ClInclude Include="tutorial.h" />
+    <ClInclude Include="wall.h" />
     <ClInclude Include="wing.h" />
     <ClInclude Include="WinResultManager.h" />
     <ClInclude Include="cylinder.h" />

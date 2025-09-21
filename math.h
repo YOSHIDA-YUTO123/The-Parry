@@ -109,7 +109,18 @@ template <class T> T Random(const T min, const T max)
 //***************************************************
 namespace math
 {
+	/**
+	* @brief 距離を求める関数
+	* @param 二つの位置の差分
+	* @return 計算後の距離
+	*/
 	float GetDistance(const D3DXVECTOR3 diff);
+	/**
+	* @brief 単位ベクトルを取得する関数
+	* @param 目的の位置
+	* @param 位置
+	* @return 正規化されたベクトル
+	*/
 	D3DXVECTOR3 GetVector(const D3DXVECTOR3 dest, const D3DXVECTOR3 pos);
 	float GetTargetAngle(const D3DXVECTOR3 dest, const D3DXVECTOR3 pos); // 目標までの角度の取得
 	D3DXVECTOR3 GetPositionFromMatrix(const D3DXMATRIX mtxWorld);		 // MATRIXの位置の情報をD3DXVECTOR3型に変換する

@@ -173,7 +173,7 @@ END_BLOCKSET
 BLOCKSET
 	POS = 0.0 0.0 -1200.0 	  		# 位置
 	FILE_NAME = gate000.x 	# 読み込むファイル名
-	REVERSE = 0			  		# 反転するかどうか
+	REVERSE = 1			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET

@@ -38,7 +38,7 @@ public:
 	void Uninit(void) override;
 	void Update(void) override;
 	void Draw(void) override;
-	bool Collision(CColliderCapsule* pCapsule);
+	bool Collision(CColliderCapsule* pCapsule, D3DXVECTOR3* pPos = nullptr);
 private:
 	std::unique_ptr<CColliderSphere> m_pSphere; // 円のコライダー
 	D3DXVECTOR3 m_pos;							// 位置

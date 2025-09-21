@@ -47,7 +47,7 @@ public:
 	void Uninit(void);
 	void Update(void);
 	int GetObstacleSize(void);
-	bool CollisionExplotion(CColliderCapsule* pCapsule);
+	bool CollisionExplotion(CColliderCapsule* pCapsule, D3DXVECTOR3* pPos = nullptr);
 	bool CollisionImpact(CObstacle* pObstacle);
 private:
 	static constexpr int NUM_TNTPOP_POINT = 4;		// 爆発樽の出現ポイントの数

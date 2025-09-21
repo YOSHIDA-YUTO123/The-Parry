@@ -25,6 +25,7 @@
 #include "Obstacle.h"
 #include "FadeInObject2D.h"
 #include "SkipUI.h"
+#include "gear.h"
 
 using namespace Const; // 名前空間Constの使用
 using namespace std;   // 名前空間stdの使用
@@ -111,6 +112,12 @@ HRESULT COpening::Init(void)
 
 	// スパイクトラップ
 	CSpikeTrap::Create(D3DXVECTOR3(1540.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), -1);
+
+	// 歯車の生成
+	CGear::Create(D3DXVECTOR3(-2320.0f, 1700.0f, 100.0f));
+
+	// 歯車の生成
+	CGear::Create(D3DXVECTOR3(2100.0f, 1700.0f, 100.0f));
 
 	return S_OK;
 }

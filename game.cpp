@@ -43,6 +43,7 @@
 #include "RevengeActiveUI.h"
 #include "billboardAnim.h"
 #include "wing.h"
+#include "ArenaDust.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -153,8 +154,20 @@ HRESULT CGame::Init(void)
 		pSound->Play(CSound::SOUND_LABEL_GAME_BGM, 0.5f);
 	}
 
-	// マルチテクスチャの表示
+	// 反撃ゲージのUIの生成
 	CRevengeActiveUI::Create(D3DXVECTOR3(55.0f,90.0f,0.0f), D3DXVECTOR2(48.0f, 18.0f), 4, 4);
+
+	// 瓦礫の生成
+	CArenaDust::Create(D3DXVECTOR3(970.0f,0.0f,561.0f), 0.0f);
+
+	// 瓦礫の生成
+	CArenaDust::Create(D3DXVECTOR3(810.0f, 0.0f, -922.0f), 0.5f);
+
+	// 瓦礫の生成
+	CArenaDust::Create(D3DXVECTOR3(-882.0f, 0.0f, -762.0f), 0.0f);
+
+	// 瓦礫の生成
+	CArenaDust::Create(D3DXVECTOR3(-1061.0f, 0.0f, 762.0f), 0.0f);
 
 	//// パリィエフェクトの生成
 	//CParryEffect::Create(D3DXVECTOR3(0.0f,200.0f,0.0f), D3DXVECTOR3(150.0f, 150.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 5, 2, 4, true);
@@ -713,8 +726,18 @@ void CGameManager::Uninit(void)
 //===================================================
 void CGameManager::Update(void)
 {
-	// ゲームが終了状態じゃないなら
-	if (CGame::GetState() != CGame::STATE_END)
+	// ポーズのマネージャーの取得
+	CPauseManager* pPauseManager = CPauseManager::GetInstance();
+
+	bool bPause = false;
+
+	if (pPauseManager != nullptr)
+	{
+		// ポーズの状態の取得
+		bPause = pPauseManager->GetPause();
+	}
+	// ゲームが終了状態じゃないなら&&ポーズ状態じゃないなら
+	if (CGame::GetState() != CGame::STATE_END && !bPause)
 	{
 		// カウンターを加算
 		m_nCounter++;

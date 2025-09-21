@@ -10,15 +10,15 @@
 //***************************************************
 #include "camera.h"
 #include "object.h"
-#include"manager.h"
-#include"renderer.h"
+#include "manager.h"
+#include "renderer.h"
 #include "player.h"
-#include"math.h"
-#include"meshfield.h"
-#include"cylinder.h"
-#include"input.h"
+#include "math.h"
+#include "meshfield.h"
+#include "cylinder.h"
+#include "input.h"
 #include "game.h"
-#include"pause.h"
+#include "pause.h"
 #include "BlockManager.h"
 #include "Collider.h"
 
@@ -27,7 +27,7 @@ using namespace Const; // 名前空間Constを使用
 namespace
 {
 	constexpr float MAX_VIEW_TOP = 2.90f;	// カメラの制限(上)
-	constexpr float MAX_VIEW_BOTTOM = 0.1f; // カメラの制限(下)
+	constexpr float MAX_VIEW_BOTTOM = D3DX_PI * 0.45f; // カメラの制限(下)
 	constexpr float HEIGHT_OFFSET = 20.0f;	// カメラの高さのオフセット
 	constexpr float ROCKON_HEIGHT = 200.0f;	// ロックオンの時のカメラの高さ
 	constexpr float FOV_BASE = 45.0f;		// 視野角ベース
@@ -39,6 +39,7 @@ namespace
 //===================================================
 CCamera::CCamera()
 {
+	m_posVOld = VEC3_NULL;
 	m_fFov = FOV_BASE;
 	m_bCollision = false;
 	D3DXMatrixIdentity(&m_mtxView);
@@ -91,33 +92,8 @@ void CCamera::Uninit(void)
 //===================================================
 void CCamera::Update(void)
 {
-#if 0
-
-	// プレイヤーの取得
-	CPlayer* pPlayer = CManager::GetPlayer();
-
-	// プレイヤーの取得
-	D3DXVECTOR3 playerPos(pPlayer->GetPosition().x, pPlayer->GetPosition().y + 200.0f, pPlayer->GetPosition().z);
-	D3DXVECTOR3 playerRot = pPlayer->GetRotation();
-
-	m_posRDest.x = playerPos.x + sinf(playerRot.y) * 1.0f;
-	m_posRDest.y = playerPos.y + sinf(playerRot.y) * 1.0f;
-	m_posRDest.z = playerPos.z + cosf(playerRot.y) * 1.0f;
-
-	m_posVDest.x = playerPos.x - sinf(m_rot.y) * m_fDistance;
-	m_posVDest.y = playerPos.y - cosf(m_rot.y) * m_fDistance;
-	m_posVDest.z = playerPos.z - cosf(m_rot.y) * m_fDistance;
-
-	m_posR.x += ((m_posRDest.x - m_posR.x) * 0.07f);
-	m_posR.y += ((m_posRDest.y - m_posR.y) * 0.07f);
-	m_posR.z += ((m_posRDest.z - m_posR.z) * 0.07f);
-
-	m_posV.x += ((m_posVDest.x - m_posV.x) * 0.07f);
-	m_posV.z += ((m_posVDest.z - m_posV.z) * 0.07f);
-
-#endif
-
-	D3DXVECTOR3 posOld = m_posV;
+	//// 前回の位置の設定
+	//m_posVOld = m_posV;
 
 	// メッシュシリンダーの取得
 	CMeshCylinder* pCylinder = CGame::GetCylinder();
@@ -159,7 +135,16 @@ void CCamera::Update(void)
 			}
 		}
 #else
-		pCylinder->Collision(&m_posV);
+		if (pCylinder->Collision(&m_posV))
+		{
+			m_fFov += (FOV_COLLISION - m_fFov) * 0.01f;
+			m_bCollision = true;
+		}
+		else
+		{
+			m_fFov += (FOV_BASE - m_fFov) * 0.01f;
+			m_bCollision = false;
+		}
 #endif // _DEBUG
 	}
 
@@ -409,6 +394,9 @@ void CCamera::PadView(void)
 //===================================================
 void CCamera::UpdatePositionV(void)
 {
+	// 前回の位置の設定
+	m_posVOld = m_posV;
+
 	// カメラの視点の更新
 	m_posV.x = m_posR.x - sinf(m_rot.x) * sinf(m_rot.y) * m_fDistance;
 	m_posV.y = m_posR.y - cosf(m_rot.x) * m_fDistance;
@@ -431,6 +419,9 @@ void CCamera::UpdatePositionR(void)
 //===================================================
 void CCamera::LerpPos(const D3DXVECTOR3 posRDest, const D3DXVECTOR3 posVDest, const float fCoef)
 {
+	// 前回の位置の設定
+	m_posVOld = m_posV;
+
 	// 目的の注視点の設定
 	m_posRDest.x = posRDest.x;
 	m_posRDest.y = posRDest.y;

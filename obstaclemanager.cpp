@@ -257,7 +257,7 @@ int CObstacleManager::GetObstacleSize(void)
 //==============================================
 // ”š”­‚Ì“–‚½‚è”»’è
 //==============================================
-bool CObstacleManager::CollisionExplotion(CColliderCapsule* pCapsule)
+bool CObstacleManager::CollisionExplotion(CColliderCapsule* pCapsule, D3DXVECTOR3* pPos)
 {
 	// —v‘f•ª’²‚×‚é
 	for (auto itr = m_apExplosionArea.begin(); itr != m_apExplosionArea.end(); ++itr)
@@ -266,7 +266,7 @@ bool CObstacleManager::CollisionExplotion(CColliderCapsule* pCapsule)
 		if ((*itr) == nullptr) continue;
 
 		// ”š”­‚Æ‚Ì“–‚½‚è”»’è
-		if ((*itr)->Collision(pCapsule))
+		if ((*itr)->Collision(pCapsule, pPos))
 		{
 			return true;
 		}

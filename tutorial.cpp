@@ -35,6 +35,8 @@
 #include"Collision.h"
 #include "obstaclemanager.h"
 #include "GateUI.h"
+#include "wall.h"
+#include "RevengeActiveUI.h"
 
 using namespace std;	// 名前空間stdの使用
 using namespace Const;  // 名前空間Const
@@ -191,6 +193,18 @@ HRESULT CTutorial::Init(void)
 
 	// ゲート
 	m_pSphere = CColliderSphere::Create(GATE_POS, GATE_RADIUS);
+
+	// 反撃ゲージのUIの生成
+	CRevengeActiveUI::Create(D3DXVECTOR3(55.0f, 90.0f, 0.0f), D3DXVECTOR2(48.0f, 18.0f), 4, 4);
+
+	//// 壁の設置
+	//CWall::Create(D3DXVECTOR3(0.0f, 150.0f, 1200.0f), D3DXVECTOR3(100.0f, 3000.0f, 0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
+
+	//CWall::Create(D3DXVECTOR3(0.0f, 150.0f, -1200.0f), D3DXVECTOR3(100.0f, 3000.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+
+	//CWall::Create(D3DXVECTOR3(1200.0f, 150.0f, 0.0f), D3DXVECTOR3(100.0f, 3000.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+
+	//CWall::Create(D3DXVECTOR3(-1200.0f, 150.0f, 0.0f), D3DXVECTOR3(100.0f, 3000.0f, 0.0f), D3DXVECTOR3(0.0f, -D3DX_PI * 0.5f, 0.0f));
 
 	return S_OK;
 }

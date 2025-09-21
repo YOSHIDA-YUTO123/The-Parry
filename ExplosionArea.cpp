@@ -127,7 +127,7 @@ void CExplosionArea::Draw(void)
 //==============================================
 // 当たり判定
 //==============================================
-bool CExplosionArea::Collision(CColliderCapsule* pCapsule)
+bool CExplosionArea::Collision(CColliderCapsule* pCapsule,D3DXVECTOR3 *pPos)
 {
 	// カプセルの当たり判定の取得
 	auto pCollision = CCollisionCapsule::GetInstance();
@@ -138,6 +138,11 @@ bool CExplosionArea::Collision(CColliderCapsule* pCapsule)
 	// 当たっている
 	if (pCollision->CollisionSphere(pCapsule, m_pSphere.get()))
 	{
+		if (pPos != nullptr)
+		{
+			// 自分の位置の設定
+			*pPos = m_pos;
+		}
 		return true;
 	}
 	return false;
