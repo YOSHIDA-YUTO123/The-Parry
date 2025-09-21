@@ -39,7 +39,7 @@ CHARACTERSET
 	TYPE = 2 					# 種類
 	POS = 0.0 0.0 1500.0 		# 位置
 	ANGLE = 0.0 				# 向き
-	LIFE = 70					# 体力
+	LIFE = 75					# 体力
 	SPEED = 6.0					# 速さ
 	SHADOW = 10.0 1.0 10.0 		# 影の大きさ
 	SIZE = 200.0 400.0 200.0	# 大きさ

@@ -153,8 +153,8 @@ void CWinResultManager::Create(void)
 	}
 
 	// スコアの計算
-	int nPerfectScore = 20000 * m_pInstance->m_nPerfectCnt;
-	int nNormalScore = 3000 * m_pInstance->m_nNormalCnt;
+	int nPerfectScore = 25000 * m_pInstance->m_nPerfectCnt;
+	int nNormalScore = 5069 * m_pInstance->m_nNormalCnt;
 	int nWeakScore = 590 * m_pInstance->m_nWeakCnt;
 	int nTimeScore = 700000 - (nTime * 2000);
 

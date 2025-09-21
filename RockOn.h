@@ -32,7 +32,7 @@ public:
 	void Update(void) override;
 	void Draw(void) override;
 private:
-	const D3DXVECTOR2 SIZE = { 60.0f,60.0f };
+	const D3DXVECTOR2 SIZE = { 40.0f,40.0f };
 	D3DXVECTOR2 m_DestSize; // –Ú“I‚Ì‘å‚«‚³
 };
 

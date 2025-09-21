@@ -1771,6 +1771,8 @@ void CPlayer::CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos, CMotion
 		}
 
 		m_fDestRevengeValue += 30;
+
+		m_nParryCounter++;
 	}
 	// インパクトの当たり判定
 	else if (bCollision && pMotion->GetBlendType() != MOTIONTYPE_DAMAGE)

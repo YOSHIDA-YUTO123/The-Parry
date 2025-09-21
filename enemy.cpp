@@ -397,16 +397,9 @@ void CEnemy::Update(void)
 		m_pMove->Gravity(-MAX_GRABITY);
 	}
 
-	// インパクトとの判定
-	const bool bCollision = pMesh->CollisionImpact(pos, 150.0f,CMeshFieldImpact::OBJ_ENEMY);
-
 	// インパクトの当たり判定
-	if (bCollision && IsDamageMotion() == false)
-	{			
-		// 状態の設定
-		ChangeState(make_shared<CEnemyDamageL>(5));
-	}
-	
+	CollisionImpact(pMotion, pMesh, &pos);
+
 	// プレイヤーとの当たり判定
 	CollisionPlayer(pPlayerMotion, pPlayer);
 
@@ -442,6 +435,16 @@ void CEnemy::Update(void)
 		pMesh->SetImpact(config);
 	}
 
+	// HPが半分以下だったら
+	if (m_pStateManager != nullptr && m_pStateManager->CheckLowHp(2))
+	{
+		// パーティクルの生成
+		auto pNormal = CParticle3DNormal::Create(CCharacter3D::GetModelPos(MODEL_CHEST), 20.0f, D3DXCOLOR(1.0f, 0.4f, 1.0f, 1.0f));
+
+		// パーティクルの設定処理
+		pNormal->SetParticle(5.0f, 120, 5, 1, 60);
+		pNormal->SetParam(CEffect3D::TYPE_NORAML, 200);
+	}
 	// カメラが使われていたら
 	if (pCamera != nullptr)
 	{
@@ -587,7 +590,7 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 	CSound* pSound = CManager::GetSound();
 
 	// 30%の確率でガードする
-	if (random <= 50 && m_pStateManager->CheckLowHp(2))
+	if (random <= 38 && m_pStateManager->CheckLowHp(2))
 	{
 		if (pSound != nullptr)
 		{
@@ -1583,6 +1586,49 @@ bool CEnemy::SetTNTEffect(CObstacle* pObstacle)
 	CExplosion::Create(TopPos, D3DXVECTOR2(100.0f, 100.0f), D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f), 5, 2, 5, CExplosion::TYPE_FIRE);
 
 	return true;
+}
+
+//===================================================
+// 衝撃波との当たり判定
+//===================================================
+void CEnemy::CollisionImpact(CMotion* pMotion, CMeshField* pMeshField, D3DXVECTOR3* pPos)
+{
+	// 最初の位置
+	D3DXVECTOR3 firstPos = VEC3_NULL;
+
+	// インパクトとの判定
+	const bool bCollision = pMeshField->CollisionImpact(*pPos, 150.0f, CMeshFieldImpact::OBJ_ENEMY,&firstPos);
+
+	// モーションの種類の取得
+	int nMotionBlendType = pMotion->GetBlendType();
+	int nMotionType = pMotion->GetType();
+
+	// インパクトの当たり判定
+	if (bCollision && IsDamageMotion() == false)
+	{
+		int nRevenge = -1;
+
+		if (nMotionBlendType != MOTIONTYPE_REVENGE_IMPACT && nMotionType != MOTIONTYPE_REVENGE_IMPACT)
+		{
+			nRevenge = rand() % 100;
+		}
+
+		if (nRevenge <= 40 && nRevenge != -1)
+		{
+			// 発生位置に返す
+			D3DXVECTOR3 dir = firstPos - *pPos;
+
+			// 跳ね返す
+			pMeshField->ResetImpact(dir, CMeshFieldImpact::OBJ_ENEMY, *pPos, D3DXCOLOR(1.0f, 0.4f, 0.4f, 1.0f));
+
+			// 状態の遷移
+			ChangeState(make_shared<CEnemyRevengeImpact>());
+			return;
+		}
+
+		// 状態の設定
+		ChangeState(make_shared<CEnemyDamageL>(5));
+	}
 }
 
 //===================================================

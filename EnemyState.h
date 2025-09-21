@@ -68,6 +68,7 @@ public:
 		ID_RUSH_SWING,	 // 突進なぎ
 		ID_BRISK_MOVE,	 // 早歩き
 		ID_COUNTER,		 // カウンター
+		ID_REVENGE_IMPACT, // 衝撃波の跳ね返し
 		ID_MAX
 	}ID;
 
@@ -315,6 +316,7 @@ public:
 	void SetType(const TYPE type) { m_type = type; }
 private:
 	static constexpr int IDLE_TIME = 30; // 何もしない時間
+	static constexpr int PROB_ACTION = 40; // 次の行動に派生する確率
 
 	TYPE m_type;		// モーションの種類
 	int m_nIdleTime;	// 何もしない時間
@@ -480,7 +482,7 @@ public:
 	void Update(void) override;
 private:
 	static constexpr int MOVE_TIME = 60; // 最低移動時間
-	static constexpr float OBSTACLE_DISTANCE = 250.0f;	 // 障害物との距離
+	static constexpr float OBSTACLE_DISTANCE = 450.0f;	 // 障害物との距離
 	static constexpr float ACTION_DISTANCE = 750.0f; // 攻撃してくる距離
 	int m_nTime; // 横移動の時間
 };
@@ -498,7 +500,7 @@ public:
 private:
 	static constexpr int MOVE_TIME = 60; // 最低移動時間
 	static constexpr float ACTION_DISTANCE = 750.0f; // 攻撃してくる距離
-	static constexpr float OBSTACLE_DISTANCE = 250.0f;	 // 障害物との距離
+	static constexpr float OBSTACLE_DISTANCE = 450.0f;	 // 障害物との距離
 	int m_nTime; // 横移動の時間
 };
 
@@ -615,12 +617,22 @@ private:
 class CEnemyRushSwing : public CEnemyState
 {
 public:
+
+	// 攻撃モーションの種類
+	typedef enum
+	{
+		ACTION_SMASH = 0,
+		ACTION_SWING,
+		ACTION_MAX
+	}ACTION;
+
 	CEnemyRushSwing();
 	~CEnemyRushSwing();
 	void Init(void) override;
 	void Update(void) override;
 private:
-	static constexpr float MOVE_FRAME = 15.0f;
+	static constexpr float MOVE_FRAME = 15.0f; // 移動フレーム
+	static constexpr int PROB_ACTION = 40; // 次の攻撃に派生する確率
 
 	void CollisionPlayer(CEnemy* pEnemy, CMotion* pMotion);
 };
@@ -649,6 +661,19 @@ class CEnemyCounter : public CEnemyState
 public:
 	CEnemyCounter();
 	~CEnemyCounter();
+	void Init(void) override;
+	void Update(void) override;
+private:
+};
+
+//***************************************************
+// 敵の状態(Revenge_impact)クラスの定義
+//***************************************************
+class CEnemyRevengeImpact : public CEnemyState
+{
+public:
+	CEnemyRevengeImpact();
+	~CEnemyRevengeImpact();
 	void Init(void) override;
 	void Update(void) override;
 private:

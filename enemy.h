@@ -44,6 +44,7 @@ class CColliderCapsule;
 class CColliderFOV;
 class CEnemyStateManager;
 class CObstacleManager;
+class CMeshField;
 
 //***************************************************
 // 敵クラスの定義
@@ -92,6 +93,7 @@ public:
 		MOTIONTYPE_STANP_DOWN,	// 踏みつけダウン(死亡)
 		MOTIONTYPE_BRISK_MOVE,	// 早歩き
 		MOTIONTYPE_COUNTER,		// カウンター
+		MOTIONTYPE_REVENGE_IMPACT, // 衝撃波の跳ね返し
 		MOTIONTYPE_MAX
 	}MOTIONTYPE;
 
@@ -182,6 +184,7 @@ private:
 	void Config(const int nLife, const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size);
 	bool CollisionObstacleToWepon(CObstacle* pObstacle);	// 障害物と武器の当たり判定
 	bool SetTNTEffect(CObstacle* pObstacle);				// 障害物の爆発の演出
+	void CollisionImpact(CMotion* pMotion,CMeshField *pMeshField,D3DXVECTOR3 *pPos);			// インパクトの当たり判定
 
 	std::unique_ptr<CColliderCapsule> m_pCapsule;			// カプセルコライダー
 	std::unique_ptr<CColliderAABB> m_pAABB;					// AABBのコライダー
