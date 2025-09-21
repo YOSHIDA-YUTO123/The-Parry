@@ -64,7 +64,7 @@ HRESULT CBackGround::Init(void)
 	{
 	case TYPE_PAUSE:
 		// テクスチャのID
-		SetTextureID("data/TEXTURE/pause/pauseBg.png");
+		SetTextureID();
 
 		// ポーズ中にしか描画しない
 		CObject::SetType(CObject::TYPE_PAUSE);

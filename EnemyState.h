@@ -66,6 +66,7 @@ public:
 		ID_SWEEP_RIGHT,	 // 薙ぎ払い(右)
 		ID_SWEEP_LEFT,	 // 薙ぎ払い(左)
 		ID_RUSH_SWING,	 // 突進なぎ
+		ID_BRISK_MOVE,	 // 早歩き
 		ID_MAX
 	}ID;
 
@@ -197,7 +198,7 @@ class CEnemyDamageL : public CEnemyState
 {
 public:
 	CEnemyDamageL();
-	CEnemyDamageL(const int nDamage,const bool bBackStatp = false);
+	CEnemyDamageL(const int nDamage, const bool bBackStatp = false);
 	~CEnemyDamageL();
 	void Init(void) override;
 	void Update(void) override;
@@ -601,6 +602,22 @@ private:
 	static constexpr float MOVE_FRAME = 15.0f;
 
 	void CollisionPlayer(CEnemy* pEnemy, CMotion* pMotion);
+};
+
+//***************************************************
+// 敵の状態(Brisk_Move)クラスの定義
+//***************************************************
+class CEnemyBriskMove : public CEnemyState
+{
+public:
+	CEnemyBriskMove();
+	~CEnemyBriskMove();
+	void Init(void) override;
+	void Update(void) override;
+private:
+	static constexpr int DEST_RANGE = 500; // 目的の位置の範囲
+
+	D3DXVECTOR3 m_destPos; // 目的の位置
 };
 
 #endif

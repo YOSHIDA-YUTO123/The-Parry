@@ -42,6 +42,6 @@ CHARACTERSET
 	LIFE = 70					# 体力
 	SPEED = 6.0					# 速さ
 	SHADOW = 10.0 1.0 10.0 		# 影の大きさ
-	SIZE = 100.0 400.0 100.0	# 大きさ
+	SIZE = 200.0 400.0 200.0	# 大きさ
 END_CHARACTERSET
 

@@ -57,6 +57,7 @@ public:
 		SOUND_LABEL_ENEMY_ATTACK,		// 敵の攻撃
 		SOUND_LABEL_ENEMY_DAMAGE,		// 敵のダメージ
 		SOUND_LABEL_BLOW,				// ダメージを受けて背中から着地
+		SOUND_LABEL_BARRIEL,			// 樽
 		SOUND_LABEL_MAX
 	} SOUND_LABEL;
 
@@ -119,6 +120,7 @@ private:
 		{"data/SE/enemy_attack.wav", 0},  // 敵攻撃
 		{"data/SE/enemy_damage.wav", 0},  // 敵ダメージ
 		{"data/SE/blow.wav", 0},		  // 吹き飛び
+		{"data/SE/barriel.wav", 0},		  // 樽
 	};				
 };
 #endif

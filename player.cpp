@@ -431,20 +431,23 @@ void CPlayer::Update(void)
 		// 重力を加算
 		m_pMove->Gravity(-MAX_GRABITY);
 	}
-
-	// ロックオン
-	if (pKeyboard->GetTrigger(DIK_R) || pJoypad->GetTrigger(pJoypad->JOYKEY_RIGHT_THUMB))
+	
+	// 敵の死亡ムービーじゃないなら
+	if (CGame::GetState() != CGame::STATE_ENEMY_DEATH)
 	{
-		CGameCamera::STATE state; // カメラの状態
+		// ロックオン
+		if (pKeyboard->GetTrigger(DIK_R) || pJoypad->GetTrigger(pJoypad->JOYKEY_RIGHT_THUMB))
+		{
+			CGameCamera::STATE state; // カメラの状態
 
-		// カメラの状態を判定
-		const bool rockon = pCamera->GetState() == CGameCamera::STATE_ROCKON;
+			// カメラの状態を判定
+			const bool rockon = pCamera->GetState() == CGameCamera::STATE_ROCKON;
 
-		// ロックオンじゃなかったらロックオン
-		state = rockon ? CGameCamera::STATE_TRACKING : CGameCamera::STATE_ROCKON;
+			// ロックオンじゃなかったらロックオン
+			state = rockon ? CGameCamera::STATE_TRACKING : CGameCamera::STATE_ROCKON;
 
-		pCamera->SetState(state);
-
+			pCamera->SetState(state);
+		}
 	}
 
 	// 回避ボタンを押したかつ生きているなら
@@ -490,8 +493,8 @@ void CPlayer::Update(void)
 		}
 	}
 
-	// 反撃ボタンを押したら
-	if (pMouse->OnMouseTriggerDown(1) || pJoypad->GetTriggerTrigger(pJoypad->JOYKEY_R2))
+	// 反撃ボタンを押したら&&ダメージ状態じゃないなら
+	if ((pMouse->OnMouseTriggerDown(1) || pJoypad->GetTriggerTrigger(pJoypad->JOYKEY_R2)) && !IsDamage(pMotion))
 	{
 		// 反撃の受付時間いないだったら
 		if (m_nAttackCounter >= 0)
@@ -547,7 +550,7 @@ void CPlayer::Update(void)
 		pNormal->SetParticle(5.0f, 120, 5, 1, 60);
 		pNormal->SetParam(CEffect3D::TYPE_NORAML, 100);
 
-		if (pKeyboard->GetTrigger(DIK_Q) || pJoypad->GetTrigger(pJoypad->JOYKEY_LEFT_THUMB))
+		if ((pKeyboard->GetTrigger(DIK_Q) || pJoypad->GetTrigger(pJoypad->JOYKEY_LEFT_THUMB)) && !IsDamage(pMotion))
 		{
 			// 状態の遷移
 			ChangeState(make_shared<CPlayerRevenge>());
@@ -1350,6 +1353,7 @@ bool CPlayer::CollisionObstacle(D3DXVECTOR3* pPos)
 		bResult = true;
 	}
 
+	// 爆発の位置
 	D3DXVECTOR3 explosionPos;
 
 	// 爆発の当たり判定
@@ -1603,21 +1607,16 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos, const PARRYMOTION parry)
 	// 音の取得
 	CSound* pSound = CManager::GetSound();
 
-	// パーティクルの生成
-	auto pParticle = CParticle2D::Create(
-		D3DXVECTOR3(50.0f,
-			80.0f,
-			0.0f),
-		10.0f,
-		D3DXCOLOR(1.0f, 0.4f, 0.4f, 1.0f));
-
-	// パーティクルの生成
-	pParticle->SetParam(20.0f, 60, 10, 10, D3DXVECTOR3(0.0f, -10.0f, 0.0f));
-	pParticle->SetParam(7, 100);
-
 	// パーフェクトだったら
 	if (m_nParryCounter >= 0 && m_nParryCounter <= 3)
 	{
+		// パーティクルの生成
+		auto pParticle = CParticle2D::Create(D3DXVECTOR3(50.0f, 80.0f, 0.0f), 10.0f, D3DXCOLOR(1.0f, 0.4f, 0.4f, 1.0f));
+
+		// パーティクルの生成
+		pParticle->SetParam(20.0f, 60, 30, 10, D3DXVECTOR3(0.0f, -10.0f, 0.0f));
+		pParticle->SetParam(7, 100);
+
 		// レンダラーの取得
 		auto pRenderer = CManager::GetRenderer();
 
@@ -1646,9 +1645,12 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos, const PARRYMOTION parry)
 	}
 	else if (m_nParryCounter > 3 && m_nParryCounter <= 10)
 	{
-		//// エフェクトの生成
-		//auto pEffect = CEffect2D::Create(D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXVECTOR2(80.0f, 80.0f), D3DXCOLOR(1.0f, 1.0f, 0.4f, 0.8f));
-		//pEffect->SetParam(60, VEC3_NULL);
+		// パーティクルの生成
+		auto pParticle = CParticle2D::Create(D3DXVECTOR3(50.0f, 80.0f, 0.0f), 10.0f, D3DXCOLOR(0.4f, 1.0f, 1.0f, 1.0f));
+
+		// パーティクルの生成
+		pParticle->SetParam(20.0f, 60, 30, 10, D3DXVECTOR3(0.0f, -10.0f, 0.0f));
+		pParticle->SetParam(7, 100);
 
 		m_fDestRevengeValue += 15;
 
@@ -1668,6 +1670,13 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos, const PARRYMOTION parry)
 	}
 	else if (m_nParryCounter > 10 && m_nParryCounter <= m_nParryTime)
 	{
+		// パーティクルの生成
+		auto pParticle = CParticle2D::Create(D3DXVECTOR3(50.0f, 80.0f, 0.0f), 10.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+
+		// パーティクルの生成
+		pParticle->SetParam(20.0f, 60, 30, 10, D3DXVECTOR3(0.0f, -10.0f, 0.0f));
+		pParticle->SetParam(7, 100);
+
 		m_fDestRevengeValue += 5;
 
 		if (pSound != nullptr)
@@ -1719,6 +1728,13 @@ void CPlayer::CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos, CMotion
 
 	if (bCollision && CCharacter3D::GetState() == STATE::STATE_ACTION)
 	{
+		// パーティクルの生成
+		auto pParticle2D = CParticle2D::Create(D3DXVECTOR3(50.0f, 80.0f, 0.0f), 10.0f, D3DXCOLOR(1.0f, 0.4f, 0.4f, 1.0f));
+
+		// パーティクルの生成
+		pParticle2D->SetParam(20.0f, 60, 30, 10, D3DXVECTOR3(0.0f, -10.0f, 0.0f));
+		pParticle2D->SetParam(7, 100);
+
 		// 方向の設定
 		D3DXVECTOR3 dir = firstPos - *pPos;
 
@@ -1764,11 +1780,9 @@ void CPlayer::CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos, CMotion
 			// 音の再生
 			pSound->Play(CSound::SOUND_LABEL_PERFECT);
 		}
-		// 吹き飛び処理
-		BlowOff(ImpactPos, 50.0f, 10.0f);
 
-		// モーションの設定
-		ChangeState(make_shared<CPlayerDamage>(5));
+		// ダメージモーションの設定
+		SetDamageMotion(ImpactPos, 7);
 	}
 }
 
@@ -1883,7 +1897,7 @@ bool CPlayer::IsStance(CMotion* pMotion)
 	int motiontype = pMotion->GetBlendType();
 	
 	// ダメージモーションだったら
-	if (motiontype == MOTIONTYPE_DAMAGE) return false;
+	if (IsDamage(pMotion)) return false;
 		
 	// 構え状態だったら
 	if (motiontype == MOTIONTYPE_STANCE) return false;
@@ -1933,6 +1947,23 @@ bool CPlayer::IsAvoid(CMotion* pMotion)
 	if (m_fStamina < AVOID_STAMINA) return false;
 	
 	return true;
+}
+
+//===================================================
+// ダメージ状態かどうか
+//===================================================
+bool CPlayer::IsDamage(CMotion* pMotion)
+{
+	// モーションの種類の取得
+	int nMotionType = pMotion->GetBlendType();
+
+	// ダメージモーションだったら
+	if (nMotionType == CPlayer::MOTIONTYPE_DAMAGE || nMotionType == CPlayer::MOTIONTYPE_BACK_DAMAGE) return true;
+
+	// ダウン状態だったら
+	if (nMotionType == CPlayer::MOTIONTYPE_DOWN_NEUTRAL || nMotionType == CPlayer::MOTIONTYPE_DOWN_NEUTRA_BACK) return true;
+
+	return false;
 }
 
 //===================================================

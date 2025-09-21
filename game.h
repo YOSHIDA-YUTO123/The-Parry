@@ -41,6 +41,7 @@ public:
 	enum STATE
 	{
 		STATE_NORMAL = 0,
+		STATE_ENEMY_DEATH,
 		STATE_END,
 		STATE_MAX
 	};

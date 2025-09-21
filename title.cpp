@@ -97,7 +97,7 @@ HRESULT CTitle::Init(void)
 	if (pSound != nullptr)
 	{
 		// bgm‚ÌÄ¶
-		pSound->Play(CSound::SOUND_LABEL_TITLE_BGM, 0.1f);
+		pSound->Play(CSound::SOUND_LABEL_TITLE_BGM, 0.5f);
 	}
 	//auto pObj2D = CObject2DMT::Create(D3DXVECTOR3(640.0f, 360.0f, 0.0f), D3DXVECTOR2(350.0f, 150.0f));
 	//pObj2D->SetTextureID("data/TEXTURE/GageFrame/playerHpFrame.png", "data/TEXTURE/gradation/wave000.png");

@@ -178,6 +178,7 @@ private:
 	bool IsMove(CMotion* pMotion);		// 移動できるか判定
 	bool IsStance(CMotion* pMotion);	// 構えをだせるか判定
 	bool IsAvoid(CMotion* pMotion);		// 回避を出せるか判定
+	bool IsDamage(CMotion* pMotion);	// ダメージ状態かどうか
 	void Notify(void);					// オブザーバーへの通知処理
 	void UpdateParry(void);
 	void SetMoveAngle(CGameCamera* pCamera, CInputKeyboard* pKeyboard, CInputJoypad* pJoypad);

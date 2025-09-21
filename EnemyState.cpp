@@ -792,6 +792,13 @@ void CEnemyDamageL::Update(void)
 	// モーションを最後まで行ったら
 	if (pMotion->IsFinishEndBlend())
 	{
+		// バックステップするなら
+		if (m_bBackStap)
+		{
+			// 状態の変更
+			pEnemy->ChangeState(make_shared<CEnemyBackStep>());
+			return;
+		}
 		m_bFinish = true;
 	}
 
@@ -1408,6 +1415,10 @@ void CEnemyHit::Init(void)
 		switch (m_type)
 		{
 		case TYPE_NORMAL:
+
+			// プレイヤーの方向を見る
+			pEnemy->AngleToPlayer();
+
 			// モーションの設定
 			pMotion->SetMotion(CEnemy::MOTIONTYPE_HIT, true, 5);
 			break;
@@ -4319,6 +4330,103 @@ void CEnemyRushSwing::CollisionPlayer(CEnemy* pEnemy, CMotion* pMotion)
 
 			// 状態の変更
 			pPlayer->ChangeState(make_shared<CPlayerRevengeAttack>());
+		}
+	}
+}
+
+//===================================================
+// コンストラクタ(早歩き)
+//===================================================
+CEnemyBriskMove::CEnemyBriskMove() : CEnemyState(ID_BRISK_MOVE)
+{
+	m_destPos = VEC3_NULL;
+}
+
+//===================================================
+// デストラクタ(早歩き)
+//===================================================
+CEnemyBriskMove::~CEnemyBriskMove()
+{
+}
+
+//===================================================
+// 初期化処理(早歩き)
+//===================================================
+void CEnemyBriskMove::Init(void)
+{
+	// 敵の取得
+	CEnemy* pEnemy = CEnemyState::GetEnemy();
+
+	// 敵が使われていないなら処理しない
+	if (pEnemy == nullptr) return;
+
+	// モーションクラスの取得
+	CMotion* pMotion = pEnemy->GetMotion();
+
+	// 位置の取得
+	D3DXVECTOR3 pos = pEnemy->GetPosition();
+
+	m_destPos.x = static_cast<float>(rand() % (DEST_RANGE * 2) - DEST_RANGE);
+	m_destPos.z = static_cast<float>(rand() % (DEST_RANGE * 2) - DEST_RANGE);
+
+	// 移動方向を求める
+	float fAngle = GetTargetAngle(m_destPos, pos) + D3DX_PI;
+
+	// 目的の方向を見る
+	pEnemy->SetAngle(fAngle);
+
+	// モーションがあるなら
+	if (pMotion != nullptr)
+	{
+		// モーションの再生
+		pMotion->SetMotion(CEnemy::MOTIONTYPE_BRISK_MOVE, true, 10);
+	}
+}
+
+//===================================================
+// 更新処理(早歩き)
+//===================================================
+void CEnemyBriskMove::Update(void)
+{
+	// 敵の取得
+	CEnemy* pEnemy = CEnemyState::GetEnemy();
+
+	// 敵が使われていないなら処理しない
+	if (pEnemy == nullptr) return;
+
+	// モーションクラスの取得
+	CMotion* pMotion = pEnemy->GetMotion();
+
+	// モーションがあるなら
+	if (pMotion != nullptr)
+	{
+		// モーションの再生
+		if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_BRISK_MOVE))
+		{
+			// 音の取得
+			CSound* pSound = CManager::GetSound();
+
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_WARK003);
+			}
+		}
+
+		// 移動する
+		pEnemy->GetMovement()->MoveForWard(10.0f);
+
+		// 位置の取得
+		D3DXVECTOR3 pos = pEnemy->GetPosition();
+
+		// 目的の位置までの距離を求める
+		float fDistance = GetDistance(m_destPos - pos);
+
+		// 目的の場所に到達したら
+		if (fDistance <= 100.0f)
+		{
+			// 状態の遷移
+			pEnemy->ChangeState(make_shared<CEnemyIdle>(2));
 		}
 	}
 }

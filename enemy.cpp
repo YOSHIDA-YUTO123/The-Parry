@@ -476,6 +476,9 @@ void CEnemy::Update(void)
 			// “G‚ð’Ç]‚·‚é
 			pCamera->SetTracking(CGameCamera::TRACKOBJ_ENEMY);
 
+			// “GŽ€–S
+			CGame::SetState(CGame::STATE_ENEMY_DEATH);
+
 			if (nMotionType == MOTIONTYPE_STANP_DAMAGE)
 			{
 				// Ž€–Só‘Ô‚ÌÝ’è
@@ -1043,7 +1046,8 @@ bool CEnemy::CollisionObstacle(D3DXVECTOR3 *pPos)
 		if (type != CObstacle::TYPE_TNT_BARREL)
 		{
 			// Ž€–Só‘Ô‚¶‚á‚È‚¢‚È‚ç
-			if (pMotion->GetBlendType() != MOTIONTYPE_DEATH && pMotion->GetBlendType() != MOTIONTYPE_DAMAGEL)
+			if (pMotion->GetBlendType() != MOTIONTYPE_DEATH && pMotion->GetBlendType() != MOTIONTYPE_DAMAGEL &&
+				pMotion->GetType() != MOTIONTYPE_DOWN && pMotion->GetType() != MOTIONTYPE_STANP_DOWN)
 			{
 				// ‰¹‚ÌŽæ“¾
 				CSound* pSound = CManager::GetSound();

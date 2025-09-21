@@ -213,6 +213,15 @@ void CBirdFlyMove::Update(void)
 	// ŽžŠÔ‚ª0‚É‚È‚Á‚½‚ç
 	if (m_nTime <= 0)
 	{
+		// ‰¹‚ÌŽæ“¾
+		CSound* pSound = CManager::GetSound();
+
+		if (pSound != nullptr)
+		{
+			// ’¹‚ª‰H‚Î‚½‚­
+			pSound->Play(CSound::SOUND_LABEL_BIRDSOUND,0.5f);
+		}
+
 		// ƒŠƒZƒbƒg
 		m_nTime = WING_DROP_TIME;
 

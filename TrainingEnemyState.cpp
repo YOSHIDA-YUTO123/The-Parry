@@ -192,6 +192,19 @@ void CTrainingEnemyAction::Update(void)
 	// 音の取得
 	CSound* pSound = CManager::GetSound();
 
+	// 敵の攻撃のカウンターの目安の表示
+	if (pMotion->IsEventFrame(40, 40, CTrainingEnemy::MOTIONTYPE_ACTION))
+	{
+		// モデルの位置の取得
+		D3DXVECTOR3 chestPos = pEnemy->GetModelPos(CTrainingEnemy::MODEL_CHEST);
+
+		// パーティクルの生成
+		auto pParticle = CParticle3DNormal::Create(chestPos, 100.0f, D3DXCOLOR(1.0f, 0.3f, 0.3f, 1.0f));
+
+		// パーティクルの設定
+		pParticle->SetParticle(15.0f, 240, 50, 1, 314);
+	}
+
 	if (pMotion->IsEventFrame(65, 65, CTrainingEnemy::MOTIONTYPE_ACTION))
 	{
 		if (pSound != nullptr)

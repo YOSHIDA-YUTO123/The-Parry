@@ -23,6 +23,7 @@
 #include"shadowS.h"
 #include "opening.h"
 #include "explosion.h"
+#include "sound.h"
 
 using namespace Const;							// 名前空間Constを使用する
 using namespace std;							// 名前空間stdを使用する
@@ -604,12 +605,20 @@ void CTNTBarrel::LandingShake(const D3DXVECTOR3 pos)
 	
 	float fHeight = 0.0f;
 
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
 	// 地面の着地していたら
 	if (pMeshField->Collision(pos, &fHeight))
 	{
 		// 着地したら
 		if (!m_bLanding)
 		{
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_BARRIEL);
+			}
 			// 爆発の生成
 			auto pExplotion = CExplosionManager::SetParam(pos, D3DXVECTOR2(70.0f, 70.0f), D3DXCOLOR(0.6f, 0.6f, 0.6f, 0.8f), 4, 3, 5);
 
