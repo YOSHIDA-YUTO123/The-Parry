@@ -40,6 +40,7 @@
 #include "BirdManager.h"
 #include"ExplosionArea.h"
 #include"sound.h"
+#include "Collision.h"
 //***************************************************
 // 定数定義
 //***************************************************
@@ -830,19 +831,13 @@ bool CEnemy::CollisionWepon(void)
 		//CEffect3D::Create(pos, 50.0f, VEC3_NULL, WHITE, 10);
 #endif // _DEBUG
 
-		// 円の判定の取得
-		CCollisionSphere* pCollision = CCollisionSphere::GetInstance();
+		CColliderSphere* playersphere = pPlayer->GetSphereCollider();
 
-		// 敵の武器に当たったら
-		if (pCollision != nullptr)
+		if (CCollisionSphere::Collision(m_pSphere.get(), playersphere))
 		{
-			CColliderSphere* playersphere = pPlayer->GetSphereCollider();
-
-			if (pCollision->Collision(m_pSphere.get(), playersphere))
-			{
-				return true;
-			}
+			return true;
 		}
+		
 	}
 
 	return false;
@@ -1213,11 +1208,8 @@ void CEnemy::SetAngle(const float fAngle)
 //===================================================
 bool CEnemy::CollisionFOV(const D3DXVECTOR3 pos)
 {
-	// 視界判定の取得
-	auto pCollision = CCollisionFOV::GetInstance();
-
 	// 視界内だったら
-	if (pCollision->Collision(pos, m_pFOV.get()))
+	if (CCollisionFOV::Collision(pos, m_pFOV.get()))
 	{
 		return true;
 	}
@@ -1230,9 +1222,6 @@ bool CEnemy::CollisionFOV(const D3DXVECTOR3 pos)
 //===================================================
 bool CEnemy::CollisionFOV(const D3DXVECTOR3 Targetpos, const float fLeftAngle, const float fRightAngle)
 {
-	// 視界判定の取得
-	auto pCollision = CCollisionFOV::GetInstance();
-
 	// 位置の取得
 	D3DXVECTOR3 myPos = CCharacter3D::GetPosition();
 
@@ -1243,7 +1232,7 @@ bool CEnemy::CollisionFOV(const D3DXVECTOR3 Targetpos, const float fLeftAngle, c
 	auto ColliderFOV = CColliderFOV::CreateCollider(myPos, Angle.y, fLeftAngle, fRightAngle,1000.0f);
 	
 	// 視界内だったら
-	if (pCollision->Collision(Targetpos, &ColliderFOV))
+	if (CCollisionFOV::Collision(Targetpos, &ColliderFOV))
 	{
 		return true;
 	}
@@ -1330,13 +1319,7 @@ CEnemy::RESULT CEnemy::WeponAttackResult(CPlayer* pPlayer)
 // 攻撃の結果を返す
 //===================================================
 CEnemy::RESULT CEnemy::AttackResult(CPlayer* pPlayer, const MODEL model,const float fRadius)
-{
-	// カプセルの当たり判定の取得
-	auto pCollisionCapsule = CCollisionCapsule::GetInstance();
-
-	// 取得できなかったら処理しない
-	if (pCollisionCapsule == nullptr) return RESULT_NONE;
-	
+{	
 	D3DXVECTOR3 pos = VEC3_NULL;
 
 	if (model != MODEL_NONE)
@@ -1357,7 +1340,7 @@ CEnemy::RESULT CEnemy::AttackResult(CPlayer* pPlayer, const MODEL model,const fl
 	auto pPlayerCapsule = pPlayer->GetCapsuleCollider();
 
 	// 円とカプセルの判定
-	if (pCollisionCapsule->CollisionSphere(pPlayerCapsule, &SphereCollider))
+	if (CCollisionCapsule::CollisionSphere(pPlayerCapsule, &SphereCollider))
 	{
 		// プレイヤーのモーションの取得
 		CMotion* pPlayerMotion = pPlayer->GetMotion();
@@ -1492,9 +1475,6 @@ void CEnemy::Config(const int nLife, const float fSpeed, const D3DXVECTOR3 Shado
 //===================================================
 bool CEnemy::CollisionObstacleToWepon(CObstacle *pObstacle)
 {
-	// 当たり判定の取得
-	auto pCollision = CCollisionCapsule::GetInstance();
-
 	// 使われていないなら処理しない
 	if (pObstacle == nullptr) return false;
 
@@ -1523,7 +1503,7 @@ bool CEnemy::CollisionObstacleToWepon(CObstacle *pObstacle)
 	// カプセルの生成
 	auto capsule = CColliderCapsule::CreateCollider(obstaclePos, obstacleTopPos, fRadius);
 
-	if (pCollision->Collision(m_pCapsule.get(),&capsule) || pCollision->Collision(&Weponcapsule, &capsule))
+	if (CCollisionCapsule::Collision(m_pCapsule.get(),&capsule) || CCollisionCapsule::Collision(&Weponcapsule, &capsule))
 	{
 		return true;
 	}
@@ -1697,15 +1677,12 @@ void CEnemy::CollisionPlayer(CMotion *pPlayerMotion,CPlayer *pPlayer)
 		// プレイヤーの右足の位置
 		D3DXVECTOR3 playerFootR = pPlayer->GetModelPos(11);
 
-		// 円の当たり判定の取得
-		CCollisionSphere* pSphere = CCollisionSphere::GetInstance();
-
 		// 右手の円
 		CColliderSphere FootRSphere = CColliderSphere::CreateCollider(playerFootR, 50.0f);
 		CColliderSphere ChestSphere = CColliderSphere::CreateCollider(chestpos, 250.0f);
 
 		// 手が当たったら
-		if (pSphere != nullptr && pSphere->Collision(&ChestSphere, &FootRSphere))
+		if (CCollisionSphere::Collision(&ChestSphere, &FootRSphere))
 		{
 			// どの攻撃モーションがでるか判定
 			SelectDamageMotion(nParrySuccess, playerFootR);
@@ -1718,15 +1695,12 @@ void CEnemy::CollisionPlayer(CMotion *pPlayerMotion,CPlayer *pPlayer)
 		// プレイヤーの右手の位置
 		D3DXVECTOR3 playerHandR = pPlayer->GetModelPos(5);
 
-		// 円の当たり判定の取得
-		CCollisionSphere* pSphere = CCollisionSphere::GetInstance();
-
 		// 右手の円
 		CColliderSphere HandRSphere = CColliderSphere::CreateCollider(playerHandR, 80.0f);
 		CColliderSphere ChestSphere = CColliderSphere::CreateCollider(chestpos, 250.0f);
 
 		// 手が当たったら
-		if (pSphere != nullptr && pSphere->Collision(&ChestSphere, &HandRSphere))
+		if (CCollisionSphere::Collision(&ChestSphere, &HandRSphere))
 		{
 			// どの攻撃モーションがでるか判定
 			SelectDamageMotion(nParrySuccess, playerHandR);
@@ -1739,15 +1713,12 @@ void CEnemy::CollisionPlayer(CMotion *pPlayerMotion,CPlayer *pPlayer)
 		// プレイヤーの位置
 		D3DXVECTOR3 playerPos = pPlayer->GetPosition();
 
-		// 円の当たり判定の取得
-		CCollisionSphere* pSphere = CCollisionSphere::GetInstance();
-
 		// 右手の円
 		CColliderSphere Sphere = CColliderSphere::CreateCollider(playerPos, 80.0f);
 		CColliderSphere ChestSphere = CColliderSphere::CreateCollider(chestpos, 250.0f);
 
 		// 手が当たったら
-		if (pSphere != nullptr && pSphere->Collision(&ChestSphere, &Sphere))
+		if (CCollisionSphere::Collision(&ChestSphere, &Sphere))
 		{
 			// エフェクトの生成
 			auto pEffect = CParticle3DNormal::Create(PlayerPos, 20.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));

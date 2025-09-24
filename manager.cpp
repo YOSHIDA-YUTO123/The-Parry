@@ -106,9 +106,6 @@ HRESULT CManager::Init(HINSTANCE hInstance,HWND hWnd, BOOL bWindow)
 	// マウスの初期化処理
 	if (FAILED(m_pInputMouse->Init(hWnd))) return E_FAIL;
 
-	// 当たり判定のマネージャーの生成
- 	CCollisionManager::CreateAll();
-
 	// ブロックのマネージャーの生成
 	CBlockManager::Create();
 

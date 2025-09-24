@@ -285,11 +285,8 @@ void CTutorial::Update(void)
 		m_pCamera->Update();
 	}
 
-	// ‰~‚Ì“–‚½‚è”»’è‚ÌŽæ“¾
-	auto pCollision = CCollisionSphere::GetInstance();
-
 	// ƒQ[ƒg‚Ì”ÍˆÍ“à‚É“ü‚Á‚½‚ç
-	if (pCollision != nullptr && pCollision->Collision(m_pPlayer->GetSphereCollider(), m_pSphere.get()))
+	if (CCollisionSphere::Collision(m_pPlayer->GetSphereCollider(), m_pSphere.get()))
 	{
 		if (pKeyboard->GetTrigger(DIK_RETURN) || pJoypad->GetTrigger(pJoypad->JOYKEY_START))
 		{

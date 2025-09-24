@@ -25,6 +25,7 @@
 #include "ParticleSpark.h"
 #include "enemy.h"
 #include "math.h"
+#include "transform.h"
 
 using MOTION = CPlayer::MOTIONTYPE; // プレイヤーの列挙型の使用
 using namespace std;				// 名前空間stdの使用

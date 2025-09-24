@@ -24,7 +24,7 @@
 #include "opening.h"
 #include "explosion.h"
 #include "sound.h"
-
+#include "Collision.h"
 using namespace Const;							// 名前空間Constを使用する
 using namespace std;							// 名前空間stdを使用する
 using namespace math;							// 名前空間mathを使用する
@@ -291,9 +291,6 @@ void CSpikeTrap::Draw(void)
 //==============================================
 bool CSpikeTrap::Collision(CColliderAABB *pCollider, D3DXVECTOR3* pushPos)
 {
-	// 当たり判定(矩形)の取得
-	auto pCollisionAABB = CCollisionAABB::GetInstance();
-
 	// 自分のコライダーの取得
 	auto pColliderAABB = CObstacle::GetCollider();
 
@@ -301,7 +298,7 @@ bool CSpikeTrap::Collision(CColliderAABB *pCollider, D3DXVECTOR3* pushPos)
 	int nDamageFace = 0;
 
 	// 矩形の判定
-	if (pCollisionAABB->Collision(pCollider, pColliderAABB, pushPos,&nDamageFace))
+	if (CCollisionAABB::Collision(pCollider, pColliderAABB, pushPos,&nDamageFace))
 	{
 		// ダメージを食らう面が同じだったら(またはすべて食らうなら)
 		if (m_nDamageFace == nDamageFace || m_nDamageFace == -1)
@@ -521,14 +518,11 @@ void CTNTBarrel::Draw(void)
 //==============================================
 bool CTNTBarrel::Collision(CColliderAABB* pCollider, D3DXVECTOR3* pushPos)
 {
-	// 当たり判定(矩形)の取得
-	auto pCollisionAABB = CCollisionAABB::GetInstance();
-
 	// 自分のコライダーの取得
 	auto pColliderAABB = CObstacle::GetCollider();
 
 	// 矩形の判定
-	if (pCollisionAABB->Collision(pCollider, pColliderAABB, pushPos))
+	if (CCollisionAABB::Collision(pCollider, pColliderAABB, pushPos))
 	{
 		return true;
 	}

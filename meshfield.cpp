@@ -22,6 +22,10 @@
 #include "player.h"
 #include "game.h"
 #include "math.h"
+#include "renderer.h"
+#include "textureManager.h" 
+#include "Collision.h"
+#include <string>
 
 using namespace Const;		// 名前空間Constを使用する
 using namespace std;		// 名前空間stdを使用する
@@ -40,10 +44,20 @@ namespace
 //================================================
 // コンストラクタ
 //================================================
-CMeshField::CMeshField(int nPriority) : CMesh(nPriority)
+CMeshField::CMeshField(int nPriority) : CObject(nPriority)
 {
-	m_fWidth = NULL;
-	m_fHeight = NULL;
+	D3DXMatrixIdentity(&m_mtxWorld);
+	m_pIdxBuffer = nullptr;
+	m_pVtxBuffer = nullptr;
+	m_nNumIdx = NULL;
+	m_nNumPolygon = NULL;
+	m_nNumVtx = NULL;
+	m_nTextureIdx = -1;
+	m_nSegV = 1;
+	m_nSegH = 1;
+	m_pos = VEC3_NULL;
+	m_rot = VEC3_NULL;
+	m_Size = VEC2_NULL;
 	m_Nor = VEC3_NULL;
 	m_apImpact = nullptr;
 }
@@ -62,22 +76,23 @@ CMeshField* CMeshField::Create(const D3DXVECTOR3 pos, const int nSegH, const int
 {
 	// メッシュフィールドを生成
 	CMeshField* pMeshField = new CMeshField;
-
-	if (pMeshField == nullptr) return nullptr;
 	
 	// 頂点数の設定
-	int nNumVtx = (nSegH + 1) * (nSegV + 1);
+	pMeshField->m_nNumVtx = (nSegH + 1) * (nSegV + 1);
 
 	// ポリゴン数の設定
-	int nNumPolygon = ((nSegH * nSegV) * 2) + (4 * (nSegV - 1));
+	pMeshField->m_nNumPolygon = ((nSegH * nSegV) * 2) + (4 * (nSegV - 1));
 
 	// インデックス数の設定
-	int nNumIndex = nNumPolygon + 2;
+	pMeshField->m_nNumIdx = pMeshField->m_nNumPolygon + 2;
 
-	// 頂点の設定
-	pMeshField->SetVtxElement(nNumVtx, nNumPolygon, nNumIndex);
-	pMeshField->SetSegment(nSegH, nSegV);
+	pMeshField->m_nSegH = nSegH;
+	pMeshField->m_nSegV = nSegV;
 
+	pMeshField->m_pos = pos;
+	pMeshField->m_Size = Size;
+	pMeshField->m_rot = rot;
+	
 	// 初期化処理
 	if (FAILED(pMeshField->Init()))
 	{
@@ -89,13 +104,6 @@ CMeshField* CMeshField::Create(const D3DXVECTOR3 pos, const int nSegH, const int
 		return nullptr;
 	}
 
-	// 設定処理
-	pMeshField->SetPosition(pos);
-	pMeshField->SetRotation(rot);
-	pMeshField->SetMeshField(nSegH, nSegV, pos, Size);
-	pMeshField->m_fWidth = Size.x;
-	pMeshField->m_fHeight = Size.y;
-
 	return pMeshField;
 }
 
@@ -104,13 +112,110 @@ CMeshField* CMeshField::Create(const D3DXVECTOR3 pos, const int nSegH, const int
 //================================================
 HRESULT CMeshField::Init(void)
 {
-	if (FAILED(CMesh::Init()))
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+	//頂点バッファの生成
+	if (FAILED(pDevice->CreateVertexBuffer(sizeof(VERTEX_3D) * m_nNumVtx,
+		D3DUSAGE_WRITEONLY,
+		FVF_VERTEX_3D,
+		D3DPOOL_MANAGED,
+		&m_pVtxBuffer,
+		NULL)))
+	{
+		return E_FAIL;
+	}
+
+	//インデックスバッファの生成
+	if (FAILED(pDevice->CreateIndexBuffer(sizeof(WORD) * m_nNumIdx,
+		D3DUSAGE_WRITEONLY,
+		D3DFMT_INDEX16,
+		D3DPOOL_MANAGED,
+		&m_pIdxBuffer,
+		NULL)))
 	{
 		return E_FAIL;
 	}
 
 	// テクスチャのIDの設定
-	CMesh::SetTextureID("data/TEXTURE/field/field.jpg");
+	SetTextureID("field.jpg");
+
+	// 頂点のカウント
+	int nCntVtx = 0;
+
+	// テクスチャの座標の割合
+	float fTexPosX = 1.0f / m_nSegH;
+	float fTexPosY = 1.0f / m_nSegV;
+
+	// 計算用の位置
+	D3DXVECTOR3 posWk;
+
+	VERTEX_3D* pVtx = NULL;
+
+	// 頂点バッファをロック
+	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+
+	for (int nCntZ = 0; nCntZ <= m_nSegV; nCntZ++)
+	{
+		for (int nCntX = 0; nCntX <= m_nSegH; nCntX++)
+		{
+			// 位置の設定
+			posWk.x = ((m_Size.x / m_nSegH) * nCntX) - (m_Size.x * 0.5f);
+			posWk.y = m_pos.y;
+			posWk.z = m_Size.y - ((m_Size.y / m_nSegV) * nCntZ) - (m_Size.y * 0.5f);
+
+			pVtx[nCntVtx].pos = posWk;
+
+			//法線ベクトルの設定
+			pVtx[nCntVtx].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+
+			//頂点カラーの設定
+			pVtx[nCntVtx].col = WHITE;
+
+			//テクスチャ座標の設定
+			pVtx[nCntVtx].tex = D3DXVECTOR2((fTexPosX * nCntX), (fTexPosY * nCntZ));
+
+			nCntVtx++;
+		}
+	}
+
+	// 頂点バッファをアンロック
+	m_pVtxBuffer->Unlock();
+
+	// インデックスバッファへのポインタ
+	WORD* pIdx;
+
+	// インデックスバッファのロック
+	m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
+
+	int IndxNum = m_nSegH + 1;//X
+
+	int IdxCnt = 0;//配列
+
+	int Num = 0;//
+
+	//インデックスの設定
+	for (int IndxCount1 = 0; IndxCount1 < m_nSegV; IndxCount1++)
+	{
+		for (int IndxCount2 = 0; IndxCount2 <= m_nSegH; IndxCount2++, IndxNum++, Num++)
+		{
+			// インデックスバッファの設定
+			pIdx[IdxCnt] = static_cast<WORD>(IndxNum);
+			pIdx[IdxCnt + 1] = static_cast<WORD>(Num);
+			IdxCnt += 2;
+		}
+
+		// NOTE:最後の行じゃなかったら
+		if (IndxCount1 < m_nSegV - 1)
+		{
+			pIdx[IdxCnt] = static_cast<WORD>(Num - 1);
+			pIdx[IdxCnt + 1] = static_cast<WORD>(IndxNum);
+			IdxCnt += 2;
+		}
+	}
+
+	//インデックスバッファのアンロック
+	m_pIdxBuffer->Unlock();
 
 	return S_OK;
 }
@@ -129,6 +234,7 @@ void CMeshField::Uninit(void)
 			m_apWave[nCnt] = nullptr;
 		}
 	}
+
 	// 要素のクリア
 	m_apWave.clear();
 
@@ -139,8 +245,23 @@ void CMeshField::Uninit(void)
 		delete m_apImpact;
 		m_apImpact = nullptr;
 	}
-	// 終了処理
-	CMesh::Uninit();
+
+	// 頂点バッファの破棄
+	if (m_pVtxBuffer != nullptr)
+	{
+		m_pVtxBuffer->Release();
+		m_pVtxBuffer = nullptr;
+	}
+
+	// インデックスバッファの破棄
+	if (m_pIdxBuffer != nullptr)
+	{
+		m_pIdxBuffer->Release();
+		m_pIdxBuffer = nullptr;
+	}
+
+	// 自分自身の破棄
+	CObject::Release();
 }
 
 //================================================
@@ -151,8 +272,8 @@ void CMeshField::Update(void)
 	// 法線の再設定
 	UpdateNor();
 
-	int nSegH = GetSegH();
-	int nSegV = GetSegV();
+	int nSegH = m_nSegH;
+	int nSegV = m_nSegV;
 
 	// 頂点数の設定
 	int nNumVtx = (nSegH + 1) * (nSegV + 1);
@@ -210,49 +331,33 @@ void CMeshField::Update(void)
 		return;
 	}
 	
+	VERTEX_3D* pVtx = NULL;
+
+	// 頂点バッファをロック
+	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 
 	// 頂点の高さを0に戻す
 	for (int nCnt = 0; nCnt < nNumVtx; nCnt++)
 	{
-		D3DXVECTOR3 vtxPos = GetVtxPos(nCnt);
-
-		if (vtxPos.y >= 0.0f)
+		// 0より高い所にあったら
+		if (pVtx[nCnt].pos.y >= 0.0f)
 		{
-			vtxPos.y += (0.0f - vtxPos.y) * 0.01f;
-			SetVtxPos(vtxPos, nCnt);
+			// 0にだんだん近づける
+			pVtx[nCnt].pos.y += (0.0f - pVtx[nCnt].pos.y) * 0.01f;
 		}
 
-		// 色の取得
-		D3DXCOLOR vtxcol = GetColor(nCnt);
+		// 色
+		D3DXCOLOR col = pVtx[nCnt].col;
 
 		// 色を白に近づける
-		vtxcol += (WHITE - vtxcol) * COLOR_EASE;
+		col += (WHITE - col) * COLOR_EASE;
 
 		// 色の設定
-		SetVtxColor(vtxcol, nCnt);
+		pVtx[nCnt].col = col;
 	}
 
-#endif // 0
-
-	
-#if 0
-
-	m_Wave.fTime += 1.0f / 25.0f;
-	
-	for (int nCnt = 0; nCnt < nNumVtx; nCnt++)
-	{
-		D3DXVECTOR3 pos = GetVtxPos(nCnt);
-
-		D3DXVECTOR3 diff = pPlayer->GetPosition() - pos;
-
-		float dis = sqrtf((diff.x * diff.x) + (diff.z * diff.z));
-
-		float offset = sinf((dis * 0.005f) - m_Wave.fTime);
-
-		pos.y = offset * 150.0f;
-		
-		SetVtxPos(pos, nCnt);
-	}
+	// 頂点バッファをアンロック
+	m_pVtxBuffer->Unlock();
 #endif // 0
 }
 
@@ -261,63 +366,53 @@ void CMeshField::Update(void)
 //================================================
 void CMeshField::Draw(void)
 {
-	// 描画処理
-	CMesh::Draw();
-}
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
-//================================================
-// メッシュフィールドの設定処理
-//================================================
-void CMeshField::SetMeshField(const int nSegH, const int nSegV, const D3DXVECTOR3 pos,const D3DXVECTOR2 Size)
-{
-	int nCntVtx = 0;
+	// テクスチャクラスの取得
+	CTextureManager* pTexture = CManager::GetTexture();
 
-	float fTexPosX = 1.0f / nSegH;
-	float fTexPosY = 1.0f / nSegV;
+	//計算用のマトリックス
+	D3DXMATRIX mtxRot, mtxTrans;
 
-	D3DXVECTOR3 posWk;
+	//ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&m_mtxWorld);
 
-	for (int nCntZ = 0; nCntZ <= nSegV; nCntZ++)
+	//向きを反映
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
+
+	//位置を反映
+	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
+	//ワールドマトリックスの設定
+	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+
+	//頂点バッファをデバイスのデータストリームに設定
+	pDevice->SetStreamSource(0, m_pVtxBuffer, 0, sizeof(VERTEX_3D));
+
+	//インデックスバッファをデータストリームに設定
+	pDevice->SetIndices(m_pIdxBuffer);
+
+	//テクスチャフォーマットの設定
+	pDevice->SetFVF(FVF_VERTEX_3D);
+
+	// テクスチャが無かったら
+	if (m_nTextureIdx == -1)
 	{
-		for (int nCntX = 0; nCntX <= nSegH; nCntX++)
-		{
-			// 位置の設定
-			posWk.x = ((Size.x / nSegH) * nCntX) - (Size.x * 0.5f);
-			posWk.y = pos.y;
-			posWk.z = Size.y - ((Size.y / nSegV) * nCntZ) - (Size.y * 0.5f);
+		//テクスチャの設定
+		pDevice->SetTexture(0, NULL);
+	}
+	else
+	{
+		//テクスチャの設定
+		pDevice->SetTexture(0, pTexture->GetAdress(m_nTextureIdx));
 
-			// 頂点バッファの設定
-			SetVtxBuffer(posWk, nCntVtx, D3DXVECTOR2((fTexPosX * nCntX), (fTexPosY * nCntZ)));
-
-			nCntVtx++;
-		}
 	}
 
-	int IndxNum = nSegH + 1;//X
-
-	int IdxCnt = 0;//配列
-
-	int Num = 0;//
-
-	//インデックスの設定
-	for (int IndxCount1 = 0; IndxCount1 < nSegV; IndxCount1++)
-	{
-		for (int IndxCount2 = 0; IndxCount2 <= nSegH; IndxCount2++, IndxNum++, Num++)
-		{
-			// インデックスバッファの設定
-			SetIndexBuffer((WORD)IndxNum, IdxCnt);
-			SetIndexBuffer((WORD)Num, IdxCnt + 1);
-			IdxCnt += 2;
-		}
-
-		// NOTE:最後の行じゃなかったら
-		if (IndxCount1 < nSegV - 1)
-		{
-			SetIndexBuffer((WORD)Num - 1, IdxCnt);
-			SetIndexBuffer((WORD)IndxNum, IdxCnt + 1);
-			IdxCnt += 2;
-		}
-	}
+	//ポリゴンの描画
+	pDevice->DrawIndexedPrimitive(D3DPT_TRIANGLESTRIP, 0, 0, m_nNumVtx, 0, m_nNumPolygon);
 }
 
 //================================================
@@ -328,15 +423,15 @@ bool CMeshField::Collision(const D3DXVECTOR3 pos,float *pOutHeight)
 	// 着地判定
 	bool bLanding = false;
 
-	int nSegH = GetSegH();
-	int nSegV = GetSegV();
+	int nSegH = m_nSegH;
+	int nSegV = m_nSegV;
 
 	// 1マスのサイズ
-	float GridSizeX = m_fWidth / (float)nSegH;
-	float GridSizeZ = m_fHeight / (float)nSegV;
+	float GridSizeX = m_Size.x / (float)nSegH;
+	float GridSizeZ = m_Size.y / (float)nSegV;
 
-	float X = pos.x + (m_fWidth * 0.5f);
-	float Z = (m_fHeight * 0.5f) - pos.z;
+	float X = pos.x + (m_Size.x * 0.5f);
+	float Z = (m_Size.y * 0.5f) - pos.z;
 
 	// 何番目のポリゴンか
 	int polyX = (int)(X / GridSizeX);
@@ -351,25 +446,37 @@ bool CMeshField::Collision(const D3DXVECTOR3 pos,float *pOutHeight)
 	// インデックス数の設定
 	int nNumIndex = nNumPolygon + 2;
 
+	VERTEX_3D* pVtx = NULL;
+
+	// 頂点バッファをロック
+	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+
+	// インデックスバッファへのポインタ
+	WORD* pIdx;
+
+	// インデックスバッファのロック
+	m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
+
 	for (int nCnt = 0; nCnt < NUM_POLYGON; nCnt++)
 	{
 		// 頂点のインデックス
 		int nCntVertex = (polyIndex + nCnt);
 
 		// マイナスだったら
-		if (nCntVertex < 0 || nCntVertex > nNumIndex) break;
+		if (nCntVertex < 0 || nCntVertex > nNumIndex) continue;
 
 		// インデックスを取得
-		int nIdx0 = GetIndex(nCntVertex);
-		int nIdx1 = GetIndex(nCntVertex + 1);
-		int nIdx2 = GetIndex(nCntVertex + 2);
+		int nIdx0 = pIdx[nCntVertex];
+		int nIdx1 = pIdx[nCntVertex + 1];
+		int nIdx2 = pIdx[nCntVertex + 2];
 
-		if (nIdx0 >= nCntVertex || nIdx1 >= nCntVertex || nIdx2 >= nCntVertex) continue;
+		//// オーバーしていたら
+		//if (nIdx0 >= nCntVertex || nIdx1 >= nCntVertex || nIdx2 >= nCntVertex) continue;
 
 		// 頂点を取得
-		D3DXVECTOR3 vtx0 = GetVtxPos(nIdx0);
-		D3DXVECTOR3 vtx1 = GetVtxPos(nIdx1);
-		D3DXVECTOR3 vtx2 = GetVtxPos(nIdx2);
+		D3DXVECTOR3 vtx0 = pVtx[nIdx0].pos;
+		D3DXVECTOR3 vtx1 = pVtx[nIdx1].pos;
+		D3DXVECTOR3 vtx2 = pVtx[nIdx2].pos;
 
 		D3DXVECTOR3 edge0 = vtx1 - vtx0; // 辺ベクトル0
 		D3DXVECTOR3 edge1 = vtx2 - vtx1; // 辺ベクトル1
@@ -436,8 +543,6 @@ bool CMeshField::Collision(const D3DXVECTOR3 pos,float *pOutHeight)
 			// プレイヤーの位置に基づいて、プレイヤーのY位置を計算
 			float PosY = (Normal.x * pos.x + Normal.z * pos.z + D) / -Normal.y;
 
-			D3DXVECTOR3 field = GetPosition();
-
 			D3DXVECTOR3 vec = vtx0 - pos;
 			D3DXVec3Normalize(&vec, &vec);
 
@@ -446,7 +551,7 @@ bool CMeshField::Collision(const D3DXVECTOR3 pos,float *pOutHeight)
 
 			if (pOutHeight != nullptr)
 			{
-				*pOutHeight = field.y + PosY;
+				*pOutHeight = m_pos.y + PosY;
 			}
 
 			if (dot >= 0.0f)
@@ -456,6 +561,12 @@ bool CMeshField::Collision(const D3DXVECTOR3 pos,float *pOutHeight)
 			}
 		}
 	}
+
+	//インデックスバッファのアンロック
+	m_pIdxBuffer->Unlock();
+
+	// 頂点バッファをアンロック
+	m_pVtxBuffer->Unlock();
 
 	return bLanding;//判定を返す
 }
@@ -496,8 +607,13 @@ void CMeshField::ResetImpact(D3DXVECTOR3 dir, const CMeshFieldImpact::OBJ obj, c
 void CMeshField::UpdateNor(void)
 {
 	int nCnt = 0;
-	int nSegH = GetSegH();
-	int nSegV = GetSegV();
+	int nSegH = m_nSegH;
+	int nSegV = m_nSegV;
+
+	VERTEX_3D* pVtx = NULL;
+
+	// 頂点バッファをロック
+	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 
 	// 頂点数分調べる
 	for (int nCntZ = 0; nCntZ <= nSegV; nCntZ++)
@@ -541,9 +657,9 @@ void CMeshField::UpdateNor(void)
 					nIdx1 = 1;
 					nIdx2 = nSegH + 1;
 
-					vtx0 = GetVtxPos(nIdx0);
-					vtx1 = GetVtxPos(nIdx1);
-					vtx2 = GetVtxPos(nIdx2);
+					vtx0 = pVtx[nIdx0].pos;
+					vtx1 = pVtx[nIdx1].pos;
+					vtx2 = pVtx[nIdx2].pos;
 
 					vec0 = vtx1 - vtx0;
 					vec1 = vtx2 - vtx0;
@@ -557,9 +673,9 @@ void CMeshField::UpdateNor(void)
 					nIdx1 = (nSegH + 1) * (nSegV - 1);
 					nIdx2 = ((nSegH + 1) * nSegV) + 1;
 
-					vtx0 = GetVtxPos(nIdx0);
-					vtx1 = GetVtxPos(nIdx1);
-					vtx2 = GetVtxPos(nIdx2);
+					vtx0 = pVtx[nIdx0].pos;
+					vtx1 = pVtx[nIdx1].pos;
+					vtx2 = pVtx[nIdx2].pos;
 
 					vec0 = vtx1 - vtx0;
 					vec1 = vtx2 - vtx0;
@@ -573,10 +689,10 @@ void CMeshField::UpdateNor(void)
 					nIdx1 = nCnt + 1;
 					nIdx2 = nCnt + (nSegH + 1);
 
-					vtx0 = GetVtxPos(nIdx0);
-					vtx1 = GetVtxPos(nIdx1);
-					vtx2 = GetVtxPos(nIdx2);
-					vtx3 = GetVtxPos(nCnt);
+					vtx0 = pVtx[nIdx0].pos;
+					vtx1 = pVtx[nIdx1].pos;
+					vtx2 = pVtx[nIdx2].pos;
+					vtx3 = pVtx[nCnt].pos;
 
 					vec0 = vtx0 - vtx3;
 					vec1 = vtx1 - vtx3;
@@ -595,10 +711,10 @@ void CMeshField::UpdateNor(void)
 				nIdx1 = nCnt - 1;
 				nIdx2 = nCnt + 1;
 
-				vtx0 = GetVtxPos(nCnt);
-				vtx1 = GetVtxPos(nIdx1);
-				vtx2 = GetVtxPos(nIdx2);
-				vtx3 = GetVtxPos(nIdx0);
+				vtx0 = pVtx[nCnt].pos;
+				vtx1 = pVtx[nIdx1].pos;
+				vtx2 = pVtx[nIdx2].pos;
+				vtx3 = pVtx[nIdx0].pos;
 
 				vec0 = vtx1 - vtx0;
 				vec1 = vtx2 - vtx0;
@@ -616,9 +732,9 @@ void CMeshField::UpdateNor(void)
 				nIdx1 = nSegH - 1;
 				nIdx2 = nSegH + 1 + nCntX;
 
-				vtx0 = GetVtxPos(nIdx0);
-				vtx1 = GetVtxPos(nIdx1);
-				vtx2 = GetVtxPos(nIdx2);
+				vtx0 = pVtx[nIdx0].pos;
+				vtx1 = pVtx[nIdx1].pos;
+				vtx2 = pVtx[nIdx2].pos;
 
 				vec0 = vtx1 - vtx0;
 				vec1 = vtx2 - vtx0;
@@ -632,10 +748,10 @@ void CMeshField::UpdateNor(void)
 				nIdx1 = nCnt - (nSegH + 1);
 				nIdx2 = nCnt + 1;
 
-				vtx0 = GetVtxPos(nCnt);
-				vtx1 = GetVtxPos(nIdx0);
-				vtx2 = GetVtxPos(nIdx1);
-				vtx3 = GetVtxPos(nIdx2);
+				vtx0 = pVtx[nCnt].pos;
+				vtx1 = pVtx[nIdx0].pos;
+				vtx2 = pVtx[nIdx1].pos;
+				vtx3 = pVtx[nIdx2].pos;
 
 				vec0 = vtx1 - vtx0;
 				vec1 = vtx2 - vtx0;
@@ -653,9 +769,9 @@ void CMeshField::UpdateNor(void)
 				nIdx1 = nIdx0 - (nSegH + 1);
 				nIdx2 = nIdx0 - 1;
 
-				vtx0 = GetVtxPos(nIdx0);
-				vtx1 = GetVtxPos(nIdx1);
-				vtx2 = GetVtxPos(nIdx2);
+				vtx0 = pVtx[nIdx0].pos;
+				vtx1 = pVtx[nIdx1].pos;
+				vtx2 = pVtx[nIdx2].pos;
 
 				vec0 = vtx1 - vtx0;
 				vec1 = vtx2 - vtx0;
@@ -669,10 +785,10 @@ void CMeshField::UpdateNor(void)
 				nIdx1 = nCnt - 1;
 				nIdx2 = nCnt + (nSegH + 1);
 
-				vtx0 = GetVtxPos(nIdx0);
-				vtx1 = GetVtxPos(nIdx1);
-				vtx2 = GetVtxPos(nIdx2);
-				vtx3 = GetVtxPos(nCnt);
+				vtx0 = pVtx[nIdx0].pos;
+				vtx1 = pVtx[nIdx1].pos;
+				vtx2 = pVtx[nIdx2].pos;
+				vtx3 = pVtx[nCnt].pos;
 
 				vec0 = vtx0 - vtx3;
 				vec1 = vtx1 - vtx3;
@@ -691,11 +807,11 @@ void CMeshField::UpdateNor(void)
 				nIdx2 = nCnt + 1;
 				nIdx3 = nCnt + (nSegH + 1);
 
-				vtx0 = GetVtxPos(nCnt);
-				vtx1 = GetVtxPos(nIdx0);
-				vtx2 = GetVtxPos(nIdx1);
-				vtx3 = GetVtxPos(nIdx2);
-				vtx4 = GetVtxPos(nIdx3);
+				vtx0 = pVtx[nCnt].pos;
+				vtx1 = pVtx[nIdx0].pos;
+				vtx2 = pVtx[nIdx1].pos;
+				vtx3 = pVtx[nIdx2].pos;
+				vtx4 = pVtx[nIdx3].pos;
 
 				vec0 = vtx1 - vtx0; // 左
 				vec1 = vtx2 - vtx0; // 上
@@ -711,12 +827,38 @@ void CMeshField::UpdateNor(void)
 				Normal = (Nor0 + Nor1 + Nor2 + Nor3) * 0.25f;
 			}
 
+			// 正規化
 			D3DXVec3Normalize(&Normal, &Normal);
 
-			SetNormal(Normal, nCnt);
+			// 法線の再設定
+			pVtx[nCnt].nor = Normal;
+
 			nCnt++;
 		}
 	}
+
+	// 頂点バッファをアンロック
+	m_pVtxBuffer->Unlock();
+}
+
+//================================================
+// 頂点座標の取得
+//================================================
+D3DXVECTOR3 CMeshField::GetVtxPos(const int nIdx)
+{
+	VERTEX_3D* pVtx = NULL;
+
+	D3DXVECTOR3 OutPos;
+
+	// 頂点バッファをロック
+	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+
+	OutPos = pVtx[nIdx].pos;
+
+	// 頂点バッファのアンロック
+	m_pVtxBuffer->Unlock();
+
+	return OutPos;
 }
 
 //================================================
@@ -743,58 +885,58 @@ void CMeshField::SetImpact(CMeshFieldImpact::Config config)
 	}
 }
 
-////================================================
-//// メッシュフィールドのロード
-////================================================
-//void CMeshField::Load(void)
-//{
-//	fstream file("data/system.ini"); // ファイルを開く
-//	string line; // ファイルの文字列読み取り用
-//	string input; // 値を代入する
-//
-//	// ファイルを開けたら
-//	if (file.is_open())
-//	{
-//		// ロードのマネージャの生成
-//		CLoadManager* pLoadManager = new CLoadManager;
-//
-//		// 最後じゃないなら
-//		while (getline(file, line))
-//		{
-//			// プレイヤーのモーションファイルを読み取ったら
-//			if (line.find("FIELD_TEXTURE") != string::npos)
-//			{
-//				size_t equal_pos = line.find("="); // =の位置
-//
-//				// [=] から先を求める
-//				input = line.substr(equal_pos + 1);
-//
-//				// ファイルの名前を取得
-//				string file_name = pLoadManager->GetString(input);
-//
-//				// ファイルの名前を代入
-//				const char* FILE_NAME = file_name.c_str();
-//
-//				// テクスチャのIDの設定
-//				CMesh::SetTextureID(FILE_NAME);
-//			}
-//		}
-//
-//		// ロードのマネージャーの破棄
-//		if (pLoadManager != nullptr)
-//		{
-//			delete pLoadManager;
-//			pLoadManager = nullptr;
-//		}
-//		// ファイルを閉じる
-//		file.close();
-//	}
-//	else
-//	{
-//		MessageBox(NULL, "system.iniが開けません", "ファイルが存在しません。", MB_OK | MB_ICONWARNING);
-//		return;
-//	}
-//}
+//================================================
+// 頂点座標の設定
+//================================================
+void CMeshField::SetVtxPos(const D3DXVECTOR3 pos, const int nIdx)
+{
+	VERTEX_3D* pVtx = NULL;
+
+	// 頂点バッファをロック
+	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+
+	pVtx[nIdx].pos = pos;
+
+	// 頂点バッファのアンロック
+	m_pVtxBuffer->Unlock();
+}
+
+//================================================
+// 色の設定
+//================================================
+void CMeshField::SetColor(const D3DXCOLOR col, const int nIdx)
+{
+	VERTEX_3D* pVtx = NULL;
+
+	// 頂点バッファをロック
+	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+
+	pVtx[nIdx].col = col;
+
+	// 頂点バッファのアンロック
+	m_pVtxBuffer->Unlock();
+}
+
+//================================================
+// テクスチャのIDの設定処理
+//================================================
+void CMeshField::SetTextureID(const char* pTextureName)
+{
+	// テクスチャマネージャーの取得
+	CTextureManager* pTexture = CManager::GetTexture();
+
+	// ファイルパス
+	string filePath = "data/TEXTURE/field/";
+
+	// 文字列の連結
+	filePath += pTextureName;
+
+	if (pTexture != nullptr)
+	{
+		// テクスチャのIDの取得
+		m_nTextureIdx = pTexture->Register(filePath.c_str());
+	}
+}
 
 //================================================
 // コンストラクタ
@@ -879,9 +1021,6 @@ bool CMeshFieldWave::Update(CMeshField* pMeshField,const int nNumVtx)
 		// 範囲内だったら
 		if (dis >= fTimeInRadius && dis <= fTimeOutRadius)
 		{
-			////頂点カラーの設定
-			//pMeshField->SetVtxColor(D3DXCOLOR(0.4f, 0.4f, 0.4f, 1.0f), nCnt);
-
 			// 高さの設定
 			float dest = m_Confing.fHeight + sinf(dis * m_Confing.fcoef);
 
@@ -890,9 +1029,6 @@ bool CMeshFieldWave::Update(CMeshField* pMeshField,const int nNumVtx)
 		}
 		else
 		{
-			//// 色の設定
-			//pMeshField->SetVtxColor(WHITE, nCnt);
-
 			// 目的の高さに近づける
 			pos.y += (0.0f - pos.y) * 0.05f;
 		}
@@ -1060,14 +1196,11 @@ bool CMeshFieldImpact::Update(CMeshField* pMeshField, const int nNumVtx)
 			// コライダーの作成
 			CColliderSphere spere = m_pSphere->CreateCollider(vtxPos,50.0f);
 
-			// 当たり判定の取得
-			CCollisionSphere* pCollision = CCollisionSphere::GetInstance();
-
 			// 円と円の判定
-			if (pCollision != nullptr && pCollision->Collision(&spere, m_pSphere.get()))
+			if (CCollisionSphere::Collision(&spere, m_pSphere.get()))
 			{
 				//頂点カラーの設定
-				pMeshField->SetVtxColor(D3DXCOLOR(0.4f, 0.4f, 0.4f, 1.0f), nCnt);
+				pMeshField->SetColor(D3DXCOLOR(0.4f, 0.4f, 0.4f, 1.0f), nCnt);
 
 				vtxPos.y += (m_Config.fHeight - vtxPos.y) * 0.3f;
 			}
@@ -1107,29 +1240,23 @@ bool CMeshFieldImpact::Collision(const D3DXVECTOR3 pos, const float fRadius,cons
 	// コライダーの作成
 	CColliderSphere sphere = m_pSphere->CreateCollider(NewPos, fRadius);
 
-	// 当たり判定の取得
-	CCollisionSphere* pCollision = CCollisionSphere::GetInstance();
-
-	if (pCollision != nullptr)
+	// 当たり判定
+	if (CCollisionSphere::Collision(&sphere, m_pSphere.get()) && myObj != m_Config.ObjType)
 	{
-		// 当たり判定
-		if (pCollision->Collision(&sphere, m_pSphere.get()) && myObj != m_Config.ObjType)
+		if (pFirstPos != nullptr)
 		{
-			if (pFirstPos != nullptr)
-			{
-				// 発射地点を設定
-				*pFirstPos = m_Config.FirstPos;
-			}
-
-			if (pImpactPos != nullptr)
-			{
-				// 衝撃波の位置を設定
-				*pImpactPos = m_Config.pos;
-			}
-			return true;
+			// 発射地点を設定
+			*pFirstPos = m_Config.FirstPos;
 		}
-	}
 
+		if (pImpactPos != nullptr)
+		{
+			// 衝撃波の位置を設定
+			*pImpactPos = m_Config.pos;
+		}
+		return true;
+	}
+	
 	return false;
 }
 

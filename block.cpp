@@ -166,12 +166,6 @@ void CBlock::Draw(void)
 //===================================================
 bool CBlock::Collision(CColliderAABB* pAABB,D3DXVECTOR3 *pPushPos)
 {
-	// AABB‚ÌŽæ“¾
-	auto pCollision = CCollisionAABB::GetInstance();
-
-	// Žæ“¾‚Å‚«‚È‚©‚Á‚½‚çˆ—‚µ‚È‚¢
-	if (pCollision == nullptr) return false;
-
 	// null‚¾‚Á‚½‚çˆ—‚µ‚È‚¢
 	if (m_pAABB == nullptr) return false;
 
@@ -179,7 +173,7 @@ bool CBlock::Collision(CColliderAABB* pAABB,D3DXVECTOR3 *pPushPos)
 	if (pAABB == nullptr) return false;
 
 	// ‹éŒ`‚Ì”»’è
-	if (pCollision->Collision(pAABB, m_pAABB.get(), pPushPos))
+	if (CCollisionAABB::Collision(pAABB, m_pAABB.get(), pPushPos))
 	{
 		return true;
 	}

@@ -21,15 +21,11 @@
 class CMain
 {
 public:
+	CMain();
 	~CMain();
-	static void Create(void);
-	static CMain* GetInstance(void) { return m_pInstance; }
-	void Uninit(void);
 	void ToggleFullscreen(HWND hWnd); // フルスクリーン
 private:
-	CMain();
-	static 	CMain* m_pInstance;		  // 自分のインスタンス
-	bool m_bFullScreen;				  // フルスクリーンかどうか
 	RECT m_windowRect;				  // ウィンドウのサイズ
+	bool m_bFullScreen;				  // フルスクリーンかどうか
 };
 #endif

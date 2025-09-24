@@ -16,11 +16,6 @@
 #include "manager.h"
 
 //**************************************************
-// 静的メンバ変数宣言
-//**************************************************
-CMain* CMain::m_pInstance = nullptr; // 自分のインスタンス
-
-//**************************************************
 // プロトタイプ宣言
 //**************************************************
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -106,9 +101,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 		pManager = new CManager;
 	}
 
-	// メインクラスの生成
-	CMain::Create();
-
 	// 初期化処理
 	if (FAILED(pManager->Init(hInstance,hWnd, TRUE)))
 	{
@@ -148,7 +140,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 					// FPSの設定
 					pManager->SetFps(fps);
 				}
-
+				
 				dwFPSLastTime = dwCurrentTime; // FPSを計測した時刻を保存
 				dwFrameCount = 0; // フレームカウントをクリア
 
@@ -182,15 +174,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hInstancePrev, _
 		pManager = nullptr;
 	}
 
-	// メインの取得
-	CMain* pMain = CMain::GetInstance();
-
-	// メインの破棄
-	if (pMain != nullptr)
-	{
-		pMain->Uninit();
-		pMain = nullptr;
-	}
 	// ウインドウクラスの登録を解除
 	UnregisterClass(CLASS_NAME, wcex.hInstance);
 
@@ -204,8 +187,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	const RECT rect = { 0,0, SCREEN_WIDTH,SCREEN_HEIGHT }; // ウインドウの領域
 
-		// メインの取得
-	CMain* pMain = CMain::GetInstance();
+	static CMain main;
 
 	switch (uMsg)
 	{
@@ -233,10 +215,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 			break;
 		case VK_F11:
-			if (pMain != nullptr)
-			{
-				pMain->ToggleFullscreen(hWnd);	// F11でフルスクリーン
-			}
+			// フルスクリーン
+			main.ToggleFullscreen(hWnd);
 			break;
 		}
 	}
@@ -257,30 +237,6 @@ CMain::CMain()
 //==================================================
 CMain::~CMain()
 {
-}
-
-//==================================================
-// 生成処理
-//==================================================
-void CMain::Create(void)
-{
-	if (m_pInstance == nullptr)
-	{
-		m_pInstance = new CMain;
-	}
-}
-
-//==================================================
-// 終了処理
-//==================================================
-void CMain::Uninit(void)
-{
-	// 自分自身の破棄
-	if (m_pInstance != nullptr)
-	{
-		delete m_pInstance;
-		m_pInstance = nullptr;
-	}
 }
 
 //==================================================

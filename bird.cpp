@@ -293,12 +293,6 @@ void CBird::ChangeState(std::shared_ptr<CBirdState> pNewState)
 //===================================================
 bool CBird::CheckDistance(const D3DXVECTOR3 otherPos, const float fRadius)
 {
-	// “–‚½‚è”»’è‚Ìæ“¾
-	auto pCollsionSphere = CCollisionSphere::GetInstance();
-
-	// æ“¾‚Å‚«‚È‚©‚Á‚½‚çˆ—‚µ‚È‚¢
-	if (pCollsionSphere == nullptr) return false;
-
 	// ˆÊ’u‚Ìæ“¾
 	D3DXVECTOR3 pos = CCharacter3D::GetPosition();
 
@@ -309,7 +303,7 @@ bool CBird::CheckDistance(const D3DXVECTOR3 otherPos, const float fRadius)
 	auto OtherSphere = CColliderSphere::CreateCollider(otherPos, fRadius);
 
 	// ‰~‚Ì“–‚½‚è”»’è
-	if (pCollsionSphere->Collision(&mySphere, &OtherSphere))
+	if (CCollisionSphere::Collision(&mySphere, &OtherSphere))
 	{
 		// ó‘Ô‚Ì•ÏX
 		ChangeState(make_shared<CBirdFly>());

@@ -76,14 +76,9 @@ public:
 	}FACE;
 
 	~CCollisionAABB();
-	static void Create(void);
-	static CCollisionAABB* GetInstance(void) { return m_pAABB.get(); }
-	bool Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox, D3DXVECTOR3* pushPos = nullptr,int *pFace = nullptr);
-	D3DXVECTOR3 GetPushPos(void) { return m_pushPos; }
+	static bool Collision(CColliderAABB* pMyBox, CColliderAABB* pTargetBox, D3DXVECTOR3* pushPos = nullptr,int *pFace = nullptr);
 private:
 	CCollisionAABB();
-	static std::unique_ptr<CCollisionAABB> m_pAABB; // 自分のインスタンス
-	D3DXVECTOR3 m_pushPos;
 };
 
 //************************************************
@@ -93,14 +88,10 @@ class CCollisionSphere : public CCollision
 {
 public:
 	~CCollisionSphere();
-	// コライダーの作成処理
-	static void Create(void);
-	static CCollisionSphere* GetInstance(void) { return m_pSphere.get(); }
 
-	bool Collision(CColliderSphere* myCollider, CColliderSphere* otherCollider);
+	static bool Collision(CColliderSphere* myCollider, CColliderSphere* otherCollider);
 private:
 	CCollisionSphere();
-	static std::unique_ptr<CCollisionSphere> m_pSphere; // 自分のインスタンス
 };
 
 //************************************************
@@ -110,14 +101,10 @@ class CCollisionFOV : public CCollision
 {
 public:
 	~CCollisionFOV();
-	static void Create(void);
-	static CCollisionFOV* GetInstance(void) { return m_pFOV.get(); }
 
-	bool Collision(const D3DXVECTOR3 otherpos, CColliderFOV* pFOV);
-	//CCollisionFOV CreateCollider(const D3DXVECTOR3 pos, const float fAngle, const float fAngleLeft, const float fAngleRight);
+	static bool Collision(const D3DXVECTOR3 otherpos, CColliderFOV* pFOV);
 private:
 	CCollisionFOV();
-	static std::unique_ptr<CCollisionFOV> m_pFOV; // 自分のインスタンス
 };
 
 //************************************************
@@ -127,26 +114,12 @@ class CCollisionCapsule : public CCollision
 {
 public:
 	~CCollisionCapsule();
-	static void Create(void);
-	static CCollisionCapsule* GetInstance(void) { return m_pCapsule.get(); }
 
-	bool Collision(CColliderCapsule* myCapsule, CColliderCapsule* otherCapsule, D3DXVECTOR3* NearPos1 = nullptr, D3DXVECTOR3* NearPos2 = nullptr);
-	bool CollisionSphere(CColliderCapsule* pCapsule, CColliderSphere* pSphere);
+	static bool Collision(CColliderCapsule* myCapsule, CColliderCapsule* otherCapsule, D3DXVECTOR3* NearPos1 = nullptr, D3DXVECTOR3* NearPos2 = nullptr);
+	static bool CollisionSphere(CColliderCapsule* pCapsule, CColliderSphere* pSphere);
 private:
 	CCollisionCapsule();
-	float ClosestPtSegmentSegment(D3DXVECTOR3 Start1, D3DXVECTOR3 End1, D3DXVECTOR3 Start2, D3DXVECTOR3 End2, float* pParam1, float* pParam2, D3DXVECTOR3* c1osestPos1, D3DXVECTOR3* c1osestPos2);
-	static std::unique_ptr< CCollisionCapsule> m_pCapsule;
+	static float ClosestPtSegmentSegment(D3DXVECTOR3 Start1, D3DXVECTOR3 End1, D3DXVECTOR3 Start2, D3DXVECTOR3 End2, float* pParam1, float* pParam2, D3DXVECTOR3* c1osestPos1, D3DXVECTOR3* c1osestPos2);
 };
-//************************************************
-// 当たり判定のマネージャークラスの定義
-//************************************************
-class CCollisionManager
-{
-public:
-	~CCollisionManager();
-	static void CreateAll(void);
-	void Uninit(void);
-private:
-	CCollisionManager();
-};
+
 #endif

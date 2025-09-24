@@ -391,14 +391,11 @@ void CTrainingEnemy::CollisionPlayerAttack(void)
 		// プレイヤーの右足の位置
 		D3DXVECTOR3 playerFootR = pPlayer->GetModelPos(CPlayer::MODEL_FOOTR);
 
-		// 円の当たり判定の取得
-		CCollisionCapsule* pCapsule = CCollisionCapsule::GetInstance();
-
 		// 右手の円
 		CColliderSphere FootRSphere = CColliderSphere::CreateCollider(playerFootR, 250.0f);
 
 		// 手が当たったら
-		if (pCapsule != nullptr && pCapsule->CollisionSphere(m_pCapsule.get(), &FootRSphere))
+		if (CCollisionCapsule::CollisionSphere(m_pCapsule.get(), &FootRSphere))
 		{
 			// ダメ―ジモーションの設定
 			SelectDamageMotion(nSuccess, playerFootR);

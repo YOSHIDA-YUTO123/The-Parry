@@ -14,10 +14,8 @@
 //************************************************
 // インクルードファイル
 //************************************************
-#include"mesh.h"
+#include"object.h"
 #include<vector>
-#include"transform.h"
-#include"Collision.h"
 #include <memory> 
 
 //************************************************
@@ -25,6 +23,7 @@
 //************************************************
 class CMeshField;
 class CColliderSphere;
+class CVelocity;
 
 //************************************************
 // メッシュのフィールドのウェーブクラスの定義
@@ -118,10 +117,11 @@ private:
 	std::unique_ptr<CColliderSphere> m_pSphere; // 円のコライダー
 	CVelocity* m_pMove;							// 移動量クラスへのポインタ
 };
+
 //************************************************
 // メッシュフィールドクラスの定義
 //************************************************
-class CMeshField : public CMesh
+class CMeshField : public CObject
 {
 public:
 	CMeshField(int nPriority = 2);
@@ -132,7 +132,6 @@ public:
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
-	void SetMeshField(const int nSegH, const int nSegV, const  D3DXVECTOR3 pos, const D3DXVECTOR2 Size);
 
 	bool Collision(const D3DXVECTOR3 pos, float* pOutHeight); // 地面との当たり判定
 
@@ -146,17 +145,30 @@ public:
 
 	// ゲッター
 	D3DXVECTOR3 GetNor(void) const { return m_Nor; }
+	D3DXVECTOR3 GetVtxPos(const int nIdx);
 
 	// セッター
 	void SetWave(CMeshFieldWave::Config config);
 	void SetImpact(CMeshFieldImpact::Config config);
+	void SetVtxPos(const D3DXVECTOR3 pos, const int nIdx);
+	void SetColor(const D3DXCOLOR col, const int nIdx);
+	void SetTextureID(const char* pTextureName);
 private:
-	//void Load(void);
-
-	std::vector<CMeshFieldWave*> m_apWave;	 // フィールドの波クラスへのポインタ
-	CMeshFieldImpact* m_apImpact;			 // フィールドのインパクトクラスへのポインタ
-	D3DXVECTOR3 m_Nor;						 // 法線
-	float m_fWidth, m_fHeight;				 // 横幅,高さ
+	std::vector<CMeshFieldWave*> m_apWave;	// フィールドの波クラスへのポインタ
+	CMeshFieldImpact* m_apImpact;			// フィールドのインパクトクラスへのポインタ
+	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuffer;	// 頂点バッファへのポインタ
+	LPDIRECT3DINDEXBUFFER9 m_pIdxBuffer;	// インデックスバッファへのポインタ
+	D3DXVECTOR3 m_pos;						// 位置
+	D3DXVECTOR3 m_rot;						// 向き
+	D3DXVECTOR2 m_Size;						// 大きさ
+	D3DXVECTOR3 m_Nor;						// 法線
+	D3DXMATRIX m_mtxWorld;					// ワールドマトリックス
+	int m_nSegH;							// 横の分割数
+	int m_nSegV;							// 縦の分割数
+	int m_nNumVtx;							// 頂点の総数
+	int m_nNumPolygon;						// ポリゴン数
+	int m_nNumIdx;							// インデックス数
+	int m_nTextureIdx;						// テクスチャのID
 };
 
 #endif

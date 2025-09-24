@@ -19,13 +19,6 @@ using namespace std; // 名前空間stdを処理使用
 
 constexpr float HALF_VALUE = 0.5f; // 半分
 
-//************************************************
-// 静的メンバ変数宣言
-//************************************************
-unique_ptr<CCollisionAABB> CCollisionAABB::m_pAABB = nullptr;			// 当たり判定AABB
-unique_ptr<CCollisionSphere> CCollisionSphere::m_pSphere = nullptr;		// 当たり判定Sphere
-unique_ptr<CCollisionFOV> CCollisionFOV::m_pFOV = nullptr;				// 当たり判定視界
-unique_ptr<CCollisionCapsule> CCollisionCapsule::m_pCapsule = nullptr;  // 当たり判定カプセル
 //================================================
 // コンストラクタ
 //================================================
@@ -80,7 +73,6 @@ CCollision* CCollision::Create(const D3DXVECTOR3 pos, const TYPE type)
 //================================================
 CCollisionAABB::CCollisionAABB() : CCollision(TYPE::TYPE_AABB)
 {
-	m_pushPos = VEC3_NULL;
 }
 
 //================================================
@@ -88,19 +80,6 @@ CCollisionAABB::CCollisionAABB() : CCollision(TYPE::TYPE_AABB)
 //================================================
 CCollisionAABB::~CCollisionAABB()
 {
-}
-
-//================================================
-// AABBの作成処理
-//================================================
-void CCollisionAABB::Create(void)
-{
-	// nullだったら自分の生成(1つ以上作らない)
-	if (m_pAABB == nullptr)
-	{
-		// AABBの作成処理
-		m_pAABB.reset(new CCollisionAABB());
-	}
 }
 
 //================================================
@@ -280,19 +259,6 @@ CCollisionSphere::~CCollisionSphere()
 }
 
 //================================================
-// 生成処理
-//================================================
-void CCollisionSphere::Create(void)
-{
-	// nullだったら自分の生成(1つ以上作らない)
-	if (m_pSphere == nullptr)
-	{
-		// sphereの作成処理
-		m_pSphere.reset(new CCollisionSphere());
-	}
-}
-
-//================================================
 // 当たり判定(円vs円)
 //================================================
 bool CCollisionSphere::Collision(CColliderSphere* myCollider, CColliderSphere* otherCollider)
@@ -342,19 +308,6 @@ CCollisionFOV::CCollisionFOV() : CCollision(TYPE::TYPE_FOV)
 //================================================
 CCollisionFOV::~CCollisionFOV()
 {
-}
-
-//================================================
-// 視界の生成
-//================================================
-void CCollisionFOV::Create(void)
-{
-	// nullだったら自分の生成(1つ以上作らない)
-	if (m_pFOV == nullptr)
-	{
-		// 視界の作成処理
-		m_pFOV.reset(new CCollisionFOV());
-	}
 }
 
 ////================================================
@@ -420,45 +373,6 @@ bool CCollisionFOV::Collision(const D3DXVECTOR3 otherpos, CColliderFOV* pFOV)
 	}
 
 	return false;
-}
-
-//================================================
-// コンストラクタ
-//================================================
-CCollisionManager::CCollisionManager()
-{
-}
-
-//================================================
-// デストラクタ
-//================================================
-CCollisionManager::~CCollisionManager()
-{
-}
-
-//================================================
-// すべての判定の生成
-//================================================
-void CCollisionManager::CreateAll(void)
-{
-	// AABBの作成処理
-	CCollisionAABB::Create();
-
-	// sphereの作成
-	CCollisionSphere::Create();
-
-	// 視界判定の生成
-	CCollisionFOV::Create();
-
-	CCollisionCapsule::Create();
-}
-
-//================================================
-// すべての判定の破棄
-//================================================
-void CCollisionManager::Uninit(void)
-{
-
 }
 
 //================================================
@@ -666,16 +580,4 @@ float CCollisionCapsule::ClosestPtSegmentSegment(D3DXVECTOR3 Start1, D3DXVECTOR3
 //================================================
 CCollisionCapsule::~CCollisionCapsule()
 {
-}
-
-//================================================
-// 生成処理
-//================================================
-void CCollisionCapsule::Create(void)
-{
-	if (m_pCapsule == nullptr)
-	{
-		// 自分の生成
-		m_pCapsule.reset(new CCollisionCapsule);
-	}
 }

@@ -51,6 +51,7 @@
 #include "RockOn.h"
 #include "effect2D.h"
 #include "particle2D.h"
+#include "Collision.h"
 
 //***************************************************
 // 名前空間
@@ -1157,16 +1158,10 @@ int CPlayer::SuccessParry(void)
 //===================================================
 bool CPlayer::CollisionAABB(CColliderAABB* pAABB)
 {
-	// AABBの取得
-	auto pCollision = CCollisionAABB::GetInstance();
-
-	// インスタンスがないなら処理しない
-	if (pCollision == nullptr) return false;
-
 	// 押し出し位置
 	D3DXVECTOR3 pushPos = VEC3_NULL;
 
-	if (pCollision->Collision(m_pAABB.get(), pAABB,&pushPos))
+	if (CCollisionAABB::Collision(m_pAABB.get(), pAABB,&pushPos))
 	{
 		// 位置の取得
 		CCharacter3D::SetPosition(pushPos);
@@ -1212,13 +1207,10 @@ void CPlayer::BlowOff(const D3DXVECTOR3 attacker, const float blowOff, const flo
 //===================================================
 bool CPlayer::CollisionCapsule(CColliderCapsule* pCapsule, const bool bPush)
 {
-	// 当たり判定の取得
-	auto pCollision = CCollisionCapsule::GetInstance();
-
 	D3DXVECTOR3 nearPlayerPos,nearPos2; // 最近接点1,プレイヤー,最近接点2
 
 	// カプセルとカプセルが当たったら
-	if (pCollision->Collision(m_Capsule.get(), pCapsule,&nearPlayerPos,&nearPos2))
+	if (CCollisionCapsule::Collision(m_Capsule.get(), pCapsule,&nearPlayerPos,&nearPos2))
 	{
 		if (bPush)
 		{
@@ -1262,13 +1254,10 @@ bool CPlayer::IsParry(const D3DXVECTOR3 pos)
 	
 	// 視界の更新処理
 	m_pFOV->UpdateData(rot.y);
-	
-	// 視界判定の取得
-	CCollisionFOV* pCollision = CCollisionFOV::GetInstance();
-	
+		
 	// 視界内かつ状態が攻撃の時
 	if (CCharacter3D::GetState() == CCharacter3D::STATE_ACTION &&
-		pCollision->Collision(pos, m_pFOV.get()) &&
+		CCollisionFOV::Collision(pos, m_pFOV.get()) &&
 		pMotion->GetBlendType() != MOTIONTYPE_PARRY&&
 		pMotion->GetBlendType() != MOTIONTYPE_DAMAGE)
 	{
@@ -1440,9 +1429,6 @@ void CPlayer::SetRevengeEffect(void)
 //===================================================
 void CPlayer::SetDamageMotion(const D3DXVECTOR3 AttackerPos,const int nDamage)
 {
-	// 視界の判定の取得
-	auto pFOV = CCollisionFOV::GetInstance();
-
 	// モーションの取得
 	CMotion* pMotion = CCharacter3D::GetMotion();
 
@@ -1456,7 +1442,7 @@ void CPlayer::SetDamageMotion(const D3DXVECTOR3 AttackerPos,const int nDamage)
 	if (nNowMotion == MOTIONTYPE_DAMAGE || nNowMotion == MOTIONTYPE_BACK_DAMAGE) return;
 
 	// 視界の中だったら
-	if (pFOV->Collision(AttackerPos, m_pFOV.get()))
+	if (CCollisionFOV::Collision(AttackerPos, m_pFOV.get()))
 	{
 		// 吹き飛び処理
 		BlowOff(AttackerPos, 10.0f, 10.0f);

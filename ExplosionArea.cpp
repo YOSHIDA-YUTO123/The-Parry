@@ -129,14 +129,11 @@ void CExplosionArea::Draw(void)
 //==============================================
 bool CExplosionArea::Collision(CColliderCapsule* pCapsule,D3DXVECTOR3 *pPos)
 {
-	// ƒJƒvƒZƒ‹‚Ì“–‚½‚è”»’è‚ÌŽæ“¾
-	auto pCollision = CCollisionCapsule::GetInstance();
-
 	// null‚¾‚Á‚½‚çˆ—‚µ‚È‚¢
-	if (pCollision == nullptr || pCapsule == nullptr) return false;
+	if (pCapsule == nullptr) return false;
 
 	// “–‚½‚Á‚Ä‚¢‚é
-	if (pCollision->CollisionSphere(pCapsule, m_pSphere.get()))
+	if (CCollisionCapsule::CollisionSphere(pCapsule, m_pSphere.get()))
 	{
 		if (pPos != nullptr)
 		{
