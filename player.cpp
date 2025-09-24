@@ -620,29 +620,12 @@ void CPlayer::Update(void)
 	// デバッグ表示
 	CDebugProc::Print("カメラの回転 X = %.2f Y = %.2f\n", pCamera->GetRotaition().x, pCamera->GetRotaition().y);
 
-	static CMeshCylinder* pC = nullptr;
-
-	if (pKeyboard->GetTrigger(DIK_T))
-	{
-		pCamera->SetShake(120,20);
-		//pCamera->SetState(pCamera->STATE_SHAKE);
-
-		float fRadius = m_Capsule->GetData().fRadius;
-		fHeight = GetDistance(m_Capsule->GetData().EndPos - m_Capsule->GetData().StartPos);
-		pC = CMeshCylinder::Create(pos, 16, 1, fRadius, fHeight);
-		pC->Set(pC->TYPE_VIEW);
-	}
-
 	if (pKeyboard->GetTrigger(DIK_Y))
 	{
 		// パーティクルの生成
 		auto pParticle = CParticleSpark::Create(GetModelPos(2), D3DXVECTOR2(3.0f,20.0f), D3DXCOLOR(1.0f, 0.2f, 0.2f, 1.0f));
 
 		pParticle->SetParticle(10.0f, 60, 50, 1, 180);
-	}
-	if (pC != nullptr)
-	{
-		pC->SetPosition(pos);
 	}
 
 	if (pKeyboard->GetPress(DIK_9))

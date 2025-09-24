@@ -14,12 +14,12 @@
 //************************************************
 // インクルードファイル
 //************************************************
-#include"mesh.h"
+#include"object.h"
 
 //************************************************
 // メッシュフィールドクラスの定義
 //************************************************
-class CMeshCylinder : public CMesh
+class CMeshCylinder : public CObject
 {
 public:
 
@@ -43,10 +43,23 @@ public:
 	void Draw(void);
 	void SetCylinder(const int nSegH, const int nSegV, const float fRadius, const float fHeight);
 	bool Collision(D3DXVECTOR3* pPos);
+	void SetTextureID(const char* pTextureName);
+
 private:
-	D3DXVECTOR3 m_CenterPos; // 円柱の中心の座標
-	D3DXCOLOR m_col;		 // 色
-	TYPE m_Type;			 // 種類
-	float m_fRadius;		 // 半径
+	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuffer;	// 頂点バッファへのポインタ
+	LPDIRECT3DINDEXBUFFER9 m_pIdxBuffer;	// インデックスバッファへのポインタ
+	D3DXVECTOR3 m_pos;						// 位置
+	D3DXVECTOR3 m_rot;						// 向き
+	D3DXMATRIX m_mtxWorld;					// ワールドマトリックス
+	D3DXCOLOR m_col;						// 色
+	TYPE m_Type;							// 種類
+	float m_fRadius;						// 半径
+	float m_fHeight;						// 高さ
+	int m_nSegH;							// 横の分割数
+	int m_nSegV;							// 縦の分割数
+	int m_nNumVtx;							// 頂点の総数
+	int m_nNumPolygon;						// ポリゴン数
+	int m_nNumIdx;							// インデックス数
+	int m_nTextureIdx;						// テクスチャのID
 };
 #endif

@@ -83,14 +83,14 @@ public:
 	// 衝撃波の構成(位置、発射位置、方向、サークルの色、放ったオブジェクト、当たり判定の半径、高さ、速さ、発生時間)
 	struct Config
 	{
-		D3DXVECTOR3 pos;	         // 位置
-		D3DXVECTOR3 FirstPos;		 // 最初の位置
-		D3DXVECTOR3 dir;			 // 方向
-		D3DXCOLOR Circlecol;		 // 色
-		OBJ ObjType;				 // 誰が放った衝撃波か
+		D3DXVECTOR3 pos;	     // 位置
+		D3DXVECTOR3 FirstPos;	 // 最初の位置
+		D3DXVECTOR3 dir;		 // 方向
+		D3DXCOLOR Circlecol;	 // 色
+		OBJ ObjType;			 // 誰が放った衝撃波か
 		float fRadius;	         // 半径
 		float fHeight;	         // 高さ
-		float fSpeed;				 // 速さ
+		float fSpeed;			 // 速さ
 		int nTime;		         // 時間
 	};
 
@@ -111,6 +111,7 @@ private:
 	{
 		int nCounter;		         // カウンター
 	};
+
 	Config m_Config;			 // 構成
 	Info m_Info;				 // 情報
 

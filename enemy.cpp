@@ -312,22 +312,10 @@ void CEnemy::Update(void)
 		return;
 	}
 
-	static CMeshCylinder* pC = nullptr;
-
 	if (pKeyboard->GetTrigger(DIK_T))
 	{
 		pCamera->SetShake(120, 20);
 		//pCamera->SetState(pCamera->STATE_SHAKE);
-
-		float fRadius = m_pCapsule->GetData().fRadius;
-		float fHeight = GetDistance(m_pCapsule->GetData().EndPos - m_pCapsule->GetData().StartPos);
-		pC = CMeshCylinder::Create(pos, 16, 1, fRadius, fHeight);
-		pC->Set(pC->TYPE_VIEW);
-	}
-
-	if (pC != nullptr)
-	{
-		pC->SetPosition(pos);
 	}
 
 #endif // _DEBUG

@@ -198,7 +198,6 @@ void CMesh::SetUpDraw(void)
 	{
 		//テクスチャの設定
 		pDevice->SetTexture(0, pTexture->GetAdress(m_nIdexTexture));
-
 	}
 }
 

@@ -9,9 +9,12 @@
 // インクルードファイル
 //************************************************
 #include "dome.h"
-#include"manager.h"
-#include"renderer.h"
+#include "manager.h"
+#include "renderer.h"
+#include "textureManager.h"
+#include <string>
 
+using namespace std;
 using namespace Const; // 名前空間Constを使用
 
 //================================================
@@ -19,7 +22,20 @@ using namespace Const; // 名前空間Constを使用
 //================================================
 CMeshDome::CMeshDome()
 {
-
+	m_nOffsetIdx = NULL;
+	m_fHeight = NULL;
+	m_fRadius = NULL;
+	D3DXMatrixIdentity(&m_mtxWorld);
+	m_nNumIdx = NULL;
+	m_nNumPolygon = NULL;
+	m_nNumVtx = NULL;
+	m_nSegH = 1;
+	m_nSegV = 1;
+	m_nTextureIdx = -1;
+	m_pIdxBuffer = nullptr;
+	m_pVtxBuffer = nullptr;
+	m_pos = VEC3_NULL;
+	m_rot = VEC3_NULL;
 }
 
 //================================================
@@ -42,9 +58,6 @@ CMeshDome* CMeshDome::Create(const D3DXVECTOR3 pos, const int nSegH, const int n
 	// 頂点数の設定
 	int nNumFanVtx = nSegH + 2;
 
-	//// ポリゴン数の設定
-	//int nNumFanPolygon = nSegH;
-
 	int nNumIdxFan = nNumFanVtx;
 
 	// 頂点数の設定
@@ -59,22 +72,27 @@ CMeshDome* CMeshDome::Create(const D3DXVECTOR3 pos, const int nSegH, const int n
 	// 頂点情報の設定
 	int nNumVtx = nNumFanVtx + nNumDomeVtx;
 
+	// インデックス数の計算
 	int nNumIdx = nNumDomeIndex + nNumIdxFan;
 
-	// 頂点の設定
-	pMesh->SetVtxElement(nNumVtx, nNumDomePolygon, nNumIdx);
+	// 要素の設定
+	pMesh->m_nNumIdx = nNumIdx;
+	pMesh->m_nNumVtx = nNumVtx;
+	pMesh->m_nNumPolygon = nNumDomePolygon;
+	pMesh->m_nSegH = nSegH;
+	pMesh->m_nSegV = nSegV;
+	pMesh->m_pos = pos;
+	pMesh->m_rot = rot;
+	pMesh->m_fHeight = fHeight;
+	pMesh->m_fRadius = fRadius;
 
-	// 分割数の設定処理
-	pMesh->SetSegment(nSegH, nSegV);
-	
 	// 初期化処理
-	pMesh->Init();
-
-	// 設定処理
-	pMesh->SetPosition(pos);
-	pMesh->SetRotation(rot);
-
-	pMesh->SetDome(nSegH, nSegV, fRadius, fHeight);
+	if (FAILED(pMesh->Init()))
+	{
+		pMesh->Uninit();
+		pMesh = nullptr;
+		return nullptr;
+	}
 
 	return pMesh;
 }
@@ -84,16 +102,38 @@ CMeshDome* CMeshDome::Create(const D3DXVECTOR3 pos, const int nSegH, const int n
 //================================================
 HRESULT CMeshDome::Init(void)
 {
-	// 初期化処理
-	if (FAILED(CMesh::Init()))
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+	//頂点バッファの生成
+	if (FAILED(pDevice->CreateVertexBuffer(sizeof(VERTEX_3D) * m_nNumVtx,
+		D3DUSAGE_WRITEONLY,
+		FVF_VERTEX_3D,
+		D3DPOOL_MANAGED,
+		&m_pVtxBuffer,
+		NULL)))
 	{
 		return E_FAIL;
 	}
 
-	// テクスチャのIDの設定
-	CMesh::SetTextureID("data/TEXTURE/sky/sky.jpg");
+	//インデックスバッファの生成
+	if (FAILED(pDevice->CreateIndexBuffer(sizeof(WORD) * m_nNumIdx,
+		D3DUSAGE_WRITEONLY,
+		D3DFMT_INDEX16,
+		D3DPOOL_MANAGED,
+		&m_pIdxBuffer,
+		NULL)))
+	{
+		return E_FAIL;
+	}
 
-	return E_FAIL;
+	// ドームの設定
+	SetDome(m_nSegH, m_nSegV, m_fRadius, m_fHeight);
+
+	// テクスチャのIDの設定
+	SetTextureID("sky.jpg");
+
+	return S_OK;
 }
 
 //================================================
@@ -101,8 +141,22 @@ HRESULT CMeshDome::Init(void)
 //================================================
 void CMeshDome::Uninit(void)
 {
-	// 終了処理
-	CMesh::Uninit();
+	// 頂点バッファの破棄
+	if (m_pVtxBuffer != nullptr)
+	{
+		m_pVtxBuffer->Release();
+		m_pVtxBuffer = nullptr;
+	}
+
+	// インデックスバッファの破棄
+	if (m_pIdxBuffer != nullptr)
+	{
+		m_pIdxBuffer->Release();
+		m_pIdxBuffer = nullptr;
+	}
+
+	// 自分自身の破棄
+	CObject::Release();
 }
 
 //================================================
@@ -110,7 +164,8 @@ void CMeshDome::Uninit(void)
 //================================================
 void CMeshDome::Update(void)
 {
-	UpdateRotation(D3DXVECTOR3(0.0f,0.001f,0.0f));
+	// 回転する
+	m_rot.y += 0.001f;
 }
 
 //================================================
@@ -125,8 +180,8 @@ void CMeshDome::Draw(void)
 
 	pDevice->SetRenderState(D3DRS_CULLMODE, TRUE);
 
-	int nSegH = GetSegH();
-	int nSegV = GetSegV();
+	int nSegH = m_nSegH;
+	int nSegV = m_nSegV;
 
 	// 頂点数の設定
 	int nNumFanVtx = nSegH + 2;
@@ -140,8 +195,46 @@ void CMeshDome::Draw(void)
 	// ポリゴン数の設定
 	int nNumDomePolygon = (((nSegH * nSegV) * 2)) + (4 * (nSegV - 1));
 
-	// 描画処理
-	CMesh::SetUpDraw();
+	// テクスチャクラスの取得
+	CTextureManager* pTexture = CManager::GetTexture();
+
+	//計算用のマトリックス
+	D3DXMATRIX mtxRot, mtxTrans;
+
+	//ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&m_mtxWorld);
+
+	//向きを反映
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
+
+	//位置を反映
+	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
+	//ワールドマトリックスの設定
+	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+
+	//頂点バッファをデバイスのデータストリームに設定
+	pDevice->SetStreamSource(0, m_pVtxBuffer, 0, sizeof(VERTEX_3D));
+
+	//インデックスバッファをデータストリームに設定
+	pDevice->SetIndices(m_pIdxBuffer);
+
+	//テクスチャフォーマットの設定
+	pDevice->SetFVF(FVF_VERTEX_3D);
+
+	// テクスチャが無かったら
+	if (m_nTextureIdx == -1)
+	{
+		//テクスチャの設定
+		pDevice->SetTexture(0, NULL);
+	}
+	else
+	{
+		//テクスチャの設定
+		pDevice->SetTexture(0, pTexture->GetAdress(m_nTextureIdx));
+	}
 
 	//ポリゴンの描画
 	pDevice->DrawIndexedPrimitive(D3DPT_TRIANGLEFAN, 0, 0, nNumFanVtx, 0, nNumFanPolygon);
@@ -160,14 +253,29 @@ void CMeshDome::Draw(void)
 void CMeshDome::SetDome(const int nSegH, const int nSegV, const float fRadius, const float fHeight)
 {
 	int nCntVtx = 0;
+
 	// テクスチャのオフセット
 	float fTexX = 0.5f / nSegH;
 	float fTexY = 0.5f / nSegV;
 
 	float fNowRadius = fRadius / (nSegV + 1);
 
-	// ドームのてっぺんの位置の設定
-	SetVtxBuffer(D3DXVECTOR3(0.0f, fHeight + (fHeight / nSegV + 1), 0.0f), 0, D3DXVECTOR2(0.5f, 0.5f));
+	VERTEX_3D* pVtx = NULL;
+
+	// 頂点バッファをロック
+	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+
+	// 頂上の座標の設定
+	pVtx[0].pos = D3DXVECTOR3(0.0f, fHeight + (fHeight / nSegV + 1), 0.0f);
+
+	// 法線の設定
+	pVtx[0].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+
+	// 色の設定
+	pVtx[0].col = WHITE;
+
+	// テクスチャ座標の設定
+	pVtx[0].tex = D3DXVECTOR2(0.5f, 0.5f);
 
 	nCntVtx++;
 
@@ -185,21 +293,41 @@ void CMeshDome::SetDome(const int nSegH, const int nSegV, const float fRadius, c
 		float u = 0.5f + 0.5f * cosf(fAngle);
 		float v = 0.5f + 0.5f * sinf(fAngle);
 
-		SetVtxBuffer(posWk, nCntVtx, D3DXVECTOR2(u, v));
+		// 頂上の座標の設定
+		pVtx[nCntVtx].pos = posWk;
 
-		SetNormal(NormalizeNormal(nCntVtx), nCntVtx);
+		// 法線の設定
+		pVtx[nCntVtx].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+
+		// 色の設定
+		pVtx[nCntVtx].col = WHITE;
+
+		// テクスチャ座標の設定
+		pVtx[nCntVtx].tex = D3DXVECTOR2(u, v);
+
 		nCntVtx++;
 	}
 	
+	// インデックスのオフセットの保存
 	int OffsetIdx = nCntVtx;
 
 	int nCntIdx = 0;
 
+	// インデックスバッファへのポインタ
+	WORD* pIdx;
+
+	// インデックスバッファのロック
+	m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
+
 	// 頂点数分
 	for (int nCnt = 0; nCnt < nSegH + 2; nCnt++)
 	{
-		SetIndexBuffer((WORD)nCnt, nCntIdx++);
+		// インデックスの設定
+		pIdx[nCntIdx++] = static_cast<WORD>(nCnt);
 	}
+
+	//インデックスバッファのアンロック
+	m_pIdxBuffer->Unlock();
 
 	// インデックスのオフセットを設定
 	m_nOffsetIdx = nCntIdx;
@@ -226,13 +354,27 @@ void CMeshDome::SetDome(const int nSegH, const int nSegV, const float fRadius, c
 			posWk.y = fHeight - (fHeight / nSegV) * nCntZ;
 			posWk.z = cosf(fAngel) * fNowRadius;
 			
-			SetVtxBuffer(posWk, nCntVtx, D3DXVECTOR2(fTexX * nCntX, fTexY * nCntZ));
-			SetNormal(NormalizeNormal(nCntVtx), nCntVtx);
+			// 頂上の座標の設定
+			pVtx[nCntVtx].pos = posWk;
+
+			// 法線の設定
+			pVtx[nCntVtx].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+
+			// 色の設定
+			pVtx[nCntVtx].col = WHITE;
+
+			// テクスチャ座標の設定
+			pVtx[nCntVtx].tex = D3DXVECTOR2(fTexX * nCntX, fTexY * nCntZ);
 
 			nCntVtx++;//加算
 		}
+
+		// 半径を拡大
 		fNowRadius += fRateRadius / (nCntZ + 1);
 	}
+
+	// 頂点バッファをアンロック
+	m_pVtxBuffer->Unlock();
 
 	int IndxCount3 = nSegH + 1;//X
 
@@ -243,6 +385,9 @@ void CMeshDome::SetDome(const int nSegH, const int nSegV, const float fRadius, c
 	int Index0 = 0;
 	int Index1 = 0;
 
+	// インデックスバッファのロック
+	m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
+
 	//インデックスの設定
 	for (int IndxCount1 = 0; IndxCount1 < nSegV; IndxCount1++)
 	{
@@ -252,18 +397,40 @@ void CMeshDome::SetDome(const int nSegH, const int nSegV, const float fRadius, c
 			Index1 = Num + OffsetIdx;
 
 			// インデックスバッファの設定
-			SetIndexBuffer((WORD)Index0, IdxCnt);
-			SetIndexBuffer((WORD)Index1, IdxCnt + 1);
+			pIdx[IdxCnt] = static_cast<WORD>(Index0);
+			pIdx[IdxCnt + 1] = static_cast<WORD>(Index1);
 			IdxCnt += 2;
 		}
 
 		if (IndxCount1 < nSegV - 1)
 		{
 			// インデックスバッファの設定
-			SetIndexBuffer((WORD)(Num - 1 + OffsetIdx), IdxCnt);
-			SetIndexBuffer((WORD)(IndxCount3 + OffsetIdx), IdxCnt + 1);
+			pIdx[IdxCnt] = static_cast<WORD>((Num - 1 + OffsetIdx));
+			pIdx[IdxCnt + 1] = static_cast<WORD>(IndxCount3 + OffsetIdx);
 			IdxCnt += 2;
 		}
 	}
+	//インデックスバッファのアンロック
+	m_pIdxBuffer->Unlock();
+}
 
+//================================================
+// テクスチャのIDの設定
+//================================================
+void CMeshDome::SetTextureID(const char* pTextureName)
+{
+	// テクスチャマネージャーの取得
+	CTextureManager* pTexture = CManager::GetTexture();
+
+	// ファイルパス
+	string filePath = "data/TEXTURE/sky/";
+
+	// 文字列の連結
+	filePath += pTextureName;
+
+	if (pTexture != nullptr)
+	{
+		// テクスチャのIDの取得
+		m_nTextureIdx = pTexture->Register(filePath.c_str());
+	}
 }
