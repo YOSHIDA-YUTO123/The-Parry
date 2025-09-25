@@ -52,6 +52,7 @@
 #include "effect2D.h"
 #include "particle2D.h"
 #include "Collision.h"
+#include "PlayerMovement.h"
 
 //***************************************************
 // 名前空間
@@ -82,7 +83,6 @@ CPlayer::CPlayer() : CCharacter3D(TYPE_PLAYER)
 	m_pMovement = nullptr;
 	m_pFOV = nullptr;
 	m_pSphere = nullptr;
-	m_pMove = nullptr;
 	m_posOld = VEC3_NULL;
 	m_nParryTime = NULL;
 	m_nParryCounter = NULL;
@@ -131,12 +131,9 @@ HRESULT CPlayer::Init(void)
 	// 円の当たり判定の生成
 	m_pSphere = CColliderSphere::Create(pos, 50.0f);
 
-	// 移動クラスの生成
-	m_pMove = make_unique<CVelocity>();
-
 	m_pMovement = make_unique<CPlayerMovement>();
 
-	m_pMovement->Init(m_pMove.get(), GetRotaition());
+	m_pMovement->Init();
 
 	// コライダーの生成
 	m_pAABB = CColliderAABB::Create(pos, m_posOld, Size);
@@ -185,7 +182,6 @@ void CPlayer::Uninit(void)
 
 	m_pFOV = nullptr;
 	m_pSphere = nullptr;
-	m_pMove = nullptr;
 	m_pMovement = nullptr;
 	m_pOrbit = nullptr;
 	m_pAABB = nullptr;
@@ -268,104 +264,14 @@ void CPlayer::Update(void)
 		return;
 	}
 
-	// 速さ
-	float fSpeed = m_bDash ? CCharacter3D::GetSpeed() : 1.5f;
-
-	float fAngleDest = 0.0f;
-
-	// 移動できるなら
-	if (IsMove(pMotion) && bAlive)
-	{
-		// 移動を入力していたら
-		const bool bKeyboardMove = m_pMovement->MoveKeyboard(pKeyboard, fSpeed, &fAngleDest);
-		const bool bJoypadMove = m_pMovement->MoveJoypad(pJoypad, fSpeed, &fAngleDest);
-
-		// 移動ごとの処理ができるか判定
-		const bool bPlayerMove = bKeyboardMove || bJoypadMove;
-
-		// 移動ごとの処理ができるなら
-		if (bPlayerMove)
-		{
-			CCharacter3D::GetRotaition()->SetDest(D3DXVECTOR3(0.0f, fAngleDest, 0.0f));
-
-			// ダッシュモーションか歩きモーションかを判定
-			int isDashMotion = (m_bDash ? MOTIONTYPE_DASH : MOTIONTYPE_MOVE);
-
-			// 現在のモーションの取得
-			int nNowMotionType = pMotion->GetBlendType();
-
-			// ダウンニュートラルか判定
-			const bool isDownNeutral = nNowMotionType == MOTIONTYPE_DOWN_NEUTRAL || nNowMotionType == MOTIONTYPE_DOWN_NEUTRA_BACK;
-
-			// ダウンニュートラルか判定
-			int motiontype = isDownNeutral ? MOTIONTYPE_AVOID : isDashMotion;
-
-			// フレームを設定
-			const int nFrame = m_bDash ? 5 : 10;
-
-			// モーションの設定
-			pMotion->SetMotion(motiontype, true, nFrame);
-
-			// 移動状態にする
-			CCharacter3D::SetState(STATE::STATE_MOVE, 1);
-
-			// ダッシュ状態だったら
-			if (motiontype == MOTIONTYPE_DASH)
-			{
-				// 状態の変更
-				ChangeState(make_shared<CPlayerDash>());
-			}
-			else if(motiontype == MOTIONTYPE_MOVE)
-			{
-				// 状態の変更
-				ChangeState(make_shared<CPlayerMove>());
-			}
-			else
-			{
-				// 状態の変更
-				ChangeState(make_shared<CPlayerAvoid>(25.0f));
-			}
-		}
-		else
-		{
-			// モーションの種類の取得
-			int motiontype = pMotion->GetBlendType();
-
-			// 移動状態だったら
-			if (motiontype == MOTIONTYPE_MOVE || motiontype == MOTIONTYPE_DASH && pMotion != nullptr)
-			{
-				pMotion->SetMotion(MOTIONTYPE_NEUTRAL, true, 15);
-
-				// 状態の変更
-				ChangeState(make_shared<CPlayerNormal>());
-			}
-		}
-	}
-
-	// ダッシュボタンを押したら
-	if ((pKeyboard->GetPress(DIK_LSHIFT) || pJoypad->GetPress(pJoypad->JOYKEY_LEFT_SHOULDER)))
-	{
-		m_bDash = true;
-	}
-	else
-	{
-		m_bDash = false;
-	}
+	// 移動の更新処理
+	UpdateMove(pMotion, bAlive, pKeyboard, pJoypad,pCamera);
 
 	// 位置の取得
 	D3DXVECTOR3 pos = CCharacter3D::GetPosition();
 
-	// 移動量の減衰
-	m_pMove->SetInertia3D(0.25f);
-
-	// 前回の位置の取得
-	m_posOld = pos;
-
-	// 移動量の取得
-	D3DXVECTOR3 move = m_pMove->Get();
-
-	// 位置の更新
-	pos += move;
+	// 位置の更新処理
+	m_pMovement->UpdatePosition(&pos, &m_posOld);
 
 	float fHeight = 0.0f;
 
@@ -430,7 +336,7 @@ void CPlayer::Update(void)
 	if (m_bGravity)
 	{
 		// 重力を加算
-		m_pMove->Gravity(-MAX_GRABITY);
+		m_pMovement->Gravity(-MAX_GRABITY);
 	}
 	
 	// 敵の死亡ムービーじゃないなら
@@ -786,289 +692,6 @@ CPlayer* CPlayer::Create(const int nLife, const float fSpeed, const D3DXVECTOR3 
 	return pPlayer;
 }
 
-//===================================================
-// コンストラクタ
-//===================================================
-CPlayerMovement::CPlayerMovement()
-{
-}
-
-//===================================================
-// デストラクタ
-//===================================================
-CPlayerMovement::~CPlayerMovement()
-{
-}
-
-//===================================================
-// 初期化処理
-//===================================================
-void CPlayerMovement::Init(CVelocity* pMove,CRotation* pRot)
-{
-	m_pMove = pMove;
-	m_pRot = pRot;
-}
-
-//===================================================
-// キーボードの処理
-//===================================================
-bool CPlayerMovement::MoveKeyboard(CInputKeyboard* pKeyboard,const float fSpeed, float* pRotDest)
-{
-	bool bMove = false;
-
-	// モードの取得
-	CScene::MODE mode = CManager::GetMode();
-
-	// カメラの取得
-	CGameCamera* pCamera = nullptr;
-
-	if (mode == CScene::MODE_GAME)
-	{
-		// カメラの取得
-		pCamera = CGame::GetCamera();
-	}
-	else if (mode == CScene::MODE_TUTORIAL)
-	{
-		// カメラの取得
-		pCamera = CTutorial::GetCamera();
-	}
-
-	// 取得できなかったら処理しない
-	if (pCamera == nullptr) return false;
-
-	// カメラの向き
-	D3DXVECTOR3 cameraRot = pCamera->GetRotaition();
-
-	// 移動量
-	D3DXVECTOR3 move = m_pMove->Get();
-
-	CInputJoypad* pJoyPad = CManager::GetInputJoypad();
-
-	if (pJoyPad->GetJoyStickL())
-	{
-		return false;
-	}
-
-	if (pKeyboard->GetPress(DIK_A))
-	{
-		//プレイヤーの移動(上)
-		if (pKeyboard->GetPress(DIK_W) == true)
-		{
-			move.x += sinf(cameraRot.y - D3DX_PI * 0.25f) * fSpeed;
-			move.z += cosf(cameraRot.y - D3DX_PI * 0.25f) * fSpeed;
-
-			*pRotDest = cameraRot.y + D3DX_PI * 0.75f;
-
-			bMove = true;
-		}
-		//プレイヤーの移動(下)
-		else if (pKeyboard->GetPress(DIK_S))
-		{
-			move.x += sinf(cameraRot.y - D3DX_PI * 0.75f) * fSpeed;
-			move.z += cosf(cameraRot.y - D3DX_PI * 0.75f) * fSpeed;
-
-			*pRotDest = cameraRot.y + D3DX_PI * 0.25f;
-
-			bMove = true;
-		}
-		// プレイヤーの移動(左)
-		else
-		{
-			move.z += sinf(cameraRot.y) * fSpeed;
-			move.x -= cosf(cameraRot.y) * fSpeed;
-
-			*pRotDest = cameraRot.y + D3DX_PI * 0.5f;
-
-			bMove = true;
-		}
-	}
-	//プレイヤーの移動(右)
-	else if (pKeyboard->GetPress(DIK_D))
-	{
-		//プレイヤーの移動(上)
-		if (pKeyboard->GetPress(DIK_W))
-		{
-			move.x += sinf(cameraRot.y + D3DX_PI * 0.25f) * fSpeed;
-			move.z += cosf(cameraRot.y + D3DX_PI * 0.25f) * fSpeed;
-
-			*pRotDest = cameraRot.y - D3DX_PI * 0.75f;
-
-			bMove = true;
-		}
-		//プレイヤーの移動(下)
-		else if (pKeyboard->GetPress(DIK_S))
-		{
-			move.x += sinf(cameraRot.y + D3DX_PI * 0.75f) * fSpeed;
-			move.z += cosf(cameraRot.y + D3DX_PI * 0.75f) * fSpeed;
-
-			*pRotDest = cameraRot.y - D3DX_PI * 0.25f;
-
-			bMove = true;
-		}
-		// プレイヤーの移動(右)
-		else
-		{
-			move.z -= sinf(cameraRot.y) * fSpeed;
-			move.x += cosf(cameraRot.y) * fSpeed;
-
-			*pRotDest = cameraRot.y - D3DX_PI * 0.5f;
-
-			bMove = true;
-		}
-	}
-	//プレイヤーの移動(上)
-	else if (pKeyboard->GetPress(DIK_W) == true)
-	{
-		move.x += sinf(cameraRot.y) * fSpeed;
-		move.z += cosf(cameraRot.y) * fSpeed;
-
-		*pRotDest = cameraRot.y + D3DX_PI;
-
-		bMove = true;
-	}
-	//プレイヤーの移動(下)
-	else if (pKeyboard->GetPress(DIK_S) == true)
-	{
-		move.x -= sinf(cameraRot.y) * fSpeed;
-		move.z -= cosf(cameraRot.y) * fSpeed;
-
-		*pRotDest = cameraRot.y;
-
-		bMove = true;
-	}
-
-	// 移動量の設定
-	m_pMove->Set(move);
-
-	return bMove;
-}
-
-//===================================================
-// パッドの処理
-//===================================================
-bool CPlayerMovement::MoveJoypad(CInputJoypad* pJoypad, const float fSpeed, float* pRotDest)
-{
-	bool bMove = false;
-
-	XINPUT_STATE* pStick;
-
-	pStick = pJoypad->GetJoyStickAngle();
-
-	// モードの取得
-	CScene::MODE mode = CManager::GetMode();
-
-	// カメラの取得
-	CGameCamera* pCamera = nullptr;
-
-	if (mode == CScene::MODE_GAME)
-	{
-		// カメラの取得
-		pCamera = CGame::GetCamera();
-	}
-	else if (mode == CScene::MODE_TUTORIAL)
-	{
-		// カメラの取得
-		pCamera = CTutorial::GetCamera();
-	}
-
-	// 取得できなかったら処理しない
-	if (pCamera == nullptr) return false;
-
-	// カメラの向き
-	D3DXVECTOR3 cameraRot = pCamera->GetRotaition();
-
-	// Lスティックの角度
-	float LStickAngleY = pStick->Gamepad.sThumbLY;
-	float LStickAngleX = pStick->Gamepad.sThumbLX;
-
-	// デッドゾーン
-	float deadzone = 32767.0f * 0.25f;
-
-	// スティックの傾けた角度を求める
-	float magnitude = sqrtf((LStickAngleX * LStickAngleX) + (LStickAngleY * LStickAngleY));
-
-	// 動かせる
-	if (magnitude > deadzone)
-	{
-		bMove = true;
-
-		// アングルを正規化
-		float normalizeX = (LStickAngleX / magnitude);
-		float normalizeY = (LStickAngleY / magnitude);
-
-		// プレイヤーの移動量
-		float moveX = normalizeX * cosf(-cameraRot.y) - normalizeY * sinf(-cameraRot.y);
-		float moveZ = normalizeX * sinf(-cameraRot.y) + normalizeY * cosf(-cameraRot.y);
-
-		// 移動量をスティックの角度によって変更
-		float speedWk = fSpeed * ((magnitude - deadzone) / (32767.0f - deadzone));
-
-		// 移動量
-		D3DXVECTOR3 moveWk = m_pMove->Get();
-
-		// プレイヤーの移動
-		moveWk.x += moveX * speedWk;
-		moveWk.z += moveZ * speedWk;
-
-		// 移動量の設定
-		m_pMove->Set(moveWk);
-
-		// プレイヤーの角度を移動方向にする
-		float fDestAngle = atan2f(-moveX, -moveZ);
-
-		*pRotDest = fDestAngle;
-	}
-
-	return bMove;
-}
-
-//===================================================
-// 向いている方向に移動する処理
-//===================================================
-void CPlayerMovement::MoveForward(const float fSpeed)
-{
-	// 移動量の取得
-	D3DXVECTOR3 move = m_pMove->Get();
-
-	// 今の向きの取得
-	float forward = m_pRot->Get().y;
-
-	// 移動方向の計算
-	move.x = sinf(forward + D3DX_PI) * fSpeed;
-	move.z = cosf(forward + D3DX_PI) * fSpeed;
-
-	// 移動量の設定
-	m_pMove->Set(move);
-}
-
-//===================================================
-// 前に進む処理
-//===================================================
-void CPlayerMovement::MoveForward(const float fSpeed, const float fJump)
-{
-	// 移動量の取得
-	D3DXVECTOR3 move = m_pMove->Get();
-
-	// 今の向きの取得
-	float forward = m_pRot->Get().y;
-
-	// 移動方向の計算
-	move.x = sinf(forward + D3DX_PI) * fSpeed;
-	move.y = fJump;
-	move.z = cosf(forward + D3DX_PI) * fSpeed;
-
-	// 移動量の設定
-	m_pMove->Set(move);
-}
-
-//===================================================
-// 移動量の設定
-//===================================================
-void CPlayerMovement::Set(const D3DXVECTOR3 move)
-{
-	// 移動量の設定
-	m_pMove->Set(move);
-}
 
 //===================================================
 // コライダーの更新処理
@@ -1155,34 +778,6 @@ bool CPlayer::CollisionAABB(CColliderAABB* pAABB)
 		return true;
 	}
 	return false;
-}
-
-//===================================================
-// 吹き飛び処理
-//===================================================
-void CPlayer::BlowOff(const D3DXVECTOR3 attacker, const float blowOff, const float jump)
-{
-	// 位置
-	D3DXVECTOR3 pos = CCharacter3D::GetPosition();
-
-	// アタッカーからプレイヤーまでの差分を求める
-	D3DXVECTOR3 diff = pos - attacker;
-
-	// 角度を求める
-	float fAngle = atan2f(diff.x, diff.z);
-
-	// 目的の角度の設定
-	CCharacter3D::GetRotaition()->SetDest(D3DXVECTOR3(0.0f, fAngle, 0.0f));
-
-	// 移動量
-	D3DXVECTOR3 move;
-
-	// 移動量の設定
-	move.x = sinf(fAngle) * blowOff;
-	move.y = jump;
-	move.z = cosf(fAngle) * blowOff;
-
-	m_pMove->Set(move);
 }
 
 //===================================================
@@ -1427,16 +1022,25 @@ void CPlayer::SetDamageMotion(const D3DXVECTOR3 AttackerPos,const int nDamage)
 	// 視界の中だったら
 	if (CCollisionFOV::Collision(AttackerPos, m_pFOV.get()))
 	{
+		// 位置の取得
+		D3DXVECTOR3 pos = CCharacter3D::GetPosition();
+
 		// 吹き飛び処理
-		BlowOff(AttackerPos, 10.0f, 10.0f);
+		float fAngle = m_pMovement->BlowOff(pos - AttackerPos, 100.0f, 10.0f);
+
+		// 向きの設定
+		SetAngle(fAngle);
 
 		// プレイヤーの状態の設定
 		ChangeState(make_shared<CPlayerDamage>(nDamage));
 	}
 	else
 	{
+		// 向きの取得
+		float fAngle = CCharacter3D::GetRotaition()->Get().y;
+
 		// 前に吹き飛ぶ
-		BlowForward(20.0f, 15.0f);
+		m_pMovement->BlowForward(20.0f, 15.0f, fAngle);
 
 		// プレイヤーの状態の設定
 		ChangeState(make_shared<CPlayerDamageBack>(nDamage));
@@ -1802,22 +1406,112 @@ void CPlayer::Config(const int nLife, const float fSpeed, const D3DXVECTOR3 Shad
 }
 
 //===================================================
-// 前に吹き飛ぶ
+// 移動の更新処理
 //===================================================
-void CPlayer::BlowForward(const float fMove, const float fJump)
+void CPlayer::UpdateMove(CMotion* pMotion, const bool bAlive, CInputKeyboard* pKeyboard, CInputJoypad* pJoyPad, CGameCamera* pGameCamera)
 {
-	// 目的の角度の設定
-	float fAngle = CCharacter3D::GetRotaition()->Get().y;
+	// 速さ
+	float fSpeed = m_bDash ? CCharacter3D::GetSpeed() : 1.5f;
 
-	// 移動量
-	D3DXVECTOR3 move;
+	float fAngleDest = 0.0f;
 
-	// 移動量の設定
-	move.x = sinf(fAngle + D3DX_PI) * fMove;
-	move.y = fJump;
-	move.z = cosf(fAngle + D3DX_PI) * fMove;
+	// カメラの状態の取得
+	CGameCamera::STATE cameraState = pGameCamera->GetState();
 
-	m_pMove->Set(move);
+	// 移動できるなら
+	if (IsMove(pMotion) && bAlive)
+	{
+		// 移動を入力していたら
+		const bool bKeyboardMove = m_pMovement->MoveKeyboard(pKeyboard, fSpeed, &fAngleDest);
+		const bool bJoypadMove = m_pMovement->MoveJoypad(pJoyPad, fSpeed, &fAngleDest);
+
+		// 移動ごとの処理ができるか判定
+		const bool bPlayerMove = bKeyboardMove || bJoypadMove;
+
+		// 移動ごとの処理ができるなら
+		if (bPlayerMove)
+		{
+			CCharacter3D::GetRotaition()->SetDest(D3DXVECTOR3(0.0f, fAngleDest, 0.0f));
+
+			// ダッシュモーションか歩きモーションかを判定
+			int isDashMotion = (m_bDash ? MOTIONTYPE_DASH : MOTIONTYPE_MOVE);
+
+			// 現在のモーションの取得
+			int nNowMotionType = pMotion->GetBlendType();
+
+			// ダウンニュートラルか判定
+			const bool isDownNeutral = nNowMotionType == MOTIONTYPE_DOWN_NEUTRAL || nNowMotionType == MOTIONTYPE_DOWN_NEUTRA_BACK;
+
+			// ダウンニュートラルか判定
+			int motiontype = isDownNeutral ? MOTIONTYPE_AVOID : isDashMotion;
+
+			// フレームを設定
+			const int nFrame = m_bDash ? 5 : 10;
+
+			// モーションの設定
+			pMotion->SetMotion(motiontype, true, nFrame);
+
+			// ダッシュ状態だったら
+			if (motiontype == MOTIONTYPE_DASH)
+			{
+				// 状態の変更
+				ChangeState(make_shared<CPlayerDash>());
+			}
+			else if (motiontype == MOTIONTYPE_MOVE)
+			{
+				// 状態の変更
+				ChangeState(make_shared<CPlayerMove>());
+			}
+			else
+			{
+				// 移動方向に向ける処理
+				SetMoveAngle(pGameCamera, pKeyboard, pJoyPad);
+
+				// 状態の変更
+				ChangeState(make_shared<CPlayerAvoid>(25.0f));
+			}
+		}
+		else
+		{
+			// モーションの種類の取得
+			int motiontype = pMotion->GetBlendType();
+
+			// 移動状態だったら
+			if (motiontype == MOTIONTYPE_MOVE || motiontype == MOTIONTYPE_DASH && pMotion != nullptr)
+			{
+				pMotion->SetMotion(MOTIONTYPE_NEUTRAL, true, 15);
+
+				// 状態の変更
+				ChangeState(make_shared<CPlayerNormal>());
+			}
+
+			// ロックオン状態だったら&&ダメージ状態じゃないなら
+			if (cameraState == CGameCamera::STATE_ROCKON && !IsDamage(pMotion))
+			{
+				// 注視点の位置の取得
+				D3DXVECTOR3 posR = pGameCamera->GetPosR();
+
+				// 位置の取得
+				D3DXVECTOR3 pos = CCharacter3D::GetPosition();
+
+				// 向きの取得
+				float fAngle = GetTargetAngle(pos, posR);
+
+				SetAngle(fAngle);
+			}
+
+		}
+	}
+
+	// ダッシュボタンを押したら
+	if ((pKeyboard->GetPress(DIK_LSHIFT) || pJoyPad->GetPress(pJoyPad->JOYKEY_LEFT_SHOULDER)))
+	{
+		m_bDash = true;
+	}
+	else
+	{
+		m_bDash = false;
+	}
 }
 
 //===================================================
@@ -1838,7 +1532,7 @@ bool CPlayer::IsMove(CMotion *pMotion)
 	if (motiontype == MOTIONTYPE_AVOID) return false;
 	
 	// カウンター状態だったら移動できない
-	if (pMotion->IsEventFrame(1, 40, MOTIONTYPE_PARRY)) return false;
+	if (pMotion->IsEventFrame(0, 40, MOTIONTYPE_PARRY)) return false;
 	
 	// パリィだったら移動できない
 	if (motiontype == MOTIONTYPE_PUNCH) return false;
@@ -1865,24 +1559,28 @@ bool CPlayer::IsMove(CMotion *pMotion)
 bool CPlayer::IsStance(CMotion* pMotion)
 {
 	// モーションの種類
-	int motiontype = pMotion->GetBlendType();
-	
+	int motiontypeBlend = pMotion->GetBlendType();
+	int motiontype = pMotion->GetType();
+
 	// ダメージモーションだったら
 	if (IsDamage(pMotion)) return false;
-		
+
 	// 構え状態だったら
-	if (motiontype == MOTIONTYPE_STANCE) return false;
+	if (motiontypeBlend == MOTIONTYPE_STANCE || motiontype == MOTIONTYPE_STANCE) return false;
 	
 	// 回避状態だったら
-	if (motiontype == MOTIONTYPE_AVOID) return false;
+	if (motiontypeBlend == MOTIONTYPE_AVOID) return false;
 	
-	// 反撃状態だったら移動できない
-	if (motiontype == MOTIONTYPE_REVENGE) return false;
+	// 反撃状態だったら構え出来ない
+	if (motiontypeBlend == MOTIONTYPE_REVENGE) return false;
 
-	// 反撃状態だったら移動できない
-	if (motiontype == MOTIONTYPE_REVENGEATTACK) return false;
+	// 反撃状態だったら構え出来ない
+	if (motiontypeBlend == MOTIONTYPE_REVENGEATTACK) return false;
 
-	return true;
+	// 反撃していたら構えできない
+	if (motiontypeBlend == MOTIONTYPE_ROUNDKICK || motiontype == MOTIONTYPE_ROUNDKICK) return false;
+
+	return true; 
 }
 
 //===================================================
@@ -1900,7 +1598,7 @@ bool CPlayer::IsAvoid(CMotion* pMotion)
 	if (pMotion->IsEventFrame(1, m_nParryTime, MOTIONTYPE_STANCE)) return false;
 	
 	// 反撃モーションの時一定時間回避できない
-	if (pMotion->IsEventFrame(1, 15, MOTIONTYPE_PARRY)) return false;
+	if (pMotion->IsEventFrame(0, 15, MOTIONTYPE_PARRY)) return false;
 	
 	// 回避モーションの時回避できない
 	if (motiontype == MOTIONTYPE_AVOID || pMotion->GetType() == MOTIONTYPE_AVOID) return false;

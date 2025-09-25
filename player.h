@@ -75,6 +75,7 @@ public:
 		MOTIONTYPE_BACK_DAMAGE,		// 後ろから攻撃を受けた
 		MOTIONTYPE_DOWN_NEUTRA_BACK,// ダウンニュートラル(Back)
 		MOTIONTYPE_JUMP_ATTACK,		// ジャンプ攻撃
+		MOTIONTYPE_LEFT_MOVE,		// 左移動
 		MOTIONTYPE_MAX
 	}MOTIONTYPE;
 
@@ -152,7 +153,6 @@ public:
 
 	int SuccessParry(void);
 
-	void BlowOff(const D3DXVECTOR3 attacker, const float blowOff, const float jump);
 	bool IsParry(const D3DXVECTOR3 pos);
 	void SetAngle(const float angleY);
 	bool CollisionObstacle(D3DXVECTOR3* pPos);
@@ -186,7 +186,7 @@ private:
 	void UpdateStamina(void);
 	bool CollisionBlock(D3DXVECTOR3 *pPos);
 	void Config(const int nLife,const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size);
-	void BlowForward(const float fMove, const float fJump);
+	void UpdateMove(CMotion* pMotion,const bool bAlive, CInputKeyboard *pKeyboard, CInputJoypad *pJoyPad, CGameCamera* pGameCamera);
 
 	static constexpr int NUM_RUBBLE = 16;			// 瓦礫の数
 
@@ -195,7 +195,7 @@ private:
 	std::unique_ptr<CColliderFOV> m_pFOV;			// 視界の判定
 	std::unique_ptr<CColliderSphere> m_pSphere;		// 円のコライダー
 	std::unique_ptr<CColliderCapsule> m_Capsule;	// カプセルコライダー
-	std::unique_ptr<CVelocity> m_pMove;				// 移動量
+	//std::unique_ptr<CVelocity> m_pMove;				// 移動量
 	std::unique_ptr<CColliderAABB> m_pAABB;			// コライダーAABB
 	CMeshOrbit* m_pOrbit;							// 軌跡の処理
 	CObserver<int>* m_pHpObserver;					// HPオブザーバークラスへのポインタ
@@ -217,27 +217,6 @@ private:
 	bool m_bJump;									// ジャンプできるかどうか
 	bool m_bDash;									// 走ってるかどうか
 	bool m_bRevenge;								// 絶対反撃できるかどうか
-};
-
-//***************************************************
-// プレイヤーの移動処理の定義
-//***************************************************
-class CPlayerMovement
-{
-public:
-	CPlayerMovement();
-	~CPlayerMovement();
-
-	// プレイヤーのmoveを受け取る
-	void Init(CVelocity* pMove, CRotation* pRot);
-	bool MoveKeyboard(CInputKeyboard* pKeyboard, const float fSpeed, float* pRotDest);
-	bool MoveJoypad(CInputJoypad* pJoypad, const float fSpeed, float* pRotDest);
-	void MoveForward(const float fSpeed);
-	void MoveForward(const float fSpeed,const float fJump);
-	void Set(const D3DXVECTOR3 move);
-private:
-	CRotation* m_pRot;	// 向き
-	CVelocity* m_pMove;		// 移動量
 };
 
 #endif

@@ -126,9 +126,6 @@
     <ClCompile Include="object.cpp">
       <Filter>ソース ファイル\base</Filter>
     </ClCompile>
-    <ClCompile Include="mesh.cpp">
-      <Filter>ソース ファイル\mesh</Filter>
-    </ClCompile>
     <ClCompile Include="meshfield.cpp">
       <Filter>ソース ファイル\mesh</Filter>
     </ClCompile>
@@ -456,6 +453,9 @@
     <ClCompile Include="ArenaDust.cpp">
       <Filter>ソース ファイル\objectX</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerMovement.cpp">
+      <Filter>ソース ファイル\model\player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="testword.h">
@@ -495,9 +495,6 @@
       <Filter>ヘッダー ファイル\mesh</Filter>
     </ClInclude>
     <ClInclude Include="cylinder.h">
-      <Filter>ヘッダー ファイル\mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh.h">
       <Filter>ヘッダー ファイル\mesh</Filter>
     </ClInclude>
     <ClInclude Include="meshfield.h">
@@ -796,6 +793,9 @@
     </ClInclude>
     <ClInclude Include="ArenaDust.h">
       <Filter>ヘッダー ファイル\objectX</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerMovement.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

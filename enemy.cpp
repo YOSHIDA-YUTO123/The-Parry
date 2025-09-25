@@ -394,7 +394,7 @@ void CEnemy::Update(void)
 
 	// 武器の先端の位置
 	D3DXVECTOR3 WeponPos = GetPositionFromMatrix(m_weponMatrix);
-	D3DXVECTOR3 WeponBottom = GetModelPos(15);
+	D3DXVECTOR3 WeponBottom = GetModelPos(MODEL_WEPON);
 
 	// 攻撃モーションのたたきつけになったら
 	if (pMotion->IsEventFrame(72,72, MOTIONTYPE_SMASH))
@@ -424,16 +424,6 @@ void CEnemy::Update(void)
 		pMesh->SetImpact(config);
 	}
 
-	// HPが半分以下だったら
-	if (m_pStateManager != nullptr && m_pStateManager->CheckLowHp(2))
-	{
-		// パーティクルの生成
-		auto pNormal = CParticle3DNormal::Create(CCharacter3D::GetModelPos(MODEL_CHEST), 20.0f, D3DXCOLOR(1.0f, 0.4f, 1.0f, 1.0f));
-
-		// パーティクルの設定処理
-		pNormal->SetParticle(5.0f, 120, 5, 1, 60);
-		pNormal->SetParam(CEffect3D::TYPE_NORAML, 200);
-	}
 	// カメラが使われていたら
 	if (pCamera != nullptr)
 	{
@@ -452,6 +442,17 @@ void CEnemy::Update(void)
 
 	// オブザーバーへの通知処理
 	Notify();
+
+	// HPが半分以下だったら
+	if (m_pStateManager != nullptr && m_pStateManager->CheckLowHp(2))
+	{
+		// パーティクルの生成
+		auto pNormal = CParticle3DNormal::Create(CCharacter3D::GetModelPos(MODEL_CHEST), 20.0f, D3DXCOLOR(1.0f, 0.4f, 1.0f, 1.0f));
+
+		// パーティクルの設定処理
+		pNormal->SetParticle(5.0f, 120, 5, 1, 60);
+		pNormal->SetParam(CEffect3D::TYPE_NORAML, 200);
+	}
 
 	if (CCharacter3D::GetAlive() == false)
 	{
@@ -508,15 +509,6 @@ void CEnemy::Update(void)
 
 	// 向きの補間
 	CCharacter3D::GetRotaition()->SetSmoothAngle(0.1f);
-
-	//// モデルの位置の取得
-	//D3DXVECTOR3 EffectPos = GetPositionFromMatrix(m_RushEffectMtx);
-
-	//auto p = CEffect3D::Create(EffectPos, 50.0f, WHITE, CEffect3D::TYPE_NORAML);
-	//p->Set(60, VEC3_NULL);
-
-	//// 腰
-	//D3DXVECTOR3 waist = CCharacter3D::GetModelPos(MODEL_WAIST);
 }
 
 //===================================================

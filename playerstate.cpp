@@ -26,6 +26,7 @@
 #include "enemy.h"
 #include "math.h"
 #include "transform.h"
+#include "PlayerMovement.h"
 
 using MOTION = CPlayer::MOTIONTYPE; // プレイヤーの列挙型の使用
 using namespace std;				// 名前空間stdの使用
@@ -373,6 +374,9 @@ void CPlayerAvoid::Update(void)
 	// 移動制御の取得
 	auto pMoveMent = pPlayer->GetMovement();
 
+	// 向きの取得
+	float fAnlge = pPlayer->GetRotaition()->Get().y;
+
 	// モーションがあるなら
 	if (pMotion != nullptr)
 	{
@@ -380,7 +384,7 @@ void CPlayerAvoid::Update(void)
 		if (pMoveMent != nullptr && pMotion->IsEventFrame(1,24,CPlayer::MOTIONTYPE_AVOID))
 		{
 			// 向いている方向に進む処理
-			pMoveMent->MoveForward(m_fSpeed);
+			pMoveMent->MoveForward(m_fSpeed, fAnlge + D3DX_PI);
 		}
 
 		// モーションが終わったら
@@ -442,6 +446,9 @@ void CPlayerRoundKick::Update(void)
 	// モーションの取得
 	CMotion* pMotion = pPlayer->GetMotion();
 
+	// 向きの取得
+	float fAnlge = pPlayer->GetRotaition()->Get().y;
+
 	// モーションがあるなら
 	if (pMotion != nullptr)
 	{
@@ -451,7 +458,7 @@ void CPlayerRoundKick::Update(void)
 		if (pMotion->IsEventFrame(1, 10, pPlayer->MOTIONTYPE_ROUNDKICK))
 		{
 			// 向いている方向に進む
-			pPlayer->GetMovement()->MoveForward(10.0f);
+			pPlayer->GetMovement()->MoveForward(10.0f, fAnlge + D3DX_PI);
 		}
 
 		if (pMotion->IsEventFrame(15, 15, pPlayer->MOTIONTYPE_ROUNDKICK))
@@ -875,6 +882,9 @@ void CPlayerRevengeAttack::Update(void)
 	pNormal->SetParticle(5.0f, 120, 5, 1, 60);
 	pNormal->SetParam(CEffect3D::TYPE_NORAML, 100);
 
+	// 向きの取得
+	float fAnlge = pPlayer->GetRotaition()->Get().y;
+
 	if (pMotion != nullptr)
 	{
 		// 現在のモードの取得
@@ -895,7 +905,7 @@ void CPlayerRevengeAttack::Update(void)
 
 			// 少し前に進む
 			pPlayer->GetMovement()->Set(D3DXVECTOR3(0.0f, fJumpHeight, 0.0f));
-			pPlayer->GetMovement()->MoveForward(50.0f);
+			pPlayer->GetMovement()->MoveForward(50.0f, fAnlge + D3DX_PI);
 
 			// 重力を無効化
 			pPlayer->EnableGravity(false);
@@ -1122,6 +1132,9 @@ void CPlayerJumpAttack::Update(void)
 		return;
 	}
 
+	// 向きの取得
+	float fAnlge = pPlayer->GetRotaition()->Get().y;
+
 	// プレイヤーの位置の取得
 	D3DXVECTOR3 pos = pPlayer->GetPosition();
 
@@ -1184,7 +1197,7 @@ void CPlayerJumpAttack::Update(void)
 			float fDistance = GetDistance(enemyChestCenter - pos);
 
 			// 移動量の設定
-			pPlayer->GetMovement()->MoveForward(fDistance / JUMP_MOVE_FRAME);
+			pPlayer->GetMovement()->MoveForward(fDistance / JUMP_MOVE_FRAME, fAnlge + D3DX_PI);
 		}
 		// モーションがおわったら
 		if (pMotion->IsFinishEndBlend())

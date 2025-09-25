@@ -354,7 +354,7 @@ void CBird::FlyMove(const float fMove)
 	// ‰~‰^“®‚Ì‘¬“xƒxƒNƒgƒ‹‚ðŒvŽZ
 	moveWk.x = -sinf(fTime) * fMove;
 	moveWk.z = cosf(fTime) * fMove;
-
+	
 	// ˆÚ“®—Ê‚ÌÝ’è
 	m_pMove->Set(moveWk);
 

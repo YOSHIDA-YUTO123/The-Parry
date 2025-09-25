@@ -9,11 +9,13 @@
 // インクルードファイル
 //***************************************************
 #include "TitlePlayer.h"
-#include"transform.h"
-#include"player.h"
+#include "transform.h"
+#include "player.h"
 #include "TitleMenu.h"
-#include"playerstate.h"
-#include"motion.h"
+#include "playerstate.h"
+#include "motion.h"
+#include "PlayerMovement.h"
+#include "transform.h"
 
 using namespace std; // 名前空間stdを使用
 
@@ -22,7 +24,6 @@ using namespace std; // 名前空間stdを使用
 //===================================================
 CTitlePlayer::CTitlePlayer() : CCharacter3D(TYPE_TITLEPLAYER)
 {
-	m_pMove = nullptr;
 	m_pMoveMent = nullptr;
 }
 
@@ -62,12 +63,9 @@ HRESULT CTitlePlayer::Init(void)
 	// 初期化処理
 	CCharacter3D::Init();
 
-	// 移動量の生成
-	m_pMove = make_shared<CVelocity>();
-
 	// 移動制御の生成
 	m_pMoveMent = make_unique<CPlayerMovement>();
-	m_pMoveMent->Init(m_pMove.get(), GetRotaition());
+	m_pMoveMent->Init();
 
 	return S_OK;
 }
@@ -77,8 +75,12 @@ HRESULT CTitlePlayer::Init(void)
 //===================================================
 void CTitlePlayer::Uninit(void)
 {
-	m_pMove = nullptr;
-	m_pMoveMent = nullptr;
+	// 移動クラスの破棄
+	if (m_pMoveMent != nullptr)
+	{
+		m_pMoveMent->Uninit();
+		m_pMoveMent = nullptr;
+	}
 
 	// 終了処理
 	CCharacter3D::Uninit();
@@ -92,8 +94,11 @@ void CTitlePlayer::Update(void)
 	// 位置の取得
 	D3DXVECTOR3 pos = CCharacter3D::GetPosition();
 
-	m_pMove->SetInertia3D(0.25f);
-	pos += m_pMove->Get();
+	if (m_pMoveMent != nullptr)
+	{
+		// 位置の更新処理
+		m_pMoveMent->UpdatePosition(&pos, nullptr);
+	}
 
 	// タイトルのマネージャーの取得
 	auto pTitleMenuManager = CTitleMenuManager::GetInstance();
@@ -106,7 +111,13 @@ void CTitlePlayer::Update(void)
 
 		pMotion->SetMotion(MOTIONTYPE_DASH, true, 5);
 
-		m_pMoveMent->MoveForward(10.0f);
+		if (m_pMoveMent != nullptr)
+		{
+			// 向きの取得
+			float fAngle = CCharacter3D::GetRotaition()->Get().y;
+
+			m_pMoveMent->MoveForward(10.0f, fAngle + D3DX_PI);
+		}
 	}
 
 	// モーションの更新処理

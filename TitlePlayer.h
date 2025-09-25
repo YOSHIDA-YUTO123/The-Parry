@@ -47,7 +47,6 @@ public:
 	void Update(void) override;
 	void Draw(void) override;
 private:
-	std::shared_ptr<CVelocity> m_pMove;				// 移動量クラスへのポインタ
 	std::unique_ptr<CPlayerMovement> m_pMoveMent;	// 移動制御クラスへのポインタ
 };
 

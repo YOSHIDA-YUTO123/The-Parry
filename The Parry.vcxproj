@@ -186,6 +186,7 @@
     <ClCompile Include="ParryEffect.cpp" />
     <ClCompile Include="particle2D.cpp" />
     <ClCompile Include="ParticleSpark.cpp" />
+    <ClCompile Include="PlayerMovement.cpp" />
     <ClCompile Include="ranking.cpp" />
     <ClCompile Include="RankingManager.cpp" />
     <ClCompile Include="RankingScore.cpp" />
@@ -231,7 +232,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="manager.cpp" />
     <ClCompile Include="math.cpp" />
-    <ClCompile Include="mesh.cpp" />
     <ClCompile Include="meshfield.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="modelManager.cpp" />
@@ -306,6 +306,7 @@
     <ClInclude Include="ParryEffect.h" />
     <ClInclude Include="particle2D.h" />
     <ClInclude Include="ParticleSpark.h" />
+    <ClInclude Include="PlayerMovement.h" />
     <ClInclude Include="ranking.h" />
     <ClInclude Include="RankingManager.h" />
     <ClInclude Include="RankingScore.h" />
@@ -351,7 +352,6 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="manager.h" />
     <ClInclude Include="math.h" />
-    <ClInclude Include="mesh.h" />
     <ClInclude Include="meshfield.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="modelManager.h" />
