@@ -214,7 +214,7 @@ HRESULT CMeshField::Init(void)
 		}
 	}
 
-	//インデックスバッファのアンロック
+	// インデックスバッファのアンロック
 	m_pIdxBuffer->Unlock();
 
 	return S_OK;
