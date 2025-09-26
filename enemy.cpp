@@ -57,6 +57,12 @@ constexpr int NUM_RUBBLE = 16;					// 瓦礫を出す数
 constexpr int NUM_MATRIX = 8;					// 武器につけるマトリックスの数
 constexpr int NEXT_ACTION_TIME = 300;			// 次の行動の抽選までの時間
 constexpr int MODEL_WEPON = 15;					// 武器のインデックス
+constexpr int WEAK_DAMAGE = 1;					// セーフ時のダメージ
+constexpr int NORMAL_DAMAGE = 5;				// 普通時のダメージ
+constexpr int PARFECT_DAMAGE = 10;				// パーフェクト時のダメージ
+constexpr int GUARD_WEAK_DAMAGE = 1;			// セーフ時のダメージ(ガード時)
+constexpr int GUARD_NORMAL_DAMAGE = 3;			// 普通時のダメージ(ガード時)
+constexpr int GUARD_PARFECT_DAMAGE = 5;		// パーフェクト時のダメージ(ガード時)
 
 using namespace Const;							// 名前空間Constを使用する
 using namespace math;							// 名前空間mathを使用する
@@ -576,13 +582,13 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 		case CPlayer::PARRY_MISS:
 			break;
 		case CPlayer::PARRY_WEAK:
-			nDamage = 1;
+			nDamage = GUARD_WEAK_DAMAGE;
 			break;
 		case CPlayer::PARRY_NORMAL:
-			nDamage = 3;
+			nDamage = GUARD_NORMAL_DAMAGE;
 			break;
 		case CPlayer::PARRY_PARFECT:
-			nDamage = 5;
+			nDamage = GUARD_PARFECT_DAMAGE;
 			break;
 		default:
 			break;
@@ -602,7 +608,7 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 	case CPlayer::PARRY_WEAK:
 	{
 		// 状態の設定
-		ChangeState(make_shared<CEnemyDamageS>(1));
+		ChangeState(make_shared<CEnemyDamageS>(WEAK_DAMAGE));
 
 		// 位置の取得
 		D3DXVECTOR3 pos = GetPosition();
@@ -674,7 +680,7 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 		}
 
 		// 状態の設定
-		ChangeState(make_shared<CEnemyDamageS>(5));
+		ChangeState(make_shared<CEnemyDamageS>(NORMAL_DAMAGE));
 	}
 		break;
 	case CPlayer::PARRY_PARFECT:
@@ -725,7 +731,7 @@ void CEnemy::SelectDamageMotion(int success,const D3DXVECTOR3 ImpactPos)
 		}
 
 		// 状態の設定
-		ChangeState(make_shared<CEnemyDamageL>(10));
+		ChangeState(make_shared<CEnemyDamageL>(PARFECT_DAMAGE));
 	}
 		break;
 	default:
@@ -1581,6 +1587,9 @@ void CEnemy::CollisionPlayer(CMotion *pPlayerMotion,CPlayer *pPlayer)
 	{
 		// プレイヤーとの当たり判定
 		pPlayer->CollisionCapsule(m_pCapsule.get());
+
+		// 成功度の設定
+		pPlayer->SetParryResult(nParrySuccess);
 	}
 
 	// パリィモーションの蹴りになったら
@@ -1601,7 +1610,7 @@ void CEnemy::CollisionPlayer(CMotion *pPlayerMotion,CPlayer *pPlayer)
 		}
 	}
 
-	// パリィモーションの蹴りになったら
+	// パリィモーションのパンチになったら
 	if (pPlayerMotion->IsEventFrame(13, 13, pPlayer->MOTIONTYPE_PUNCH) && IsDamageMotion() == false)
 	{
 		// プレイヤーの右手の位置
@@ -1632,6 +1641,9 @@ void CEnemy::CollisionPlayer(CMotion *pPlayerMotion,CPlayer *pPlayer)
 		// 手が当たったら
 		if (CCollisionSphere::Collision(&ChestSphere, &Sphere))
 		{
+			// 成功度の設定
+			pPlayer->SetParryResult(nParrySuccess);
+
 			// エフェクトの生成
 			auto pEffect = CParticle3DNormal::Create(PlayerPos, 20.0f, D3DXCOLOR(1.0f, 1.0f, 0.4f, 1.0f));
 			pEffect->SetParticle(35.0f, 360, 150, 1, 314);

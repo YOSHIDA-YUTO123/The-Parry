@@ -75,6 +75,15 @@ public:
 	/// <returns>ˆÚ“®‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©</returns>
 	bool MoveJoypad(CInputJoypad* pJoypad, const float fSpeed, float* pRotDest);
 
+	/// <summary>
+	/// ƒpƒbƒh‚ÌˆÚ“®&ˆÚ“®•ûŒü‚ÌŽæ“¾
+	/// </summary>
+	/// <param name="pKeyboard"></param>
+	/// <param name="fSpeed"></param>
+	/// <param name="pRotDest"></param>
+	/// <returns>ˆÚ“®•ûŒü</returns>
+	MOVE_DIRECTION GetMoveJoypadDir(CInputJoypad* pJoypad, const float fSpeed, float* pRotDest);
+
 	void MoveForward(const float fSpeed, const float fAngle);
 	void MoveForward(const float fSpeed, const float fJump, const float fAngle);
 

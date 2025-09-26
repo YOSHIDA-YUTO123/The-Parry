@@ -175,6 +175,7 @@ public:
 	void SetDamageMotion(const D3DXVECTOR3 AttackerPos, const int nDamage);
 	void SetRubble(const D3DXVECTOR3 pos);
 	bool GetRevengeState(void) const { return m_bRevenge; }
+	void SetParryResult(const int nParry);
 private:
 	void CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos, CMotion* pMotion); // インパクトの当たり判定
 	bool IsMove(CMotion* pMotion);		// 移動できるか判定

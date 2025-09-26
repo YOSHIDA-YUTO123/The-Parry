@@ -57,20 +57,24 @@
 //***************************************************
 // 名前空間
 //***************************************************
-using namespace math;						// 名前空間mathを使用
-using namespace std;						// 名前空間をstdを使用する
-using namespace Const;						// 名前空間Constを使用する
+using namespace math;							// 名前空間mathを使用
+using namespace std;							// 名前空間をstdを使用する
+using namespace Const;							// 名前空間Constを使用する
 
-using STATE = CCharacter3D::STATE;			// キャラクターの状態
+using STATE = CCharacter3D::STATE;				// キャラクターの状態
 
-constexpr float JUMP_HEIGHT = 25.0f;		// ジャンプ量
-constexpr float SHADOW_SIZE = 50.0f;		// 影の大きさ
-constexpr float SHADOW_MAX_HEIGHT = 500.0f; // 影が見える最大の高さ
-constexpr float SHADOW_A_LEVEL = 0.9f;		// 影のアルファ値のオフセット
-constexpr float AVOID_STAMINA = 15.0f;		// 回避に使用するスタミナ
-constexpr int PARRY_TIME = 25;				// パリィの有効時間
-constexpr int ATTACK_TIME = 120;			// 攻撃の有効時間
-constexpr float SIDE_MOVE_VALUE = 1.0f;		// 横移動
+constexpr float JUMP_HEIGHT = 25.0f;			// ジャンプ量
+constexpr float SHADOW_SIZE = 50.0f;			// 影の大きさ
+constexpr float SHADOW_MAX_HEIGHT = 500.0f;		// 影が見える最大の高さ
+constexpr float SHADOW_A_LEVEL = 0.9f;			// 影のアルファ値のオフセット
+constexpr float AVOID_STAMINA = 15.0f;			// 回避に使用するスタミナ
+constexpr float SIDE_MOVE_VALUE = 1.0f;			// 横移動
+constexpr float ADD_REVENGE_WEAK = 5.0f;		// 反撃ゲージの加算量(セーフ時)
+constexpr float ADD_REVENGE_NORMAL = 15.0f;		// 反撃ゲージの加算量(ノーマル時)
+constexpr float ADD_REVENGE_PERFECT = 25.0f;	// 反撃ゲージの加算量(パーフェクト時)
+
+constexpr int PARRY_TIME = 25;					// パリィの有効時間
+constexpr int ATTACK_TIME = 120;				// 攻撃の有効時間
 
 //===================================================
 // コンストラクタ
@@ -466,8 +470,12 @@ void CPlayer::Update(void)
 		// パーティクルの設定処理
 		pNormal->SetParticle(5.0f, 120, 5, 1, 60);
 		pNormal->SetParam(CEffect3D::TYPE_NORAML, 100);
+		
+		// モーションの種類の取得
+		int nMotiontype = pMotion->GetBlendType();
 
-		if ((pKeyboard->GetTrigger(DIK_Q) || pJoypad->GetTrigger(pJoypad->JOYKEY_LEFT_THUMB)) && !IsDamage(pMotion))
+		if ((pKeyboard->GetTrigger(DIK_Q) || pJoypad->GetTrigger(pJoypad->JOYKEY_LEFT_THUMB)) &&
+			!IsDamage(pMotion) && nMotiontype != MOTIONTYPE_REVENGEATTACK)
 		{
 			// 状態の遷移
 			ChangeState(make_shared<CPlayerRevenge>());
@@ -1096,6 +1104,33 @@ void CPlayer::SetRubble(const D3DXVECTOR3 pos)
 }
 
 //===================================================
+// パリィの成功度の設定
+//===================================================
+void CPlayer::SetParryResult(const int nParry)
+{
+	// 種類の遷移
+	switch (nParry)
+	{
+	case PARRY_MISS:
+		break;
+	case PARRY_WEAK:
+		m_fDestRevengeValue += ADD_REVENGE_WEAK;
+		m_nWeakCnt++;
+		break;
+	case PARRY_NORMAL:
+		m_fDestRevengeValue += ADD_REVENGE_NORMAL;
+		m_nNormalCnt++;
+		break;
+	case PARRY_PARFECT:
+		m_fDestRevengeValue += ADD_REVENGE_PERFECT;
+		m_nPerfectCnt++;
+		break;
+	default:
+		break;
+	}
+}
+
+//===================================================
 // 剣の軌跡の削除
 //===================================================
 void CPlayer::DeleteOrbit(void)
@@ -1209,17 +1244,11 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos, const PARRYMOTION parry)
 			pRenderer->onEffect(0.8f);
 		}
 
-		// 反撃ゲージを増やす
-		m_fDestRevengeValue += 25;
-
 		if (pSound != nullptr)
 		{
 			// パリィ
 			pSound->Play(CSound::SOUND_LABEL_PARRYPARFECT);
 		}
-
-		// パーフェクト回数を増やす
-		m_nPerfectCnt++;
 
 		// 成功度の設定
 		m_ParryResult = PARRY_PARFECT;
@@ -1235,16 +1264,11 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos, const PARRYMOTION parry)
 		pParticle->SetParam(20.0f, 60, 30, 10, D3DXVECTOR3(0.0f, -10.0f, 0.0f));
 		pParticle->SetParam(7, 100);
 
-		m_fDestRevengeValue += 15;
-
 		if (pSound != nullptr)
 		{
 			// パリィ
 			pSound->Play(CSound::SOUND_LABEL_PARRYNORMAL);
 		}
-
-		// 普通回数を増やす
-		m_nNormalCnt++;
 
 		// 成功度の設定
 		m_ParryResult = PARRY_NORMAL;
@@ -1260,16 +1284,11 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos, const PARRYMOTION parry)
 		pParticle->SetParam(20.0f, 60, 30, 10, D3DXVECTOR3(0.0f, -10.0f, 0.0f));
 		pParticle->SetParam(7, 100);
 
-		m_fDestRevengeValue += 5;
-
 		if (pSound != nullptr)
 		{
 			// パリィ
 			pSound->Play(CSound::SOUND_LABEL_PARRYWEAK);
 		}
-
-		// 弱い回数を増やす
-		m_nWeakCnt++;
 
 		// 成功度の設定
 		m_ParryResult = PARRY_WEAK;
@@ -1533,14 +1552,31 @@ void CPlayer::UpdateRockOnMove(CMotion* pMotion, const bool bAlive, CInputKeyboa
 	if (IsMove(pMotion) && bAlive)
 	{
 		// 移動方向
-		auto moveDir = m_pMovement->GetMoveKeyboardDir(pKeyboard, fSpeed, &fAngleDest);
+		auto MoveDir = CPlayerMovement::MOVE_DIRECTION::NONE;
+
+		// 移動方向
+		auto KeyboardmoveDir = m_pMovement->GetMoveKeyboardDir(pKeyboard, fSpeed, &fAngleDest);
+		auto JoypadmoveDir = m_pMovement->GetMoveJoypadDir(pJoyPad, fSpeed, &fAngleDest);
 
 		// 移動を入力していたら
-		const bool bKeyboardMove = moveDir != CPlayerMovement::MOVE_DIRECTION::NONE;
-		const bool bJoypadMove = m_pMovement->MoveJoypad(pJoyPad, fSpeed, &fAngleDest);
+		const bool bKeyboardMove = KeyboardmoveDir != CPlayerMovement::MOVE_DIRECTION::NONE;
+		const bool bJoypadMove = JoypadmoveDir != CPlayerMovement::MOVE_DIRECTION::NONE;
 
 		// 移動ごとの処理ができるか判定
 		const bool bPlayerMove = bKeyboardMove || bJoypadMove;
+
+		// キーボードで移動していたら
+		if (bKeyboardMove)
+		{
+			// 移動方向の設定
+			MoveDir = KeyboardmoveDir;
+		}
+		// パッドで移動していたら
+		else if (bJoypadMove)
+		{
+			// 移動方向の設定
+			MoveDir = JoypadmoveDir;
+		}
 
 		// 移動ごとの処理ができるなら
 		if (bPlayerMove)
@@ -1557,7 +1593,7 @@ void CPlayer::UpdateRockOnMove(CMotion* pMotion, const bool bAlive, CInputKeyboa
 			}
 
 			// 移動方向の設定
-			switch (moveDir)
+			switch (MoveDir)
 			{
 			case CPlayerMovement::MOVE_DIRECTION::LEFT:
 				pMotion->SetMotion(MOTIONTYPE_LEFT_MOVE, true, 10);
@@ -1773,7 +1809,6 @@ void CPlayer::Notify(void)
 		// 反撃量の変化を通知する
 		m_pRevengeObserver->OnNotify(m_fRevengeValue);
 	}
-
 }
 
 //===================================================

@@ -416,6 +416,12 @@ void CEnemyDamageL::Init(void)
 		float fAngle = pMovement->BlowOff(pos - PlayerPos, 250.0f, 5.0f);
 		pEnemy->SetAngle(fAngle);
 	}
+
+	// 成功度の取得
+	int nSuccess = pPlayer->SuccessParry();
+
+	// 成功度の設定
+	pPlayer->SetParryResult(nSuccess);
 }
 
 //===================================================
@@ -889,6 +895,12 @@ void CEnemyDamageS::Init(void)
 			break;
 		}
 	}
+
+	// 成功度の取得
+	int nSuccess = pPlayer->SuccessParry();
+
+	// 成功度の設定
+	pPlayer->SetParryResult(nSuccess);
 }
 
 //===================================================
@@ -1048,6 +1060,12 @@ void CEnemyGuard::Init(void)
 		// モーションの再生
 		pMotion->SetMotion(CEnemy::MOTIONTYPE_GUARD, true, 2);
 	}
+
+	// 成功度の取得
+	int nSuccess = pPlayer->SuccessParry();
+
+	// 成功度の設定
+	pPlayer->SetParryResult(nSuccess);
 }
 
 //===================================================

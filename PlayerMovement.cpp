@@ -15,9 +15,25 @@
 #include "GameCamera.h"
 #include "game.h"
 #include "tutorial.h"
+#include "debugproc.h"
 
 using namespace std;	// 名前空間stdの使用
 using namespace Const;	// 名前空間Constの使用
+
+//***************************************************
+// 定数宣言
+//***************************************************
+constexpr float FORWARD_ANGLE_MIN = -25.0f; // 前に進む角度
+constexpr float FORWARD_ANGLE_MAX = 25.0f;  // 前に進む角度
+
+constexpr float LEFT_ANGLE_MAX = -25.0f;    // 左に進む角度
+constexpr float LEFT_ANGLE_MIN = -150.0f;   // 左に進む角度
+
+constexpr float RIGHT_ANGLE_MAX = 150.0f;   // 右に進む角度
+constexpr float RIGHT_ANGLE_MIN = -25.0f;   // 右に進む角度
+
+constexpr float BACK_ANGLE_MAX = 150.0f;    // 後ろに進む角度
+constexpr float BACK_ANGLE_MIN = -150.0f;   // 後ろに進む角度
 
 //===================================================
 // コンストラクタ
@@ -405,6 +421,113 @@ bool CPlayerMovement::MoveJoypad(CInputJoypad* pJoypad, const float fSpeed, floa
 	}
 
 	return bMove;
+}
+
+//===================================================
+// パッドの処理
+//===================================================
+CPlayerMovement::MOVE_DIRECTION CPlayerMovement::GetMoveJoypadDir(CInputJoypad* pJoypad, const float fSpeed, float* pRotDest)
+{
+	// 移動方向
+	MOVE_DIRECTION dir = MOVE_DIRECTION::NONE;
+
+	XINPUT_STATE* pStick;
+
+	pStick = pJoypad->GetJoyStickAngle();
+
+	// モードの取得
+	CScene::MODE mode = CManager::GetMode();
+
+	// カメラの取得
+	CGameCamera* pCamera = nullptr;
+
+	if (mode == CScene::MODE_GAME)
+	{
+		// カメラの取得
+		pCamera = CGame::GetCamera();
+	}
+	else if (mode == CScene::MODE_TUTORIAL)
+	{
+		// カメラの取得
+		pCamera = CTutorial::GetCamera();
+	}
+
+	// 取得できなかったら処理しない
+	if (pCamera == nullptr) return MOVE_DIRECTION::NONE;
+
+	// カメラの向き
+	D3DXVECTOR3 cameraRot = pCamera->GetRotaition();
+
+	// Lスティックの角度
+	float LStickAngleY = pStick->Gamepad.sThumbLY;
+	float LStickAngleX = pStick->Gamepad.sThumbLX;
+
+	// デッドゾーン
+	float deadzone = 32767.0f * 0.25f;
+
+	// スティックの傾けた角度を求める
+	float magnitude = sqrtf((LStickAngleX * LStickAngleX) + (LStickAngleY * LStickAngleY));
+
+	// 動かせる
+	if (magnitude > deadzone)
+	{
+		// アングルを正規化
+		float normalizeX = (LStickAngleX / magnitude);
+		float normalizeY = (LStickAngleY / magnitude);
+
+		// プレイヤーの移動量
+		float moveX = normalizeX * cosf(-cameraRot.y) - normalizeY * sinf(-cameraRot.y);
+		float moveZ = normalizeX * sinf(-cameraRot.y) + normalizeY * cosf(-cameraRot.y);
+
+		// 移動量をスティックの角度によって変更
+		float speedWk = fSpeed * ((magnitude - deadzone) / (32767.0f - deadzone));
+
+		// 移動量
+		D3DXVECTOR3 moveWk = m_pMove->Get();
+
+		// プレイヤーの移動
+		moveWk.x += moveX * speedWk;
+		moveWk.z += moveZ * speedWk;
+
+		// 移動量の設定
+		m_pMove->Set(moveWk);
+
+		// プレイヤーの角度を移動方向にする
+		float fDestAngle = atan2f(-moveX, -moveZ);
+
+		*pRotDest = fDestAngle;
+
+		// 角度の取得
+		float radian = atan2f(LStickAngleX, LStickAngleY);
+
+		// 角度を変換
+		float degree = D3DXToDegree(radian);
+
+		CDebugProc::Print("コントローラーの移動方向%.3f\n", degree);
+
+		// 前方だったら
+		if (degree >= FORWARD_ANGLE_MIN && degree <= FORWARD_ANGLE_MAX)
+		{
+			dir = MOVE_DIRECTION::FORWARD;
+		}
+		// 左方向だったら
+		else if (degree >= LEFT_ANGLE_MIN && degree <= LEFT_ANGLE_MAX)
+		{
+			dir = MOVE_DIRECTION::LEFT;
+		}
+		// 右方向だったら
+		else if (degree >= RIGHT_ANGLE_MIN && degree <= RIGHT_ANGLE_MAX)
+		{
+			dir = MOVE_DIRECTION::RIGHT;
+		}
+		// 後方だったら
+		else if (degree <= BACK_ANGLE_MIN || degree >= BACK_ANGLE_MAX)
+		{
+			dir = MOVE_DIRECTION::BACK;
+		}
+	}
+
+	return dir;
 }
 
 //===================================================
