@@ -632,6 +632,7 @@ bool CInputMouse::OnMousePress(int button_type)
 {
 	return (m_CurrentState.rgbButtons[button_type] & 0x80) ? true : false;
 }
+
 //===============================================
 // マウスのプレス処理
 //===============================================

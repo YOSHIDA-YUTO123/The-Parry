@@ -195,7 +195,6 @@ private:
 	std::unique_ptr<CColliderFOV> m_pFOV;			// 視界の判定
 	std::unique_ptr<CColliderSphere> m_pSphere;		// 円のコライダー
 	std::unique_ptr<CColliderCapsule> m_Capsule;	// カプセルコライダー
-	//std::unique_ptr<CVelocity> m_pMove;				// 移動量
 	std::unique_ptr<CColliderAABB> m_pAABB;			// コライダーAABB
 	CMeshOrbit* m_pOrbit;							// 軌跡の処理
 	CObserver<int>* m_pHpObserver;					// HPオブザーバークラスへのポインタ

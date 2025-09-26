@@ -41,6 +41,9 @@
 #include"ExplosionArea.h"
 #include"sound.h"
 #include "Collision.h"
+#include "EnemyStateAttack.h"
+#include "EnemyStateMovement.h"
+
 //***************************************************
 // ’è”’è‹`
 //***************************************************

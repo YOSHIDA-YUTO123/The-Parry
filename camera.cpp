@@ -258,12 +258,6 @@ void CCamera::MouseView(void)
 	// マウスの取得
 	CInputMouse* pMouse = CManager::GetInputMouse();
 
-
-	//D3DXVECTOR2 Move = pMouse->GetVelocity();
-	//D3DXVECTOR2 MoveOld = pMouse->GetOldVelocity();
-
-	//D3DXVECTOR2 fAngle = Move - MoveOld;
-
 #ifdef _DEBUG
 	// マウスホイール
 	CCamera::MouseWheel();
@@ -333,9 +327,6 @@ void CCamera::MouseView(void)
 		}
 
 		SetCursorPos((long)SCREEN_WIDTH / (long)2.0f, (long)SCREEN_HEIGHT / (long)2.0f);
-
-		// 注視点の更新処理
-		UpdatePositionR();
 	}
 #endif // _DEBUG
 }

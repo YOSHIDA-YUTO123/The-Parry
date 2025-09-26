@@ -115,6 +115,12 @@
     <Filter Include="ヘッダー ファイル\model\player">
       <UniqueIdentifier>{2a0c518b-171f-4bc4-bdb3-009250950532}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\statemachine\enemy">
+      <UniqueIdentifier>{bc73c178-9943-4970-b882-2fe6b37e3982}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\statemachine\enemy">
+      <UniqueIdentifier>{e32c4373-5b18-4662-963e-e2fc01c410eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="testword.cpp">
@@ -254,9 +260,6 @@
     </ClCompile>
     <ClCompile Include="billboardAnim.cpp">
       <Filter>ソース ファイル\objectBillboard</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyState.cpp">
-      <Filter>ソース ファイル\statemachine</Filter>
     </ClCompile>
     <ClCompile Include="playerstate.cpp">
       <Filter>ソース ファイル\statemachine</Filter>
@@ -456,6 +459,15 @@
     <ClCompile Include="PlayerMovement.cpp">
       <Filter>ソース ファイル\model\player</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyStateAttack.cpp">
+      <Filter>ソース ファイル\statemachine\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyState.cpp">
+      <Filter>ソース ファイル\statemachine\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyStateMovement.cpp">
+      <Filter>ソース ファイル\statemachine\enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="testword.h">
@@ -598,9 +610,6 @@
     </ClInclude>
     <ClInclude Include="billboardAnim.h">
       <Filter>ヘッダー ファイル\objectBillboard</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyState.h">
-      <Filter>ヘッダー ファイル\statemachine</Filter>
     </ClInclude>
     <ClInclude Include="playerstate.h">
       <Filter>ヘッダー ファイル\statemachine</Filter>
@@ -795,7 +804,16 @@
       <Filter>ヘッダー ファイル\objectX</Filter>
     </ClInclude>
     <ClInclude Include="PlayerMovement.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\model\player</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyState.h">
+      <Filter>ヘッダー ファイル\statemachine\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyStateAttack.h">
+      <Filter>ヘッダー ファイル\statemachine\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyStateMovement.h">
+      <Filter>ヘッダー ファイル\statemachine\enemy</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

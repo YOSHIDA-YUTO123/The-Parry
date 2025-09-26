@@ -129,36 +129,6 @@ private:
 };
 
 //***************************************************
-// 敵の状態(Move)クラスの定義
-//***************************************************
-class CEnemyMove : public CEnemyState
-{
-public:
-	CEnemyMove();
-	~CEnemyMove();
-	void Update(void) override;
-private:
-	static constexpr float SIDE_MOVE_DISTANCE = 1000.0f;	// 横歩きしてくる距離
-	static constexpr float ACTION_DISTANCE = 250.0f;		// 攻撃してくる距離
-
-	void ElectinMove(CEnemy* pEnemy); // 移動のランダム選出
-	int m_nNextStateCount;  // 次のステートに移るカウンター
-};
-
-//***************************************************
-// 敵の状態(BackStep)クラスの定義
-//***************************************************
-class CEnemyBackStep : public CEnemyState
-{
-public:
-	CEnemyBackStep();
-	~CEnemyBackStep();
-	void Init(void) override;
-	void Update(void) override;
-private:
-};
-
-//***************************************************
 // 敵の状態(Landing)クラスの定義
 //***************************************************
 class CEnemyLanding : public CEnemyState
@@ -172,32 +142,6 @@ private:
 	int m_nNextAction; // 次の行動
 };
 
-//***************************************************
-// 敵の状態(ATTACK)クラスの定義
-//***************************************************
-class CEnemyAttackSmash : public CEnemyState
-{
-public:
-	CEnemyAttackSmash();
-	~CEnemyAttackSmash();
-	void Init(void) override;
-	void Update(void) override;
-private:
-	int m_nNextAction; // 次の行動
-};
-
-//***************************************************
-// 敵の状態(ATTACKImpact)クラスの定義
-//***************************************************
-class CEnemyAttackImpact : public CEnemyState
-{
-public:
-	CEnemyAttackImpact();
-	~CEnemyAttackImpact();
-	void Init(void) override;
-	void Update(void) override;
-private:
-};
 
 //***************************************************
 // 敵の状態(DAMAGELarge)クラスの定義
@@ -228,34 +172,6 @@ public:
 	~CEnemyRoar();
 	void Update(void) override;
 private:
-};
-
-//***************************************************
-// 敵の状態(DASH)クラスの定義
-//***************************************************
-class CEnemyDash : public CEnemyState
-{
-public:
-	CEnemyDash();
-	~CEnemyDash();
-	void Update(void) override;
-private:
-};
-
-//***************************************************
-// 敵の状態(SPIN)クラスの定義
-//***************************************************
-class CEnemySpin : public CEnemyState
-{
-public:
-	CEnemySpin();
-	CEnemySpin(const int nTime);
-	~CEnemySpin();
-	void Init(void) override;
-	void Update(void) override;
-private:
-	int m_nTime;	// 回転する時間
-	int m_nMaxTime;	// 最大の時間
 };
 
 //***************************************************
@@ -352,47 +268,6 @@ private:
 };
 
 //***************************************************
-// 敵の状態(Step)クラスの定義
-//***************************************************
-class CEnemyStep : public CEnemyState
-{
-public:
-	CEnemyStep();
-	~CEnemyStep();
-	void Init(void) override;
-	void Update(void) override;
-private:
-};
-
-//***************************************************
-// 敵の状態(Swing)クラスの定義
-//***************************************************
-class CEnemySwing : public CEnemyState
-{
-public:
-	CEnemySwing();
-	~CEnemySwing();
-	void Init(void) override;
-	void Update(void) override;
-private:
-	int m_nNextAction; // 次の行動
-};
-
-//***************************************************
-// 敵の状態(JumpAttack)クラスの定義
-//***************************************************
-class CEnemyJumpAttack : public CEnemyState
-{
-public:
-	CEnemyJumpAttack();
-	~CEnemyJumpAttack();
-	void Init(void) override;
-	void Update(void) override;
-	void CollisionPlayer(CPlayer *pPlayer, CMotion* pMotion);
-private:
-};
-
-//***************************************************
 // 敵の状態(Death)クラスの定義
 //***************************************************
 class CEnemyDeath : public CEnemyState
@@ -431,20 +306,6 @@ private:
 };
 
 //***************************************************
-// 敵の状態(Away)クラスの定義
-//***************************************************
-class CEnemyAway : public CEnemyState
-{
-public:
-	CEnemyAway();
-	~CEnemyAway();
-	void Init(void) override;
-	void Update(void) override;
-private:
-	D3DXVECTOR3 m_pos; // 移動先
-};
-
-//***************************************************
 // 敵の状態(SuperHit)クラスの定義
 //***************************************************
 class CEnemySuperHit : public CEnemyState
@@ -465,87 +326,6 @@ class CEnemyComboDamage : public CEnemyState
 public:
 	CEnemyComboDamage();
 	~CEnemyComboDamage();
-	void Init(void) override;
-	void Update(void) override;
-private:
-};
-
-//***************************************************
-// 敵の状態(RIghtMove)クラスの定義
-//***************************************************
-class CEnemyRightMove : public CEnemyState
-{
-public:
-	CEnemyRightMove();
-	~CEnemyRightMove();
-	void Init(void) override;
-	void Update(void) override;
-private:
-	static constexpr int MOVE_TIME = 60; // 最低移動時間
-	static constexpr float OBSTACLE_DISTANCE = 450.0f;	 // 障害物との距離
-	static constexpr float ACTION_DISTANCE = 750.0f; // 攻撃してくる距離
-	int m_nTime; // 横移動の時間
-};
-
-//***************************************************
-// 敵の状態(LeftMove)クラスの定義
-//***************************************************
-class CEnemyLeftMove : public CEnemyState
-{
-public:
-	CEnemyLeftMove();
-	~CEnemyLeftMove();
-	void Init(void) override;
-	void Update(void) override;
-private:
-	static constexpr int MOVE_TIME = 60; // 最低移動時間
-	static constexpr float ACTION_DISTANCE = 750.0f; // 攻撃してくる距離
-	static constexpr float OBSTACLE_DISTANCE = 450.0f;	 // 障害物との距離
-	int m_nTime; // 横移動の時間
-};
-
-//***************************************************
-// 敵の状態(Rush)クラスの定義
-//***************************************************
-class CEnemyRush : public CEnemyState
-{
-public:
-	CEnemyRush();
-	~CEnemyRush();
-	void Init(void) override;
-	void Update(void) override;
-private:
-	static constexpr int MAX_TIME = 360;			// 最大の時間
-	static constexpr int PROB_SMASH = 40;			// 振り下ろし攻撃に派生する確率 
-	static constexpr float SMASH_DISTANCE = 300.0f;	// 振り下ろし攻撃に派生する距離
-
-	int m_nProbSmash;	// 振り下ろしに派生するか
-	int m_nEndTime;		// 終了する時間
-};
-
-//***************************************************
-// 敵の状態(EndRush)クラスの定義
-//***************************************************
-class CEnemyEndRush : public CEnemyState
-{
-public:
-	CEnemyEndRush();
-	CEnemyEndRush(const float fInertia);
-	~CEnemyEndRush();
-	void Init(void) override;
-	void Update(void) override;
-private:
-	float m_fInertia; // 慣性
-};
-
-//***************************************************
-// 敵の状態(BackKick)クラスの定義
-//***************************************************
-class CEnemyBackKick : public CEnemyState
-{
-public:
-	CEnemyBackKick();
-	~CEnemyBackKick();
 	void Init(void) override;
 	void Update(void) override;
 private:
@@ -583,100 +363,6 @@ private:
 	float m_fDiffAngle; // 目的の向きまでの距離
 	int m_nFrame;		// フレーム
 	int m_nCounter;		// カウンター
-};
-
-//***************************************************
-// 敵の状態(SweepRight)クラスの定義
-//***************************************************
-class CEnemySweepRight : public CEnemyState
-{
-public:
-	CEnemySweepRight();
-	~CEnemySweepRight();
-	void Init(void) override;
-	void Update(void) override;
-private:
-};
-
-//***************************************************
-// 敵の状態(SweepLeft)クラスの定義
-//***************************************************
-class CEnemySweepLeft : public CEnemyState
-{
-public:
-	CEnemySweepLeft();
-	~CEnemySweepLeft();
-	void Init(void) override;
-	void Update(void) override;
-private:
-};
-
-//***************************************************
-// 敵の状態(RushSwing)クラスの定義
-//***************************************************
-class CEnemyRushSwing : public CEnemyState
-{
-public:
-
-	// 攻撃モーションの種類
-	typedef enum
-	{
-		ACTION_SMASH = 0,
-		ACTION_SWING,
-		ACTION_MAX
-	}ACTION;
-
-	CEnemyRushSwing();
-	~CEnemyRushSwing();
-	void Init(void) override;
-	void Update(void) override;
-private:
-	static constexpr float MOVE_FRAME = 15.0f; // 移動フレーム
-	static constexpr int PROB_ACTION = 40; // 次の攻撃に派生する確率
-
-	void CollisionPlayer(CEnemy* pEnemy, CMotion* pMotion);
-};
-
-//***************************************************
-// 敵の状態(Brisk_Move)クラスの定義
-//***************************************************
-class CEnemyBriskMove : public CEnemyState
-{
-public:
-	CEnemyBriskMove();
-	~CEnemyBriskMove();
-	void Init(void) override;
-	void Update(void) override;
-private:
-	static constexpr int DEST_RANGE = 500; // 目的の位置の範囲
-
-	D3DXVECTOR3 m_destPos; // 目的の位置
-};
-
-//***************************************************
-// 敵の状態(Counter)クラスの定義
-//***************************************************
-class CEnemyCounter : public CEnemyState
-{
-public:
-	CEnemyCounter();
-	~CEnemyCounter();
-	void Init(void) override;
-	void Update(void) override;
-private:
-};
-
-//***************************************************
-// 敵の状態(Revenge_impact)クラスの定義
-//***************************************************
-class CEnemyRevengeImpact : public CEnemyState
-{
-public:
-	CEnemyRevengeImpact();
-	~CEnemyRevengeImpact();
-	void Init(void) override;
-	void Update(void) override;
-private:
 };
 
 #endif
