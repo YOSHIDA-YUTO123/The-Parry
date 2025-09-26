@@ -467,11 +467,115 @@ void CEnemyAway::Update(void)
 }
 
 //===================================================
+// コンストラクタ(横移動)
+//===================================================
+CEnemySideMove::CEnemySideMove()
+{
+	m_fMoveAngle = NULL;
+	m_fMoveValue = NULL;
+	m_nTime = rand() % 120 + MOVE_TIME;
+}
+
+//===================================================
+// コンストラクタ(横移動)
+//===================================================
+CEnemySideMove::CEnemySideMove(ID id) : CEnemyState(id)
+{
+	m_fMoveAngle = NULL;
+	m_fMoveValue = NULL;
+	m_nTime = rand() % 120 + MOVE_TIME;
+}
+
+//===================================================
+// デストラクタ(横移動)
+//===================================================
+CEnemySideMove::~CEnemySideMove()
+{
+}
+
+//===================================================
+// 更新処理処理(横移動)
+//===================================================
+void CEnemySideMove::Update(void)
+{
+	// 敵の取得
+	CEnemy* pEnemy = CEnemyState::GetEnemy();
+
+	// 敵が使われていないなら処理しない
+	if (pEnemy == nullptr) return;
+
+	// モーションの取得
+	CMotion* pMotion = pEnemy->GetMotion();
+
+	// 取得できなかったら処理しない
+	if (pMotion == nullptr) return;
+
+	// プレイヤーの方向を見る
+	pEnemy->AngleToPlayer();
+
+	// 右に移動する
+	//pEnemy->GetMovement()->SetMoveDir(D3DX_PI * 0.5f, 5.0f);
+	pEnemy->GetMovement()->SetMoveDir(m_fMoveAngle, m_fMoveValue);
+
+	// 障害物の近くだったら
+	if (pEnemy->CheckObstacleDistance(OBSTACLE_DISTANCE))
+	{
+		// 状態の遷移
+		pEnemy->ChangeState(make_shared<CEnemyMove>());
+	}
+
+	m_nTime--;
+
+	// 時間が終わったら
+	if (m_nTime <= 0)
+	{
+		// 距離以内か判定
+		if (!pEnemy->CheckDistane(ACTION_DISTANCE))
+		{
+			// 次の行動の選出
+			int nAction = rand() % 4;
+
+			// 次の行動の遷移
+			switch (nAction)
+			{
+			case 0:
+				pEnemy->ChangeState(make_shared<CEnemyJumpAttack>());
+				break;
+			case 1:
+				pEnemy->ChangeState(make_shared<CEnemyRush>());
+				break;
+			case 2:
+				pEnemy->ChangeState(make_shared<CEnemyAttackImpact>());
+				break;
+			case 3:
+				pEnemy->ChangeState(make_shared<CEnemyRoar>());
+				break;
+			default:
+				break;
+			}
+		}
+		else
+		{
+			// 状態の変更
+			pEnemy->ChangeState(make_shared<CEnemyRushSwing>());
+		}
+	}
+}
+
+//===================================================
+// パラメータの設定処理
+//===================================================
+void CEnemySideMove::SetParam(const float fMoveAngle, const float fMoveValue)
+{
+	m_fMoveAngle = fMoveAngle;
+	m_fMoveValue = fMoveValue;
+}
+
+//===================================================
 // コンストラクタ(右横歩き)
 //===================================================
-CEnemyRightMove::CEnemyRightMove() : CEnemyState(ID_RIGHT_MOVE)
+CEnemyRightMove::CEnemyRightMove() : CEnemySideMove(ID_RIGHT_MOVE)
 {
-	m_nTime = rand() % 120 + MOVE_TIME;
 }
 
 //===================================================
@@ -501,6 +605,9 @@ void CEnemyRightMove::Init(void)
 		// モーションの再生
 		pMotion->SetMotion(CEnemy::MOTIONTYPE_RIGHTMOVE, true, 10);
 	}
+
+	// パラメータの設定処理
+	CEnemySideMove::SetParam(-D3DX_PI * 0.5f, 5.0f);
 }
 
 //===================================================
@@ -514,60 +621,8 @@ void CEnemyRightMove::Update(void)
 	// 敵が使われていないなら処理しない
 	if (pEnemy == nullptr) return;
 
-	// モーションの取得
+	// モーションクラスの取得
 	CMotion* pMotion = pEnemy->GetMotion();
-
-	// 取得できなかったら処理しない
-	if (pMotion == nullptr) return;
-
-	// プレイヤーの方向を見る
-	pEnemy->AngleToPlayer();
-
-	// 右に移動する
-	pEnemy->GetMovement()->SetMoveDir(-D3DX_PI * 0.5f, 5.0f);
-
-	m_nTime--;
-
-	// 障害物の近くだったら
-	if (pEnemy->CheckObstacleDistance(OBSTACLE_DISTANCE))
-	{
-		// 状態の遷移
-		pEnemy->ChangeState(make_shared<CEnemyMove>());
-	}
-	// 時間が終わったら
-	if (m_nTime <= 0)
-	{
-		// 距離以内か判定
-		if (!pEnemy->CheckDistane(ACTION_DISTANCE))
-		{
-			// 次の行動の選出
-			int nAction = rand() % 4;
-
-			// 次の行動の遷移
-			switch (nAction)
-			{
-			case 0:
-				pEnemy->ChangeState(make_shared<CEnemyJumpAttack>());
-				break;
-			case 1:
-				pEnemy->ChangeState(make_shared<CEnemyRush>());
-				break;
-			case 2:
-				pEnemy->ChangeState(make_shared<CEnemyAttackImpact>());
-				break;
-			case 3:
-				pEnemy->ChangeState(make_shared<CEnemyRoar>());
-				break;
-			default:
-				break;
-			}
-		}
-		else
-		{
-			// 状態の変更
-			pEnemy->ChangeState(make_shared<CEnemyRushSwing>());
-		}
-	}
 
 	// 音の取得
 	CSound* pSound = CManager::GetSound();
@@ -580,14 +635,16 @@ void CEnemyRightMove::Update(void)
 			pSound->Play(CSound::SOUND_LABEL_WARK003, 0.5f);
 		}
 	}
+
+	// 状態の更新処理
+	CEnemySideMove::Update();
 }
 
 //===================================================
 // コンストラクタ(左横歩き)
 //===================================================
-CEnemyLeftMove::CEnemyLeftMove() : CEnemyState(ID_LEFT_MOVE)
+CEnemyLeftMove::CEnemyLeftMove() : CEnemySideMove(ID_LEFT_MOVE)
 {
-	m_nTime = rand() % 120 + MOVE_TIME;
 }
 
 //===================================================
@@ -617,6 +674,9 @@ void CEnemyLeftMove::Init(void)
 		// モーションの再生
 		pMotion->SetMotion(CEnemy::MOTIONTYPE_LEFTMOVE, true, 10);
 	}
+
+	// パラメータの設定処理
+	CEnemySideMove::SetParam(D3DX_PI * 0.5f, 5.0f);
 }
 
 //===================================================
@@ -630,61 +690,8 @@ void CEnemyLeftMove::Update(void)
 	// 敵が使われていないなら処理しない
 	if (pEnemy == nullptr) return;
 
-	// モーションの取得
+	// モーションクラスの取得
 	CMotion* pMotion = pEnemy->GetMotion();
-
-	// 取得できなかったら処理しない
-	if (pMotion == nullptr) return;
-
-	// プレイヤーの方向を見る
-	pEnemy->AngleToPlayer();
-
-	// 右に移動する
-	pEnemy->GetMovement()->SetMoveDir(D3DX_PI * 0.5f, 5.0f);
-
-	// 障害物の近くだったら
-	if (pEnemy->CheckObstacleDistance(OBSTACLE_DISTANCE))
-	{
-		// 状態の遷移
-		pEnemy->ChangeState(make_shared<CEnemyMove>());
-	}
-
-	m_nTime--;
-
-	// 時間が終わったら
-	if (m_nTime <= 0)
-	{
-		// 距離以内か判定
-		if (!pEnemy->CheckDistane(ACTION_DISTANCE))
-		{
-			// 次の行動の選出
-			int nAction = rand() % 4;
-
-			// 次の行動の遷移
-			switch (nAction)
-			{
-			case 0:
-				pEnemy->ChangeState(make_shared<CEnemyJumpAttack>());
-				break;
-			case 1:
-				pEnemy->ChangeState(make_shared<CEnemyRush>());
-				break;
-			case 2:
-				pEnemy->ChangeState(make_shared<CEnemyAttackImpact>());
-				break;
-			case 3:
-				pEnemy->ChangeState(make_shared<CEnemyRoar>());
-				break;
-			default:
-				break;
-			}
-		}
-		else
-		{
-			// 状態の変更
-			pEnemy->ChangeState(make_shared<CEnemyRushSwing>());
-		}
-	}
 
 	// 音の取得
 	CSound* pSound = CManager::GetSound();
@@ -697,6 +704,9 @@ void CEnemyLeftMove::Update(void)
 			pSound->Play(CSound::SOUND_LABEL_WARK003, 0.5f);
 		}
 	}
+
+	// 状態の更新処理
+	CEnemySideMove::Update();
 }
 
 //===================================================

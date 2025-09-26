@@ -86,9 +86,32 @@ private:
 };
 
 //***************************************************
+// “G‚Ì‰¡ˆÚ“®ƒNƒ‰ƒX‚Ì’è‹`
+//***************************************************
+class CEnemySideMove : public CEnemyState
+{
+public:
+	CEnemySideMove();
+	CEnemySideMove(ID id);
+	~CEnemySideMove();
+	virtual void Init(void) override = 0;
+	virtual void Update(void) override;
+protected:
+	static constexpr int MOVE_TIME = 60; // Å’áˆÚ“®ŠÔ
+	static constexpr float OBSTACLE_DISTANCE = 450.0f;	 // áŠQ•¨‚Æ‚Ì‹——£
+	static constexpr float ACTION_DISTANCE = 750.0f; // UŒ‚‚µ‚Ä‚­‚é‹——£
+
+	void SetParam(const float fMoveAngle, const float fMoveValue);
+private:
+	float m_fMoveAngle;	// ˆÚ“®‚·‚é•ûŒü
+	float m_fMoveValue;	// ˆÚ“®—Ê		
+	int m_nTime;		// ‰¡ˆÚ“®‚ÌŠÔ
+};
+
+//***************************************************
 // “G‚Ìó‘Ô(RIghtMove)ƒNƒ‰ƒX‚Ì’è‹`
 //***************************************************
-class CEnemyRightMove : public CEnemyState
+class CEnemyRightMove : public CEnemySideMove
 {
 public:
 	CEnemyRightMove();
@@ -96,16 +119,12 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 private:
-	static constexpr int MOVE_TIME = 60; // Å’áˆÚ“®ŠÔ
-	static constexpr float OBSTACLE_DISTANCE = 450.0f;	 // áŠQ•¨‚Æ‚Ì‹——£
-	static constexpr float ACTION_DISTANCE = 750.0f; // UŒ‚‚µ‚Ä‚­‚é‹——£
-	int m_nTime; // ‰¡ˆÚ“®‚ÌŠÔ
 };
 
 //***************************************************
 // “G‚Ìó‘Ô(LeftMove)ƒNƒ‰ƒX‚Ì’è‹`
 //***************************************************
-class CEnemyLeftMove : public CEnemyState
+class CEnemyLeftMove : public CEnemySideMove
 {
 public:
 	CEnemyLeftMove();
@@ -113,10 +132,6 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 private:
-	static constexpr int MOVE_TIME = 60; // Å’áˆÚ“®ŠÔ
-	static constexpr float ACTION_DISTANCE = 750.0f; // UŒ‚‚µ‚Ä‚­‚é‹——£
-	static constexpr float OBSTACLE_DISTANCE = 450.0f;	 // áŠQ•¨‚Æ‚Ì‹——£
-	int m_nTime; // ‰¡ˆÚ“®‚ÌŠÔ
 };
 
 //***************************************************
