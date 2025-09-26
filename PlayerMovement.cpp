@@ -237,7 +237,7 @@ CPlayerMovement::MOVE_DIRECTION CPlayerMovement::GetMoveKeyboardDir(CInputKeyboa
 			*pRotDest = cameraRot.y + D3DX_PI * 0.75f;
 
 			// 前に移動
-			dir = MOVE_DIRECTION::FORWARD;
+			dir = MOVE_DIRECTION::LEFT;
 		}
 		//プレイヤーの移動(下)
 		else if (pKeyboard->GetPress(DIK_S))
@@ -248,7 +248,7 @@ CPlayerMovement::MOVE_DIRECTION CPlayerMovement::GetMoveKeyboardDir(CInputKeyboa
 			*pRotDest = cameraRot.y + D3DX_PI * 0.25f;
 
 			// 後ろ移動
-			dir = MOVE_DIRECTION::BACK;
+			dir = MOVE_DIRECTION::LEFT;
 		}
 		// プレイヤーの移動(左)
 		else
@@ -274,7 +274,7 @@ CPlayerMovement::MOVE_DIRECTION CPlayerMovement::GetMoveKeyboardDir(CInputKeyboa
 			*pRotDest = cameraRot.y - D3DX_PI * 0.75f;
 
 			// 前に移動
-			dir = MOVE_DIRECTION::FORWARD;
+			dir = MOVE_DIRECTION::RIGHT;
 		}
 		//プレイヤーの移動(下)
 		else if (pKeyboard->GetPress(DIK_S))
@@ -285,7 +285,7 @@ CPlayerMovement::MOVE_DIRECTION CPlayerMovement::GetMoveKeyboardDir(CInputKeyboa
 			*pRotDest = cameraRot.y - D3DX_PI * 0.25f;
 
 			// 後ろ移動
-			dir = MOVE_DIRECTION::BACK;
+			dir = MOVE_DIRECTION::RIGHT;
 		}
 		// プレイヤーの移動(右)
 		else
@@ -458,6 +458,25 @@ void CPlayerMovement::Set(const D3DXVECTOR3 move)
 {
 	// 移動量の設定
 	m_pMove->Set(move);
+}
+
+//===================================================
+// 移動方向の設定処理
+//===================================================
+void CPlayerMovement::SetMoveDir(const float dir, const float fSpeed, const float fAngleBase)
+{
+	// nullだったら処理しない
+	if (m_pMove == nullptr) return;
+
+	// 移動量の取得
+	D3DXVECTOR3 moveWk = m_pMove->Get();
+
+	// 移動量の設定
+	moveWk.x = sinf(fAngleBase + dir) * fSpeed;
+	moveWk.z = cosf(fAngleBase + dir) * fSpeed;
+
+	// 移動量の設定
+	m_pMove->Set(moveWk);
 }
 
 //===================================================

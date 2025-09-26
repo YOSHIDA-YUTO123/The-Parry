@@ -91,6 +91,7 @@ public:
 
 	D3DXVECTOR3 Get(void) const;
 	void Set(const D3DXVECTOR3 move);
+	void SetMoveDir(const float dir, const float fSpeed, const float fAngleBase); // ˆÚ“®•ûŒü‚Ìİ’è
 
 
 private:

@@ -155,10 +155,8 @@ public:
 	void ChangeState(std::shared_ptr<CEnemyState> pNewState);
 	bool CollisionObstacle(D3DXVECTOR3* pPos);
 	void SetObserver(CObserver<int>* pObserver) { m_pObserver = pObserver; }
-	void SetHitStop(const int nTime);
 	void SetRubble(void);
 	void Hit(const int nDamage);
-	void MoveSmoke(void);
 	void SetAngle(const float fAngle);
 	bool CollisionFOV(const D3DXVECTOR3 pos);
 	bool CollisionFOV(const D3DXVECTOR3 Targetpos, const float fLeftAngle, const float fRightAngle);
@@ -187,7 +185,6 @@ private:
 	std::unique_ptr<CColliderAABB> m_pAABB;					// AABBのコライダー
 	std::unique_ptr<CStateMachine> m_pMachine;				// 状態マシーン
 	std::unique_ptr<CColliderSphere> m_pSphere;				// 円の当たり判定クラス
-	//std::shared_ptr<CVelocity> m_pMove;						// 移動クラスの生成
 	std::unique_ptr<CEnemyMovement> m_pMovement;			// 敵の移動制御クラス
 	std::unique_ptr<CColliderFOV> m_pFOV;					// 視界の判定
 	std::unique_ptr<CEnemyStateManager> m_pStateManager;	// 状態マネージャーの生成

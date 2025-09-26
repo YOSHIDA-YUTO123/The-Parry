@@ -76,6 +76,8 @@ public:
 		MOTIONTYPE_DOWN_NEUTRA_BACK,// ダウンニュートラル(Back)
 		MOTIONTYPE_JUMP_ATTACK,		// ジャンプ攻撃
 		MOTIONTYPE_LEFT_MOVE,		// 左移動
+		MOTIONTYPE_RIGHT_MOVE,		// 右移動
+		MOTIONTYPE_BACK_MOVE,		// 後ろ移動
 		MOTIONTYPE_MAX
 	}MOTIONTYPE;
 
@@ -187,6 +189,8 @@ private:
 	bool CollisionBlock(D3DXVECTOR3 *pPos);
 	void Config(const int nLife,const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size);
 	void UpdateMove(CMotion* pMotion,const bool bAlive, CInputKeyboard *pKeyboard, CInputJoypad *pJoyPad, CGameCamera* pGameCamera);
+	void UpdateRockOnMove(CMotion* pMotion, const bool bAlive, CInputKeyboard* pKeyboard, CInputJoypad* pJoyPad, CGameCamera* pGameCamera);
+	bool GetMoveState(CMotion* pMotion);
 
 	static constexpr int NUM_RUBBLE = 16;			// 瓦礫の数
 

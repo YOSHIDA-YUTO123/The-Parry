@@ -67,9 +67,6 @@ void CEnemyMove::Update(void)
 	// モーションクラスの取得
 	CMotion* pMotion = pEnemy->GetMotion();
 
-	// 移動時の煙
-	pEnemy->MoveSmoke();
-
 	// 距離が近かったら
 	if (pEnemy->CheckDistane(ACTION_DISTANCE))
 	{

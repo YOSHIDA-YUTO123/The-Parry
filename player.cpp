@@ -70,6 +70,7 @@ constexpr float SHADOW_A_LEVEL = 0.9f;		// 影のアルファ値のオフセット
 constexpr float AVOID_STAMINA = 15.0f;		// 回避に使用するスタミナ
 constexpr int PARRY_TIME = 25;				// パリィの有効時間
 constexpr int ATTACK_TIME = 120;			// 攻撃の有効時間
+constexpr float SIDE_MOVE_VALUE = 1.0f;		// 横移動
 
 //===================================================
 // コンストラクタ
@@ -257,15 +258,24 @@ void CPlayer::Update(void)
 		// メッシュフィールドの取得
 		pMesh = CTutorial::GetField();
 	}
-	
 
 	if (CCharacter3D::HitStop())
 	{
 		return;
 	}
 
-	// 移動の更新処理
-	UpdateMove(pMotion, bAlive, pKeyboard, pJoypad,pCamera);
+	// ロックオン状態じゃないかダッシュ中だったら
+	if (pCamera->GetState() != CGameCamera::STATE_ROCKON || m_bDash)
+	{
+		// 移動の更新処理
+		UpdateMove(pMotion, bAlive, pKeyboard, pJoypad, pCamera);
+	}
+	// ロックオン状態中でダッシュしていないなら
+	else if(!m_bDash)
+	{
+		// ロックオン状態の移動処理
+		UpdateRockOnMove(pMotion, bAlive, pKeyboard, pJoypad, pCamera);
+	}
 
 	// 位置の取得
 	D3DXVECTOR3 pos = CCharacter3D::GetPosition();
@@ -1415,9 +1425,6 @@ void CPlayer::UpdateMove(CMotion* pMotion, const bool bAlive, CInputKeyboard* pK
 
 	float fAngleDest = 0.0f;
 
-	// カメラの状態の取得
-	CGameCamera::STATE cameraState = pGameCamera->GetState();
-
 	// 移動できるなら
 	if (IsMove(pMotion) && bAlive)
 	{
@@ -1484,22 +1491,6 @@ void CPlayer::UpdateMove(CMotion* pMotion, const bool bAlive, CInputKeyboard* pK
 				// 状態の変更
 				ChangeState(make_shared<CPlayerNormal>());
 			}
-
-			// ロックオン状態だったら&&ダメージ状態じゃないなら
-			if (cameraState == CGameCamera::STATE_ROCKON && !IsDamage(pMotion))
-			{
-				// 注視点の位置の取得
-				D3DXVECTOR3 posR = pGameCamera->GetPosR();
-
-				// 位置の取得
-				D3DXVECTOR3 pos = CCharacter3D::GetPosition();
-
-				// 向きの取得
-				float fAngle = GetTargetAngle(pos, posR);
-
-				SetAngle(fAngle);
-			}
-
 		}
 	}
 
@@ -1512,6 +1503,128 @@ void CPlayer::UpdateMove(CMotion* pMotion, const bool bAlive, CInputKeyboard* pK
 	{
 		m_bDash = false;
 	}
+}
+
+//===================================================
+// ロックオン状態時の移動処理
+//===================================================
+void CPlayer::UpdateRockOnMove(CMotion* pMotion, const bool bAlive, CInputKeyboard* pKeyboard, CInputJoypad* pJoyPad, CGameCamera* pGameCamera)
+{
+	// 速さ
+	float fSpeed = SIDE_MOVE_VALUE;
+
+	float fAngleDest = 0.0f;
+
+	// カメラの状態の取得
+	CGameCamera::STATE cameraState = pGameCamera->GetState();
+
+	// ダッシュボタンを押したら
+	if ((pKeyboard->GetPress(DIK_LSHIFT) || pJoyPad->GetPress(pJoyPad->JOYKEY_LEFT_SHOULDER)))
+	{
+		m_bDash = true;
+		return;
+	}
+	else
+	{
+		m_bDash = false;
+	}
+
+	// 移動できるなら
+	if (IsMove(pMotion) && bAlive)
+	{
+		// 移動方向
+		auto moveDir = m_pMovement->GetMoveKeyboardDir(pKeyboard, fSpeed, &fAngleDest);
+
+		// 移動を入力していたら
+		const bool bKeyboardMove = moveDir != CPlayerMovement::MOVE_DIRECTION::NONE;
+		const bool bJoypadMove = m_pMovement->MoveJoypad(pJoyPad, fSpeed, &fAngleDest);
+
+		// 移動ごとの処理ができるか判定
+		const bool bPlayerMove = bKeyboardMove || bJoypadMove;
+
+		// 移動ごとの処理ができるなら
+		if (bPlayerMove)
+		{
+			// ダッシュ状態だったら
+			if (IsDamage(pMotion))
+			{
+				// 移動方向に向ける処理
+				SetMoveAngle(pGameCamera, pKeyboard, pJoyPad);
+
+				// 状態の変更
+				ChangeState(make_shared<CPlayerAvoid>(25.0f));
+				return;
+			}
+
+			// 移動方向の設定
+			switch (moveDir)
+			{
+			case CPlayerMovement::MOVE_DIRECTION::LEFT:
+				pMotion->SetMotion(MOTIONTYPE_LEFT_MOVE, true, 10);
+				break;
+			case CPlayerMovement::MOVE_DIRECTION::RIGHT:
+				pMotion->SetMotion(MOTIONTYPE_RIGHT_MOVE, true, 10);
+				break;
+			case CPlayerMovement::MOVE_DIRECTION::BACK:
+				pMotion->SetMotion(MOTIONTYPE_BACK_MOVE, true, 10);
+				break;
+			case CPlayerMovement::MOVE_DIRECTION::FORWARD:
+				pMotion->SetMotion(MOTIONTYPE_MOVE, true, 10);
+				break;
+			default:
+				break;
+			}
+		}
+		else
+		{
+			// 移動状態だったら
+			if (GetMoveState(pMotion) && pMotion != nullptr)
+			{
+				pMotion->SetMotion(MOTIONTYPE_NEUTRAL, true, 15);
+
+				// 状態の変更
+				ChangeState(make_shared<CPlayerNormal>());
+			}
+		}
+
+		// 注視点の位置の取得
+		D3DXVECTOR3 posR = pGameCamera->GetPosR();
+
+		// 位置の取得
+		D3DXVECTOR3 pos = CCharacter3D::GetPosition();
+
+		// 向きの取得
+		float fAngle = GetTargetAngle(pos, posR);
+
+		// 向きの設定
+		SetAngle(fAngle);
+	}
+}
+
+//===================================================
+// 移動状態の取得
+//===================================================
+bool CPlayer::GetMoveState(CMotion* pMotion)
+{
+	// モーションの種類
+	int motiontypeBlend = pMotion->GetBlendType();
+
+	// 移動状態だったら
+	if (motiontypeBlend == MOTIONTYPE_MOVE) return true;
+
+	// 移動状態だったら
+	if (motiontypeBlend == MOTIONTYPE_LEFT_MOVE) return true;
+
+	// 移動状態だったら
+	if (motiontypeBlend == MOTIONTYPE_DASH) return true;
+
+	// 移動状態だったら
+	if (motiontypeBlend == MOTIONTYPE_RIGHT_MOVE) return true;
+
+	// 移動状態だったら
+	if (motiontypeBlend == MOTIONTYPE_BACK_MOVE) return true;
+
+	return false;
 }
 
 //===================================================

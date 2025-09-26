@@ -1057,15 +1057,6 @@ bool CEnemy::CollisionObstacle(D3DXVECTOR3 *pPos)
 }
 
 //===================================================
-// ヒットストップの設定処理
-//===================================================
-void CEnemy::SetHitStop(const int nTime)
-{
-	// ヒットストップの設定
-	CCharacter3D::SetHitStop(nTime);
-}
-
-//===================================================
 // 瓦礫の設定処理
 //===================================================
 void CEnemy::SetRubble(void)
@@ -1114,53 +1105,6 @@ void CEnemy::Hit(const int nDamage)
 	{
 		CCharacter3D::Hit(nDamage);
 	}
-}
-
-//===================================================
-// 移動時の煙
-//===================================================
-void CEnemy::MoveSmoke(void)
-{
-	//// モーションの取得
-	//auto pMotion = CCharacter3D::GetMotion();
-
-	//// モーションがないなら処理しない
-	//if (pMotion == nullptr) return;
-
-	//// 向きの取得
-	//D3DXVECTOR3 rot = CCharacter3D::GetRotaition()->Get();
-
-	//// プレイヤーの後ろ方向を設定
-	//float fMoveX = sinf(rot.y) * 2.0f;
-	//float fMoveZ = cosf(rot.y) * 2.0f;
-
-	//if (pMotion != nullptr)
-	//{
-	//	// 17フレーム目になったら
-	//	if (pMotion->IsEventFrame(17, 17, MOTIONTYPE_MOVE))
-	//	{
-	//		// 位置の取得
-	//		D3DXVECTOR3 pos = GetModelPos(11);
-
-	//		// エフェクトの生成
-	//		auto pEffect = CMoveSmoke::Create(D3DXVECTOR3(pos.x, pos.y, pos.z), 100.0f, WHITE);
-
-	//		// エフェクトの設定処理
-	//		pEffect->SetEffect(60, D3DXVECTOR3(fMoveX, 0.0f, fMoveZ));
-	//	}
-	//	// 40フレーム目になったら
-	//	if (pMotion->IsEventFrame(40, 40, MOTIONTYPE_MOVE))
-	//	{
-	//		// 位置の取得
-	//		D3DXVECTOR3 pos = GetModelPos(14);
-
-	//		// エフェクトの生成
-	//		auto pEffect = CMoveSmoke::Create(D3DXVECTOR3(pos.x, pos.y, pos.z), 100.0f, WHITE);
-
-	//		// エフェクトの設定処理
-	//		pEffect->SetEffect(60, D3DXVECTOR3(fMoveX, 0.0f, fMoveZ));
-	//	}
-	//}
 }
 
 //===================================================
