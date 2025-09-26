@@ -468,6 +468,12 @@
     <ClCompile Include="EnemyStateMovement.cpp">
       <Filter>ソース ファイル\statemachine\enemy</Filter>
     </ClCompile>
+    <ClCompile Include="FieldWave.cpp">
+      <Filter>ソース ファイル\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="FieldImpact.cpp">
+      <Filter>ソース ファイル\mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="testword.h">
@@ -814,6 +820,12 @@
     </ClInclude>
     <ClInclude Include="EnemyStateMovement.h">
       <Filter>ヘッダー ファイル\statemachine\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="FieldWave.h">
+      <Filter>ヘッダー ファイル\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="FieldImpact.h">
+      <Filter>ヘッダー ファイル\mesh</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

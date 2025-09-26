@@ -174,6 +174,8 @@
     <ClCompile Include="ExplosionArea.cpp" />
     <ClCompile Include="FadeEffect.cpp" />
     <ClCompile Include="FadeInObject2D.cpp" />
+    <ClCompile Include="FieldImpact.cpp" />
+    <ClCompile Include="FieldWave.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GateUI.cpp" />
     <ClCompile Include="gear.cpp" />
@@ -296,6 +298,8 @@
     <ClInclude Include="ExplosionArea.h" />
     <ClInclude Include="FadeEffect.h" />
     <ClInclude Include="FadeInObject2D.h" />
+    <ClInclude Include="FieldImpact.h" />
+    <ClInclude Include="FieldWave.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GateUI.h" />
     <ClInclude Include="gear.h" />
