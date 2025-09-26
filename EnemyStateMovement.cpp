@@ -14,6 +14,9 @@
 #include "motion.h"
 #include "sound.h"
 #include "manager.h"
+#include "EnemyMovement.h"
+#include "enemy.h"
+#include "transform.h"
 
 //***************************************************
 // 名前空間
@@ -231,7 +234,10 @@ void CEnemyBackStep::Update(void)
 	// 敵が使われていないなら処理しない
 	if (pEnemy == nullptr) return;
 
-	pEnemy->GetMovement()->SetMoveDir(0.0f, 10.0f);
+	// 向きの取得
+	float fAngle = pEnemy->GetRotaition()->Get().y;
+
+	pEnemy->GetMovement()->SetMoveDir(0.0f, 10.0f, fAngle);
 
 	// モーションクラスの取得
 	CMotion* pMotion = pEnemy->GetMotion();
@@ -337,7 +343,10 @@ void CEnemyStep::Init(void)
 	// モーションクラスの取得
 	CMotion* pMotion = pEnemy->GetMotion();
 
-	pEnemy->GetMovement()->MoveForWard(150.0f);
+	// 向きの取得
+	float fAngle = pEnemy->GetRotaition()->Get().y;
+
+	pEnemy->GetMovement()->MoveForWard(150.0f, fAngle + D3DX_PI);
 
 	// モーションがあるなら
 	if (pMotion != nullptr)
@@ -462,8 +471,11 @@ void CEnemyAway::Update(void)
 	// 距離を到達時間で割る
 	float dir = fDistance / AWAY_TIME;
 
+	// 向きの取得
+	float fAngle = pEnemy->GetRotaition()->Get().y;
+
 	// 移動量を設定する
-	pEnemy->GetMovement()->MoveForWard(dir);
+	pEnemy->GetMovement()->MoveForWard(dir, fAngle + D3DX_PI);
 }
 
 //===================================================
@@ -513,9 +525,11 @@ void CEnemySideMove::Update(void)
 	// プレイヤーの方向を見る
 	pEnemy->AngleToPlayer();
 
+	// 向きの取得
+	float fAngle = pEnemy->GetRotaition()->Get().y;
+
 	// 右に移動する
-	//pEnemy->GetMovement()->SetMoveDir(D3DX_PI * 0.5f, 5.0f);
-	pEnemy->GetMovement()->SetMoveDir(m_fMoveAngle, m_fMoveValue);
+	pEnemy->GetMovement()->SetMoveDir(m_fMoveAngle, m_fMoveValue, fAngle);
 
 	// 障害物の近くだったら
 	if (pEnemy->CheckObstacleDistance(OBSTACLE_DISTANCE))
@@ -772,6 +786,9 @@ void CEnemyBriskMove::Update(void)
 	// モーションクラスの取得
 	CMotion* pMotion = pEnemy->GetMotion();
 
+	// 向きの取得
+	float fAngle = pEnemy->GetRotaition()->Get().y;
+
 	// モーションがあるなら
 	if (pMotion != nullptr)
 	{
@@ -788,8 +805,9 @@ void CEnemyBriskMove::Update(void)
 			}
 		}
 
+
 		// 移動する
-		pEnemy->GetMovement()->MoveForWard(10.0f);
+		pEnemy->GetMovement()->MoveForWard(10.0f, fAngle);
 
 		// 位置の取得
 		D3DXVECTOR3 pos = pEnemy->GetPosition();

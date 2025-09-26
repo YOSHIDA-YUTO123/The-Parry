@@ -31,8 +31,8 @@ using namespace math;		// 名前空間mathを使用する
 //************************************************
 namespace
 {
-	constexpr int NUM_SIRCLE = 5;			// メッシュサークルを出す数
-	constexpr float AUDIO_DISTANCE = 2000.0f; // 音の聞こえる距離
+	constexpr int NUM_SIRCLE = 5;				// メッシュサークルを出す数
+	constexpr float AUDIO_DISTANCE = 2000.0f;	// 音の聞こえる距離
 }
 
 //================================================
@@ -107,10 +107,11 @@ bool CMeshFieldImpact::Update(CMeshField* pMeshField, const int nNumVtx)
 	}
 
 	// 吹っ飛び量を選出
-	float dir = rand() % 15 + 5.0f;
-	float Jump = rand() % 15 + 25.0f;
+	float dir = Random(5.0f, 20.0f);
+	float Jump = Random(25.0f, 40.0f);
 
-	float fAngle = (float)(rand() % 629 - 314);
+	// ランダムな角度の選出
+	float fAngle = Random(-314.0f, 314.0f) * 0.01f;
 
 	// 方向に応じた吹っ飛び量を計算
 	float fMoveX = sinf(fAngle) * dir;

@@ -24,6 +24,7 @@
 #include "dust.h"
 #include <memory>
 #include "EnemyStateMovement.h"
+#include "EnemyMovement.h"
 
 using namespace std;	// 名前空間stdの使用
 using namespace Const;	// 名前空間Constの使用
@@ -413,8 +414,11 @@ void CEnemySpin::Update(void)
 	CPlayer* pPlayer = CGame::GetPlayer();
 	CMotion* pPlayerMotion = pPlayer->GetMotion();
 
+	// 向きの取得
+	float fAngle = pEnemy->GetRotaition()->Get().y;
+
 	// 向いている方向に移動する
-	pEnemy->GetMovement()->MoveForWard(15.0f);
+	pEnemy->GetMovement()->MoveForWard(15.0f, fAngle + D3DX_PI);
 
 	if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_SPIN))
 	{
@@ -486,10 +490,10 @@ void CEnemySpin::Update(void)
 			D3DXVECTOR3 playerPos = pPlayer->GetPosition();
 
 			// 角度を求める
-			float fAngle = GetTargetAngle(playerPos, pos);
+			float fDirAngle = GetTargetAngle(playerPos, pos);
 
 			// 角度を設定
-			pPlayer->SetAngle(fAngle);
+			pPlayer->SetAngle(fDirAngle);
 
 			// ヒット状態にする
 			pEnemy->ChangeState(make_shared<CEnemySuperHit>());
@@ -847,8 +851,11 @@ void CEnemyJumpAttack::Update(void)
 			// 距離を求める
 			float dir = GetDistance(Diff);
 
+			// 向きの取得
+			float fAngle = pEnemy->GetRotaition()->Get().y;
+
 			// ジャンプ攻撃中の移動
-			pEnemy->GetMovement()->MoveForWard(dir / JUMPATTACK_MOVE_FRAME);
+			pEnemy->GetMovement()->MoveForWard(dir / JUMPATTACK_MOVE_FRAME, fAngle + D3DX_PI);
 		}
 
 		// たたきつけになったら
@@ -999,7 +1006,7 @@ CEnemyRush::~CEnemyRush()
 	if (pEnemy == nullptr) return;
 
 	// もとに戻しておく
-	pEnemy->SetInertia(0.25f);
+	pEnemy->GetMovement()->SetInertia(0.25f);
 }
 
 //===================================================
@@ -1232,7 +1239,7 @@ CEnemyEndRush::~CEnemyEndRush()
 	if (pEnemy == nullptr) return;
 
 	// 慣性の設定をもとに戻す
-	pEnemy->SetInertia(0.25f);
+	pEnemy->GetMovement()->SetInertia(0.25f);
 
 	// 音の取得
 	CSound* pSound = CManager::GetSound();
@@ -1295,7 +1302,7 @@ void CEnemyEndRush::Update(void)
 		pEnemy->SetState(CCharacter3D::STATE_ACTION, 5);
 
 		// 慣性の設定
-		pEnemy->SetInertia(m_fInertia);
+		pEnemy->GetMovement()->SetInertia(m_fInertia);
 
 		// 右足の位置
 		D3DXVECTOR3 footPosR = pEnemy->GetModelPos(CEnemy::MODEL_FOOTR);
@@ -1321,7 +1328,7 @@ void CEnemyEndRush::Update(void)
 		else if (pMotion->IsFinishEndBlend())
 		{
 			// 慣性の設定をもとに戻す
-			pEnemy->SetInertia(0.25f);
+			pEnemy->GetMovement()->SetInertia(0.25f);
 
 			// 状態の遷移
 			pEnemy->ChangeState(make_shared<CEnemyIdle>(5));
@@ -1841,7 +1848,7 @@ CEnemyRushSwing::~CEnemyRushSwing()
 	if (pEnemy == nullptr) return;
 
 	// 慣性をもとに戻す
-	pEnemy->SetInertia(0.25f);
+	pEnemy->GetMovement()->SetInertia(0.25f);
 }
 
 //===================================================
@@ -1911,13 +1918,16 @@ void CEnemyRushSwing::Update(void)
 		// 距離を求める
 		float fDistance = GetDistance(playerPos - pos);
 
+		// 向きの取得
+		float fAngle = pEnemy->GetRotaition()->Get().y;
+
 		// 移動量を設定
-		pEnemy->GetMovement()->MoveForWard(fDistance / MOVE_FRAME);
+		pEnemy->GetMovement()->MoveForWard(fDistance / MOVE_FRAME, fAngle + D3DX_PI);
 	}
 	else if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_RUSH_SWING, 3))
 	{
 		// 慣性を設定
-		pEnemy->SetInertia(0.02f);
+		pEnemy->GetMovement()->SetInertia(0.02f);
 	}
 	if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_RUSH_SWING, 4) ||
 		pMotion->IsEventFrame(CEnemy::MOTIONTYPE_RUSH_SWING, 5) ||

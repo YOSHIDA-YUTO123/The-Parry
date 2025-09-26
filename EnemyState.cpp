@@ -32,6 +32,7 @@
 #include "renderer.h"
 #include "EnemyStateAttack.h"
 #include "EnemyStateMovement.h"
+#include "EnemyMovement.h"
 
 //***************************************************
 // 名前空間
@@ -408,8 +409,12 @@ void CEnemyDamageL::Init(void)
 
 	if (pMovement != nullptr && pPlayer != nullptr)
 	{
+		// 位置の取得
+		D3DXVECTOR3 pos = pEnemy->GetPosition();
+
 		// 吹き飛び処理
-		pMovement->BlowOff(PlayerPos, 250.0f, 5.0f);
+		float fAngle = pMovement->BlowOff(pos - PlayerPos, 250.0f, 5.0f);
+		pEnemy->SetAngle(fAngle);
 	}
 }
 
@@ -444,10 +449,15 @@ void CEnemyDamageL::Update(void)
 		// プレイヤーの取得
 		CPlayer* pPlayer = CGame::GetPlayer();
 
+		// プレイヤーの位置の取得
 		D3DXVECTOR3 PlayerPos = pPlayer->GetPosition();
 
+		// 位置の取得
+		D3DXVECTOR3 pos = pEnemy->GetPosition();
+
 		// 吹き飛び処理
-		pEnemy->GetMovement()->BlowOff(PlayerPos, 50.0f, 5.0f);
+		float fAngle = pEnemy->GetMovement()->BlowOff(pos - PlayerPos, 50.0f, 5.0f);
+		pEnemy->SetAngle(fAngle);
 	}
 
 	// モーションを最後まで行ったら
@@ -744,6 +754,9 @@ void CEnemyHit::Update(void)
 	// モーションクラスの取得
 	CMotion* pMotion = pEnemy->GetMotion();
 
+	// 向きの取得
+	float fAngle = pEnemy->GetRotaition()->Get().y;
+
 	if (pMotion != nullptr)
 	{
 		// モーションの種類の取得
@@ -752,7 +765,7 @@ void CEnemyHit::Update(void)
 		if (pMotion->IsEventFrame(1,50,CEnemy::MOTIONTYPE_HIT))
 		{
 			// 後ろに進む
-			pEnemy->GetMovement()->SetMoveDir(m_Const.BACK_MOVE_VALUE.x, m_Const.BACK_MOVE_VALUE.y);
+			pEnemy->GetMovement()->SetMoveDir(m_Const.BACK_MOVE_VALUE.x, m_Const.BACK_MOVE_VALUE.y, fAngle);
 		}
 
 		// モーションが終わったら
@@ -765,7 +778,7 @@ void CEnemyHit::Update(void)
 		if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_BACK_HIT))
 		{
 			// 前に進む
-			pEnemy->GetMovement()->MoveForWard(m_Const.FORWARD_MOVE_VALUE);
+			pEnemy->GetMovement()->MoveForWard(m_Const.FORWARD_MOVE_VALUE, fAngle + D3DX_PI);
 		}
 
 		// モーションが終わったら
@@ -849,6 +862,11 @@ void CEnemyDamageS::Init(void)
 		pSound->Play(CSound::SOUND_LABEL_ENEMY_DAMAGE);
 	}
 
+	// 位置の取得
+	D3DXVECTOR3 pos = pEnemy->GetPosition();
+
+	float fAngle = 0.0f;
+
 	if (pMotion != nullptr)
 	{
 		switch (m_type)
@@ -857,7 +875,8 @@ void CEnemyDamageS::Init(void)
 			if (pMovement != nullptr && pPlayer != nullptr)
 			{
 				// 吹き飛び処理
-				pMovement->BlowOff(PlayerPos, 100.0f, 5.0f);
+				fAngle = pMovement->BlowOff(pos - PlayerPos, 100.0f, 5.0f);
+				pEnemy->SetAngle(fAngle);
 			}
 			// ダメージモーションにする
 			pMotion->SetMotion(CEnemy::MOTIONTYPE_DAMAGES, true, 2);
@@ -1151,6 +1170,9 @@ void CEnemyDeath::Update(void)
 	// モーションクラスの取得
 	CMotion* pMotion = pEnemy->GetMotion();
 
+	// 向きの取得
+	float fAngle = pEnemy->GetRotaition()->Get().y;
+
 	// モーションがあるなら
 	if (pMotion != nullptr)
 	{
@@ -1158,7 +1180,7 @@ void CEnemyDeath::Update(void)
 		if (pMotion->IsEventFrame(1, 90, CEnemy::MOTIONTYPE_DEATH))
 		{
 			// 移動方向を設定
-			pEnemy->GetMovement()->SetMoveDir(0.0f, 20.0f);
+			pEnemy->GetMovement()->SetMoveDir(0.0f, 20.0f, fAngle);
 		}
 		// 音の取得
 		CSound* pSound = CManager::GetSound();
@@ -1323,13 +1345,16 @@ void CEnemySuperHit::Update(void)
 	// プレイヤーを取得できなかったら処理しない
 	if (pPlayer == nullptr) return;
 
+	// 向きの取得
+	float fAngle = pEnemy->GetRotaition()->Get().y;
+
 	// モーションがあるなら
 	if (pMotion != nullptr)
 	{
 		if (pMotion->IsEventFrame(1, 44, CEnemy::MOTIONTYPE_SUPER_HIT))
 		{
 			// 後ろ方向
-			pEnemy->GetMovement()->SetMoveDir(0.0f, 2.0f);
+			pEnemy->GetMovement()->SetMoveDir(0.0f, 2.0f, fAngle);
 		}
 		
 		// プレイヤーのモーションの取得

@@ -121,6 +121,12 @@
     <Filter Include="ヘッダー ファイル\statemachine\enemy">
       <UniqueIdentifier>{e32c4373-5b18-4662-963e-e2fc01c410eb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\model\enemy">
+      <UniqueIdentifier>{46567663-934f-4fef-af12-36a41c107d70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\model\enemy">
+      <UniqueIdentifier>{472380d2-884f-40ba-80bd-2800a42bc265}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="testword.cpp">
@@ -267,9 +273,6 @@
     <ClCompile Include="statebase.cpp">
       <Filter>ソース ファイル\statemachine</Filter>
     </ClCompile>
-    <ClCompile Include="enemy.cpp">
-      <Filter>ソース ファイル\model</Filter>
-    </ClCompile>
     <ClCompile Include="Observer.cpp">
       <Filter>ソース ファイル\system</Filter>
     </ClCompile>
@@ -348,9 +351,6 @@
     <ClCompile Include="opening.cpp">
       <Filter>ソース ファイル\scene</Filter>
     </ClCompile>
-    <ClCompile Include="OpningEnemy.cpp">
-      <Filter>ソース ファイル\model</Filter>
-    </ClCompile>
     <ClCompile Include="OpeningCamera.cpp">
       <Filter>ソース ファイル\system\camera</Filter>
     </ClCompile>
@@ -368,9 +368,6 @@
     </ClCompile>
     <ClCompile Include="edit.cpp">
       <Filter>ソース ファイル\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="TrainingEnemy.cpp">
-      <Filter>ソース ファイル\model</Filter>
     </ClCompile>
     <ClCompile Include="TrainingEnemyState.cpp">
       <Filter>ソース ファイル\statemachine</Filter>
@@ -473,6 +470,18 @@
     </ClCompile>
     <ClCompile Include="FieldImpact.cpp">
       <Filter>ソース ファイル\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy.cpp">
+      <Filter>ソース ファイル\model\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyMovement.cpp">
+      <Filter>ソース ファイル\model\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="OpningEnemy.cpp">
+      <Filter>ソース ファイル\model\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="TrainingEnemy.cpp">
+      <Filter>ソース ファイル\model\enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -623,9 +632,6 @@
     <ClInclude Include="statebase.h">
       <Filter>ヘッダー ファイル\statemachine</Filter>
     </ClInclude>
-    <ClInclude Include="enemy.h">
-      <Filter>ヘッダー ファイル\model</Filter>
-    </ClInclude>
     <ClInclude Include="Observer.h">
       <Filter>ヘッダー ファイル\system</Filter>
     </ClInclude>
@@ -701,9 +707,6 @@
     <ClInclude Include="opening.h">
       <Filter>ヘッダー ファイル\scene</Filter>
     </ClInclude>
-    <ClInclude Include="OpningEnemy.h">
-      <Filter>ヘッダー ファイル\model</Filter>
-    </ClInclude>
     <ClInclude Include="OpeningCamera.h">
       <Filter>ヘッダー ファイル\system\camera</Filter>
     </ClInclude>
@@ -721,9 +724,6 @@
     </ClInclude>
     <ClInclude Include="edit.h">
       <Filter>ヘッダー ファイル\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="TrainingEnemy.h">
-      <Filter>ヘッダー ファイル\model</Filter>
     </ClInclude>
     <ClInclude Include="TrainingEnemyState.h">
       <Filter>ヘッダー ファイル\statemachine</Filter>
@@ -803,9 +803,6 @@
     <ClInclude Include="wing.h">
       <Filter>ヘッダー ファイル\objectX</Filter>
     </ClInclude>
-    <ClInclude Include="wall.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="ArenaDust.h">
       <Filter>ヘッダー ファイル\objectX</Filter>
     </ClInclude>
@@ -826,6 +823,21 @@
     </ClInclude>
     <ClInclude Include="FieldImpact.h">
       <Filter>ヘッダー ファイル\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="wall.h">
+      <Filter>ヘッダー ファイル\object3D</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy.h">
+      <Filter>ヘッダー ファイル\model\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="OpningEnemy.h">
+      <Filter>ヘッダー ファイル\model\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="TrainingEnemy.h">
+      <Filter>ヘッダー ファイル\model\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyMovement.h">
+      <Filter>ヘッダー ファイル\model\enemy</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

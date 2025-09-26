@@ -169,6 +169,7 @@
     <ClCompile Include="edit.cpp" />
     <ClCompile Include="effect2D.cpp" />
     <ClCompile Include="EffectSpark.cpp" />
+    <ClCompile Include="EnemyMovement.cpp" />
     <ClCompile Include="EnemyStateAttack.cpp" />
     <ClCompile Include="EnemyStateMovement.cpp" />
     <ClCompile Include="ExplosionArea.cpp" />
@@ -293,6 +294,7 @@
     <ClInclude Include="edit.h" />
     <ClInclude Include="effect2D.h" />
     <ClInclude Include="EffectSpark.h" />
+    <ClInclude Include="EnemyMovement.h" />
     <ClInclude Include="EnemyStateAttack.h" />
     <ClInclude Include="EnemyStateMovement.h" />
     <ClInclude Include="ExplosionArea.h" />

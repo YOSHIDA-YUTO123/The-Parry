@@ -43,6 +43,7 @@
 #include "Collision.h"
 #include "EnemyStateAttack.h"
 #include "EnemyStateMovement.h"
+#include "EnemyMovement.h"
 
 //***************************************************
 // 定数定義
@@ -51,7 +52,6 @@ constexpr float SHADOW_ALEVEL = 0.7f;			// 影のアルファ値
 constexpr float SHADOW_MAX_HEIGHT = 500.0f;		// 影が見える最大の高さ
 constexpr float SHADOW_SIZE = 150.0f;			// 影の大きさ
 constexpr float ROCKON_HEIGHT = 100.0f;			// ロックオン時の見る場所
-constexpr float INERTIA = 0.25f;				// 慣性
 constexpr float RUSH_EFFECT_POS = -350.0f;		// 突進エフェクトの位置
 constexpr int NUM_RUBBLE = 16;					// 瓦礫を出す数
 constexpr int NUM_MATRIX = 8;					// 武器につけるマトリックスの数
@@ -68,13 +68,11 @@ using namespace std;							// 名前空間stdを使用
 CEnemy::CEnemy() : CCharacter3D(TYPE_ENEMY)
 {
 	m_bSetMatrix = false;
-	m_pMove = nullptr;
 	m_pMachine = nullptr;
 	D3DXMatrixIdentity(&m_RushEffectMtx);
 	D3DXMatrixIdentity(&m_weponMatrix);
 	m_pOrbit = nullptr;
 	m_posOld = VEC3_NULL;
-	m_fInertia = INERTIA;
 }
 
 //===================================================
@@ -122,12 +120,11 @@ CEnemy* CEnemy::Create(const int nLife, const float fSpeed, const D3DXVECTOR3 Sh
 //===================================================
 HRESULT CEnemy::Init(void)
 {
+	// 状態マシーンの処理
 	m_pMachine = make_unique<CStateMachine>();
 
+	// 状態の変更処理
 	ChangeState(make_shared<CEnemyIdle>(120));
-
-	// 移動クラスの生成
-	m_pMove = make_unique<CVelocity>();
 
 	// 大きさの取得
 	D3DXVECTOR3 Size = CCharacter3D::GetSize();
@@ -158,7 +155,7 @@ HRESULT CEnemy::Init(void)
 	// 移動制御クラスの生成
 	m_pMovement = make_unique<CEnemyMovement>();
 
-	m_pMovement->Init(m_pMove,this);
+	m_pMovement->Init();
 
 	return S_OK;
 }
@@ -326,17 +323,8 @@ void CEnemy::Update(void)
 	// モーションの制御クラスの取得
 	CMotion* pPlayerMotion = pPlayer->GetMotion();
 
-	// 移動量の減衰
-	m_pMove->SetInertia3D(m_fInertia);
-
-	// 移動量の取得
-	D3DXVECTOR3 move = m_pMove->Get();
-
-	// 前回の位置の更新
-	m_posOld = pos;
-
 	// 位置の更新処理
-	pos += move;
+	m_pMovement->UpdatePosition(&pos, &m_posOld);
 
 	// メッシュフィールドの取得
 	CMeshField* pMesh = CGame::GetField();
@@ -383,11 +371,8 @@ void CEnemy::Update(void)
 		pBirdManager->CheckDistance(pos, 500.0f);
 	}
 
-	if (m_pMove != nullptr)
-	{
-		// 重力の設定
-		m_pMove->Gravity(-MAX_GRABITY);
-	}
+	// 重力の処理
+	m_pMovement->Gravity(-MAX_GRABITY);
 
 	// インパクトの当たり判定
 	CollisionImpact(pMotion, pMesh, &pos);
@@ -841,7 +826,7 @@ void CEnemy::ChasePlayer(float chaseScal, const float speedScal)
 	D3DXVECTOR3 pos = CCharacter3D::GetPosition();
 
 	// 移動量の取得
-	D3DXVECTOR3 move = m_pMove->Get();
+	D3DXVECTOR3 move = m_pMovement->Get();
 
 	// 現在の移動方向を求める
 	float fRotMove = atan2f(move.x, move.z);
@@ -881,7 +866,7 @@ void CEnemy::ChasePlayer(float chaseScal, const float speedScal)
 	float fAngle = GetTargetAngle(playerPos, pos);		  // 目標までの角度の取得
 
 	// 移動量の設定
-	m_pMove->Set(move);
+	m_pMovement->Set(move);
 
 	// 目的の角度の設定
 	CCharacter3D::GetRotaition()->SetDest(D3DXVECTOR3(0.0f, fAngle + D3DX_PI, 0.0f));
@@ -1760,116 +1745,4 @@ void CEnemy::SetParent(const int nCnt, const D3DXVECTOR3 offPos, D3DXMATRIX* pMa
 
 	// ワールドマトリックスの設定
 	pDevice->SetTransform(D3DTS_WORLD, pMatrixOut);
-}
-
-//===================================================
-// コンストラクタ
-//===================================================
-CEnemyMovement::CEnemyMovement()
-{
-	m_pEnemy = nullptr;
-	m_pMove = nullptr;
-}
-
-//===================================================
-// デストラクタ
-//===================================================
-CEnemyMovement::~CEnemyMovement()
-{
-}
-
-//===================================================
-// 初期化処理
-//===================================================
-void CEnemyMovement::Init(std::shared_ptr<CVelocity> enemyMove, CEnemy* pEnemy)
-{
-	// nullなら
-	if (m_pMove == nullptr)
-	{
-		// 敵の移量を参照
-		m_pMove = enemyMove;
-	}
-
-	// nullなら
-	if (m_pEnemy == nullptr)
-	{
-		m_pEnemy = pEnemy;
-	}
-}
-
-//===================================================
-// 吹き飛び処理
-//===================================================
-void CEnemyMovement::BlowOff(const D3DXVECTOR3 attacker,const float blowOff, const float jump)
-{
-	// 位置の取得
-	D3DXVECTOR3 pos = m_pEnemy->GetPosition();
-
-	// アタッカーからプレイヤーまでの差分を求める
-	D3DXVECTOR3 diff = pos - attacker;
-
-	// 角度を求める
-	float fAngle = atan2f(diff.x, diff.z);
-
-	// 移動量
-	D3DXVECTOR3 move;
-
-	// 向きの設定
-	m_pEnemy->GetRotaition()->SetDest(D3DXVECTOR3(0.0f, fAngle, 0.0f));
-
-	// 移動量の設定
-	move.x = sinf(fAngle) * blowOff;
-	move.y = jump;
-	move.z = cosf(fAngle) * blowOff;
-
-	m_pMove->Set(move);
-}
-
-//===================================================
-// 向いている方向に進む処理
-//===================================================
-void CEnemyMovement::MoveForWard(const float fSpeed)
-{
-	// 向きの取得
-	D3DXVECTOR3 rot = m_pEnemy->GetRotaition()->Get();
-
-	// 移動量の取得
-	D3DXVECTOR3 move = m_pMove->Get();
-
-	// 移動量の設定
-	move.x = sinf(rot.y + D3DX_PI) * fSpeed;
-	move.z = cosf(rot.y + D3DX_PI) * fSpeed;
-
-	// 移動量の設定
-	m_pMove->Set(move);
-}
-
-//===================================================
-// 移動方向の設定処理
-//===================================================
-void CEnemyMovement::SetMoveDir(const float dir,const float fSpeed)
-{
-	// 向きの取得
-	D3DXVECTOR3 rot = m_pEnemy->GetRotaition()->Get();
-
-	// 移動量の取得
-	D3DXVECTOR3 moveWk = m_pMove->Get();
-
-	// 移動量の設定
-	moveWk.x = sinf(rot.y + dir) * fSpeed;
-	moveWk.z = cosf(rot.y + dir) * fSpeed;
-
-	// 移動量の設定
-	m_pMove->Set(moveWk);
-}
-
-//===================================================
-// ジャンプ
-//===================================================
-void CEnemyMovement::Jump(const float fHeight)
-{
-	if (m_pMove != nullptr)
-	{
-		m_pMove->Jump(fHeight);
-	}
 }
