@@ -192,6 +192,7 @@ private:
 	void UpdateMove(CMotion* pMotion,const bool bAlive, CInputKeyboard *pKeyboard, CInputJoypad *pJoyPad, CGameCamera* pGameCamera);
 	void UpdateRockOnMove(CMotion* pMotion, const bool bAlive, CInputKeyboard* pKeyboard, CInputJoypad* pJoyPad, CGameCamera* pGameCamera);
 	bool GetMoveState(CMotion* pMotion);
+	void DebugInfo(void);
 
 	static constexpr int NUM_RUBBLE = 16;			// ä¢‚IÇÃêî
 

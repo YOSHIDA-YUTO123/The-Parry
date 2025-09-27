@@ -132,6 +132,7 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 private:
+	bool m_bHit; // ƒvƒŒƒCƒ„[‚ÉUŒ‚‚ª‚ ‚½‚Á‚½‚©‚Ç‚¤‚©
 };
 
 //***************************************************

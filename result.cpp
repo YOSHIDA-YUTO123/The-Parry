@@ -102,32 +102,6 @@ void CResultWin::Update(void)
 		// 更新処理
 		m_pCamera->Update();
 	}
-
-	// キーボードの取得
-	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
-
-	// パッドの取得
-	CInputJoypad* pJoyPad = CManager::GetInputJoypad();
-
-	if (pKeyboard->GetTrigger(DIK_RETURN) || pJoyPad->GetTrigger(pJoyPad->JOYKEY_A))
-	{
-		CFade* pFade = CManager::GetFade();
-
-		// 音の取得
-		CSound* pSound = CManager::GetSound();
-
-		if (pSound != nullptr)
-		{
-			// 音の再生
-			pSound->Play(CSound::SOUND_LABEL_RESULT001);
-		}
-
-		if (pFade != nullptr)
-		{
-			// 新しいモードの設定
-			pFade->SetFade(make_unique<CRanking>());
-		}
-	}
 }
 
 //===================================================

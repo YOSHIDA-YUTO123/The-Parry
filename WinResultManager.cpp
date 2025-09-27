@@ -16,6 +16,9 @@
 #include "game.h"
 #include "sound.h"
 #include "manager.h"
+#include "input.h"
+#include "fade.h"
+#include "ranking.h"
 
 using namespace std; // 名前空間stdの使用
 
@@ -41,6 +44,7 @@ CWinResultManager::CWinResultManager()
 	m_nNormalCnt = NULL;
 	m_nWeakCnt = NULL;
 	m_nScore = NULL;
+	m_bSkip = false;
 }
 
 //===================================================
@@ -206,6 +210,71 @@ void CWinResultManager::Update(void)
 		m_nWeakCnt,
 	};
 
+	// キーボードの取得
+	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
+
+	// パッドの取得
+	CInputJoypad* pJoyPad = CManager::GetInputJoypad();
+
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	// 決定ボタンを押したら
+	if (pKeyboard->GetTrigger(DIK_RETURN) || pJoyPad->GetTrigger(pJoyPad->JOYKEY_A))
+	{
+		// 最大まで行ったら
+		if (m_menu == MENU_MAX)
+		{
+			CFade* pFade = CManager::GetFade();
+
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_RESULT001);
+			}
+
+			if (pFade != nullptr)
+			{
+				// 新しいモードの設定
+				pFade->SetFade(make_unique<CRanking>());
+			}
+		}
+		// スキップが押されていないなら
+		else if (!m_bSkip)
+		{
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_RESULT000);
+			}
+
+			// スキップした
+			m_bSkip = true;
+		}
+		else
+		{
+			CFade* pFade = CManager::GetFade();
+
+			if (pSound != nullptr)
+			{
+				// 音の再生
+				pSound->Play(CSound::SOUND_LABEL_RESULT001);
+			}
+
+			if (pFade != nullptr)
+			{
+				// 新しいモードの設定
+				pFade->SetFade(make_unique<CRanking>());
+			}
+		}
+	}
+
+	// スキップしたら
+	if (m_bSkip)
+	{
+		m_nCounter = CREATE_TIME;
+	}
+
 	int nCnt = m_menu;
 
 	// 最大になったら
@@ -220,7 +289,7 @@ void CWinResultManager::Update(void)
 		m_nCounter++;
 	}
 
-	// 生成時間になったら
+	// 生成時間になったら&&スキップしていないなら
 	if (m_nCounter >= CREATE_TIME)
 	{
 		// 音の取得

@@ -93,8 +93,8 @@ class CEnemySideMove : public CEnemyState
 public:
 	CEnemySideMove();
 	CEnemySideMove(ID id);
-	~CEnemySideMove();
-	virtual void Init(void) override = 0;
+	virtual ~CEnemySideMove();
+	virtual void Init(void) override;
 	virtual void Update(void) override;
 protected:
 	static constexpr int MOVE_TIME = 60; // Å’áˆÚ“®ŠÔ

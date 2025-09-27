@@ -852,6 +852,8 @@ void CPlayerRevengeAttack::Init(void)
 	pNormal->SetParticle(15.0f, 120, 60, 1, 314);
 	pNormal->SetParam(CEffect3D::TYPE_HIT,0);
 
+	// ¬Œ÷“x‚ÌÝ’è
+	pPlayer->SetParryResult(CPlayer::PARRY_PARFECT);
 }
 
 //===================================================

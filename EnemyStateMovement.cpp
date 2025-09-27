@@ -482,7 +482,7 @@ CEnemySideMove::CEnemySideMove()
 {
 	m_fMoveAngle = NULL;
 	m_fMoveValue = NULL;
-	m_nTime = rand() % 120 + MOVE_TIME;
+	m_nTime = NULL;
 }
 
 //===================================================
@@ -492,7 +492,7 @@ CEnemySideMove::CEnemySideMove(ID id) : CEnemyState(id)
 {
 	m_fMoveAngle = NULL;
 	m_fMoveValue = NULL;
-	m_nTime = rand() % 120 + MOVE_TIME;
+	m_nTime = NULL;
 }
 
 //===================================================
@@ -500,6 +500,15 @@ CEnemySideMove::CEnemySideMove(ID id) : CEnemyState(id)
 //===================================================
 CEnemySideMove::~CEnemySideMove()
 {
+}
+
+//===================================================
+// 横歩きの初期化処理
+//===================================================
+void CEnemySideMove::Init(void)
+{
+	// 移動時間の設定
+	m_nTime = rand() % 120 + MOVE_TIME;
 }
 
 //===================================================
@@ -564,11 +573,25 @@ void CEnemySideMove::Update(void)
 			default:
 				break;
 			}
+			return;
 		}
-		else
+
+		// 次の行動の選出
+		int nAction = rand() % 2;
+
+		// 次の行動の遷移
+		switch (nAction)
 		{
+		case 0:
 			// 状態の変更
 			pEnemy->ChangeState(make_shared<CEnemyRushSwing>());
+			break;
+		case 1:
+			// 状態の変更
+			pEnemy->ChangeState(make_shared<CEnemyRoar>());
+			break;
+		default:
+			break;
 		}
 	}
 }
@@ -601,6 +624,9 @@ CEnemyRightMove::~CEnemyRightMove()
 //===================================================
 void CEnemyRightMove::Init(void)
 {
+	// 初期化処理
+	CEnemySideMove::Init();
+
 	// 敵の取得
 	CEnemy* pEnemy = CEnemyState::GetEnemy();
 
@@ -670,6 +696,9 @@ CEnemyLeftMove::~CEnemyLeftMove()
 //===================================================
 void CEnemyLeftMove::Init(void)
 {
+	// 初期化処理
+	CEnemySideMove::Init();
+
 	// 敵の取得
 	CEnemy* pEnemy = CEnemyState::GetEnemy();
 

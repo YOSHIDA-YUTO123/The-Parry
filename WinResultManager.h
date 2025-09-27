@@ -53,6 +53,7 @@ private:
 	int m_nNormalCnt;					   // 普通の回数
 	int m_nWeakCnt;						   // 弱いの回数
 	int m_nScore;						   // スコア
+	bool m_bSkip;						   // スキップしたかどうか
 };
 
 #endif

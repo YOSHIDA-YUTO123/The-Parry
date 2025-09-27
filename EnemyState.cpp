@@ -128,6 +128,21 @@ bool CEnemyStateManager::SetMotionByPlayerPosition(void)
 			m_pEnemy->ChangeState(make_shared<CEnemySweepLeft>());
 			return true;
 		}
+		// ¶Œã‚ë‚É‚¢‚½‚ç
+		else if (m_pEnemy->CollisionFOV(playerPos, -D3DX_PI * 0.5f, D3DX_PI))
+		{
+			// U‚è•Ô‚è
+			m_pEnemy->ChangeState(make_shared<CEnemyLookBackL>());
+			return true;
+		}
+		// ‰EŒã‚ë‚É‚¢‚½‚ç
+		else if (m_pEnemy->CollisionFOV(playerPos, D3DX_PI, D3DX_PI * 0.5f))
+		{
+			// U‚è•Ô‚è
+			m_pEnemy->ChangeState(make_shared<CEnemyLookBackR>());
+			return true;
+		}
+
 	}
 	else
 	{

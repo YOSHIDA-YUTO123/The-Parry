@@ -44,6 +44,7 @@
 #include "billboardAnim.h"
 #include "wing.h"
 #include "ArenaDust.h"
+#include "renderer.h"
 
 using namespace Const; // 名前空間Constを使用
 using namespace std; // 名前空間stdを使用
@@ -74,7 +75,14 @@ CGame::CGame() : CScene(MODE_GAME)
 //===================================================
 CGame::~CGame()
 {
+	// レンダラーの取得
+	CRenderer* pRenderer = CManager::GetRenderer();
 
+	if (pRenderer != nullptr)
+	{
+		// エフェクトをOFFにする
+		pRenderer->offEffect();
+	}
 }
 
 //===================================================

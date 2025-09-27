@@ -78,7 +78,7 @@ void CEnemyAttackSmash::Init(void)
 	if (pMotion != nullptr)
 	{
 		// 攻撃モーションの設定
-		pMotion->SetMotion(CEnemy::MOTIONTYPE_SMASH, true, 20);
+		pMotion->SetMotion(CEnemy::MOTIONTYPE_SMASH, true, 10);
 	}
 }
 
@@ -107,6 +107,13 @@ void CEnemyAttackSmash::Update(void)
 
 	// 位置の取得
 	D3DXVECTOR3 pos = pEnemy->GetPosition();
+
+	// 攻撃モーションのたたきつけになったら
+	if (pMotion->IsEventFrame(65, 65, CEnemy::MOTIONTYPE_SMASH))
+	{
+		// 瓦礫の設定処理
+		pEnemy->SetRubble();
+	}
 
 	// イベントフレームの判定
 	if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_SMASH) && pEnemy->IsDamageMotion() == false)
@@ -193,7 +200,7 @@ void CEnemyAttackSmash::Update(void)
 		pEnemy->AngleToPlayer();
 	}
 
-	if (pMotion->IsEventFrame(64, 72, CEnemy::MOTIONTYPE_SMASH))
+	if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_SMASH))
 	{
 		// 軌跡の処理
 		pEnemy->Orbit(16, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f));
@@ -221,7 +228,7 @@ void CEnemyAttackSmash::Update(void)
 	else if (pMotion->IsFinishEndBlend())
 	{
 		// IDLEにする
-		pEnemy->ChangeState(make_shared<CEnemyIdle>(30));
+		pEnemy->ChangeState(make_shared<CEnemyIdle>(10));
 
 		return;
 	}
@@ -1341,6 +1348,7 @@ void CEnemyEndRush::Update(void)
 //===================================================
 CEnemyBackKick::CEnemyBackKick() : CEnemyState(ID_BACKKICK)
 {
+	m_bHit = false;
 }
 
 //===================================================
@@ -1393,101 +1401,115 @@ void CEnemyBackKick::Update(void)
 	CMotion* pMotion = pEnemy->GetMotion();
 
 	// モーションがあるなら
-	if (pMotion != nullptr)
+	if (pMotion == nullptr)
 	{
-		// 状態の設定
-		pEnemy->SetState(CCharacter3D::STATE_ACTION, 5);
+		// 状態の遷移
+		pEnemy->ChangeState(make_shared<CEnemyIdle>(5));
+		return;
+	}
+	// 状態の設定
+	pEnemy->SetState(CCharacter3D::STATE_ACTION, 5);
 
-		// 攻撃の結果を取得
-		CEnemy::RESULT result = pEnemy->AttackResult(pPlayer, CEnemy::MODEL_FOOTR, 150.0f);
+	// 攻撃の結果を取得
+	CEnemy::RESULT result = pEnemy->AttackResult(pPlayer, CEnemy::MODEL_FOOTR, 150.0f);
 
-		// 位置の取得
-		D3DXVECTOR3 pos = pEnemy->GetPosition();
+	// 位置の取得
+	D3DXVECTOR3 pos = pEnemy->GetPosition();
 
-		// 敵の攻撃のカウンターの目安の表示
-		if (pMotion->IsEventFrame(50, 50, CEnemy::MOTIONTYPE_BACKKICK))
+	// 敵の攻撃のカウンターの目安の表示
+	if (pMotion->IsEventFrame(50, 50, CEnemy::MOTIONTYPE_BACKKICK))
+	{
+		// 音の取得
+		CSound* pSound = CManager::GetSound();
+
+		if (pSound != nullptr)
 		{
-			// 音の取得
-			CSound* pSound = CManager::GetSound();
-
-			if (pSound != nullptr)
-			{
-				// 音の再生
-				pSound->Play(CSound::SOUND_LABEL_ENEMY_ATTACK);
-			}
-
-			// モデルの位置の取得
-			D3DXVECTOR3 chestPos = pEnemy->GetModelPos(CEnemy::MODEL_CHEST);
-
-			// パーティクルの生成
-			auto pParticle = CParticle3DNormal::Create(chestPos, 100.0f, D3DXCOLOR(1.0f, 0.3f, 0.3f, 1.0f));
-
-			// パーティクルの設定
-			pParticle->SetParticle(15.0f, 240, 50, 1, 314);
+			// 音の再生
+			pSound->Play(CSound::SOUND_LABEL_ENEMY_ATTACK);
 		}
 
-		if (pMotion->IsEventFrame(68, 75, CEnemy::MOTIONTYPE_BACKKICK))
+		// モデルの位置の取得
+		D3DXVECTOR3 chestPos = pEnemy->GetModelPos(CEnemy::MODEL_CHEST);
+
+		// パーティクルの生成
+		auto pParticle = CParticle3DNormal::Create(chestPos, 100.0f, D3DXCOLOR(1.0f, 0.3f, 0.3f, 1.0f));
+
+		// パーティクルの設定
+		pParticle->SetParticle(15.0f, 240, 50, 1, 314);
+	}
+
+	if (pMotion->IsEventFrame(68, 75, CEnemy::MOTIONTYPE_BACKKICK))
+	{
+		// パリィされた
+		if (result == CEnemy::RESULT_PARRY)
 		{
-			// パリィされた
-			if (result == CEnemy::RESULT_PARRY)
-			{
-				// 構えの設定処理
-				pPlayer->SetStance(pos, CPlayer::PARRYMOTION_JUMP);
+			// 構えの設定処理
+			pPlayer->SetStance(pos, CPlayer::PARRYMOTION_JUMP);
 
-				// ヒットストップ
-				pEnemy->SetHitStop(25);
+			// ヒットストップ
+			pEnemy->SetHitStop(25);
 
-				// ヒットストップ
-				pPlayer->SetHitStop(25);
+			// ヒットストップ
+			pPlayer->SetHitStop(25);
 
-				// ヒット状態の生成
-				auto pHitState = make_shared<CEnemyHit>();
+			// ヒット状態の生成
+			auto pHitState = make_shared<CEnemyHit>();
 
-				// 種類の設定
-				pHitState->SetType(CEnemyHit::TYPE_BACK);
+			// 種類の設定
+			pHitState->SetType(CEnemyHit::TYPE_BACK);
 
-				// ヒット状態にする
-				pEnemy->ChangeState(pHitState);
-			}
-			// 回避だったら
-			else if (result == CEnemy::RESULT_AVOID)
-			{
-				CSlow* pSlow = CManager::GetSlow();
+			// ヒット状態にする
+			pEnemy->ChangeState(pHitState);
+		}
+		// 回避だったら
+		else if (result == CEnemy::RESULT_AVOID)
+		{
+			CSlow* pSlow = CManager::GetSlow();
 
-				pSlow->Start(60, 4);
+			pSlow->Start(60, 4);
 
-				// 状態変更
-				pEnemy->ChangeState(make_shared<CEnemyEndRush>(0.02f));
-			}
-			// 攻撃があたった
-			else if (result == CEnemy::RESULT_HIT)
-			{
-				// プレイヤーのダメージモーションの設定
-				pPlayer->SetDamageMotion(pos, 3);
-			}
-			// 絶対反撃
-			else if (result == CEnemy::RESULT_SPREVENGE)
-			{
-				// プレイヤーの位置の取得
-				D3DXVECTOR3 playerPos = pPlayer->GetPosition();
+			// 状態変更
+			pEnemy->ChangeState(make_shared<CEnemyEndRush>(0.02f));
+		}
+		// 攻撃があたった
+		else if (result == CEnemy::RESULT_HIT)
+		{
+			m_bHit = true;
 
-				// 角度を求める
-				float fAngle = GetTargetAngle(playerPos, pos);
+			// プレイヤーのダメージモーションの設定
+			pPlayer->SetDamageMotion(pos, 3);
+		}
+		// 絶対反撃
+		else if (result == CEnemy::RESULT_SPREVENGE)
+		{
+			// プレイヤーの位置の取得
+			D3DXVECTOR3 playerPos = pPlayer->GetPosition();
 
-				// 角度を設定
-				pPlayer->SetAngle(fAngle);
+			// 角度を求める
+			float fAngle = GetTargetAngle(playerPos, pos);
 
-				// ヒット状態にする
-				pEnemy->ChangeState(make_shared<CEnemySuperHit>());
+			// 角度を設定
+			pPlayer->SetAngle(fAngle);
 
-				// 状態の変更
-				pPlayer->ChangeState(make_shared<CPlayerRevengeAttack>());
-			}
+			// ヒット状態にする
+			pEnemy->ChangeState(make_shared<CEnemySuperHit>());
 
+			// 状態の変更
+			pPlayer->ChangeState(make_shared<CPlayerRevengeAttack>());
 		}
 
-		// モーションが終わったら
-		if (pMotion->IsFinishEndBlend())
+	}
+
+	// モーションが終わったら
+	if (pMotion->IsFinishEndBlend())
+	{
+		// 攻撃が当たってたら
+		if (m_bHit)
+		{
+			// 突進に派生
+			pEnemy->ChangeState(make_shared<CEnemyRushSwing>());
+		}
+		else
 		{
 			// 状態の遷移
 			pEnemy->ChangeState(make_shared<CEnemyIdle>(5));

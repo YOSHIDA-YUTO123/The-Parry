@@ -350,12 +350,6 @@ void CEnemy::Update(void)
 		CCharacter3D::SetPosition(pos);
 	}
 
-	// 障害物との当たり判定
-	if (CollisionObstacle(&pos))
-	{
-
-	}
-
 	// コライダーの更新
 	UpdateCollider(pos);
 
@@ -368,6 +362,12 @@ void CEnemy::Update(void)
 		pCylinder->Collision(&pos);
 	}
 	
+	// 障害物との当たり判定
+	if (CollisionObstacle(&pos))
+	{
+
+	}
+
 	// 鳥のマネージャの取得
 	auto pBirdManager = CBirdManager::GetInstance();
 
@@ -389,13 +389,6 @@ void CEnemy::Update(void)
 	// 武器の先端の位置
 	D3DXVECTOR3 WeponPos = GetPositionFromMatrix(m_weponMatrix);
 	D3DXVECTOR3 WeponBottom = GetModelPos(MODEL_WEPON);
-
-	// 攻撃モーションのたたきつけになったら
-	if (pMotion->IsEventFrame(72,72, MOTIONTYPE_SMASH))
-	{
-		// 瓦礫の設定処理
-		SetRubble();
-	}
 
 	// 音の取得
 	CSound* pSound = CManager::GetSound();
@@ -1440,11 +1433,8 @@ bool CEnemy::SetTNTEffect(CObstacle* pObstacle)
 	auto STATE = CCharacter3D::GetState();
 
 	// 状態が攻撃じゃないなら処理しない
-	if (STATE != STATE_ACTION && STATE != STATE_DEATH)
+	if (STATE != STATE_ACTION && STATE != STATE_DEATH && !IsDamageMotion())
 	{
-		//// 状態の変更
-		//ChangeState(make_shared<CEnemySwing>());
-
 		return false;
 	}
 
@@ -1587,9 +1577,6 @@ void CEnemy::CollisionPlayer(CMotion *pPlayerMotion,CPlayer *pPlayer)
 	{
 		// プレイヤーとの当たり判定
 		pPlayer->CollisionCapsule(m_pCapsule.get());
-
-		// 成功度の設定
-		pPlayer->SetParryResult(nParrySuccess);
 	}
 
 	// パリィモーションの蹴りになったら

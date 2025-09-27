@@ -155,7 +155,7 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 private:
-	static constexpr int IDLE_TIME = 30; // 何もしない状態の時間
+	static constexpr int IDLE_TIME = 10; // 何もしない状態の時間
 	int m_nDamage;		// ダメージ量
 	int m_nIdleTime;	// 何もしない状態の時間
 	bool m_bFinish;		// モーションが終わったかどうか
@@ -231,7 +231,7 @@ public:
 	void Update(void) override;
 	void SetType(const TYPE type) { m_type = type; }
 private:
-	static constexpr int IDLE_TIME = 30; // 何もしない時間
+	static constexpr int IDLE_TIME = 20; // 何もしない時間
 	static constexpr int PROB_ACTION = 40; // 次の行動に派生する確率
 
 	TYPE m_type;		// モーションの種類

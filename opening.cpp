@@ -9,23 +9,24 @@
 // インクルードファイル
 //***************************************************
 #include "opening.h"
-#include"manager.h"
-#include"input.h"
+#include "manager.h"
+#include "input.h"
 #include "OpningEnemy.h"
 #include "OpeningCamera.h"
 #include "meshfield.h"
 #include "objectX.h"
-#include"light.h"
-#include"debugproc.h"
+#include "light.h"
+#include "debugproc.h"
 #include "FadeEffect.h"
 #include "dome.h"
-#include"fade.h"
-#include"game.h"
+#include "fade.h"
+#include "game.h"
 #include "BirdManager.h"
 #include "Obstacle.h"
 #include "FadeInObject2D.h"
 #include "SkipUI.h"
 #include "gear.h"
+#include "renderer.h"
 
 using namespace Const; // 名前空間Constの使用
 using namespace std;   // 名前空間stdの使用
@@ -51,6 +52,14 @@ COpening::COpening() : CScene(MODE_OPENING)
 //===================================================
 COpening::~COpening()
 {
+	// レンダラーの取得
+	CRenderer* pRenderer = CManager::GetRenderer();
+
+	if (pRenderer != nullptr)
+	{
+		// エフェクトをOFFにする
+		pRenderer->offEffect();
+	}
 }
 
 //===================================================

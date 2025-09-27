@@ -73,6 +73,11 @@ constexpr float ADD_REVENGE_WEAK = 5.0f;		// 反撃ゲージの加算量(セーフ時)
 constexpr float ADD_REVENGE_NORMAL = 15.0f;		// 反撃ゲージの加算量(ノーマル時)
 constexpr float ADD_REVENGE_PERFECT = 25.0f;	// 反撃ゲージの加算量(パーフェクト時)
 
+constexpr float DEC_STAMINA_WEAK = 30.0f;		// パリィ時のスタミナ消費(セーフ時)
+constexpr float DEC_STAMINA_NORMAL = 20.0f;		// パリィ時のスタミナ消費(ノーマル時)
+constexpr float DEC_STAMINA_PERFECT = 10.0f;	// パリィ時のスタミナ消費(パーフェクト時)
+constexpr float STANCE_STAMINA = 20.0f;			// 反撃の使用スタミナ
+
 constexpr int PARRY_TIME = 25;					// パリィの有効時間
 constexpr int ATTACK_TIME = 120;				// 攻撃の有効時間
 
@@ -540,44 +545,8 @@ void CPlayer::Update(void)
 	}
 
 #ifdef _DEBUG
-
-	// デバッグ表示
-	CDebugProc::Print("カメラの回転 X = %.2f Y = %.2f\n", pCamera->GetRotaition().x, pCamera->GetRotaition().y);
-
-	if (pKeyboard->GetTrigger(DIK_Y))
-	{
-		// パーティクルの生成
-		auto pParticle = CParticleSpark::Create(GetModelPos(2), D3DXVECTOR2(3.0f,20.0f), D3DXCOLOR(1.0f, 0.2f, 0.2f, 1.0f));
-
-		pParticle->SetParticle(10.0f, 60, 50, 1, 180);
-	}
-
-	if (pKeyboard->GetPress(DIK_9))
-	{
-		m_fDestRevengeValue += 1.0f;
-	}
-
-	if (pKeyboard->GetTrigger(DIK_O))
-	{
-		CTNTBarrel::Create(D3DXVECTOR3(-713.0f, 286.0f, 1613.0f),pos);
-		CTNTBarrel::Create(D3DXVECTOR3(656.0f, 286.0f, 1574.0f), pos);
-		CTNTBarrel::Create(D3DXVECTOR3(795.0f, 286.0f, -1412.0f), pos);
-		CTNTBarrel::Create(D3DXVECTOR3(-685.0f, 286.0f, -1507.0f), pos);
-	}
-
-	if (pKeyboard->GetTrigger(DIK_B))
-	{
-		for (int nCnt = 0; nCnt < 5; nCnt++)
-		{
-			CBird::Create(D3DXVECTOR3(static_cast<float>(rand() % 2800 - 1400.0f), 0.0f, static_cast<float>(rand() % 2800 - 1400.0f)), CBird::TYPE_NORMAL);
-			CBird::Create(D3DXVECTOR3(static_cast<float>(rand() % 2000 - 1000.0f), static_cast<float>(rand() % 200 + 600.0f), static_cast<float>(rand() % 2000 - 1000.0f)), CBird::TYPE_FLY_MOVE,false);
-		}
-	}
-
-	if (pKeyboard->GetTrigger(DIK_J))
-	{
-		ChangeState(make_shared<CPlayerJumpAttack>());
-	}
+	// デバッグ情報
+	DebugInfo();
 #endif // _DEBUG
 }
 
@@ -763,7 +732,7 @@ void CPlayer::UpdateCollider(D3DXVECTOR3 pos)
 //===================================================
 void CPlayer::UpdateStamina(void)
 {
-	m_fStamina += 0.1f;
+	m_fStamina += 0.08f;
 
 	// 範囲制限する
 	m_fStamina = Clamp(m_fStamina, 0.0f, MAX_STAMINA);
@@ -1114,15 +1083,12 @@ void CPlayer::SetParryResult(const int nParry)
 	case PARRY_MISS:
 		break;
 	case PARRY_WEAK:
-		m_fDestRevengeValue += ADD_REVENGE_WEAK;
 		m_nWeakCnt++;
 		break;
 	case PARRY_NORMAL:
-		m_fDestRevengeValue += ADD_REVENGE_NORMAL;
 		m_nNormalCnt++;
 		break;
 	case PARRY_PARFECT:
-		m_fDestRevengeValue += ADD_REVENGE_PERFECT;
 		m_nPerfectCnt++;
 		break;
 	default:
@@ -1253,6 +1219,12 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos, const PARRYMOTION parry)
 		// 成功度の設定
 		m_ParryResult = PARRY_PARFECT;
 
+		// 反撃ゲージを加算
+		m_fDestRevengeValue += ADD_REVENGE_PERFECT;
+
+		// スタミナを減らす
+		SetStamina(-DEC_STAMINA_PERFECT);
+
 		return;
 	}
 	else if (m_nParryCounter > 3 && m_nParryCounter <= 10)
@@ -1273,6 +1245,12 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos, const PARRYMOTION parry)
 		// 成功度の設定
 		m_ParryResult = PARRY_NORMAL;
 
+		// 反撃ゲージを加算
+		m_fDestRevengeValue += ADD_REVENGE_NORMAL;
+
+		// スタミナを減らす
+		SetStamina(-DEC_STAMINA_NORMAL);
+
 		return;
 	}
 	else if (m_nParryCounter > 10 && m_nParryCounter <= m_nParryTime)
@@ -1292,6 +1270,12 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos, const PARRYMOTION parry)
 
 		// 成功度の設定
 		m_ParryResult = PARRY_WEAK;
+
+		// 反撃ゲージ
+		m_fDestRevengeValue += ADD_REVENGE_WEAK;
+
+		// スタミナを減らす
+		SetStamina(-DEC_STAMINA_WEAK);
 
 		return;
 	}
@@ -1664,6 +1648,63 @@ bool CPlayer::GetMoveState(CMotion* pMotion)
 }
 
 //===================================================
+// デバッグ情報
+//===================================================
+void CPlayer::DebugInfo(void)
+{
+#ifdef _DEBUG
+
+	// キーボードの取得
+	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
+
+	// ゲームカメラの取得
+	CGameCamera* pCamera = CGame::GetCamera();
+
+	// 位置の取得
+	D3DXVECTOR3 pos = CCharacter3D::GetPosition();
+
+	// デバッグ表示
+	CDebugProc::Print("カメラの回転 X = %.2f Y = %.2f\n", pCamera->GetRotaition().x, pCamera->GetRotaition().y);
+
+	if (pKeyboard->GetTrigger(DIK_Y))
+	{
+		// パーティクルの生成
+		auto pParticle = CParticleSpark::Create(GetModelPos(2), D3DXVECTOR2(3.0f, 20.0f), D3DXCOLOR(1.0f, 0.2f, 0.2f, 1.0f));
+
+		pParticle->SetParticle(10.0f, 60, 50, 1, 180);
+	}
+
+	if (pKeyboard->GetPress(DIK_9))
+	{
+		m_fDestRevengeValue += 1.0f;
+	}
+
+	if (pKeyboard->GetTrigger(DIK_O))
+	{
+		CTNTBarrel::Create(D3DXVECTOR3(-713.0f, 286.0f, 1613.0f), pos);
+		CTNTBarrel::Create(D3DXVECTOR3(656.0f, 286.0f, 1574.0f), pos);
+		CTNTBarrel::Create(D3DXVECTOR3(795.0f, 286.0f, -1412.0f), pos);
+		CTNTBarrel::Create(D3DXVECTOR3(-685.0f, 286.0f, -1507.0f), pos);
+	}
+
+	if (pKeyboard->GetTrigger(DIK_B))
+	{
+		for (int nCnt = 0; nCnt < 5; nCnt++)
+		{
+			CBird::Create(D3DXVECTOR3(static_cast<float>(rand() % 2800 - 1400.0f), 0.0f, static_cast<float>(rand() % 2800 - 1400.0f)), CBird::TYPE_NORMAL);
+			CBird::Create(D3DXVECTOR3(static_cast<float>(rand() % 2000 - 1000.0f), static_cast<float>(rand() % 200 + 600.0f), static_cast<float>(rand() % 2000 - 1000.0f)), CBird::TYPE_FLY_MOVE, false);
+		}
+	}
+
+	if (pKeyboard->GetTrigger(DIK_J))
+	{
+		ChangeState(make_shared<CPlayerJumpAttack>());
+	}
+#endif // _DEBUG
+
+}
+
+//===================================================
 // 移動できるかどうか
 //===================================================
 bool CPlayer::IsMove(CMotion *pMotion)
@@ -1728,6 +1769,9 @@ bool CPlayer::IsStance(CMotion* pMotion)
 
 	// 反撃していたら構えできない
 	if (motiontypeBlend == MOTIONTYPE_ROUNDKICK || motiontype == MOTIONTYPE_ROUNDKICK) return false;
+
+	// 消費スタミナ以上無かったら構え出来ない
+	if (m_fStamina < STANCE_STAMINA) return false;
 
 	return true; 
 }
