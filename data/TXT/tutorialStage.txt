@@ -10,271 +10,271 @@
 //=======================================================
 BLOCKSET
 	POS = 0.0 0.0 -1250.0 		# 位置
-	FILE_NAME = wall000.x 		# 読み込むファイル名
+	TYPE = 0 					# 種類
 	REVERSE = 0			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
 	POS = 1090.0 0.0 -1250.0 	# 位置
-	FILE_NAME = wall000.x 		# 読み込むファイル名
+	TYPE = 0 					# 種類
 	REVERSE = 0			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
 	POS = -1090.0 0.0 -1250.0 	# 位置
-	FILE_NAME = wall000.x 		# 読み込むファイル名
+	TYPE = 0 					# 種類
 	REVERSE = 0			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
 	POS = 0.0 0.0 1250.0 		# 位置
-	FILE_NAME = wall000.x 		# 読み込むファイル名
+	TYPE = 0 					# 種類
 	REVERSE = 1			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
 	POS = 1090 0.0 1250.0 		# 位置
-	FILE_NAME = wall000.x 		# 読み込むファイル名
+	TYPE = 0 					# 種類
 	REVERSE = 1			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
 	POS = -1090 0.0 1250.0 		# 位置
-	FILE_NAME = wall000.x 		# 読み込むファイル名
+	TYPE = 0 					# 種類
 	REVERSE = 1			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
 	POS = 1250.0 0.0 0.0 		# 位置
-	FILE_NAME = wall001.x 		# 読み込むファイル名
+	TYPE = 1 					# 種類
 	REVERSE = 1			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
 	POS = 1250.0 0.0 1090.0 	# 位置
-	FILE_NAME = wall001.x 		# 読み込むファイル名
+	TYPE = 1 					# 種類
 	REVERSE = 1			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
 	POS = 1250.0 0.0 -1090.0 	# 位置
-	FILE_NAME = wall001.x 		# 読み込むファイル名
+	TYPE = 1 					# 種類
 	REVERSE = 1			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
 	POS = -1250.0 0.0 0.0 		# 位置
-	FILE_NAME = wall001.x 		# 読み込むファイル名
+	TYPE = 1 					# 種類
 	REVERSE = 0			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
 	POS = -1250.0 0.0 1090.0 	# 位置
-	FILE_NAME = wall001.x 		# 読み込むファイル名
+	TYPE = 1 					# 種類
 	REVERSE = 0			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
 	POS = -1250.0 0.0 -1090.0 	# 位置
-	FILE_NAME = wall001.x 		# 読み込むファイル名
+	TYPE = 1 					# 種類
 	REVERSE = 0			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
-	POS = 0.0 640.0 0.0 	  		# 位置
-	FILE_NAME = wall002.x 		# 読み込むファイル名
+	POS = 0.0 640.0 0.0 	  	# 位置
+	TYPE = 2 					# 種類
 	REVERSE = 0			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
-	POS = 950.0 640.0 0.0 	  		# 位置
-	FILE_NAME = wall002.x 		# 読み込むファイル名
+	POS = 950.0 640.0 0.0 	  	# 位置
+	TYPE = 2 					# 種類
 	REVERSE = 0			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
-	POS = -950.0 640.0 0.0 	  		# 位置
-	FILE_NAME = wall002.x 		# 読み込むファイル名
+	POS = -950.0 640.0 0.0 	  	# 位置
+	TYPE = 2 					# 種類
 	REVERSE = 0			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
-	POS = 0.0 640.0 1150.0 	  		# 位置
-	FILE_NAME = wall002.x 		# 読み込むファイル名
+	POS = 0.0 640.0 1150.0 	  	# 位置
+	TYPE = 2 					# 種類
 	REVERSE = 0			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
-	POS = 950.0 640.0 1150.0 	  		# 位置
-	FILE_NAME = wall002.x 		# 読み込むファイル名
+	POS = 950.0 640.0 1150.0 	# 位置
+	TYPE = 2 					# 種類
 	REVERSE = 0			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
-	POS = -950.0 640.0 1150.0 	  		# 位置
-	FILE_NAME = wall002.x 		# 読み込むファイル名
+	POS = -950.0 640.0 1150.0 	# 位置
+	TYPE = 2 					# 種類
 	REVERSE = 0			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
-	POS = 0.0 640.0 -1150.0 	  		# 位置
-	FILE_NAME = wall002.x 		# 読み込むファイル名
+	POS = 0.0 640.0 -1150.0 	# 位置
+	TYPE = 2 					# 種類
 	REVERSE = 0			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
-	POS = 950.0 640.0 -1150.0 	  		# 位置
-	FILE_NAME = wall002.x 		# 読み込むファイル名
+	POS = 950.0 640.0 -1150.0 	# 位置
+	TYPE = 2 					# 種類
 	REVERSE = 0			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
-	POS = -950.0 640.0 -1150.0 	  		# 位置
-	FILE_NAME = wall002.x 		# 読み込むファイル名
+	POS = -950.0 640.0 -1150.0 	# 位置
+	TYPE = 2 					# 種類
 	REVERSE = 0			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
-	POS = 500.0 0.0 0.0 	  		# 位置
-	FILE_NAME = pillar000.x 	# 読み込むファイル名
+	POS = 500.0 0.0 0.0 	    # 位置
+	TYPE = 3 					# 種類
 	REVERSE = 0			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
-	POS = 500.0 0.0 750.0 	  		# 位置
-	FILE_NAME = pillar000.x 	# 読み込むファイル名
+	POS = 500.0 0.0 750.0 	    # 位置
+	TYPE = 3 					# 種類
 	REVERSE = 0			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
-	POS = 500.0 0.0 -750.0 	  		# 位置
-	FILE_NAME = pillar000.x 	# 読み込むファイル名
+	POS = 500.0 0.0 -750.0 	    # 位置
+	TYPE = 3 					# 種類
 	REVERSE = 0			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
-	POS = -500.0 0.0 0.0 	  		# 位置
-	FILE_NAME = pillar000.x 	# 読み込むファイル名
+	POS = -500.0 0.0 0.0 	  	# 位置
+	TYPE = 3 					# 種類
 	REVERSE = 0			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
-	POS = -500.0 0.0 750.0 	  		# 位置
-	FILE_NAME = pillar000.x 	# 読み込むファイル名
+	POS = -500.0 0.0 750.0 	  	# 位置
+	TYPE = 3 					# 種類
 	REVERSE = 0			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
-	POS = -500.0 0.0 -750.0 	  		# 位置
-	FILE_NAME = pillar000.x 	# 読み込むファイル名
+	POS = -500.0 0.0 -750.0 	# 位置
+	TYPE = 3 					# 種類
 	REVERSE = 0			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
 	POS = 0.0 0.0 -1200.0 	  		# 位置
-	FILE_NAME = gate000.x 	# 読み込むファイル名
+	TYPE = 4 					# 種類
 	REVERSE = 1			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
-	POS = 1200.0 0.0 0.0 	  		# 位置
-	FILE_NAME = spear_rack.x 	# 読み込むファイル名
+	POS = 1200.0 0.0 0.0 	  	# 位置
+	TYPE = 5 					# 種類
 	REVERSE = 0			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
-	POS = 1200.0 0.0 200.0 	  		# 位置
-	FILE_NAME = sword_rack.x 	# 読み込むファイル名
+	POS = 1200.0 0.0 200.0 	  	# 位置
+	TYPE = 6 					# 種類
 	REVERSE = 0			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
 	POS = 1200.0 0.0 400.0 	  		# 位置
-	FILE_NAME = sword_rack001.x 	# 読み込むファイル名
+	TYPE = 7 					# 種類
 	REVERSE = 0			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
 	POS = 1200.0 0.0 600.0 	  		# 位置
-	FILE_NAME = wepon_rack.x 	# 読み込むファイル名
+	TYPE = 8 					# 種類
 	REVERSE = 0			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
 	POS = -1200.0 0.0 0.0 	  		# 位置
-	FILE_NAME = spear_rack.x 	# 読み込むファイル名
+	TYPE = 5 					# 種類
 	REVERSE = 1			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
 	POS = -1200.0 0.0 200.0 	  		# 位置
-	FILE_NAME = wepon_rack.x 	# 読み込むファイル名
+	TYPE = 8 					# 種類
 	REVERSE = 1			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
 	POS = -1200.0 0.0 400.0 	  		# 位置
-	FILE_NAME = sword_rack001.x 	# 読み込むファイル名
+	TYPE = 7 					# 種類
 	REVERSE = 1			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
 	POS = -1200.0 0.0 600.0 	  		# 位置
-	FILE_NAME = wepon_rack.x 	# 読み込むファイル名
+	TYPE = 8 					# 種類
 	REVERSE = 1			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
 	POS = 1150.0 0.0 1150.0 	  		# 位置
-	FILE_NAME = wooden_box.x 	# 読み込むファイル名
+	TYPE = 9 					# 種類
 	REVERSE = 0			  		# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
 	POS = 1150.0 130.0 1150.0 	  	# 位置
-	FILE_NAME = wooden_box001.x 	# 読み込むファイル名
+	TYPE = 10 					# 種類
 	REVERSE = 0			  			# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
 	POS = -1150.0 0.0 1150.0 	  		# 位置
-	FILE_NAME = wooden_box.x 		# 読み込むファイル名
+	TYPE = 9 					# 種類
 	REVERSE = 0			  			# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
 	POS = -1150.0 130.0 1150.0 	  	# 位置
-	FILE_NAME = wooden_box001.x 	# 読み込むファイル名
+	TYPE = 10 					# 種類
 	REVERSE = 0			  			# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
 	POS = -1150.0 0.0 1020.0  	# 位置
-	FILE_NAME = wooden_box.x 	# 読み込むファイル名
+	TYPE = 9 					# 種類
 	REVERSE = 0			  			# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
 	POS = -225.0 250.0 -1165.0  	# 位置
-	FILE_NAME = torch001.x 		# 読み込むファイル名
+	TYPE = 11 					# 種類
 	ROT = 0.6 0.0 0.0			# 向き
 END_BLOCKSET
 
 BLOCKSET
 	POS = 255.0 250.0 -1165.0  	# 位置
-	FILE_NAME = torch001.x 		# 読み込むファイル名
+	TYPE = 11 					# 種類
 	ROT = 0.6 0.0 0.0			# 向き
 END_BLOCKSET
 
 BLOCKSET
 	POS = 0.0 0.0 500.0  	# 位置
-	FILE_NAME = monument.x 		# 読み込むファイル名
+	TYPE = 12 					# 種類
 	REVERSE = 1			# 反転するかどうか
 END_BLOCKSET
 
 BLOCKSET
 	POS = 471.0 0.0 -287.0  	# 位置
-	FILE_NAME = monument001.x 		# 読み込むファイル名
+	TYPE = 13 					# 種類
 	REVERSE = 0			# 反転するかどうか
 END_BLOCKSET
 

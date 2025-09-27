@@ -35,6 +35,12 @@ CObject2D::CObject2D(int nPriority) : CObject(nPriority)
 //===================================================
 CObject2D::~CObject2D()
 {
+	// 頂点バッファの破棄
+	if (m_pVtxBuffer != nullptr)
+	{
+		m_pVtxBuffer->Release();
+		m_pVtxBuffer = nullptr;
+	}
 }
 
 //===================================================
@@ -66,13 +72,6 @@ HRESULT CObject2D::Init(void)
 //===================================================
 void CObject2D::Uninit(void)
 {
-	// 頂点バッファの破棄
-	if (m_pVtxBuffer != NULL)
-	{
-		m_pVtxBuffer->Release();
-		m_pVtxBuffer = NULL;
-	}
-
 	// 自分自身の破棄
 	Release();
 }

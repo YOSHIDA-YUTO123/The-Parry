@@ -28,20 +28,47 @@ class CColliderAABB;
 class CBlock : public CObjectX
 {
 public:
+
+	// ブロックの種類
+	typedef enum 
+	{
+		TYPE_WALL000 = 0,
+		TYPE_WALL001,
+		TYPE_WALL002,
+		TYPE_PILLAR000,
+		TYPE_GATE000,
+		TYPE_SPEAR_RACK,
+		TYPE_SWORD_RACK,
+		TYPE_SWORD_RACK001,
+		TYPE_WEPON_RACK,
+		TYPE_WOODEN_BOX000,
+		TYPE_WOODEN_BOX001,
+		TYPE_TORCH,
+		TYPE_MONUMENT_000,
+		TYPE_MONUMENT_001,
+		TYPE_MAX
+	}TYPE;
+
 	CBlock();
 	~CBlock();
 
 	// "data/MODEL/"は省略
-	static CBlock* Create(const D3DXVECTOR3 pos,const char *pModelFileName, const D3DXVECTOR3 rot = Const::VEC3_NULL);
+	static CBlock* Create(const D3DXVECTOR3 pos, const TYPE type, const D3DXVECTOR3 rot = Const::VEC3_NULL);
 
-	HRESULT Init(void) override;
-	void Uninit(void) override;
-	void Update(void) override;
-	void Draw(void) override;
+	virtual HRESULT Init(void) override;
+	virtual void Uninit(void) override;
+	virtual void Update(void) override;
+	virtual void Draw(void) override;
+
 	bool Collision(CColliderAABB* pAABB, D3DXVECTOR3* pPushPos);
+protected:
+	void SetType(const TYPE type) { m_type = type; }
+	TYPE GetType(void) const { return m_type; }
 private:
-	std::unique_ptr<CColliderAABB> m_pAABB; // AABBのコライダー
-	D3DXVECTOR3 m_CenterPos; // 中心座標
+	static const char* m_pFilePath[TYPE_MAX];	// ファイルパス
+	std::unique_ptr<CColliderAABB> m_pAABB;		// AABBのコライダー
+	D3DXVECTOR3 m_CenterPos;					// 中心座標
+	TYPE m_type;								// 種類
 };
 
 #endif

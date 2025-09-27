@@ -1657,8 +1657,22 @@ void CPlayer::DebugInfo(void)
 	// キーボードの取得
 	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
 
-	// ゲームカメラの取得
-	CGameCamera* pCamera = CGame::GetCamera();
+	// モードの取得
+	CScene::MODE mode = CManager::GetMode();
+
+	// カメラの取得
+	CGameCamera* pCamera = nullptr;
+
+	if (mode == CScene::MODE_GAME)
+	{
+		// カメラの取得
+		pCamera = CGame::GetCamera();
+	}
+	else if (mode == CScene::MODE_TUTORIAL)
+	{
+		// カメラの取得
+		pCamera = CTutorial::GetCamera();
+	}
 
 	// 位置の取得
 	D3DXVECTOR3 pos = CCharacter3D::GetPosition();

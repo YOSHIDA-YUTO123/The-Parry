@@ -17,14 +17,39 @@
 #include"manager.h"
 #include"renderer.h"
 
+//***************************************************
+// 名前空間
+//***************************************************
 using namespace Const; // 名前空間Constを使用
 using namespace std;   // 名前空間stdを使用
+
+//***************************************************
+// 静的メンバ変数宣言
+//***************************************************
+const char* CBlock::m_pFilePath[CBlock::TYPE_MAX] = // ファイルパス
+{
+	"wall000.x",
+	"wall001.x",
+	"wall002.x",
+	"pillar000.x",
+	"gate000.x",
+	"spear_rack.x",
+	"sword_rack.x",
+	"sword_rack001.x",
+	"wepon_rack.x",
+	"wooden_box.x",
+	"wooden_box001.x",
+	"torch001.x",
+	"monument.x",
+	"monument001.x",
+};
 
 //===================================================
 // コンストラクタ
 //===================================================
 CBlock::CBlock()
 {
+	m_type = TYPE_WALL000;
 	m_CenterPos = VEC3_NULL;
 	m_pAABB = nullptr;
 }
@@ -39,21 +64,13 @@ CBlock::~CBlock()
 //===================================================
 // 生成処理
 //===================================================
-CBlock* CBlock::Create(const D3DXVECTOR3 pos, const char* pModelFileName, const D3DXVECTOR3 rot)
+CBlock* CBlock::Create(const D3DXVECTOR3 pos, const TYPE type, const D3DXVECTOR3 rot)
 {
 	CBlock* pBlock = new CBlock;
 
 	// 位置の設定
 	pBlock->SetPosition(pos);
-
-	// 省略用パス
-	std::string pPath = "data/MODEL/obj/";
-
-	// 文字列をつなげる
-	pPath += pModelFileName;
-
-	// モデルのロード
-	pBlock->LoadModel(pPath.c_str());
+	pBlock->m_type = type;
 
 	// 初期化処理
 	if (FAILED(pBlock->Init()))
@@ -76,6 +93,18 @@ CBlock* CBlock::Create(const D3DXVECTOR3 pos, const char* pModelFileName, const 
 //===================================================
 HRESULT CBlock::Init(void)
 {
+	// 省略用パス
+	std::string pPath = "data/MODEL/obj/";
+
+	// 文字列をつなげる
+	pPath += m_pFilePath[m_type];
+
+	// モデルのロード
+	if (FAILED(CObjectX::LoadModel(pPath.c_str())))
+	{
+		return E_FAIL;
+	}
+
 	// 初期化処理
 	if (FAILED(CObjectX::Init()))
 	{
@@ -127,7 +156,6 @@ void CBlock::Update(void)
 		// データの更新
 		m_pAABB->UpdateData(m_CenterPos, m_CenterPos);
 	}
-
 }
 
 //===================================================

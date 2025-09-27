@@ -1,6 +1,6 @@
 //===================================================
 //
-// フェードインする2Dオブジェクト [FadeInObject2D.cpp]
+// 石碑のUI [MonumentUI.cpp]
 // Author:YUTO YOSHIDA
 //
 //===================================================
@@ -8,54 +8,62 @@
 //***************************************************
 // インクルードファイル
 //***************************************************
-#include "FadeInObject2D.h"
+#include "MonumentUI.h"
 
+//***************************************************
+// 名前空間
+//***************************************************
 using namespace Const; // 名前空間Constの使用
+
+//***************************************************
+// 定数宣言
+//***************************************************
+constexpr float WIDTH = 120.0f;  // 横幅
+constexpr float HEIGHT = 60.0f; // 縦幅
+constexpr int FADE_TIME = 60;	 // フェードインする時間
 
 //===================================================
 // コンストラクタ
 //===================================================
-CFadeInObject2D::CFadeInObject2D(const int nPriority) : CObject2D(nPriority)
+CMonumentUI::CMonumentUI()
 {
-	m_bFinish = false;
-	m_fAddAlv = NULL;
 	m_col = WHITE;
+	m_fFlashTime = NULL;
+	m_bShow = false;
 }
 
 //===================================================
 // デストラクタ
 //===================================================
-CFadeInObject2D::~CFadeInObject2D()
+CMonumentUI::~CMonumentUI()
 {
 }
 
 //===================================================
 // 生成処理
 //===================================================
-CFadeInObject2D* CFadeInObject2D::Create(const D3DXVECTOR3 pos, const D3DXVECTOR2 Size,const int nTime)
+CMonumentUI* CMonumentUI::Create(const D3DXVECTOR3 pos)
 {
-	CFadeInObject2D* pObject2D = new CFadeInObject2D;
+	CMonumentUI* pMonumentUI = new CMonumentUI;
+
+	// 位置の設定
+	pMonumentUI->SetPosition(pos);
 
 	// 初期化処理
-	if (FAILED(pObject2D->Init()))
+	if (FAILED(pMonumentUI->Init()))
 	{
-		pObject2D->Uninit();
-		pObject2D = nullptr;
+		pMonumentUI->Uninit();
+		pMonumentUI = nullptr;
 		return nullptr;
 	}
 
-	pObject2D->SetPosition(pos);
-	pObject2D->SetSize(Size.x, Size.y);
-	pObject2D->SetVtx(WHITE);
-	pObject2D->m_fAddAlv = 1.0f / nTime;
-
-	return pObject2D;
+	return pMonumentUI;
 }
 
 //===================================================
 // 初期化処理
 //===================================================
-HRESULT CFadeInObject2D::Init(void)
+HRESULT CMonumentUI::Init(void)
 {
 	// 初期化処理
 	if (FAILED(CObject2D::Init()))
@@ -63,8 +71,12 @@ HRESULT CFadeInObject2D::Init(void)
 		return E_FAIL;
 	}
 
-	// 透明にする
-	m_col.a = 0.0f;
+	// 設定処理
+	CObject2D::SetSize(WIDTH, HEIGHT);
+	CObject2D::SetVtx(WHITE);
+
+	// テクスチャのIDの設定
+	CObject2D::SetTextureID("data/TEXTURE/UI/monumentUI000.png");
 
 	return S_OK;
 }
@@ -72,7 +84,7 @@ HRESULT CFadeInObject2D::Init(void)
 //===================================================
 // 終了処理
 //===================================================
-void CFadeInObject2D::Uninit(void)
+void CMonumentUI::Uninit(void)
 {
 	// 終了処理
 	CObject2D::Uninit();
@@ -81,40 +93,29 @@ void CFadeInObject2D::Uninit(void)
 //===================================================
 // 更新処理
 //===================================================
-void CFadeInObject2D::Update(void)
+void CMonumentUI::Update(void)
 {
-	// 終わって無かったら
-	if (!m_bFinish)
-	{
-		// アルファ値を加算
-		m_col.a += m_fAddAlv;
+	m_fFlashTime += 0.02f;
 
-		// 範囲制限
-		if (m_col.a >= 1.0f)
-		{
-			m_bFinish = true;
-			m_col.a = 1.0f;
-		}
-	}
+	// 色の点滅
+	m_col.a = 1.0f - fabsf(sinf(m_fFlashTime));
 
 	// 色の設定
 	CObject2D::SetColor(m_col);
+
+	// 更新処理
+	CObject2D::Update();
 }
 
 //===================================================
 // 描画処理
 //===================================================
-void CFadeInObject2D::Draw(void)
+void CMonumentUI::Draw(void)
 {
-	// 描画処理
-	CObject2D::Draw();
-}
-
-//===================================================
-// 再設定
-//===================================================
-void CFadeInObject2D::Reset(void)
-{
-	m_col.a = 0.0f;
-	m_bFinish = false;
+	// 表示状態だったら
+	if (m_bShow)
+	{
+		// 描画処理
+		CObject2D::Draw();
+	}
 }

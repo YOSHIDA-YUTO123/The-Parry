@@ -37,7 +37,7 @@ public:
 
 	// セッター
 	void SetColor(const D3DXCOLOR col) { m_col = col; }
-	
+	void Reset(void);
 protected:
 	void SetAddAvl(const int nTime) { m_fAddAlv = 1.0f / nTime; }
 	bool GetFinish(void) const { return m_bFinish; }

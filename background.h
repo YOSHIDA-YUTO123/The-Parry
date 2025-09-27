@@ -25,7 +25,8 @@ public:
 
 	enum TYPE
 	{
-		TYPE_PAUSE = 0,
+		TYPE_NONE = 0,
+		TYPE_PAUSE,
 		TYPE_RESULT,
 		TYPE_MAX
 	};

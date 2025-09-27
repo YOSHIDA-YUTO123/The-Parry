@@ -292,9 +292,6 @@ void CWinResultManager::Update(void)
 	// 生成時間になったら&&スキップしていないなら
 	if (m_nCounter >= CREATE_TIME)
 	{
-		// 音の取得
-		CSound* pSound = CManager::GetSound();
-
 		if (pSound != nullptr)
 		{
 			// 音の再生

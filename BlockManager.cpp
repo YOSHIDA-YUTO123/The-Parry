@@ -11,6 +11,7 @@
 #include "BlockManager.h"
 #include"block.h"
 #include"LoadManager.h"
+#include "BlockMonument.h"
 
 using namespace std;	// 名前空間stdを使用
 using namespace Const;	// 名前空間Constを使用
@@ -39,93 +40,111 @@ HRESULT CBlockManager::Load(void)
 	D3DXVECTOR3 pos;	// 位置
 	string filepath;	// ファイルパス
 	int nReverse;		// 反転するかどうか
+	int type = 0;		// 種類			
 	D3DXVECTOR3 Angle = VEC3_NULL;	// 角度
 
-	// nullじゃなかったら
-	if (file.is_open())
-	{
-		// ロードマネージャーの生成
-		unique_ptr<CLoadManager> pLoad = make_unique<CLoadManager>();
-
-		// ファイルを一行ずつ読み取る
-		while (getline(file, line))
-		{
-			size_t equal_pos = line.find("="); // =の位置
-
-			// [=] から先を求める
-			input = line.substr(equal_pos + 1);
-
-			if (line.find("POS") != string::npos)
-			{
-				// = から先を求める
-				input = line.substr(equal_pos + 1);
-
-				// 数値を読み込む準備
-				istringstream value_Input = pLoad->SetInputvalue(input);
-
-				// 数値を代入する
-				value_Input >> pos.x;
-				value_Input >> pos.y;
-				value_Input >> pos.z;
-			}
-			if (line.find("FILE_NAME") != string::npos)
-			{
-				// 数値を読み込む準備
-				istringstream value_Input = pLoad->SetInputvalue(input);
-
-				// 数値を代入する
-				value_Input >> filepath;
-			}
-			if (line.find("REVERSE") != string::npos)
-			{
-				Angle = VEC3_NULL;
-
-				// 数値を読み込む準備
-				istringstream value_Input = pLoad->SetInputvalue(input);
-
-				// 数値を代入する
-				value_Input >> nReverse;
-
-				if (nReverse == 0)
-				{
-					Angle.y = 0.0f;
-				}
-				else
-				{
-					// 反転
-					Angle.y = D3DX_PI;
-				}
-			}
-			if (line.find("ROT") != string::npos)
-			{
-				Angle = VEC3_NULL;
-
-				// 数値を読み込む準備
-				istringstream value_Input = pLoad->SetInputvalue(input);
-
-				// 数値を代入する
-				value_Input >> Angle.x;
-				value_Input >> Angle.y;
-				value_Input >> Angle.z;
-			}
-			if (line.find("END_BLOCKSET") != string::npos)
-			{
-				// ブロックの生成
-				CBlock *pBlock = CBlock::Create(pos, filepath.c_str(), Angle);
-				pBlock->SetTextureMT("data/TEXTURE/effect/grid000.png");
-				m_apBlockList.push_back(pBlock);
-			}
-		}
-
-		pLoad.reset();
-		file.close();
-		file.clear();
-	}
-	else
+	// ファイルが開けなかったら
+	if (!file.is_open())
 	{
 		MessageBox(NULL, "ファイルが開けませんでした", "blockManager", MB_OK);
 		return E_FAIL;
 	}
+
+	// ロードマネージャーの生成
+	unique_ptr<CLoadManager> pLoad = make_unique<CLoadManager>();
+
+	// ファイルを一行ずつ読み取る
+	while (getline(file, line))
+	{
+		size_t equal_pos = line.find("="); // =の位置
+
+		// [=] から先を求める
+		input = line.substr(equal_pos + 1);
+
+		if (line.find("POS") != string::npos)
+		{
+			// = から先を求める
+			input = line.substr(equal_pos + 1);
+
+			// 数値を読み込む準備
+			istringstream value_Input = pLoad->SetInputvalue(input);
+
+			// 数値を代入する
+			value_Input >> pos.x;
+			value_Input >> pos.y;
+			value_Input >> pos.z;
+		}
+		if (line.find("TYPE") != string::npos)
+		{
+			// = から先を求める
+			input = line.substr(equal_pos + 1);
+
+			// 数値を読み込む準備
+			istringstream value_Input = pLoad->SetInputvalue(input);
+
+			value_Input >> type;
+		}
+		if (line.find("REVERSE") != string::npos)
+		{
+			Angle = VEC3_NULL;
+
+			// 数値を読み込む準備
+			istringstream value_Input = pLoad->SetInputvalue(input);
+
+			// 数値を代入する
+			value_Input >> nReverse;
+
+			if (nReverse == 0)
+			{
+				Angle.y = 0.0f;
+			}
+			else
+			{
+				// 反転
+				Angle.y = D3DX_PI;
+			}
+		}
+		if (line.find("ROT") != string::npos)
+		{
+			Angle = VEC3_NULL;
+
+			// 数値を読み込む準備
+			istringstream value_Input = pLoad->SetInputvalue(input);
+
+			// 数値を代入する
+			value_Input >> Angle.x;
+			value_Input >> Angle.y;
+			value_Input >> Angle.z;
+		}
+		if (line.find("END_BLOCKSET") != string::npos)
+		{ 
+			CBlock* pBlock = nullptr;
+			// 種類の遷移
+			switch (type)
+			{
+			case CBlock::TYPE_MONUMENT_000:
+				// ブロックの生成
+				pBlock = CBlockMonument::Create(pos, static_cast<CBlock::TYPE>(type), Angle);
+				break;
+			case CBlock::TYPE_MONUMENT_001:
+				// ブロックの生成
+				pBlock = CBlockMonument::Create(pos, static_cast<CBlock::TYPE>(type), Angle);
+				break;
+			default:
+				// ブロックの生成
+				pBlock = CBlock::Create(pos, static_cast<CBlock::TYPE>(type), Angle);
+				break;
+			}
+
+			pBlock->SetTextureMT("data/TEXTURE/effect/grid000.png");
+			m_apBlockList.push_back(pBlock);
+		}
+	}
+
+	pLoad.reset();
+	file.close();
+	file.clear();
+
 	return S_OK;
 }
 

@@ -483,6 +483,15 @@
     <ClCompile Include="TrainingEnemy.cpp">
       <Filter>ソース ファイル\model\enemy</Filter>
     </ClCompile>
+    <ClCompile Include="BlockMonument.cpp">
+      <Filter>ソース ファイル\objectX</Filter>
+    </ClCompile>
+    <ClCompile Include="MonumentUI.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="MonumentMessageUI.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="testword.h">
@@ -838,6 +847,15 @@
     </ClInclude>
     <ClInclude Include="EnemyMovement.h">
       <Filter>ヘッダー ファイル\model\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockMonument.h">
+      <Filter>ヘッダー ファイル\objectX</Filter>
+    </ClInclude>
+    <ClInclude Include="MonumentUI.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="MonumentMessageUI.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

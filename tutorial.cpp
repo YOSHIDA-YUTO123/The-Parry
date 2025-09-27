@@ -197,15 +197,6 @@ HRESULT CTutorial::Init(void)
 	// îΩåÇÉQÅ[ÉWÇÃUIÇÃê∂ê¨
 	CRevengeActiveUI::Create(D3DXVECTOR3(55.0f, 90.0f, 0.0f), D3DXVECTOR2(48.0f, 18.0f), 4, 4);
 
-	//// ï«ÇÃê›íu
-	//CWall::Create(D3DXVECTOR3(0.0f, 150.0f, 1200.0f), D3DXVECTOR3(100.0f, 3000.0f, 0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
-
-	//CWall::Create(D3DXVECTOR3(0.0f, 150.0f, -1200.0f), D3DXVECTOR3(100.0f, 3000.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
-
-	//CWall::Create(D3DXVECTOR3(1200.0f, 150.0f, 0.0f), D3DXVECTOR3(100.0f, 3000.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
-
-	//CWall::Create(D3DXVECTOR3(-1200.0f, 150.0f, 0.0f), D3DXVECTOR3(100.0f, 3000.0f, 0.0f), D3DXVECTOR3(0.0f, -D3DX_PI * 0.5f, 0.0f));
-
 	return S_OK;
 }
 
