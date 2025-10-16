@@ -142,7 +142,6 @@ HRESULT CPlayer::Init(void)
 	m_pSphere = CColliderSphere::Create(pos, 50.0f);
 
 	m_pMovement = make_unique<CPlayerMovement>();
-
 	m_pMovement->Init();
 
 	// コライダーの生成

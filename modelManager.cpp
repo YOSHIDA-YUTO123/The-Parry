@@ -68,9 +68,6 @@ int CModelManager::Register(const char* pFilename)
 		// モデルの情報
 		ModelInfo info;
 
-		// 値をクリアしておく
-		memset(&info, NULL, sizeof(info));
-
 		////Xファイルの読み込み
 		if (FAILED(D3DXLoadMeshFromX(pFilename,
 			D3DXMESH_SYSTEMMEM,
@@ -269,9 +266,6 @@ HRESULT CModelManager::Load(void)
 
 				// モデルの情報
 				ModelInfo info;
-
-				// 値をクリアしておく
-				memset(&info, NULL, sizeof(info));
 
 				////Xファイルの読み込み
 				if (FAILED(D3DXLoadMeshFromX(MODEL_NAME,
