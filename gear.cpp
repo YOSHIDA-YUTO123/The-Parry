@@ -61,7 +61,7 @@ HRESULT CGear::Init(void)
 	CObjectX::LoadModel("data/MODEL/obj/gear000.x");
 	
 	// Šp“x‚ÌÝ’è
-	CObjectX::GetRotation()->Set(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+	CObjectX::SetRotation(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
 
 	m_fRotValue = 0.001f;
 	return S_OK;
@@ -82,13 +82,13 @@ void CGear::Uninit(void)
 void CGear::Update(void)
 {
 	// Œü‚«‚ÌŽæ“¾
-	D3DXVECTOR3 rot = CObjectX::GetRotation()->Get();
+	D3DXVECTOR3 rot = CObjectX::GetRotation();
 
 	// ‰ñ“]‚³‚¹‚é
 	rot.z += m_fRotValue;
 
 	// Œü‚«‚ÌÝ’è
-	CObjectX::GetRotation()->Set(rot);
+	CObjectX::SetRotation(rot);
 }
 
 //==============================================

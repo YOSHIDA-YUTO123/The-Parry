@@ -16,9 +16,7 @@
 #include "game.h"
 #include "tutorial.h"
 #include "debugproc.h"
-
-using namespace std;	// 名前空間stdの使用
-using namespace Const;	// 名前空間Constの使用
+#include "velocity.h"
 
 //***************************************************
 // 定数宣言
@@ -56,7 +54,7 @@ CPlayerMovement::~CPlayerMovement()
 void CPlayerMovement::Init(void)
 {
 	// 移動処理へのポインタ
-	m_pMove = make_unique<CVelocity>();
+	m_pMove = std::make_unique<CVelocity>();
 }
 
 //===================================================
@@ -569,7 +567,7 @@ void CPlayerMovement::MoveForward(const float fSpeed, const float fJump, const f
 D3DXVECTOR3 CPlayerMovement::Get(void) const
 {
 	// 移動量が生成されていないなら処理しない
-	if (m_pMove == nullptr) return VEC3_NULL;
+	if (m_pMove == nullptr) return Const::VEC3_NULL;
 
 	return m_pMove->Get();
 }

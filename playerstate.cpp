@@ -375,7 +375,7 @@ void CPlayerAvoid::Update(void)
 	auto pMoveMent = pPlayer->GetMovement();
 
 	// 向きの取得
-	float fAnlge = pPlayer->GetRotaition()->Get().y;
+	float fAnlge = pPlayer->GetRotation().y;
 
 	// モーションがあるなら
 	if (pMotion != nullptr)
@@ -447,7 +447,7 @@ void CPlayerRoundKick::Update(void)
 	CMotion* pMotion = pPlayer->GetMotion();
 
 	// 向きの取得
-	float fAnlge = pPlayer->GetRotaition()->Get().y;
+	float fAnlge = pPlayer->GetRotation().y;
 
 	// モーションがあるなら
 	if (pMotion != nullptr)
@@ -530,7 +530,7 @@ void CPlayerDash::Update(void)
 	CMotion* pMotion = pPlayer->GetMotion();
 
 	// 向きの取得
-	D3DXVECTOR3 rot = pPlayer->GetRotaition()->Get();
+	D3DXVECTOR3 rot = pPlayer->GetRotation();
 
 	// プレイヤーの後ろ方向を設定
 	float fMoveX = sinf(rot.y) * 2.0f;
@@ -821,7 +821,7 @@ void CPlayerRevengeAttack::Init(void)
 	D3DXVECTOR3 playerPos = pPlayer->GetPosition();
 	D3DXVECTOR3 HandPos = pPlayer->GetModelPos(CPlayer::MODEL_HANDL);
 
-	D3DXVECTOR3 angle = pPlayer->GetRotaition()->Get();
+	D3DXVECTOR3 angle = pPlayer->GetRotation();
 
 	// 右手の位置
 	D3DXVECTOR3 ImpactPos =
@@ -885,7 +885,7 @@ void CPlayerRevengeAttack::Update(void)
 	pNormal->SetParam(CEffect3D::TYPE_NORAML, 100);
 
 	// 向きの取得
-	float fAnlge = pPlayer->GetRotaition()->Get().y;
+	float fAnlge = pPlayer->GetRotation().y;
 
 	if (pMotion != nullptr)
 	{
@@ -1135,7 +1135,7 @@ void CPlayerJumpAttack::Update(void)
 	}
 
 	// 向きの取得
-	float fAnlge = pPlayer->GetRotaition()->Get().y;
+	float fAnlge = pPlayer->GetRotation().y;
 
 	// プレイヤーの位置の取得
 	D3DXVECTOR3 pos = pPlayer->GetPosition();

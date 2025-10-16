@@ -10,12 +10,7 @@
 //************************************************
 #include "EnemyMovement.h"
 #include "transform.h"
-
-//************************************************
-// 名前空間
-//************************************************
-using namespace std;	// 名前空間stdの使用
-using namespace Const;	// 名前空間Constの使用
+#include "velocity.h"
 
 //===================================================
 // コンストラクタ
@@ -42,7 +37,7 @@ void CEnemyMovement::Init()
 	if (m_pMove == nullptr)
 	{
 		// 敵の移量を参照
-		m_pMove = make_unique<CVelocity>();
+		m_pMove = std::make_unique<CVelocity>();
 	}
 }
 
@@ -157,7 +152,7 @@ void CEnemyMovement::UpdatePosition(D3DXVECTOR3* pPos, D3DXVECTOR3* pPosOld)
 D3DXVECTOR3 CEnemyMovement::Get(void) const
 {
 	// nullだったら処理しない
-	if (m_pMove == nullptr) return VEC3_NULL;
+	if (m_pMove == nullptr) return Const::VEC3_NULL;
 
 	return m_pMove->Get();
 }

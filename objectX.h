@@ -42,15 +42,16 @@ public:
 
 	HRESULT LoadModel(const char* pXFileName);
 	void SetPosition(const D3DXVECTOR3 pos) { m_pos = pos; }
-	CRotation* GetRotation(void) { return m_pRot; }
+	void SetRotation(const D3DXVECTOR3 rot) { m_rot = rot; }
 
+	D3DXVECTOR3 GetRotation(void) { return m_rot; }
 	D3DXMATRIX GetMatrix(void) const { return m_mtxWorld; }
 	D3DXVECTOR3 GetSize(void);
 	D3DXVECTOR3 GetPosition(void) const { return m_pos; }
 
 private:
 	D3DXVECTOR3 m_pos;		// 位置
-	CRotation* m_pRot;		// 向きクラスへのポインタ
+	D3DXVECTOR3 m_rot;		// 向き
 	D3DXMATRIX m_mtxWorld;	// ワールドマトリックス
 	int m_nModelIdx;		// モデルのインデックス
 	int *m_pTextureIdx;		// テクスチャのインデックス

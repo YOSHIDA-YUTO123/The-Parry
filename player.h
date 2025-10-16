@@ -172,7 +172,7 @@ public:
 	bool CollisionCapsule(CColliderCapsule* pCapsule,const bool bPush = true);
 	void SetRevengeEffect(void);					// 絶対反撃のエフェクトの設定
 	void EnableGravity(const bool bEnable) { m_bGravity = bEnable; } // 重力の判定の設定
-	void SetDamageMotion(const D3DXVECTOR3 AttackerPos, const int nDamage);
+	void SetDamageMotion(const D3DXVECTOR3 AttackerPos, const int nDamage, const float fBack = 100.0f, const float fForward = 20.0f);
 	void SetRubble(const D3DXVECTOR3 pos);
 	bool GetRevengeState(void) const { return m_bRevenge; }
 	void SetParryResult(const int nParry);

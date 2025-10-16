@@ -179,7 +179,7 @@ void CTrainingEnemyAction::Update(void)
 		float fAngle = GetTargetAngle(pos, playerPos);
 
 		// 向きを設定
-		pEnemy->GetRotaition()->SetDest(D3DXVECTOR3(0.0f, fAngle, 0.0f));
+		pEnemy->SetRotDest(fAngle);
 	}
 
 	// 範囲外にいたらかつモーションが終わったら
@@ -515,7 +515,7 @@ void CTrainingEnemyCombDamage::Update(void)
 	D3DXVECTOR3 playerPos = pPlayer->GetPosition();
 
 	// プレイヤー向きの取得
-	D3DXVECTOR3 angle = pPlayer->GetRotaition()->Get();
+	D3DXVECTOR3 angle = pPlayer->GetRotation();
 
 	// インパクトの位置
 	D3DXVECTOR3 ImpactPos =

@@ -53,12 +53,12 @@ public:
 	void Update(void);
 	void Draw(void);
 private:
-	std::unique_ptr<CShadow> m_pShadow; // 影クラスの定義
-	CVelocity m_move;					// 移動クラス
-	float m_fShadowSize;				// 影の大きさ
-	float m_fDecAlv;					// アルファ値の減少スピード
-	int m_nLife;						// 寿命
-	int m_nMaxLife;						// 最大のHP
+	std::unique_ptr<CShadow> m_pShadow;		// 影クラスの定義
+	std::unique_ptr<CVelocity> m_pMove;	// 移動クラス
+	float m_fShadowSize;					// 影の大きさ
+	float m_fDecAlv;						// アルファ値の減少スピード
+	int m_nLife;							// 寿命
+	int m_nMaxLife;							// 最大のHP
 };
 
 //***************************************************

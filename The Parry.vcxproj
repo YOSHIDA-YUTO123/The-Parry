@@ -214,6 +214,7 @@
     <ClCompile Include="TrainingEnemy.cpp" />
     <ClCompile Include="TrainingEnemyState.cpp" />
     <ClCompile Include="tutorial.cpp" />
+    <ClCompile Include="velocity.cpp" />
     <ClCompile Include="wall.cpp" />
     <ClCompile Include="wing.cpp" />
     <ClCompile Include="WinResultManager.cpp" />
@@ -342,6 +343,7 @@
     <ClInclude Include="TrainingEnemy.h" />
     <ClInclude Include="TrainingEnemyState.h" />
     <ClInclude Include="tutorial.h" />
+    <ClInclude Include="velocity.h" />
     <ClInclude Include="wall.h" />
     <ClInclude Include="wing.h" />
     <ClInclude Include="WinResultManager.h" />

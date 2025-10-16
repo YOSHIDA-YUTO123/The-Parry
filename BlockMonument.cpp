@@ -27,7 +27,7 @@ using namespace Const; // 名前空間Constの使用
 //***************************************************
 // 定数宣言
 //***************************************************
-constexpr float SHOW_UI_DISTANCE = 100.0f; // UIが見える距離
+constexpr float SHOW_UI_DISTANCE = 200.0f; // UIが見える距離
 
 //===================================================
 // コンストラクタ
@@ -89,7 +89,7 @@ CBlockMonument* CBlockMonument::Create(const D3DXVECTOR3 pos, const TYPE type, c
 		return nullptr;
 	}
 
-	pBlock->GetRotation()->Set(rot);
+	pBlock->SetRotation(rot);
 
 	return pBlock;
 }

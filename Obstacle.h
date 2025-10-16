@@ -109,6 +109,7 @@ private:
 	D3DXVECTOR3 m_axis;			// ‰ñ“]Ž²
 	D3DXVECTOR3 m_DestPos;		// –Ú“I‚ÌˆÊ’u
 	D3DXVECTOR3 m_StopPos;		// ’âŽ~‚·‚éˆÊ’u
+	D3DXVECTOR3 m_rotDest;		// –Ú“I‚ÌŒü‚«
 	float m_fCircumference;		// ”¼Œa
 	float m_fDestValueRot;		// –Ú“I‚Ì‰ñ“]—Ê
 	float m_fValueRot;			// ‰ñ“]—Ê

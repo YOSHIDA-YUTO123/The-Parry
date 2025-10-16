@@ -56,7 +56,7 @@ COpeningEnemy* COpeningEnemy::Create(const D3DXVECTOR3 pos, const float fAngle)
 
 	pEnemy->SetPosition(pos);
 	pEnemy->Init();
-	pEnemy->GetRotaition()->Set(D3DXVECTOR3(0.0f,fAngle,0.0f));
+	pEnemy->SetRotation(D3DXVECTOR3(0.0f,fAngle,0.0f));
 
 	return pEnemy;
 }

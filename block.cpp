@@ -83,7 +83,7 @@ CBlock* CBlock::Create(const D3DXVECTOR3 pos, const TYPE type, const D3DXVECTOR3
 	}
 
 	// Œü‚«‚ÌÝ’è
-	pBlock->GetRotation()->Set(rot);
+	pBlock->SetRotation(rot);
 
 	return pBlock;
 }

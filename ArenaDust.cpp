@@ -46,7 +46,7 @@ CArenaDust* CArenaDust::Create(const D3DXVECTOR3 pos, const float fAngle)
 		return nullptr;
 	}
 
-	pArenaDust->GetRotation()->Set(D3DXVECTOR3(0.0f, fAngle, 0.0f));
+	pArenaDust->SetRotation(D3DXVECTOR3(0.0f, fAngle, 0.0f));
 
 	return pArenaDust;
 }

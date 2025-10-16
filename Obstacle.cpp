@@ -25,9 +25,7 @@
 #include "explosion.h"
 #include "sound.h"
 #include "Collision.h"
-using namespace Const;							// 名前空間Constを使用する
-using namespace std;							// 名前空間stdを使用する
-using namespace math;							// 名前空間mathを使用する
+#include "velocity.h"
 
 //**********************************************
 // 定数宣言
@@ -42,8 +40,8 @@ CObstacle::CObstacle(const TYPE type)
 	m_type = type;
 	m_pMove = nullptr;
 	m_pAABB = nullptr;
-	m_CenterPos = VEC3_NULL;
-	m_posOld = VEC3_NULL;
+	m_CenterPos = Const::VEC3_NULL;
+	m_posOld = Const::VEC3_NULL;
 }
 
 //==============================================
@@ -58,7 +56,7 @@ CObstacle::~CObstacle()
 //==============================================
 HRESULT CObstacle::Init(void)
 {
-	m_pMove = make_unique<CVelocity>();
+	m_pMove = std::make_unique<CVelocity>();
 
 	// 初期化処理
 	if (FAILED(CObjectX::Init()))
@@ -159,7 +157,7 @@ void CObstacle::Update(void)
 	m_pAABB->UpdateData(m_CenterPos, m_posOld);
 	
 	// 重力の設定
-	m_pMove->Gravity(-MAX_GRABITY);
+	m_pMove->Gravity(-Const::MAX_GRABITY);
 
 	// いちの設定
 	CObjectX::SetPosition(pos);
@@ -230,7 +228,7 @@ CSpikeTrap* CSpikeTrap::Create(const D3DXVECTOR3 pos,const D3DXVECTOR3 rot, cons
 	
 	// オブジェクト
 	pObstacle->SetPosition(pos);
-	pObstacle->GetRotation()->Set(rot);
+	pObstacle->SetRotation(rot);
 	pObstacle->m_nDamageFace = nDamageFace;
 
 	return pObstacle;
@@ -315,14 +313,15 @@ bool CSpikeTrap::Collision(CColliderAABB *pCollider, D3DXVECTOR3* pushPos)
 //==============================================
 CTNTBarrel::CTNTBarrel() : CObstacle(TYPE_TNT_BARREL)
 {
-	m_StopPos = VEC3_NULL;
-	m_ShadowSize = VEC3_NULL;
+	m_rotDest = Const::VEC3_NULL;
+	m_StopPos = Const::VEC3_NULL;
+	m_ShadowSize = Const::VEC3_NULL;
 	m_pShadow = nullptr;
 	m_nShakeTime = NULL;
 	m_bLanding = false;
 	D3DXQuaternionIdentity(&m_quat);
 	D3DXMatrixIdentity(&m_mtxRot);
-	m_axis = VEC3_NULL;
+	m_axis = Const::VEC3_NULL;
 	m_fDestValueRot = NULL;
 	m_fValueRot = NULL;
 	m_fCircumference = NULL;
@@ -365,11 +364,11 @@ CTNTBarrel* CTNTBarrel::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 DestPos)
 	}
 
 	// 方向ベクトルを求める
-	float dir = GetTargetAngle(DestPos, pos);
+	float dir = math::GetTargetAngle(DestPos, pos);
 
 	// 移動方向を設定
-	pObstacle->GetRotation()->Set(D3DXVECTOR3(0.0f, dir, 0.0f));
-	pObstacle->GetRotation()->SetDest(D3DXVECTOR3(0.0f, dir, 0.0f));
+	pObstacle->SetRotation(D3DXVECTOR3(0.0f, dir, 0.0f));
+	pObstacle->m_rotDest = (D3DXVECTOR3(0.0f, dir, 0.0f));
 
 	return pObstacle;
 }
@@ -461,7 +460,7 @@ void CTNTBarrel::Update(void)
 		// 移動量の取得
 		D3DXVECTOR3 moveWk = pMove->Get();
 
-		D3DXVECTOR3 dir = GetVector(m_StopPos, pos);
+		D3DXVECTOR3 dir = math::GetVector(m_StopPos, pos);
 
 		moveWk.x = dir.x * 4.0f;
 		moveWk.z = dir.z * 4.0f;
@@ -480,8 +479,17 @@ void CTNTBarrel::Update(void)
 	// クォータニオンの設定処理
 	SetQuaternion();
 
-	// 目的の角度に近づける
-	CObjectX::GetRotation()->SetSmoothAngle(0.1f);
+	// 向きの取得
+	D3DXVECTOR3 rot = CObjectX::GetRotation();
+
+	// 差分を正規化
+	NormalizeDiffRot(m_rotDest.y - rot.y, &rot.y);
+
+	// 目的の向きに近づける
+	rot.y += (m_rotDest.y - rot.y) * 0.1f;
+
+	// 向きの設定
+	CObjectX::SetRotation(rot);
 }
 
 //==============================================
@@ -500,7 +508,7 @@ void CTNTBarrel::Draw(void)
 	// 位置のマトリックスの作成
 	D3DXMatrixTranslation(&mtxTrans, pos.x, pos.y + Size.y * 0.5f , pos.z);
 
-	D3DXVECTOR3 rot = GetRotation()->Get();
+	D3DXVECTOR3 rot = GetRotation();
 	
 	// 回転行列の作成
 	D3DXMatrixRotationYawPitchRoll(&mtxRotWk, rot.y, rot.x, rot.z);
@@ -640,7 +648,7 @@ void CTNTBarrel::LandingShake(const D3DXVECTOR3 pos)
 		m_nShakeTime--;
 
 		// 現在の向きの取得
-		D3DXVECTOR3 rot = CObjectX::GetRotation()->GetDest();
+		D3DXVECTOR3 rot = m_rotDest;
 
 		float fCounter = static_cast<float>(m_nShakeTime) * 0.1f;
 
@@ -648,8 +656,8 @@ void CTNTBarrel::LandingShake(const D3DXVECTOR3 pos)
 		rot.z = sin * 0.5f;
 
 		// 向きの設定
-		CObjectX::GetRotation()->Set(rot);
-		CObjectX::GetRotation()->SetDest(rot);
+		CObjectX::SetRotation(rot);
+		m_rotDest = rot;
 
 		if (m_nShakeTime <= 0)
 		{
@@ -658,13 +666,7 @@ void CTNTBarrel::LandingShake(const D3DXVECTOR3 pos)
 	}
 	else
 	{
-		// 向きの取得
-		D3DXVECTOR3 rot = CObjectX::GetRotation()->GetDest();
-
 		// 向きのリセット
-		rot.z = 0.0f;
-
-		// 向きの設定
-		CObjectX::GetRotation()->SetDest(rot);
+		m_rotDest.z = 0.0f;
 	}
 }

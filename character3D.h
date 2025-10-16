@@ -24,7 +24,6 @@
 // 前方宣言
 //***************************************************
 class CShadowS;
-class CRotation;
 class CMotion;
 class CModel;
 
@@ -76,7 +75,8 @@ public:
 	// ゲッター
 	D3DXVECTOR3 GetPosition(void) const { return m_pos; }
 	D3DXVECTOR3 GetSize(void) const { return m_Size; }
-	CRotation* GetRotaition(void) const { return m_pRot; }
+	D3DXVECTOR3 GetRotation(void) const { return m_rot; }
+
 	STATE GetState(void) { return m_state; }
 	CMotion* GetMotion(void) { return m_pMotion.get(); } // モーションの取得
 	float GetSpeed(void) { return m_fSpeed; }
@@ -85,9 +85,13 @@ public:
 	D3DXVECTOR3 GetModelRot(const int nIdx);
 	D3DXVECTOR3 GetModelSize(const int nIdx);
 	D3DXMATRIX GetParent(const int nIdx) const;
+	float GetRotDest(void) const { return m_fRotDest; }
 
 	// セッター
 	void SetPosition(const D3DXVECTOR3 pos) { m_pos = pos; }
+	void SetRotation(const D3DXVECTOR3 rot) { m_rot = rot; }
+	void SetRotDest(const float fRotDest) { m_fRotDest = fRotDest; }
+
 	void SetCharacter(const int nLife, const float fSpeed, const D3DXVECTOR3 ShadowScal, const D3DXVECTOR3 Size);
 	void SetModelMT(const char* pTextureName);
 	void Copy(CCharacter3D* pCharacter);
@@ -109,7 +113,7 @@ private:
 	std::vector<CModel*> m_apModel;			// モデルクラスのポインタ
 	
 	CShadowS* m_pShadowS;					// 影(ステンシル)
-	CRotation* m_pRot;						// 向きクラスへのポインタ
+	D3DXVECTOR3 m_rot;						// 向き
 	STATE m_state;							// 状態
 	TYPE m_type;							// 種類
 	D3DXVECTOR3 m_pos;						// 位置
@@ -117,6 +121,7 @@ private:
 	D3DXVECTOR3 m_Size;						// 大きさ
 	D3DXMATRIX m_mtxWorld;					// ワールドマトリックス
 	float m_fSpeed;							// 足の速さ
+	float m_fRotDest;						// 目的の向き
 	int m_nNumModel;						// モデルの最大数
 	int m_nCounterState;					// 状態のカウンター
 	int m_nLife;							// 寿命

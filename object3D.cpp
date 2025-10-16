@@ -14,20 +14,17 @@
 #include"textureManager.h"
 #include<string>
 
-using namespace Const;		// 名前空間Constを使用する
-using namespace std;		// 名前空間stdを使用する
-
 //===================================================
 // コンストラクタ
 //===================================================
 CObject3D::CObject3D(int nPriority) : CObject(nPriority)
 {
 	memset(m_mtxWorld, NULL, sizeof(D3DXMATRIX));
-	m_pPos = nullptr;
-	m_pRot = nullptr;
-	m_pSize = nullptr;
+	m_pos = Const::VEC3_NULL;
+	m_rot = Const::VEC3_NULL;
+	m_Size = Const::VEC3_NULL;
 	m_pVtxBuffer = NULL;
-	m_nTextureIdx = NULL;
+	m_nTextureIdx = -1;
 }
 
 //===================================================
@@ -44,11 +41,6 @@ HRESULT CObject3D::Init(void)
 {
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
-
-	// 位置、向き、大きさの設定
-	m_pPos = new CPosition;
-	m_pRot = new CRotation;
-	m_pSize = new CSize3D;
 
 	//頂点バッファの生成・頂点情報の設定
 	if (FAILED(pDevice->CreateVertexBuffer(sizeof(VERTEX_3D) * 4,
@@ -74,27 +66,6 @@ void CObject3D::Uninit(void)
 	{
 		m_pVtxBuffer->Release();
 		m_pVtxBuffer = nullptr;
-	}
-
-	// 位置の破棄
-	if (m_pPos != nullptr)
-	{
-		delete m_pPos;
-		m_pPos = nullptr;
-	}
-
-	// 向きの破棄
-	if (m_pRot != nullptr)
-	{
-		delete m_pRot;
-		m_pRot = nullptr;
-	}
-
-	// 大きさの破棄
-	if (m_pSize != nullptr)
-	{
-		delete m_pSize;
-		m_pSize = nullptr;
 	}
 
 	// 自分自身の破棄
@@ -128,18 +99,12 @@ void CObject3D::Draw(void)
 	//	ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
 
-	// 向き
-	D3DXVECTOR3 rot = m_pRot->Get();
-
 	// 向きを反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, rot.y, rot.x, rot.z);
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
 
-	// 位置
-	D3DXVECTOR3 pos = m_pPos->Get();
-
 	// 位置を反映
-	D3DXMatrixTranslation(&mtxTrans, pos.x, pos.y, pos.z);
+	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
 
 	// ワールドマトリックスを設定
@@ -194,36 +159,6 @@ void CObject3D::SetDraw(void)
 }
 
 //===================================================
-// 位置の取得
-//===================================================
-CPosition* CObject3D::GetPosition(void)
-{
-	if (m_pPos == nullptr) return nullptr;
-
-	return m_pPos;
-}
-
-//===================================================
-// 向きの取得
-//===================================================
-CRotation* CObject3D::GetRotaition(void)
-{
-	if (m_pRot == nullptr) return nullptr;
-
-	return m_pRot;
-}
-
-//===================================================
-// 大きさの取得
-//===================================================
-CSize3D* CObject3D::GetSize(void)
-{
-	if (m_pSize == nullptr) return nullptr;
-
-	return m_pSize;
-}
-
-//===================================================
 // 頂点のオフセットの設定処理
 //===================================================
 void CObject3D::SetOffsetVtx(const D3DXCOLOR col, const int nPosX, const int nPosY)
@@ -235,7 +170,7 @@ void CObject3D::SetOffsetVtx(const D3DXCOLOR col, const int nPosX, const int nPo
 	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 
 	// 大きさの取得
-	D3DXVECTOR3 Size = m_pSize->Get();
+	D3DXVECTOR3 Size = m_Size;
 
 	// 頂点座標の設定
 	pVtx[0].pos = D3DXVECTOR3(-Size.x, Size.y, Size.z);
@@ -285,8 +220,8 @@ void CObject3D::UpdatePosition(const D3DXVECTOR3 pos,const D3DXVECTOR3 Size)
 	// 頂点情報のポインタ
 	VERTEX_3D* pVtx;
 
-	m_pPos->Set(pos);
-	m_pSize->Set(Size);
+	m_pos = pos;
+	m_Size = Size;
 
 	// 頂点バッファのロック
 	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
@@ -338,13 +273,13 @@ CObject3D* CObject3D::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot, const
 	CTextureManager* pTexture = CManager::GetTexture();
 
 	pObject3D->Init();
-	pObject3D->m_pPos->Set(pos);
-	pObject3D->m_pRot->Set(rot);
-	pObject3D->m_pSize->Set(size);
+	pObject3D->m_pos = pos;
+	pObject3D->m_rot = rot;
+	pObject3D->m_Size = size;
 	pObject3D->SetOffsetVtx();
 
 	// テクスチャのパス
-	string TexturePath = "data/TEXTURE/";
+	std::string TexturePath = "data/TEXTURE/";
 
 	// 文字列を連結
 	TexturePath += pTextureName;

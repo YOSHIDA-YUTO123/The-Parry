@@ -34,8 +34,8 @@ namespace
 	constexpr int START_ACTION = 55;				// アクションの開始確率
 	constexpr int SPIN_TIME = 60;					// 回転モーションの時間
 	constexpr float AWAY_TIME = 24.0f;				// ジャンプする時間
-	constexpr int MAX_AWAYPOS_X = 1200;				// 最大の離れる位置X
-	constexpr int MAX_AWAYPOS_Z = 1200;				// 最大の離れる位置Z
+	constexpr int MAX_AWAYPOS_X = 500;				// 最大の離れる位置X
+	constexpr int MAX_AWAYPOS_Z = 500;				// 最大の離れる位置Z
 }
 
 //===================================================
@@ -232,7 +232,7 @@ void CEnemyBackStep::Update(void)
 	if (pEnemy == nullptr) return;
 
 	// 向きの取得
-	float fAngle = pEnemy->GetRotaition()->Get().y;
+	float fAngle = pEnemy->GetRotation().y;
 
 	pEnemy->GetMovement()->SetMoveDir(0.0f, 10.0f, fAngle);
 
@@ -341,7 +341,7 @@ void CEnemyStep::Init(void)
 	CMotion* pMotion = pEnemy->GetMotion();
 
 	// 向きの取得
-	float fAngle = pEnemy->GetRotaition()->Get().y;
+	float fAngle = pEnemy->GetRotation().y;
 
 	pEnemy->GetMovement()->MoveForWard(150.0f, fAngle + D3DX_PI);
 
@@ -420,16 +420,16 @@ void CEnemyAway::Init(void)
 	// 位置の取得
 	D3DXVECTOR3 pos = pEnemy->GetPosition();
 
-	// 距離を求める
-	float fDistance = GetDistance(m_pos - pos);
+	//// 距離を求める
+	//float fDistance = GetDistance(m_pos - pos);
 
-	// 目標地点までの距離が1000以下だったら
-	if (fDistance <= 1000.0f)
-	{
-		// ジャンプ攻撃に派生
-		pEnemy->ChangeState(make_shared<CEnemyJumpAttack>());
-		return;
-	}
+	//// 目標地点までの距離が1000以下だったら
+	//if (fDistance <= 1000.0f)
+	//{
+	//	// ジャンプ攻撃に派生
+	//	pEnemy->ChangeState(make_shared<CEnemyJumpAttack>());
+	//	return;
+	//}
 
 	// モーションがあるなら
 	if (pMotion != nullptr)
@@ -469,7 +469,7 @@ void CEnemyAway::Update(void)
 	float dir = fDistance / AWAY_TIME;
 
 	// 向きの取得
-	float fAngle = pEnemy->GetRotaition()->Get().y;
+	float fAngle = pEnemy->GetRotation().y;
 
 	// 移動量を設定する
 	pEnemy->GetMovement()->MoveForWard(dir, fAngle + D3DX_PI);
@@ -532,7 +532,7 @@ void CEnemySideMove::Update(void)
 	pEnemy->AngleToPlayer();
 
 	// 向きの取得
-	float fAngle = pEnemy->GetRotaition()->Get().y;
+	float fAngle = pEnemy->GetRotation().y;
 
 	// 右に移動する
 	pEnemy->GetMovement()->SetMoveDir(m_fMoveAngle, m_fMoveValue, fAngle);
@@ -577,7 +577,7 @@ void CEnemySideMove::Update(void)
 		}
 
 		// 次の行動の選出
-		int nAction = rand() % 2;
+		int nAction = rand() % 3;
 
 		// 次の行動の遷移
 		switch (nAction)
@@ -589,6 +589,10 @@ void CEnemySideMove::Update(void)
 		case 1:
 			// 状態の変更
 			pEnemy->ChangeState(make_shared<CEnemyRoar>());
+			break;
+		case 2:
+			// 状態の変更
+			pEnemy->ChangeState(make_shared<CEnemyJumpAttack>());
 			break;
 		default:
 			break;
@@ -781,8 +785,7 @@ void CEnemyBriskMove::Init(void)
 	// 位置の取得
 	D3DXVECTOR3 pos = pEnemy->GetPosition();
 
-	m_destPos.x = static_cast<float>(rand() % (DEST_RANGE * 2) - DEST_RANGE);
-	m_destPos.z = static_cast<float>(rand() % (DEST_RANGE * 2) - DEST_RANGE);
+	m_destPos = VEC3_NULL;
 
 	// 移動方向を求める
 	float fAngle = GetTargetAngle(m_destPos, pos) + D3DX_PI;
@@ -813,7 +816,9 @@ void CEnemyBriskMove::Update(void)
 	CMotion* pMotion = pEnemy->GetMotion();
 
 	// 向きの取得
-	float fAngle = pEnemy->GetRotaition()->Get().y;
+	float fAngle = pEnemy->GetRotation().y;
+
+	pEnemy->SetState(CCharacter3D::STATE_ACTION,5);
 
 	// モーションがあるなら
 	if (pMotion != nullptr)
@@ -831,9 +836,8 @@ void CEnemyBriskMove::Update(void)
 			}
 		}
 
-
 		// 移動する
-		pEnemy->GetMovement()->MoveForWard(10.0f, fAngle);
+		pEnemy->GetMovement()->MoveForWard(10.0f, fAngle + D3DX_PI);
 
 		// 位置の取得
 		D3DXVECTOR3 pos = pEnemy->GetPosition();

@@ -20,6 +20,7 @@
 #include "impact.h"
 #include "meshfield.h"
 #include "math.h"
+#include "velocity.h"
 
 //************************************************
 // –¼‘O‹óŠÔ

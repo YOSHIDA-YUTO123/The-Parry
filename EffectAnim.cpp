@@ -12,10 +12,7 @@
 #include "textureManager.h"
 #include "manager.h"
 #include "renderer.h"
-#include "transform.h"
-
-using namespace Const; // 名前空間Constを使用
-using namespace std;   // 名前空間stdを使用
+#include "velocity.h"
 
 //===================================================
 // コンストラクタ
@@ -23,7 +20,7 @@ using namespace std;   // 名前空間stdを使用
 CEffect3DAnim::CEffect3DAnim()
 {
 	m_pMove = nullptr;
-	m_col = WHITE;
+	m_col = Const::WHITE;
 	m_nLife = NULL;
 	m_fRadius = NULL;
 	m_decAlv = NULL;
@@ -85,7 +82,7 @@ void CEffect3DAnim::SetEffect(const int nLife, const D3DXVECTOR3 move)
 	if (m_pMove == nullptr)
 	{
 		// 移動量の生成
-		m_pMove = make_shared<CVelocity>();
+		m_pMove = std::make_shared<CVelocity>();
 	}
 
 	m_pMove->Set(move);
@@ -103,7 +100,7 @@ HRESULT CEffect3DAnim::Init(void)
 	}
 
 	// 移動クラスの生成
-	m_pMove = make_unique<CVelocity>();
+	m_pMove = std::make_unique<CVelocity>();
 
 	return S_OK;
 }

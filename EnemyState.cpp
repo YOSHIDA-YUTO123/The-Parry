@@ -28,11 +28,12 @@
 #include "transform.h"
 #include "dust.h"
 #include "Collider.h"
-#include"sound.h"
+#include "sound.h"
 #include "renderer.h"
 #include "EnemyStateAttack.h"
 #include "EnemyStateMovement.h"
 #include "EnemyMovement.h"
+#include "meshfield.h"
 
 //***************************************************
 // 名前空間
@@ -50,12 +51,45 @@ namespace
 };
 
 //===================================================
+// HPがLowのときの演出処理
+//===================================================
+void CEnemyStateManager::SetLowEvent(void)
+{
+	// 敵が使われていないなら処理しない
+	if (m_pEnemy == nullptr) return;
+
+	// モーションクラスの取得
+	CMotion* pMotion = m_pEnemy->GetMotion();
+
+	// 取得できなかったら処理しない
+	if (pMotion == nullptr) return;
+
+	// モーションの種類の取得
+	int nMotionType = pMotion->GetType();
+
+	// HPが半分になったら
+	if (m_nLife <= m_nMaxLife / 2 && m_nLife > 0 && nMotionType == CEnemy::MOTIONTYPE_NEUTRAL)
+	{
+		if (!m_bLowEventFinish)
+		{
+			m_bEvent = true;
+
+			// 状態の変更
+			m_pEnemy->ChangeState(make_shared<CEnemyAway>());
+		}
+	}
+}
+
+//===================================================
 // HPが一定以下かどうか
 //===================================================
 bool CEnemyStateManager::CheckLowHp(const int nRate)
 {
 	// 0割り対策
 	if (nRate == 0) return false;
+
+	// 演出が終わっていなかったら
+	if (!m_bLowEventFinish) return false;
 
 	// 一定の割合を下回っていたら
 	if (m_nLife <= m_nMaxLife / nRate)
@@ -66,10 +100,21 @@ bool CEnemyStateManager::CheckLowHp(const int nRate)
 }
 
 //===================================================
+// イベントの終了
+//===================================================
+void CEnemyStateManager::EndEvent(void)
+{
+	m_bEvent = false;
+	m_bLowEventFinish = true;
+}
+
+//===================================================
 // コンストラクタ
 //===================================================
 CEnemyStateManager::CEnemyStateManager()
 {
+	m_bEvent = false;
+	m_bLowEventFinish = false;
 	m_nLife = NULL;
 	m_pEnemy = nullptr;
 }
@@ -307,12 +352,12 @@ void CEnemyIdle::Update(void)
 	// 位置の取得
 	D3DXVECTOR3 playerPos = pPlayer->GetPosition();
 
+	// 状態マネージャーの取得
+	auto pStateManager = pEnemy->GetStateManager();
+
 	// 次の行動に移るまでの時間が0だったら
 	if (m_nNextStateCount <= 0)
 	{
-		// 状態マネージャーの取得
-		auto pStateManager = pEnemy->GetStateManager();
-
 		// プレイヤーの立ち位置でモーションを設定
 		if (pStateManager != nullptr && pStateManager->SetMotionByPlayerPosition())
 		{
@@ -659,10 +704,21 @@ void CEnemyLanding::Update(void)
 	// モーションの設定
 	pMotion->SetMotion(CEnemy::MOTIONTYPE_LANDING, true, 10);
 
+	// 状態マネージャーの取得
+	auto pStateManager = pEnemy->GetStateManager();
+
 	if (pMotion != nullptr)
 	{
+		// イベント状態だったら
+		if (pStateManager->GetEvent())
+		{
+			// イベント
+			pEnemy->ChangeState(make_shared<CEnemyEventRoar>());
+			return;
+		}
+
 		// モーションが終わった後40%の確率で攻撃に移る
-		if (pMotion->FinishMotion() && m_nNextAction <= 50)
+		if (pMotion->FinishMotion() && m_nNextAction <= 70)
 		{
 			// 次の行動を選出
 			int random = rand() % 3;
@@ -776,7 +832,7 @@ void CEnemyHit::Update(void)
 	CMotion* pMotion = pEnemy->GetMotion();
 
 	// 向きの取得
-	float fAngle = pEnemy->GetRotaition()->Get().y;
+	float fAngle = pEnemy->GetRotation().y;
 
 	if (pMotion != nullptr)
 	{
@@ -1103,6 +1159,16 @@ void CEnemyGuard::Update(void)
 		// 攻撃モーションの選択
 		int nAction = rand() % ACTION_MAX;
 
+		// 距離をとる確率
+		int nAway = rand() % 100;
+
+		if (nAway <= PROB_AWAY)
+		{
+			// 距離を取る
+			pEnemy->ChangeState(make_shared<CEnemyAway>());
+			return;
+		}
+
 		// 種類の遷移
 		switch (nAction)
 		{
@@ -1204,7 +1270,7 @@ void CEnemyDeath::Update(void)
 	CMotion* pMotion = pEnemy->GetMotion();
 
 	// 向きの取得
-	float fAngle = pEnemy->GetRotaition()->Get().y;
+	float fAngle = pEnemy->GetRotation().y;
 
 	// モーションがあるなら
 	if (pMotion != nullptr)
@@ -1379,7 +1445,7 @@ void CEnemySuperHit::Update(void)
 	if (pPlayer == nullptr) return;
 
 	// 向きの取得
-	float fAngle = pEnemy->GetRotaition()->Get().y;
+	float fAngle = pEnemy->GetRotation().y;
 
 	// モーションがあるなら
 	if (pMotion != nullptr)
@@ -1477,7 +1543,7 @@ void CEnemyComboDamage::Update(void)
 	D3DXVECTOR3 playerPos = pPlayer->GetPosition();
 
 	// プレイヤー向きの取得
-	D3DXVECTOR3 angle = pPlayer->GetRotaition()->Get();
+	D3DXVECTOR3 angle = pPlayer->GetRotation();
 
 	// インパクトの位置
 	D3DXVECTOR3 ImpactPos =
@@ -1601,11 +1667,10 @@ void CEnemyLookBackL::Init(void)
 	float fAngle = GetTargetAngle(pos, playerPos);
 
 	// 向きの取得
-	D3DXVECTOR3 rot = pEnemy->GetRotaition()->GetDest();
+	m_fAngle = pEnemy->GetRotDest();
 
 	// 今の角度から目的の角度までの距離を求める
-	m_fAngle = rot.y;
-	m_fDiffAngle = fAngle - rot.y;
+	m_fDiffAngle = fAngle - m_fAngle;
 
 	// 角度の差分を求める
 	if (m_fDiffAngle < -D3DX_PI)
@@ -1734,11 +1799,10 @@ void CEnemyLookBackR::Init(void)
 	float fAngle = GetTargetAngle(pos, playerPos);
 
 	// 向きの取得
-	D3DXVECTOR3 rot = pEnemy->GetRotaition()->GetDest();
+	m_fAngle = pEnemy->GetRotDest();
 
 	// 今の角度から目的の角度までの距離を求める
-	m_fAngle = rot.y;
-	m_fDiffAngle = fAngle - rot.y;
+	m_fDiffAngle = fAngle - m_fAngle;
 
 	// 角度の差分を求める
 	if (m_fDiffAngle < -D3DX_PI)
@@ -1811,5 +1875,178 @@ void CEnemyLookBackR::Update(void)
 			// カウンターを進める
 			m_nCounter++;
 		}
+	}
+}
+
+//===================================================
+// コンストラクタ(HP半分時のイベント)
+//===================================================
+CEnemyEventRoar::CEnemyEventRoar() : CEnemyState(ID_EVENT_ROAR)
+{
+}
+
+//===================================================
+// デストラクタ(HP半分時のイベント)
+//===================================================
+CEnemyEventRoar::~CEnemyEventRoar()
+{
+}
+
+//===================================================
+// 初期化処理(HP半分時のイベント)
+//===================================================
+void CEnemyEventRoar::Init(void)
+{
+	// 敵の取得
+	CEnemy* pEnemy = CEnemyState::GetEnemy();
+
+	// 敵が使われていないなら処理しない
+	if (pEnemy == nullptr) return;
+
+	// モーションクラスの取得
+	CMotion* pMotion = pEnemy->GetMotion();
+
+	if (pMotion != nullptr)
+	{
+		// モーションの再生
+		pMotion->SetMotion(CEnemy::MOTIONTYPE_ROAR, true, 10);
+	}
+}
+
+//===================================================
+// 更新処理(HP半分時のイベント)
+//===================================================
+void CEnemyEventRoar::Update(void)
+{
+	// 敵の取得
+	CEnemy* pEnemy = CEnemyState::GetEnemy();
+
+	// 敵が使われていないなら処理しない
+	if (pEnemy == nullptr) return;
+
+	// モーションクラスの取得
+	CMotion* pMotion = pEnemy->GetMotion();
+
+	// 状態マネージャーの取得
+	auto pStateManager = pEnemy->GetStateManager();
+
+	// レンダラーの取得
+	CRenderer* pRenderer = CManager::GetRenderer();
+
+	// メッシュフィールドの取得
+	CMeshField* pMeshField = CGame::GetField();
+
+	if (pMotion->IsEventFrame(CEnemy::MOTIONTYPE_ROAR))
+	{
+		// 当たり判定
+		CollisionPlayer(pEnemy);
+
+		// 胸の位置の取得
+		D3DXVECTOR3 chestPos = pEnemy->GetModelPos(CEnemy::MODEL_CHEST);
+
+		// パーティクルの生成
+		CParticle3DNormal *pParticle = CParticle3DNormal::Create(chestPos, 150.0f, D3DXCOLOR(1.0f, 0.4f, 1.0f, 1.0f));
+		pParticle->SetParticle(100.0f, 300, 100, 50, 314);
+		pParticle->SetParam(CEffect3D::TYPE_NORAML, 10, 0.01f);
+
+		// 位置の取得
+		D3DXVECTOR3 pos = pEnemy->GetPosition();
+
+		// メッシュサークルの生成
+		auto pCircle = CMeshCircle::Create(D3DXCOLOR(1.0f, 0.5f, 0.5f, 1.0f), pos, 0.0f, 35.0f);
+
+		// サークルの設定処理
+		pCircle->SetCircle(0.0f, 50.0f, 60, true);
+
+		if (pMeshField != nullptr)
+		{
+			// フィールドの波の設定
+			CMeshFieldWave::Config config = { pos,250.0f,380.0f,280.0f,12.0f,0.01f,120 };
+
+			// フィールドの波
+			pMeshField->SetWave(config);
+		}
+		// 音の取得
+		CSound* pSound = CManager::GetSound();
+
+		if (pRenderer != nullptr)
+		{
+			// ブラーをオン
+			pRenderer->onEffect(0.8f);
+		}
+
+		if (pSound != nullptr)
+		{
+			// 咆哮
+			pSound->Play(CSound::SOUND_LABEL_ROAR);
+		}
+	}
+
+	// 取得できなかったら処理しない
+	if (pMotion == nullptr) return;
+	
+	// モーションが終わったら
+	if (pMotion->FinishMotion())
+	{
+		if (pRenderer != nullptr)
+		{
+			// ブラーをオン
+			pRenderer->offEffect();
+		}
+	}
+	// モーションが終わったら(ブレンドまで)
+	else if (pMotion->IsFinishEndBlend() && pStateManager != nullptr)
+	{
+		// 攻撃を選出
+		int nAction = rand() % 3;
+
+		// 種類の遷移
+		switch (nAction)
+		{
+		case 0:
+			// 衝撃波攻撃
+			pEnemy->ChangeState(make_shared<CEnemyAttackImpact>());
+			break;
+		case 1:
+			// 衝撃波攻撃
+			pEnemy->ChangeState(make_shared<CEnemyRush>());
+			break;
+		case 2:
+			// 衝撃波攻撃
+			pEnemy->ChangeState(make_shared<CEnemyJumpAttack>());
+			break;
+		default:
+			break;
+		}
+
+		// イベント終了
+		pStateManager->EndEvent();
+	}
+}
+
+//===================================================
+// プレイヤーとの当たり判定
+//===================================================
+void CEnemyEventRoar::CollisionPlayer(CEnemy* pEnemy)
+{
+	// 位置の取得
+	D3DXVECTOR3 pos = pEnemy->GetPosition();
+
+	// プレイヤーの取得
+	CPlayer* pPlayer = CGame::GetPlayer();
+
+	// 取得できなかったら処理しない
+	if (pPlayer == nullptr) return;
+
+	// 位置の取得
+	D3DXVECTOR3 playerPos = pPlayer->GetPosition();
+
+	// 距離の取得
+	float fDistance = GetDistance(playerPos - pos);
+
+	if (fDistance <= COLLISION_DISTANCE)
+	{
+		// ダメージモーションの設定
+		pPlayer->SetDamageMotion(pos, 0,200.0f,200.0f);
 	}
 }

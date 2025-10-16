@@ -324,7 +324,6 @@ void CPlayer::Update(void)
 	// シリンダーの判定
 	if (pCylinder != nullptr && pCylinder->Collision(&pos))
 	{
-		// ここに処理があれば書く
 	}
 
 	// ブロックの当たり判定
@@ -519,12 +518,9 @@ void CPlayer::Update(void)
 	// キャラクターの更新処理
 	CCharacter3D::Update();
 
-	// 目的の視点に近づける
-	CCharacter3D::GetRotaition()->SetSmoothAngle(0.1f);
-
 	D3DXVECTOR3 posRDest;
 
-	D3DXVECTOR3 rot = CCharacter3D::GetRotaition()->Get();
+	D3DXVECTOR3 rot = CCharacter3D::GetRotation();
 
 	D3DXVECTOR3 modelpos = GetModelPos(CPlayer::MODEL_CHEST);
 
@@ -673,8 +669,8 @@ CPlayer* CPlayer::Create(const int nLife, const float fSpeed, const D3DXVECTOR3 
 	}
 
 	pPlayer->SetPosition(pos);
-	pPlayer->GetRotaition()->SetDest(rot);
-	pPlayer->GetRotaition()->Set(rot);
+	pPlayer->SetRotDest(rot.y);
+	pPlayer->SetRotation(rot);
 
 	return pPlayer;
 }
@@ -815,7 +811,7 @@ bool CPlayer::IsParry(const D3DXVECTOR3 pos)
 	auto pMotion = CCharacter3D::GetMotion();
 
 	// 向きの取得
-	D3DXVECTOR3 rot = CCharacter3D::GetRotaition()->Get();
+	D3DXVECTOR3 rot = CCharacter3D::GetRotation();
 	
 	// 視界の更新処理
 	m_pFOV->UpdateData(rot.y);
@@ -838,7 +834,7 @@ bool CPlayer::IsParry(const D3DXVECTOR3 pos)
 void CPlayer::SetAngle(const float angleY)
 {
 	// 向きの設定
-	CCharacter3D::GetRotaition()->SetDest(D3DXVECTOR3(0.0f, angleY, 0.0f));
+	CCharacter3D::SetRotDest(angleY);
 }
 
 //===================================================
@@ -910,11 +906,21 @@ bool CPlayer::CollisionObstacle(D3DXVECTOR3* pPos)
 	// 爆発の位置
 	D3DXVECTOR3 explosionPos;
 
-	// 爆発の当たり判定
-	if (pObstacleManager->CollisionExplotion(m_Capsule.get(),&explosionPos))
+	// モーションの取得
+	CMotion* pMotion = CCharacter3D::GetMotion();
+	
+	// モーションの種類の取得
+	int nMotionType = pMotion->GetBlendType();
+
+	// 絶対反撃中は攻撃を受けない
+	if (nMotionType != MOTIONTYPE_REVENGEATTACK)
 	{
-		// ダメージ状態に変更
-		SetDamageMotion(explosionPos, 2);
+		// 爆発の当たり判定
+		if (pObstacleManager->CollisionExplotion(m_Capsule.get(), &explosionPos))
+		{
+			// ダメージ状態に変更
+			SetDamageMotion(explosionPos, 2);
+		}
 	}
 
 	return bResult;
@@ -992,7 +998,7 @@ void CPlayer::SetRevengeEffect(void)
 //===================================================
 // ダメージモーションの選択
 //===================================================
-void CPlayer::SetDamageMotion(const D3DXVECTOR3 AttackerPos,const int nDamage)
+void CPlayer::SetDamageMotion(const D3DXVECTOR3 AttackerPos,const int nDamage,const float fBack,const float fForward)
 {
 	// モーションの取得
 	CMotion* pMotion = CCharacter3D::GetMotion();
@@ -1013,7 +1019,7 @@ void CPlayer::SetDamageMotion(const D3DXVECTOR3 AttackerPos,const int nDamage)
 		D3DXVECTOR3 pos = CCharacter3D::GetPosition();
 
 		// 吹き飛び処理
-		float fAngle = m_pMovement->BlowOff(pos - AttackerPos, 100.0f, 10.0f);
+		float fAngle = m_pMovement->BlowOff(pos - AttackerPos, fBack, 10.0f);
 
 		// 向きの設定
 		SetAngle(fAngle);
@@ -1024,10 +1030,10 @@ void CPlayer::SetDamageMotion(const D3DXVECTOR3 AttackerPos,const int nDamage)
 	else
 	{
 		// 向きの取得
-		float fAngle = CCharacter3D::GetRotaition()->Get().y;
+		float fAngle = CCharacter3D::GetRotation().y;
 
 		// 前に吹き飛ぶ
-		m_pMovement->BlowForward(20.0f, 15.0f, fAngle);
+		m_pMovement->BlowForward(fForward, 15.0f, fAngle);
 
 		// プレイヤーの状態の設定
 		ChangeState(make_shared<CPlayerDamageBack>(nDamage));
@@ -1117,7 +1123,7 @@ void CPlayer::SetStance(const D3DXVECTOR3 enemyPos, const PARRYMOTION parry)
 	m_ParryMotion = parry;
 
 	// 向きの取得
-	D3DXVECTOR3 rot = CCharacter3D::GetRotaition()->Get();
+	D3DXVECTOR3 rot = CCharacter3D::GetRotation();
 
 	// モードの取得
 	CScene::MODE mode = CManager::GetMode();
@@ -1327,7 +1333,7 @@ void CPlayer::CollisionImpact(CMeshField* pMeshField, D3DXVECTOR3* pPos, CMotion
 		float fAngle = GetTargetAngle(firstPos, *pPos);
 
 		// 向きの設定
-		CCharacter3D::GetRotaition()->SetDest(D3DXVECTOR3(0.0f, fAngle + D3DX_PI, 0.0f));
+		CCharacter3D::SetRotDest(fAngle + D3DX_PI);
 
 		// 右手の位置
 		D3DXVECTOR3 playerHandR = GetModelPos(5);
@@ -1441,7 +1447,7 @@ void CPlayer::UpdateMove(CMotion* pMotion, const bool bAlive, CInputKeyboard* pK
 		// 移動ごとの処理ができるなら
 		if (bPlayerMove)
 		{
-			CCharacter3D::GetRotaition()->SetDest(D3DXVECTOR3(0.0f, fAngleDest, 0.0f));
+			CCharacter3D::SetRotDest(fAngleDest);
 
 			// ダッシュモーションか歩きモーションかを判定
 			int isDashMotion = (m_bDash ? MOTIONTYPE_DASH : MOTIONTYPE_MOVE);
@@ -1517,9 +1523,6 @@ void CPlayer::UpdateRockOnMove(CMotion* pMotion, const bool bAlive, CInputKeyboa
 	float fSpeed = SIDE_MOVE_VALUE;
 
 	float fAngleDest = 0.0f;
-
-	// カメラの状態の取得
-	CGameCamera::STATE cameraState = pGameCamera->GetState();
 
 	// ダッシュボタンを押したら
 	if ((pKeyboard->GetPress(DIK_LSHIFT) || pJoyPad->GetPress(pJoyPad->JOYKEY_LEFT_SHOULDER)))
@@ -1750,8 +1753,11 @@ bool CPlayer::IsMove(CMotion *pMotion)
 	// 反撃状態だったら移動できない
 	if (motiontype == MOTIONTYPE_REVENGEATTACK) return false;
 
+	// ジャンプ攻撃だったら移動できない
+	if (motiontype == MOTIONTYPE_JUMP_ATTACK) return false;
+
 	// 構え状態だったら移動できない
-	if (pMotion->IsEventFrame(1,35, MOTIONTYPE_STANCE)) return false;
+	if (pMotion->IsEventFrame(0,35, MOTIONTYPE_STANCE)) return false;
 	
 	// 移動できる
 	return true;
@@ -1912,7 +1918,7 @@ void CPlayer::SetMoveAngle(CGameCamera* pCamera, CInputKeyboard* pKeyboard, CInp
 	D3DXVECTOR3 cameraRot = pCamera->GetRotaition();
 
 	// 角度の取得
-	D3DXVECTOR3 Angle = CCharacter3D::GetRotaition()->Get();
+	D3DXVECTOR3 Angle = CCharacter3D::GetRotation();
 
 	if (pJoypad->GetJoyStickL())
 	{
@@ -1946,8 +1952,8 @@ void CPlayer::SetMoveAngle(CGameCamera* pCamera, CInputKeyboard* pKeyboard, CInp
 		}
 
 		// 向きの設定
-		CCharacter3D::GetRotaition()->Set(Angle);
-		CCharacter3D::GetRotaition()->SetDest(Angle);
+		CCharacter3D::SetRotation(Angle);
+		CCharacter3D::SetRotDest(Angle.y);
 
 		return;
 	}
@@ -2001,6 +2007,6 @@ void CPlayer::SetMoveAngle(CGameCamera* pCamera, CInputKeyboard* pKeyboard, CInp
 	}
 
 	// 向きの設定
-	CCharacter3D::GetRotaition()->Set(Angle);
-	CCharacter3D::GetRotaition()->SetDest(Angle);
+	CCharacter3D::SetRotation(Angle);
+	CCharacter3D::SetRotDest(Angle.y);
 }

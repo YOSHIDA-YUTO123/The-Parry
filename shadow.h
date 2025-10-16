@@ -15,14 +15,7 @@
 // インクルードファイル
 //************************************************
 #include"main.h"
-#include"object3D.h"
 #include<memory>
-
-//*************************************************
-// 前方宣言
-//*************************************************
-class CRotation;
-class CSize3D;
 
 //*************************************************
 // 影クラスの定義
@@ -41,12 +34,12 @@ public:
 	// 影の設定
 	void SetFieldAngle(D3DXVECTOR3 Nor, D3DXVECTOR3 up);
 private:
-	std::unique_ptr<CRotation> m_pRot; // 向きクラスのポインタ
-	std::unique_ptr<CSize3D> m_pSize;  // 大きさクラス
-	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuffer; // 頂点バッファ
-	D3DXVECTOR3 m_pos;				   // 位置
-	D3DXMATRIX m_mtxWorld;			   // ワールドマトリックス
-	D3DXCOLOR m_col;				   // 色
-	int m_nTextureIdx;				   // テクスチャのID
+	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuffer;	// 頂点バッファ
+	D3DXVECTOR3 m_pos;						// 位置
+	D3DXVECTOR3 m_rot;						// 向き
+	D3DXVECTOR3 m_Size;						// 大きさ
+	D3DXMATRIX m_mtxWorld;					// ワールドマトリックス
+	D3DXCOLOR m_col;						// 色
+	int m_nTextureIdx;						// テクスチャのID
 };
 #endif

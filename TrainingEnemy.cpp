@@ -87,8 +87,8 @@ HRESULT CTrainingEnemy::Init(void)
 	CCharacter3D::SetCharacter(9999, 0.0f, D3DXVECTOR3(5.0f, 1.0f, 5.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	// 向きの設定
-	CCharacter3D::GetRotaition()->Set(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
-	CCharacter3D::GetRotaition()->SetDest(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+	CCharacter3D::SetRotation(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+	CCharacter3D::SetRotDest(D3DX_PI);
 
 	// 位置の取得
 	D3DXVECTOR3 pos = CCharacter3D::GetPosition();
@@ -170,9 +170,6 @@ void CTrainingEnemy::Update(void)
 		// 状態の更新処理
 		m_pMachine->Update();
 	}
-
-	// 向きの設定
-	CCharacter3D::GetRotaition()->SetSmoothAngle(0.2f);
 
 	// 更新処理
 	CCharacter3D::Update();

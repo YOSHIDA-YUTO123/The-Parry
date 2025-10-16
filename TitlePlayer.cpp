@@ -46,8 +46,8 @@ CTitlePlayer* CTitlePlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot)
 	pPlayer->Init();
 
 	pPlayer->SetPosition(pos);
-	pPlayer->GetRotaition()->Set(rot);
-	pPlayer->GetRotaition()->SetDest(rot);
+	pPlayer->SetRotation(rot);
+	pPlayer->SetRotDest(rot.y);
 
 	return pPlayer;
 }
@@ -114,7 +114,7 @@ void CTitlePlayer::Update(void)
 		if (m_pMoveMent != nullptr)
 		{
 			// Œü‚«‚ÌŽæ“¾
-			float fAngle = CCharacter3D::GetRotaition()->Get().y;
+			float fAngle = CCharacter3D::GetRotation().y;
 
 			m_pMoveMent->MoveForward(10.0f, fAngle + D3DX_PI);
 		}

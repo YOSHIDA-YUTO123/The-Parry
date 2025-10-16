@@ -172,6 +172,9 @@ void CEnemyAttackSmash::Update(void)
 		}
 	}
 
+	// 状態マネージャーの取得
+	auto pStateManager = pEnemy->GetStateManager();
+
 	// 敵の攻撃のカウンターの目安の表示
 	if (pMotion->IsEventFrame(50, 50, CEnemy::MOTIONTYPE_SMASH))
 	{
@@ -209,9 +212,6 @@ void CEnemyAttackSmash::Update(void)
 	// モーションが終わったら
 	if (pMotion->FinishMotion())
 	{
-		// 状態マネージャーの取得
-		auto pStateManager = pEnemy->GetStateManager();
-
 		// プレイヤーの立ち位置でモーションを設定
 		if (pStateManager != nullptr && pStateManager->SetMotionByPlayerPosition())
 		{
@@ -362,6 +362,7 @@ void CEnemyAttackImpact::Update(void)
 //===================================================
 CEnemySpin::CEnemySpin() : CEnemyState(ID_SPIN)
 {
+	m_ProbAttack = NULL;
 	m_nTime = NULL;
 	m_nMaxTime = NULL;
 }
@@ -371,6 +372,7 @@ CEnemySpin::CEnemySpin() : CEnemyState(ID_SPIN)
 //===================================================
 CEnemySpin::CEnemySpin(const int nTime) : CEnemyState(ID_SPIN)
 {
+	m_ProbAttack = NULL;
 	m_nTime = nTime;
 	m_nMaxTime = nTime;
 }
@@ -399,6 +401,8 @@ void CEnemySpin::Init(void)
 	// 剣の軌跡のリセット
 	pEnemy->DeleteOrbit();
 
+	m_ProbAttack = rand() % 100;
+
 	if (pMotion != nullptr)
 	{
 		pMotion->SetMotion(CEnemy::MOTIONTYPE_SPIN, true, 10);
@@ -422,7 +426,7 @@ void CEnemySpin::Update(void)
 	CMotion* pPlayerMotion = pPlayer->GetMotion();
 
 	// 向きの取得
-	float fAngle = pEnemy->GetRotaition()->Get().y;
+	float fAngle = pEnemy->GetRotation().y;
 
 	// 向いている方向に移動する
 	pEnemy->GetMovement()->MoveForWard(15.0f, fAngle + D3DX_PI);
@@ -535,6 +539,27 @@ void CEnemySpin::Update(void)
 		}
 	}
 
+	// プレイヤーの位置の取得
+	D3DXVECTOR3 playerPos = pPlayer->GetPosition();
+
+	// 距離を求める
+	float fDistance = GetDistance(playerPos - pos);
+
+	// 状態マネージャーの取得
+	auto pStateManager = pEnemy->GetStateManager();
+
+	// HPが半分を切ったら
+	if (pStateManager != nullptr && pStateManager->CheckLowHp(2))
+	{
+		// 一定の距離まで近づいたら
+		if (fDistance <= ATTACK_DISTANCE && m_ProbAttack <= PROB_ATTACK)
+		{
+			// 振り下ろしに派生する
+			pEnemy->ChangeState(make_shared<CEnemyAttackSmash>());
+			return;
+		}
+	}
+
 	// モーションが終わったら
 	if (m_nTime <= 0 && pMotion->FinishMotion())
 	{
@@ -553,6 +578,7 @@ void CEnemySpin::Update(void)
 //===================================================
 CEnemySwing::CEnemySwing() : CEnemyState(ID_SWING)
 {
+	m_nProbAction = NULL;
 	m_nNextAction = INIT_NEXT_ACTION;
 }
 
@@ -582,6 +608,9 @@ void CEnemySwing::Init(void)
 
 	// 次の行動を抽選
 	m_nNextAction = rand() % 100;
+
+	// 攻撃に派生する確率
+	m_nProbAction = rand() % 100;
 
 	// モーションがあるなら
 	if (pMotion != nullptr)
@@ -709,6 +738,20 @@ void CEnemySwing::Update(void)
 			pEnemy->ChangeState(make_shared<CEnemyIdle>(5));
 		}
 
+		// 状態マネージャーの取得
+		auto pStateManager = pEnemy->GetStateManager();
+
+		// 派生できるなら
+		if (pStateManager != nullptr && pStateManager->CheckLowHp(2) && m_nProbAction <= PROB_ACTION)
+		{
+			if (pMotion->IsEventFrame(40,40, CEnemy::MOTIONTYPE_SWING))
+			{
+				// 横凪に派生
+				pEnemy->ChangeState(make_shared<CEnemyAttackSmash>());
+				return;
+			}
+		}
+			
 		// 敵の攻撃のカウンターの目安の表示
 		if (pMotion->IsEventFrame(40, 40, CEnemy::MOTIONTYPE_SWING))
 		{
@@ -859,7 +902,7 @@ void CEnemyJumpAttack::Update(void)
 			float dir = GetDistance(Diff);
 
 			// 向きの取得
-			float fAngle = pEnemy->GetRotaition()->Get().y;
+			float fAngle = pEnemy->GetRotation().y;
 
 			// ジャンプ攻撃中の移動
 			pEnemy->GetMovement()->MoveForWard(dir / JUMPATTACK_MOVE_FRAME, fAngle + D3DX_PI);
@@ -1941,7 +1984,7 @@ void CEnemyRushSwing::Update(void)
 		float fDistance = GetDistance(playerPos - pos);
 
 		// 向きの取得
-		float fAngle = pEnemy->GetRotaition()->Get().y;
+		float fAngle = pEnemy->GetRotation().y;
 
 		// 移動量を設定
 		pEnemy->GetMovement()->MoveForWard(fDistance / MOVE_FRAME, fAngle + D3DX_PI);
@@ -2261,7 +2304,7 @@ void CEnemyCounter::Update(void)
 		else if (result == CEnemy::RESULT_HIT)
 		{
 			// プレイヤーのダメージモーションの設定
-			pPlayer->SetDamageMotion(pos, 6);
+			pPlayer->SetDamageMotion(pos, 6,200.0f,100.0f);
 		}
 		// 絶対反撃
 		else if (result == CEnemy::RESULT_SPREVENGE)

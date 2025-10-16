@@ -14,17 +14,15 @@
 #include"math.h"
 #include"textureManager.h"
 
-using namespace math; // 名前空間mathを使用
-using namespace std;  // 名前空間stdを使用
-using namespace Const;							// 名前空間Constを使用する
-
 //================================================
 // コンストラクタ
 //================================================
 CShadow::CShadow()
 {
-	m_col = WHITE;
-	m_pos = VEC3_NULL;
+	m_col = Const::WHITE;
+	m_pos = Const::VEC3_NULL;
+	m_rot = Const::VEC3_NULL;
+	m_Size = Const::VEC3_NULL;
 	m_pVtxBuffer = nullptr;
 	D3DXMatrixIdentity(&m_mtxWorld);
 	m_nTextureIdx = -1;
@@ -40,10 +38,10 @@ CShadow::~CShadow()
 //================================================
 // 生成処理
 //================================================
-unique_ptr<CShadow> CShadow::Create(const D3DXVECTOR3 pos, const float fWidth, const float fHeight, const D3DXCOLOR col)
+std::unique_ptr<CShadow> CShadow::Create(const D3DXVECTOR3 pos, const float fWidth, const float fHeight, const D3DXCOLOR col)
 {
 	// 影の生成
-	unique_ptr<CShadow> pShadow = make_unique<CShadow>();
+	std::unique_ptr<CShadow> pShadow = std::make_unique<CShadow>();
 
 	if (pShadow == nullptr) return nullptr;
 
@@ -54,10 +52,8 @@ unique_ptr<CShadow> CShadow::Create(const D3DXVECTOR3 pos, const float fWidth, c
 	pShadow->m_nTextureIdx = pTexture->Register("data/TEXTURE/effect/effect000.jpg");
 
 	// 位置、向き、大きさの設定
-	pShadow->m_pRot = make_unique<CRotation>();
-	pShadow->m_pSize = make_unique<CSize3D>();
 	pShadow->m_pos = pos;
-	pShadow->m_pSize->Set(D3DXVECTOR3(fWidth, 0.0f, fHeight));
+	pShadow->m_Size = (D3DXVECTOR3(fWidth, 0.0f, fHeight));
 	pShadow->m_col = col;
 	pShadow->Init();
 	
@@ -93,7 +89,7 @@ HRESULT CShadow::Init(void)
 	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 
 	// 大きさの取得
-	D3DXVECTOR3 Size = m_pSize->Get();
+	D3DXVECTOR3 Size = m_Size;
 
 	// 頂点座標の設定
 	pVtx[0].pos = D3DXVECTOR3(-Size.x, Size.y, Size.z);
@@ -209,11 +205,8 @@ void CShadow::Draw(void)
 	//	ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
 
-	// 向き
-	D3DXVECTOR3 rot = m_pRot->Get();
-
 	// 向きを反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, rot.y, rot.x, rot.z);
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
 
 	// 位置を反映
@@ -267,8 +260,5 @@ void CShadow::SetFieldAngle(D3DXVECTOR3 Nor, D3DXVECTOR3 up)
 	D3DXMatrixRotationAxis(&mtxRot, &axis, fAngle);
 
 	// 回転行列をオイラー角に変換
-	D3DXVECTOR3 rot = MatrixToEulerXYZ(mtxRot);
-
-	// 設定
-	m_pRot->Set(rot);
+	m_rot = math::MatrixToEulerXYZ(mtxRot);
 }

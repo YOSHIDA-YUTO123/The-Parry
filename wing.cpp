@@ -11,10 +11,7 @@
 // インクルードファイル
 //***************************************************
 #include "wing.h"
-#include "transform.h"
-
-using namespace Const; // 名前空間Constを使用
-using namespace std;   // 名前空間stdの使用
+#include "velocity.h"
 
 //***************************************************
 // 定数宣言
@@ -34,12 +31,12 @@ namespace
 //===================================================
 CWing::CWing()
 {
-	m_move = VEC3_NULL;
+	m_move = Const::VEC3_NULL;
 	m_fCounter = NULL;
 	m_nLife = NULL;
 	m_nMaxLife = NULL;
 	m_pMove = nullptr;
-	m_Scal = VEC3_NULL;
+	m_Scal = Const::VEC3_NULL;
 }
 
 //===================================================
@@ -85,7 +82,7 @@ HRESULT CWing::Init(void)
 	CObjectX::LoadModel("data/MODEL/effect/wing.x");
 
 	// 移動量の生成
-	m_pMove = make_unique<CVelocity>();
+	m_pMove = std::make_unique<CVelocity>();
 
 	// 寿命を選出
 	m_nLife = rand() % LIFE_RANGE + (LIFE_RANGE / 2);
@@ -98,7 +95,7 @@ HRESULT CWing::Init(void)
 	float fAngle = (static_cast<float>(rand() % (ANGLE_RANGE * 2) - ANGLE_RANGE)) * 0.01f;
 
 	// 角度を設定
-	CObjectX::GetRotation()->Set(D3DXVECTOR3(fAngle, fAngle, fAngle));
+	CObjectX::SetRotation(D3DXVECTOR3(fAngle, fAngle, fAngle));
 
 	// 移動量の設定
 	m_move.x = sinf(fAngle) * fMove;

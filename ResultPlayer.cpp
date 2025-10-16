@@ -43,7 +43,7 @@ CResultPlayer* CResultPlayer::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 ro
 	}
 
 	pPlayer->SetPosition(pos);
-	pPlayer->GetRotaition()->Set(rot);
+	pPlayer->SetRotation(rot);
 
 	return pPlayer;
 }

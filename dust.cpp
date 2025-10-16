@@ -16,10 +16,9 @@
 #include "opening.h"
 #include "tutorial.h"
 #include "transform.h"
-#include"shadow.h"
+#include "shadow.h"
 #include "explosion.h"
-
-using namespace Const; // 名前空間Constを使用
+#include "velocity.h"
 
 constexpr float SHADOW_SIZE_000 = 50.0f;	 // 影の大きさ000
 constexpr float SHADOW_SIZE_001 = 25.0f;	 // 影の大きさ001
@@ -33,7 +32,7 @@ constexpr float SHADOW_A_LEVEL = 0.9f;       // 影のアルファ値のオフセット
 CRubble::CRubble(int nPriority) : CObjectX(nPriority)
 {
 	m_nLife = NULL;
-	ZeroMemory(&m_move, sizeof(m_move));
+	m_pMove = nullptr;
 	m_nMaxLife = NULL;
 	m_fDecAlv = NULL;
 	m_fShadowSize = NULL;
@@ -106,7 +105,7 @@ CRubble* CRubble::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 dir, const int
 	pDust->m_nMaxLife = nLife;
 	pDust->m_fDecAlv = 1.0f / nLife;
 
-	pDust->m_move.Set(dir);
+	pDust->m_pMove->Set(dir);
 
 	return pDust;
 }
@@ -121,6 +120,9 @@ HRESULT CRubble::Init(void)
 	{
 		return E_FAIL;
 	}
+
+	// 移動量の生成
+	m_pMove = std::make_unique<CVelocity>();
 
 	// 位置の取得
 	D3DXVECTOR3 pos = CObjectX::GetPosition();
@@ -176,8 +178,11 @@ void CRubble::Update(void)
 	// 位置の取得
 	D3DXVECTOR3 pos = CObjectX::GetPosition();
 
-	// 位置の更新処理
-	pos += m_move.Get();
+	if (m_pMove != nullptr)
+	{
+		// 位置の更新処理
+		pos += m_pMove->Get();
+	}
 
 	float fHeight = 0.0f;
 
@@ -189,13 +194,16 @@ void CRubble::Update(void)
 		// 地面の法線の取得
 		D3DXVECTOR3 nor = pMesh->GetNor();
 
-		// バウンドの設定
-		m_move.Bound(nor);
+		if (m_pMove != nullptr)
+		{
+			// バウンドの設定
+			m_pMove->Bound(nor);
+		}
 	}
 
 	D3DXVECTOR3 up = pMesh->GetNor(); // 上方向ベクトル
 
-	D3DXVECTOR3 dir = m_move.Get();
+	D3DXVECTOR3 dir = m_pMove->Get();
 
 	D3DXVec3Normalize(&dir, &dir);
 
@@ -214,7 +222,7 @@ void CRubble::Update(void)
 	D3DXVECTOR3 rot = math::MatrixToEulerXYZ(mtxRot);
 
 	// 重力の設定
-	m_move.Gravity(-MAX_GRABITY);
+	m_pMove->Gravity(-Const::MAX_GRABITY);
 
 	// 影の更新処理
 	if (m_pShadow != nullptr)
@@ -233,7 +241,7 @@ void CRubble::Update(void)
 	CObjectX::SetPosition(pos);
 
 	// 向きの設定
-	CObjectX::GetRotation()->Set(rot);
+	CObjectX::SetRotation(rot);
 	
 	m_nLife--;
 

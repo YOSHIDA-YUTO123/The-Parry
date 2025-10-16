@@ -27,6 +27,7 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 private:
+
 	int m_nNextAction; // Ÿ‚Ìs“®
 };
 
@@ -55,8 +56,11 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 private:
-	int m_nTime;	// ‰ñ“]‚·‚éŠÔ
-	int m_nMaxTime;	// Å‘å‚ÌŠÔ
+	static constexpr float ATTACK_DISTANCE = 300.0f; // UŒ‚‚É”h¶‚·‚é‹——£
+	static constexpr int PROB_ATTACK = 40;				 // UŒ‚‚É”h¶‚·‚éŠm—¦
+	int m_nTime;			// ‰ñ“]‚·‚éŠÔ
+	int m_nMaxTime;			// Å‘å‚ÌŠÔ
+	int m_ProbAttack;		// •Ê‚ÌUŒ‚‚É”h¶‚·‚éŠm—¦
 };
 
 //***************************************************
@@ -70,6 +74,9 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 private:
+	static constexpr int PROB_ACTION = 30; // UŒ‚‚É”h¶‚·‚éŠm—¦
+
+	int m_nProbAction;  //  UŒ‚‚É”h¶‚·‚éŠm—¦
 	int m_nNextAction; // Ÿ‚Ìs“®
 };
 

@@ -9,23 +9,21 @@
 // インクルードファイル
 //***************************************************
 #include "EffectSpark.h"
-#include"manager.h"
-#include"renderer.h"
-#include"transform.h"
-
-using namespace std;   // 名前空間stdの使用
-using namespace Const; // 名前空間Constを使用
+#include "manager.h"
+#include "renderer.h"
+#include "transform.h"
+#include "velocity.h"
 
 //===================================================
 // コンストラクタ
 //===================================================
 CEffectSpark::CEffectSpark()
 {
-    m_col = WHITE;
+    m_col = Const::WHITE;
     m_fDecAlv = NULL;
 	m_pMove = nullptr;
     m_nLife = NULL;
-	m_fGravity = MAX_GRABITY;
+	m_fGravity = Const::MAX_GRABITY;
 }
 
 //===================================================
@@ -71,7 +69,7 @@ void CEffectSpark::SetParam(const int nLife, const D3DXVECTOR3 move, const float
 
 	if (m_pMove == nullptr)
 	{
-		m_pMove = make_unique<CVelocity>();
+		m_pMove = std::make_unique<CVelocity>();
 	}
 
 	m_pMove->Set(move);

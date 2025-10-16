@@ -66,6 +66,7 @@ protected:
 	TYPE GetType(void) const { return m_type; }
 private:
 	static const char* m_pFilePath[TYPE_MAX];	// ファイルパス
+
 	std::unique_ptr<CColliderAABB> m_pAABB;		// AABBのコライダー
 	D3DXVECTOR3 m_CenterPos;					// 中心座標
 	TYPE m_type;								// 種類

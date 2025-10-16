@@ -1,210 +1,67 @@
-//================================================
+//===================================================
 //
-// トランスフォームを制御する処理 [transform.cpp]
+// 空間情報の処理をもつクラス [transform.cpp]
 // Author:YUTO YOSHIDA
 //
-//=================================================
+//===================================================
 
-//*************************************************
+//***************************************************
 // インクルードファイル
-//*************************************************
+//***************************************************
 #include "transform.h"
-#include"math.h"
-#include"object.h"
-#include"manager.h"
-#include"slow.h"
+#include "manager.h"
+#include "renderer.h"
 
-using namespace Const;							// 名前空間Constを使用する
-
-//=================================================
+//===================================================
 // コンストラクタ
-//=================================================
-CPosition::CPosition()
+//===================================================
+CTransform::CTransform()
 {
-	m_pos = VEC3_NULL;
+	// 値のクリア
+	ZeroMemory(&m_Info, sizeof(m_Info));
 }
 
-//=================================================
+//===================================================
 // デストラクタ
-//=================================================
-CPosition::~CPosition()
+//===================================================
+CTransform::~CTransform()
 {
 }
 
-//=================================================
-// コンストラクタ
-//=================================================
-CRotation::CRotation()
-{
-	m_rot = VEC3_NULL;
-	m_Dest = VEC3_NULL;
-}
-
-//=================================================
-// デストラクタ
-//=================================================
-CRotation::~CRotation()
-{
-}
-
-//=================================================
-// スムーズな向きの変更処理
-//=================================================
-void CRotation::SetSmoothAngle(const float coef)
-{
-	// 差分
-	float Diff =  m_Dest.y - m_rot.y;
-
-	NormalizeDiffRot(Diff, &m_rot.y);
-
-	m_rot.y = LerpDest(m_Dest.y, m_rot.y, coef);
-}
-
-//=================================================
-// コンストラクタ
-//=================================================
-CVelocity::CVelocity()
-{
-	m_move = VEC3_NULL;
-}
-
-//=================================================
-// デストラクタ
-//=================================================
-CVelocity::~CVelocity()
-{
-}
-
-//=================================================
-// 移動量の取得
-//=================================================
-D3DXVECTOR3 CVelocity::Get(void) const
-{
-	// スローモーションの取得
-	CSlow* pSlow = CManager::GetSlow();
-
-	return m_move * pSlow->GetLevel(false);
-}
-
-//=================================================
-// コンストラクタ
-//=================================================
-CSizeCircle::CSizeCircle()
-{
-	m_fRadius = NULL;
-}
-
-//=================================================
-// デストラクタ
-//=================================================
-CSizeCircle::~CSizeCircle()
-{
-}
-
-//=================================================
+//===================================================
 // 位置の更新処理
-//=================================================
-void CPosition::UpdatePosition(const D3DXVECTOR3 move)
+//===================================================
+void CTransform::UpdatePosition(const D3DXVECTOR3 move)
 {
-	// スローモーションの取得
-	CSlow* pSlow = CManager::GetSlow();
+	// 前回の位置の保存
+	m_Info.posOld = m_Info.pos;
 
-	// スローモーションのレベル
-	float fSlowLevel = pSlow->GetLevel(false);
-
-	m_pos += move * fSlowLevel;
+	// 位置の更新
+	m_Info.pos += move;
 }
 
-//=================================================
-// 移動量の減衰処理3D
-//=================================================
-void CVelocity::SetInertia3D(const float fcoef, const bool bMoveY)
+//===================================================
+// マトリックスの設定
+//===================================================
+void CTransform::SetMatrix(void)
 {
-	// 0.0fに近づける
-	m_move.x = LerpDest(0.0f, m_move.x, fcoef);
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
-	// Yも減衰するなら
-	if (bMoveY)
-	{
-		m_move.y = LerpDest(0.0f, m_move.y, fcoef);
-	}
-	m_move.z = LerpDest(0.0f, m_move.z, fcoef);
-}
+	//計算用のマトリックス
+	D3DXMATRIX mtxRot, mtxTrans;
 
-//=================================================
-// 移動量の減衰処理2D
-//=================================================
-void CVelocity::SetInertia2D(const float fcoef)
-{
-	// 0.0fに近づける
-	m_move.x = LerpDest(0.0f, m_move.x, fcoef);
-	m_move.y = LerpDest(0.0f, m_move.y, fcoef);
-}
+	//ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&m_Info.mtxWorld);
 
-//=================================================
-// 重力の設定
-//=================================================
-void CVelocity::Gravity(const float gravity)
-{
-	// スローモーションの取得
-	CSlow* pSlow = CManager::GetSlow();
+	//向きを反映
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_Info.rot.y, m_Info.rot.x, m_Info.rot.z);
+	D3DXMatrixMultiply(&m_Info.mtxWorld, &m_Info.mtxWorld, &mtxRot);
 
-	// スローモーションのレベル
-	float fSlowLevel = pSlow->GetLevel(false);
+	//位置を反映
+	D3DXMatrixTranslation(&mtxTrans, m_Info.pos.x, m_Info.pos.y, m_Info.pos.z);
+	D3DXMatrixMultiply(&m_Info.mtxWorld, &m_Info.mtxWorld, &mtxTrans);
 
-	m_move.y += gravity * fSlowLevel;
-}
-
-//=================================================
-// バウンドの設定
-//=================================================
-void CVelocity::Bound(D3DXVECTOR3 nor, float coef)
-{
-	// 範囲内にクランプする
-	coef = Clamp(coef, 0.0f, 1.0f);
-
-	float dot = D3DXVec3Dot(&m_move, &nor);
-
-	D3DXVECTOR3 NewMove = m_move - (dot * 2.0f) * nor;
-
-	m_move = NewMove * coef;
-}
-
-//=================================================
-// ジャンプ処理
-//=================================================
-void CVelocity::Jump(const float jumpHeight)
-{
-	m_move.y = jumpHeight;
-}
-
-//=================================================
-// 大きさ2Dのコンストラクタ
-//=================================================
-CSize2D::CSize2D()
-{
-	m_fWidth = NULL;
-	m_fHeight = NULL;
-}
-
-//=================================================
-// 大きさ2Dのデストラクタ
-//=================================================
-CSize2D::~CSize2D()
-{
-}
-
-//=================================================
-// コンストラクタ
-//=================================================
-CSize3D::CSize3D()
-{
-	GetVector = VEC3_NULL;
-}
-
-//=================================================
-// デストラクタ
-//=================================================
-CSize3D::~CSize3D()
-{
+	//ワールドマトリックスの設定
+	pDevice->SetTransform(D3DTS_WORLD, &m_Info.mtxWorld);
 }

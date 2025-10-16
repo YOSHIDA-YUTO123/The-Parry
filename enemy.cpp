@@ -111,7 +111,8 @@ CEnemy* CEnemy::Create(const int nLife, const float fSpeed, const D3DXVECTOR3 Sh
 		pEnemy = nullptr;
 		return nullptr;
 	}
-	pEnemy->GetRotaition()->Set(rot);
+
+	pEnemy->SetRotation(rot);
 
 	// 状態マネージャーの生成
 	pEnemy->m_pStateManager.reset(CEnemyStateManager::Create());
@@ -293,10 +294,10 @@ void CEnemy::Update(void)
 	{
 		ChangeState(make_shared<CEnemyDeath>());
 	}
-	//if (pKeyboard->GetTrigger(DIK_F5))
-	//{
-	//	Hit(MAX_LIFE - 1);
-	//}
+	if (pKeyboard->GetTrigger(DIK_F5))
+	{
+		Hit(50);
+	}
 	if (pKeyboard->GetTrigger(DIK_7))
 	{
 		ChangeState(make_shared<CEnemyRush>());
@@ -430,6 +431,11 @@ void CEnemy::Update(void)
 	// オブザーバーへの通知処理
 	Notify();
 
+	if (m_pStateManager != nullptr)
+	{
+		m_pStateManager->SetLowEvent();
+	}
+
 	// HPが半分以下だったら
 	if (m_pStateManager != nullptr && m_pStateManager->CheckLowHp(2))
 	{
@@ -493,9 +499,6 @@ void CEnemy::Update(void)
 
 	// キャラクターの更新
 	CCharacter3D::Update();
-
-	// 向きの補間
-	CCharacter3D::GetRotaition()->SetSmoothAngle(0.1f);
 }
 
 //===================================================
@@ -868,7 +871,7 @@ void CEnemy::ChasePlayer(float chaseScal, const float speedScal)
 	m_pMovement->Set(move);
 
 	// 目的の角度の設定
-	CCharacter3D::GetRotaition()->SetDest(D3DXVECTOR3(0.0f, fAngle + D3DX_PI, 0.0f));
+	CCharacter3D::SetRotDest(fAngle + D3DX_PI);
 }
 
 //===================================================
@@ -889,7 +892,7 @@ void CEnemy::AngleToPlayer(void)
 	float fAngle = GetTargetAngle(pos, PlayerPos);
 
 	// 向きの設定
-	CCharacter3D::GetRotaition()->SetDest(D3DXVECTOR3(0.0f, fAngle, 0.0f));
+	CCharacter3D::SetRotDest(fAngle);
 }
 
 //===================================================
@@ -1028,7 +1031,7 @@ bool CEnemy::CollisionObstacle(D3DXVECTOR3 *pPos)
 		float fAngle = GetTargetAngle(*pPos, obstaclePos);
 
 		// 向きの設定
-		CCharacter3D::GetRotaition()->SetDest(D3DXVECTOR3(0.0f, fAngle, 0.0f));
+		CCharacter3D::SetRotDest(fAngle);
 		
 		if (type != CObstacle::TYPE_TNT_BARREL)
 		{
@@ -1111,7 +1114,7 @@ void CEnemy::Hit(const int nDamage)
 //===================================================
 void CEnemy::SetAngle(const float fAngle)
 {
-	CCharacter3D::GetRotaition()->SetDest(D3DXVECTOR3(0.0f, fAngle, 0.0f));
+	CCharacter3D::SetRotDest(fAngle);
 }
 
 //===================================================
@@ -1137,7 +1140,7 @@ bool CEnemy::CollisionFOV(const D3DXVECTOR3 Targetpos, const float fLeftAngle, c
 	D3DXVECTOR3 myPos = CCharacter3D::GetPosition();
 
 	// 向きの取得
-	D3DXVECTOR3 Angle = CCharacter3D::GetRotaition()->Get();
+	D3DXVECTOR3 Angle = CCharacter3D::GetRotation();
 
 	// 視界の作成
 	auto ColliderFOV = CColliderFOV::CreateCollider(myPos, Angle.y, fLeftAngle, fRightAngle,1000.0f);
@@ -1157,7 +1160,7 @@ bool CEnemy::CollisionFOV(const D3DXVECTOR3 Targetpos, const float fLeftAngle, c
 void CEnemy::RushEffect(void)
 {
 	// 向きの取得
-	D3DXVECTOR3 rot = CCharacter3D::GetRotaition()->Get();
+	D3DXVECTOR3 rot = CCharacter3D::GetRotation();
 	
 	//// モデルの位置を取得
 	//D3DXVECTOR3 modelpos = GetPositionFromMatrix(m_RushEffectMtx);
@@ -1357,7 +1360,7 @@ void CEnemy::UpdateCollider(const D3DXVECTOR3 pos)
 		m_pFOV->SetPosition(pos);
 
 		// 向きの取得
-		D3DXVECTOR3 Angle = CCharacter3D::GetRotaition()->Get();
+		D3DXVECTOR3 Angle = CCharacter3D::GetRotation();
 
 		// データの更新処理
 		m_pFOV->UpdateData(Angle.y);

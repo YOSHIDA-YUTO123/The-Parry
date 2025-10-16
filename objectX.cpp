@@ -14,8 +14,6 @@
 #include"modelManager.h"
 #include"textureManager.h"
 
-using namespace Const;							// 名前空間Constを使用する
-
 //===================================================
 // コンストラクタ
 //===================================================
@@ -23,8 +21,8 @@ CObjectX::CObjectX(int nPriority) : CObject(nPriority)
 {
 	memset(m_mtxWorld, NULL, sizeof(D3DXMATRIX));
 
-	m_pos = VEC3_NULL;
-	m_pRot = nullptr;
+	m_pos = Const::VEC3_NULL;
+	m_rot = Const::VEC3_NULL;
 	m_pTextureIdx = nullptr;
 	m_nModelIdx = -1;
 	m_nTextureMT = -1;
@@ -51,7 +49,7 @@ CObjectX* CObjectX::Create(const D3DXVECTOR3 pos, const char* pModelName,const D
 
 	pObjectX->Init();
 	pObjectX->m_pos = pos;
-	pObjectX->GetRotation()->Set(rot);
+	pObjectX->m_rot = rot;
 	pObjectX->LoadModel(pModelName);
 
 	return pObjectX;
@@ -62,12 +60,6 @@ CObjectX* CObjectX::Create(const D3DXVECTOR3 pos, const char* pModelName,const D
 //===================================================
 HRESULT CObjectX::Init(void)
 {
-	if (m_pRot == nullptr)
-	{
-		// 位置、向きの生成
-		m_pRot = new CRotation;
-	}
-
 	return S_OK;
 }
 
@@ -83,13 +75,6 @@ void CObjectX::Uninit(void)
 		m_pTextureIdx = nullptr;
 	}
 	
-	// 向きの破棄
-	if (m_pRot != nullptr)
-	{
-		delete m_pRot;
-		m_pRot = nullptr;
-	}
-
 	// 自分自身の破棄
 	Release();
 }
@@ -125,11 +110,8 @@ void CObjectX::Draw(void)
 	//ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
 
-	// 向き
-	D3DXVECTOR3 rot = m_pRot->Get();
-
 	//向きを反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, rot.y, rot.x, rot.z);
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
 
 	//位置を反映
@@ -218,11 +200,8 @@ void CObjectX::Draw(const float Diffuse)
 	//ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
 
-	// 向き
-	D3DXVECTOR3 rot = m_pRot->Get();
-
 	//向きを反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, rot.y, rot.x, rot.z);
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
 
 	//位置を反映
@@ -362,15 +341,12 @@ void CObjectX::SetUpMatrix(const D3DXVECTOR3 Scal)
 	//ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
 
-	// 向き
-	D3DXVECTOR3 rot = m_pRot->Get();
-
 	// 大きさを反映
 	D3DXMatrixScaling(&mtxScal, Scal.x, Scal.y, Scal.z);
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxScal);
 
 	//向きを反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, rot.y, rot.x, rot.z);
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
 
 	//位置を反映

@@ -20,6 +20,7 @@
 #include"meshfield.h"
 #include "manager.h"
 #include "wing.h"
+#include "velocity.h"
 
 using namespace std;	// 名前空間stdの使用
 using namespace Const;	// 名前空間Constの使用
@@ -82,7 +83,7 @@ CBird* CBird::Create(const D3DXVECTOR3 pos, const TYPE type, const bool bGravity
 	float fAngleY = static_cast<float>(rand() % 629 - 314) * 0.01f;
 
 	// 向きの設定
-	pBird->GetRotaition()->Set(D3DXVECTOR3(0.0f, fAngleY, 0.0f));
+	pBird->SetRotation(D3DXVECTOR3(0.0f, fAngleY, 0.0f));
 
 	return pBird;
 }
@@ -323,7 +324,7 @@ void CBird::SetFly(const D3DXVECTOR3 move)
 	D3DXVECTOR3 moveWk = VEC3_NULL;
 
 	// 現在の向きの取得
-	float fAngleY = CCharacter3D::GetRotaition()->Get().y;
+	float fAngleY = CCharacter3D::GetRotation().y;
 
 	moveWk.x = sinf(fAngleY + D3DX_PI) * move.x;
 	moveWk.y = move.y;
@@ -364,7 +365,7 @@ void CBird::FlyMove(const float fMove)
 	// 移動方向を求める
 	float fAngle = atan2f(moveWk.x, moveWk.z);
 
-	CCharacter3D::GetRotaition()->Set(D3DXVECTOR3(0.0f, fAngle + D3DX_PI, 0.0f));
+	CCharacter3D::SetRotation(D3DXVECTOR3(0.0f, fAngle + D3DX_PI, 0.0f));
 }
 
 //===================================================

@@ -34,41 +34,42 @@ public:
 	// IDの種類
 	typedef enum
 	{
-		ID_BASE = 0,	 // 無し
-		ID_IDLE,		 // なにもしない状態
-		ID_MOVE,		 // 移動
-		ID_BACKSTEP,	 // バックステップ
-		ID_LANDING,		 // 着地
-		ID_SMASH,		 // 振り下ろし攻撃
-		ID_IMPACT,		 // 衝撃波攻撃
-		ID_DAMAGEL,		 // 大ダメージ
-		ID_ROAR,		 // 叫び
-		ID_DASH,		 // 走り
-		ID_SPIN,		 // 回転攻撃
-		ID_HIT,			 // カウンターがヒットした時
-		ID_DAMAGES,		 // 小ダメージ
-		ID_GUARD,		 // ガード
-		ID_STEP,		 // ステップ
-		ID_SWING,		 // スイング攻撃
-		ID_JUMPATTACK,	 // ジャンプ攻撃
-		ID_DEATH,		 // 死亡
-		ID_DOWN,		 // ダウン(死亡)
-		ID_AWAY,		 // 距離を取る
-		ID_SUPER_HIT,	 // 特大ヒット
-		ID_COMBO_DAMAGE, // 連続ダメージ
-		ID_RIGHT_MOVE,	 // 横歩き(右)
-		ID_LEFT_MOVE,	 // 横歩き(左)
-		ID_RUSH,		 // 突進攻撃
-		ID_ENDRUSH,		 // 突進攻撃終了
-		ID_BACKKICK,	 // 後ろ蹴り
-		ID_LOOK_BACKL,	 // 後ろを見る(左)
-		ID_LOOK_BACKR,	 // 後ろを見る(右)
-		ID_SWEEP_RIGHT,	 // 薙ぎ払い(右)
-		ID_SWEEP_LEFT,	 // 薙ぎ払い(左)
-		ID_RUSH_SWING,	 // 突進なぎ
-		ID_BRISK_MOVE,	 // 早歩き
-		ID_COUNTER,		 // カウンター
-		ID_REVENGE_IMPACT, // 衝撃波の跳ね返し
+		ID_BASE = 0,		// 無し
+		ID_IDLE,			// なにもしない状態
+		ID_MOVE,			// 移動
+		ID_BACKSTEP,		// バックステップ
+		ID_LANDING,			// 着地
+		ID_SMASH,			// 振り下ろし攻撃
+		ID_IMPACT,			// 衝撃波攻撃
+		ID_DAMAGEL,			// 大ダメージ
+		ID_ROAR,			// 叫び
+		ID_DASH,			// 走り
+		ID_SPIN,			// 回転攻撃
+		ID_HIT,				// カウンターがヒットした時
+		ID_DAMAGES,			// 小ダメージ
+		ID_GUARD,			// ガード
+		ID_STEP,			// ステップ
+		ID_SWING,			// スイング攻撃
+		ID_JUMPATTACK,		// ジャンプ攻撃
+		ID_DEATH,			// 死亡
+		ID_DOWN,			// ダウン(死亡)
+		ID_AWAY,			// 距離を取る
+		ID_SUPER_HIT,		// 特大ヒット
+		ID_COMBO_DAMAGE,	// 連続ダメージ
+		ID_RIGHT_MOVE,		// 横歩き(右)
+		ID_LEFT_MOVE,		// 横歩き(左)
+		ID_RUSH,			// 突進攻撃
+		ID_ENDRUSH,			// 突進攻撃終了
+		ID_BACKKICK,		// 後ろ蹴り
+		ID_LOOK_BACKL,		// 後ろを見る(左)
+		ID_LOOK_BACKR,		// 後ろを見る(右)
+		ID_SWEEP_RIGHT,		// 薙ぎ払い(右)
+		ID_SWEEP_LEFT,		// 薙ぎ払い(左)
+		ID_RUSH_SWING,		// 突進なぎ
+		ID_BRISK_MOVE,		// 早歩き
+		ID_COUNTER,			// カウンター
+		ID_REVENGE_IMPACT,  // 衝撃波の跳ね返し
+		ID_EVENT_ROAR,		// HPが半分になったときの演出
 		ID_MAX
 	}ID;
 
@@ -105,12 +106,17 @@ public:
 	int GetLife(void) const { return m_nLife; }
 	void SetLife(const int nLife) { m_nLife = nLife; }
 	void SetMaxLife(const int nLife) { m_nMaxLife = nLife; }
+	void SetLowEvent(void);
 	bool CheckLowHp(const int nRate);
+	bool GetEvent(void) const { return m_bEvent; }
+	void EndEvent(void);
 private:
 	CEnemyStateManager();
 	CEnemy* m_pEnemy;		// 敵のインスタンス
 	int m_nMaxLife;			// 最大の体力
 	int m_nLife;			// 敵の体力
+	bool m_bLowEventFinish;	// HPが少ないときの演出が終わったかどうか
+	bool m_bEvent;			// イベント中かどうか
 };
 
 //***************************************************
@@ -263,6 +269,8 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 private:
+	static constexpr int PROB_AWAY = 10; // 距離を取る確率
+
 	D3DXVECTOR3 m_ImpactPos; // インパクトの位置
 	int m_nDamage;			 // ダメージ量
 };
@@ -365,4 +373,19 @@ private:
 	int m_nCounter;		// カウンター
 };
 
+//***************************************************
+// 敵の状態(EventRoar)クラスの定義
+//***************************************************
+class CEnemyEventRoar : public CEnemyState
+{
+public:
+	CEnemyEventRoar();
+	~CEnemyEventRoar();
+	void Init(void) override;
+	void Update(void) override;
+private:
+	static constexpr float COLLISION_DISTANCE = 1000.0f; // 当たる距離
+
+	void CollisionPlayer(CEnemy* pEnemy);
+};
 #endif

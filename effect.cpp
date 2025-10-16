@@ -12,10 +12,7 @@
 #include "textureManager.h"
 #include "manager.h"
 #include "renderer.h"
-#include "transform.h"
-
-using namespace Const; // 名前空間Constを使用
-using namespace std; // 名前空間stdを使用
+#include "velocity.h"
 
 //===================================================
 // コンストラクタ
@@ -24,7 +21,7 @@ CEffect3D::CEffect3D(int nPriority) : CObjectBillboard(nPriority)
 {
 	// 値をクリアする
 	ZeroMemory(&m_Data, sizeof(m_Data));
-	m_Data.col = WHITE;
+	m_Data.col = Const::WHITE;
 }
 
 //===================================================
@@ -68,7 +65,7 @@ HRESULT CEffect3D::Init(void)
 	m_Data.fInertia = 0.01f;
 
 	// 移動クラスの生成
-	m_Data.pMove = make_unique<CVelocity>();
+	m_Data.pMove = std::make_unique<CVelocity>();
 
 	return S_OK;
 }
@@ -222,7 +219,7 @@ void CEffect3D::Set(const int nLife, const D3DXVECTOR3 move, const float fInerti
 	if (m_Data.pMove == nullptr)
 	{
 		// 移動量の生成
-		m_Data.pMove = make_shared<CVelocity>();
+		m_Data.pMove = std::make_shared<CVelocity>();
 	}
 
 	m_Data.pMove->Set(move);

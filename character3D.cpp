@@ -19,26 +19,23 @@
 #include<string>
 #include "CharacterManager.h"
 
-using namespace math;	// 名前空間mathを使用
-using namespace Const;	// 名前空間Constを使用
-using namespace std;	// 名前空間stdを使用
-
 //===================================================
 // コンストラクタ
 //===================================================
 CCharacter3D::CCharacter3D() : CObject(4)
 {
-	m_Size = VEC3_NULL;
+	m_Size = Const::VEC3_NULL;
 	m_nNumModel = NULL;
 	m_pMotion = nullptr;
-	m_pos = VEC3_NULL;
-	m_pRot = nullptr;
+	m_pos = Const::VEC3_NULL;
+	m_rot = Const::VEC3_NULL;
 	memset(m_mtxWorld, NULL, sizeof(m_mtxWorld));
 	m_nLife = NULL;
 	m_state = STATE::STATE_NORMAL;
 	m_fSpeed = NULL;
 	m_ShadowScal = D3DXVECTOR3(2.0f,1.0f,2.0f);
 	m_nHitStopTime = NULL;
+	m_fRotDest = NULL;
 }
 
 //===================================================
@@ -47,11 +44,11 @@ CCharacter3D::CCharacter3D() : CObject(4)
 CCharacter3D::CCharacter3D(const TYPE type) : CObject(4)
 {
 	m_type = type;
-	m_Size = VEC3_NULL;
+	m_Size = Const::VEC3_NULL;
 	m_nNumModel = NULL;
 	m_pMotion = nullptr;
-	m_pos = VEC3_NULL;
-	m_pRot = nullptr;
+	m_pos = Const::VEC3_NULL;
+	m_rot = Const::VEC3_NULL;
 	memset(m_mtxWorld, NULL, sizeof(m_mtxWorld));
 	m_nLife = NULL;
 	m_state = STATE::STATE_NORMAL;
@@ -72,9 +69,6 @@ CCharacter3D::~CCharacter3D()
 //===================================================
 HRESULT CCharacter3D::Init(void)
 {
-	// 位置、向きの生成
-	m_pRot = new CRotation;
-
 	// 影の生成
 	m_pShadowS = CShadowS::Create(m_pos, &m_ShadowScal);
 
@@ -104,13 +98,6 @@ void CCharacter3D::Uninit(void)
 	{
 		// モーションの終了処理
 		m_pMotion->Uninit();
-	}
-
-	// 向きの破棄
-	if (m_pRot != nullptr)
-	{
-		delete m_pRot;
-		m_pRot = nullptr;
 	}
 
 	// 影の破棄
@@ -169,6 +156,12 @@ void CCharacter3D::Update(void)
 	{
 		m_pShadowS->SetPosition(m_pos);
 	}
+
+	// 差分を正規化
+	NormalizeDiffRot(m_fRotDest - m_rot.y, &m_rot.y);
+
+	// 目的の向きに近づける
+	m_rot.y += (m_fRotDest - m_rot.y) * 0.1f;
 }
 
 //===================================================
@@ -185,11 +178,8 @@ void CCharacter3D::Draw(void)
 	//ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
 
-	// 向きの取得
-	D3DXVECTOR3 rot = m_pRot->Get();
-
 	//向きを反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, rot.y, rot.x, rot.z);
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
 
 	//位置を反映
@@ -224,11 +214,8 @@ void CCharacter3D::Draw(const float fAvl)
 	//ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
 
-	// 向きの取得
-	D3DXVECTOR3 rot = m_pRot->Get();
-
 	//向きを反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, rot.y, rot.x, rot.z);
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
 
 	//位置を反映
@@ -263,11 +250,8 @@ void CCharacter3D::DrawMT(void)
 	//ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
 
-	// 向きの取得
-	D3DXVECTOR3 rot = m_pRot->Get();
-
 	//向きを反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, rot.y, rot.x, rot.z);
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
 
 	//位置を反映
@@ -339,7 +323,7 @@ D3DXVECTOR3 CCharacter3D::GetModelPos(const int nIdx)
 	D3DXMATRIX mtx = m_apModel[nIdx]->GetMatrixWorld();
 
 	// ワールドマトリックスの位置の取得
-	D3DXVECTOR3 modelPos = GetPositionFromMatrix(mtx);
+	D3DXVECTOR3 modelPos = math::GetPositionFromMatrix(mtx);
 
 	return modelPos;
 }
@@ -512,7 +496,7 @@ void CCharacter3D::UpdateMotion(void)
 void CCharacter3D::SetCharacter(void)
 {
 	// モーションの生成
-	m_pMotion = make_unique<CMotion>();
+	m_pMotion = std::make_unique<CMotion>();
 
 	// キャラクターのマネージャーの取得
 	auto pCharacterManager = CCharacterManager::GetInstance();

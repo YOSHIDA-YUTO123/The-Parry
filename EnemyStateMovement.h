@@ -145,8 +145,6 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 private:
-	static constexpr int DEST_RANGE = 500; // 目的の位置の範囲
-
 	D3DXVECTOR3 m_destPos; // 目的の位置
 };
 #endif
